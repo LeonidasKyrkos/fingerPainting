@@ -1,0 +1,57 @@
+$module: 		'canvas';
+
+
+.#{$module} {
+	background-color: lighten($color3,15%);
+	cursor: pointer;
+	display: block;
+
+	&__wrap {
+		width: $layout-width-canvas;
+		max-width: 100%;
+	}
+
+	&__settings {
+		@include display(flex);
+		@include align-items(baseline);
+	}
+
+	&__colours {
+		@include display(flex);
+		margin: 0 em(10) 0 auto;
+		@include justify-content(flex-end);
+	}
+
+	&__colour {
+		display: block;
+		width: em(20);
+		height: em(20);
+		margin: 0 em(5);
+		cursor: pointer;
+	}
+
+	&__brush-sizes {
+		@include display(flex);
+		margin: 0 em(10) 0 auto;
+		@include justify-content(flex-end);
+	}
+
+	&__brush-size-wrap {
+		@extend .#{$module}__colour;
+		position: relative;
+	}
+
+	&__brush-size {
+		background-color: white;
+		border-radius: 100%;
+		display: block;
+		margin: em(5);
+		position: absolute;
+		top: 50%;
+		left: 0;
+		right: 0;
+		margin: 0 auto;
+		@include transform(translateY(-50%));
+		pointer-events: none;
+	}
+}
