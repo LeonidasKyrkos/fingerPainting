@@ -13,6 +13,7 @@ var browserify = require('browserify');
 var watchify = require('watchify');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
+var bourbon = require('node-bourbon').includePaths;
 
 var production = process.env.NODE_ENV === 'production';
 
@@ -110,8 +111,9 @@ gulp.task('browserify-watch', ['browserify-vendor'], function() {
 gulp.task('styles', function() {
   return gulp.src('app/scss/main.scss')
     .pipe(plumber())
-    .pipe(sass())
-    .pipe(autoprefixer())
+    .pipe(sass({
+		includePaths: [bourbon]
+	}))
     .pipe(gulpif(production, cssmin()))
     .pipe(gulp.dest('public/css'));
 });

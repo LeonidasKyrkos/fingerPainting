@@ -1,6 +1,6 @@
 {
-  "name": "newedenfaces",
-  "description": "Character voting app for EVE Online",
+  "name": "pictionareo",
+  "description": "react pictionary with a nodejs/express/mongodb backend",
   "version": "1.0.0",
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
     "history": "^1.13.0",
     "mongoose": "^4.2.5",
     "morgan": "^1.6.1",
+    "node-bourbon": "^4.2.8",
     "react": "^0.14.2",
     "react-dom": "^0.14.2",
     "react-router": "^1.0.0",
