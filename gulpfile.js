@@ -27,22 +27,6 @@ var dependencies = [
 
 /*
  |--------------------------------------------------------------------------
- | Combine all JS libraries into a single file for fewer HTTP requests.
- |--------------------------------------------------------------------------
- */
-gulp.task('vendor', function() {
-  return gulp.src([
-    'bower_components/jquery/dist/jquery.js',
-    'bower_components/bootstrap/dist/js/bootstrap.js',
-    'bower_components/magnific-popup/dist/jquery.magnific-popup.js',
-    'bower_components/toastr/toastr.js'
-  ]).pipe(concat('vendor.js'))
-    .pipe(gulpif(production, uglify({ mangle: false })))
-    .pipe(gulp.dest('public/js'));
-});
-
-/*
- |--------------------------------------------------------------------------
  | Compile third-party dependencies separately for faster performance.
  |--------------------------------------------------------------------------
  */
@@ -80,7 +64,7 @@ gulp.task('browserify', ['browserify-vendor'], function() {
  |--------------------------------------------------------------------------
  */
 gulp.task('browserify-watch', ['browserify-vendor'], function() {
-  var bundler = watchify(browserify({ entries: 'app/main.js', debug: true }, watchify.args));
+  var bundler = watchify(browserify({ entries: 'app/js/main.js', debug: true }, watchify.args));
   bundler.external(dependencies);
   bundler.transform(babelify, { presets: ['es2015', 'react'] });
   bundler.on('update', rebundle);
@@ -109,7 +93,7 @@ gulp.task('browserify-watch', ['browserify-vendor'], function() {
  |--------------------------------------------------------------------------
  */
 gulp.task('styles', function() {
-  return gulp.src('app/scss/main.scss')
+  return gulp.src('app/sass/main.scss')
     .pipe(plumber())
     .pipe(sass({
 		includePaths: [bourbon]
@@ -119,8 +103,8 @@ gulp.task('styles', function() {
 });
 
 gulp.task('watch', function() {
-  gulp.watch('app/stylesheets/**/*.scss', ['styles']);
+  gulp.watch('app/sass/**/*.scss', ['styles']);
 });
 
-gulp.task('default', ['styles', 'vendor', 'browserify-watch', 'watch']);
-gulp.task('build', ['styles', 'vendor', 'browserify']);
+gulp.task('default', ['styles', 'browserify-watch', 'watch']);
+gulp.task('build', ['styles', 'browserify']);

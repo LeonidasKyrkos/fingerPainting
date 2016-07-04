@@ -5,7 +5,7 @@ var swig  = require('swig');
 var React = require('react');
 var ReactDOM = require('react-dom/server');
 var Router = require('react-router');
-var routes = require('./app/routes');
+var routes = require('./app/js/routes');
 
 var express = require('express');
 var path = require('path');

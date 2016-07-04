@@ -101,6 +101,8 @@ input[type="submit"] {
   -webkit-appearance: button; }
 
 input[type="search"] {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
   box-sizing: content-box;
   -webkit-appearance: textfield; }
 
@@ -212,8 +214,7 @@ h1, h2, h3, h4, h5 {
   font-family: "Farsan", Tahoma, sans-serif;
   text-align: center;
   vertical-align: middle;
-  -ms-touch-action: manipulation;
-      touch-action: manipulation;
+  touch-action: manipulation;
   cursor: pointer;
   background-image: none;
   border: 0;
@@ -257,6 +258,7 @@ h1, h2, h3, h4, h5 {
     display: -webkit-box;
     display: -moz-box;
     display: box;
+    display: -webkit-flex;
     display: -moz-flex;
     display: -ms-flexbox;
     display: flex; }
@@ -264,6 +266,7 @@ h1, h2, h3, h4, h5 {
     display: -webkit-box;
     display: -moz-box;
     display: box;
+    display: -webkit-flex;
     display: -moz-flex;
     display: -ms-flexbox;
     display: flex; }
@@ -289,6 +292,9 @@ h1, h2, h3, h4, h5 {
       right: 0.5em;
       top: 50%;
       -webkit-transform: translateY(-50%);
+      -moz-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+      -o-transform: translateY(-50%);
       transform: translateY(-50%);
       border-top: 10px solid white;
       border-left: 10px solid transparent;
@@ -326,11 +332,14 @@ h1, h2, h3, h4, h5 {
     display: -webkit-box;
     display: -moz-box;
     display: box;
+    display: -webkit-flex;
     display: -moz-flex;
     display: -ms-flexbox;
     display: flex;
     -webkit-box-align: baseline;
+    -moz-box-align: baseline;
     box-align: baseline;
+    -webkit-align-items: baseline;
     -moz-align-items: baseline;
     -ms-align-items: baseline;
     -o-align-items: baseline;
@@ -340,12 +349,15 @@ h1, h2, h3, h4, h5 {
     display: -webkit-box;
     display: -moz-box;
     display: box;
+    display: -webkit-flex;
     display: -moz-flex;
     display: -ms-flexbox;
     display: flex;
     margin: 0 0.5em 0 auto;
     -webkit-box-pack: end;
+    -moz-box-pack: end;
     box-pack: end;
+    -webkit-justify-content: flex-end;
     -moz-justify-content: flex-end;
     -ms-justify-content: flex-end;
     -o-justify-content: flex-end;
@@ -361,12 +373,15 @@ h1, h2, h3, h4, h5 {
     display: -webkit-box;
     display: -moz-box;
     display: box;
+    display: -webkit-flex;
     display: -moz-flex;
     display: -ms-flexbox;
     display: flex;
     margin: 0 0.5em 0 auto;
     -webkit-box-pack: end;
+    -moz-box-pack: end;
     box-pack: end;
+    -webkit-justify-content: flex-end;
     -moz-justify-content: flex-end;
     -ms-justify-content: flex-end;
     -o-justify-content: flex-end;
@@ -385,6 +400,9 @@ h1, h2, h3, h4, h5 {
     right: 0;
     margin: 0 auto;
     -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
     transform: translateY(-50%);
     pointer-events: none; }
 
@@ -392,12 +410,15 @@ h1, h2, h3, h4, h5 {
   display: -webkit-box;
   display: -moz-box;
   display: box;
+  display: -webkit-flex;
   display: -moz-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-lines: multiple;
   -moz-box-lines: multiple;
   box-lines: multiple;
+  -webkit-flex-wrap: wrap;
+  -moz-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap; }
 
@@ -412,13 +433,17 @@ h1, h2, h3, h4, h5 {
   display: -webkit-box;
   display: -moz-box;
   display: box;
+  display: -webkit-flex;
   display: -moz-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
   box-orient: vertical;
   -webkit-box-direction: normal;
+  -moz-box-direction: normal;
   box-direction: normal;
+  -webkit-flex-direction: column;
   -moz-flex-direction: column;
   flex-direction: column;
   -ms-flex-direction: column;
@@ -426,9 +451,9 @@ h1, h2, h3, h4, h5 {
   font-family: "Open Sans Condensed", Helvetica, sans-serif;
   font-size: 0.8em; }
   .chat__history {
+    -webkit-flex-grow: 1;
     -moz-flex-grow: 1;
-    -webkit-box-flex: 1;
-            flex-grow: 1;
+    flex-grow: 1;
     -ms-flex-positive: 1;
     overflow: auto;
     height: 28.05em;
