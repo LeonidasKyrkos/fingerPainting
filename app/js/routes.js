@@ -2,7 +2,7 @@ import React from 'react';
 import {Route} from 'react-router';
 
 import App from './components/App';
-import Login from './components/Login';
+import RoomPicker from './components/RoomPicker';
 import Home from './components/Home';
 
 export default (

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export default class Login extends Component {
+export default class RoomPicker extends Component {
 	authenticate(e) {
 		e.preventDefault();
 	}
@@ -8,7 +8,7 @@ export default class Login extends Component {
 	render() {
 		return (
 			<div className="wrapper">
-				<h1 className="alpha">Login</h1>
+				<h1 className="alpha">Join a room</h1>
 				<form id="login" className="form" onSubmit={this.authenticate}>
 					<ul>
 						<li>

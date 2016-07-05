@@ -19,6 +19,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var socket = io.connect('http://localhost:3000');
+
 var App = function (_Component) {
 	_inherits(App, _Component);
 
@@ -115,16 +117,16 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Login = function (_Component) {
-	_inherits(Login, _Component);
+var RoomPicker = function (_Component) {
+	_inherits(RoomPicker, _Component);
 
-	function Login() {
-		_classCallCheck(this, Login);
+	function RoomPicker() {
+		_classCallCheck(this, RoomPicker);
 
-		return _possibleConstructorReturn(this, Object.getPrototypeOf(Login).apply(this, arguments));
+		return _possibleConstructorReturn(this, Object.getPrototypeOf(RoomPicker).apply(this, arguments));
 	}
 
-	_createClass(Login, [{
+	_createClass(RoomPicker, [{
 		key: "authenticate",
 		value: function authenticate(e) {
 			e.preventDefault();
@@ -138,7 +140,7 @@ var Login = function (_Component) {
 				_react2.default.createElement(
 					"h1",
 					{ className: "alpha" },
-					"Login"
+					"Join a room"
 				),
 				_react2.default.createElement(
 					"form",
@@ -197,10 +199,10 @@ var Login = function (_Component) {
 		}
 	}]);
 
-	return Login;
+	return RoomPicker;
 }(_react.Component);
 
-exports.default = Login;
+exports.default = RoomPicker;
 
 },{"react":"react"}],4:[function(require,module,exports){
 'use strict';
@@ -225,19 +227,12 @@ var _createBrowserHistory2 = _interopRequireDefault(_createBrowserHistory);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var socket = io.connect('http://localhost:3000');
-
-socket.on('news', function (data) {
-	console.log(data);
-	socket.emit('my other event', { my: 'data' });
-});
-
 var browserHistory = (0, _createBrowserHistory2.default)();
 
 _reactDom2.default.render(_react2.default.createElement(
-	_reactRouter.Router,
-	{ history: browserHistory },
-	_routes2.default
+  _reactRouter.Router,
+  { history: browserHistory },
+  _routes2.default
 ), document.getElementById('app'));
 
 },{"./routes":5,"history/lib/createBrowserHistory":14,"react":"react","react-dom":"react-dom","react-router":"react-router"}],5:[function(require,module,exports){
@@ -257,9 +252,9 @@ var _App = require('./components/App');
 
 var _App2 = _interopRequireDefault(_App);
 
-var _Login = require('./components/Login');
+var _RoomPicker = require('./components/RoomPicker');
 
-var _Login2 = _interopRequireDefault(_Login);
+var _RoomPicker2 = _interopRequireDefault(_RoomPicker);
 
 var _Home = require('./components/Home');
 
@@ -273,12 +268,12 @@ exports.default = _react2.default.createElement(
 	_react2.default.createElement(
 		_reactRouter.Route,
 		{ component: _App2.default },
-		_react2.default.createElement(_reactRouter.Route, { path: '/', component: _Login2.default })
+		_react2.default.createElement(_reactRouter.Route, { path: '/', component: Login })
 	),
 	_react2.default.createElement(_reactRouter.Route, { path: '/games', component: _Home2.default })
 );
 
-},{"./components/App":1,"./components/Home":2,"./components/Login":3,"react":"react","react-router":"react-router"}],6:[function(require,module,exports){
+},{"./components/App":1,"./components/Home":2,"./components/RoomPicker":3,"react":"react","react-router":"react-router"}],6:[function(require,module,exports){
 var pSlice = Array.prototype.slice;
 var objectKeys = require('./lib/keys.js');
 var isArguments = require('./lib/is_arguments.js');
