@@ -124,6 +124,9 @@ textarea {
   display: block !important;
   margin-left: auto !important; }
 
+.align-right {
+  text-align: right; }
+
 .block {
   display: block !important; }
 
