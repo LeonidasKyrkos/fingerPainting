@@ -97,14 +97,15 @@ var App = function (_Component) {
 
 			if (!username) {
 				username = new Date().getTime();
+				localStorage.setItem('picuser', username);
 			}
 
 			socket.emit('user', username);
 		}
 	}, {
 		key: 'joinRoom',
-		value: function joinRoom(firebase) {
-			this.props.history.push('/home');
+		value: function joinRoom(data) {
+			this.props.history.push('/rooms/' + data.room);
 		}
 	}, {
 		key: 'requestJoin',
@@ -117,7 +118,10 @@ var App = function (_Component) {
 			var _this2 = this;
 
 			var childrenWithProps = _react2.default.Children.map(this.props.children, function (child) {
-				return _react2.default.cloneElement(child, { requestJoin: _this2.requestJoin });
+				return _react2.default.cloneElement(child, {
+					requestJoin: _this2.requestJoin,
+					socket: socket
+				});
 			});
 
 			return childrenWithProps;
@@ -140,7 +144,83 @@ var App = function (_Component) {
 
 exports.default = App;
 
-},{"../stores/ErrorStore":8,"react":"react"}],4:[function(require,module,exports){
+},{"../stores/ErrorStore":9,"react":"react"}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _ErrorActions = require('../actions/ErrorActions');
+
+var _ErrorActions2 = _interopRequireDefault(_ErrorActions);
+
+var _ErrorStore = require('../stores/ErrorStore');
+
+var _ErrorStore2 = _interopRequireDefault(_ErrorStore);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ErrorMessage = function (_Component) {
+	_inherits(ErrorMessage, _Component);
+
+	function ErrorMessage(props) {
+		_classCallCheck(this, ErrorMessage);
+
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ErrorMessage).call(this, props));
+
+		_this.state = _ErrorStore2.default.getState();
+
+		_this.props.socket.on('request rejected', function (data) {
+			_ErrorActions2.default.updateErrors(data.errors);
+		});
+		return _this;
+	}
+
+	_createClass(ErrorMessage, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			_ErrorStore2.default.listen(this.onChange.bind(this));
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			_ErrorStore2.default.unlisten(this.onChange.bind(this));
+		}
+	}, {
+		key: 'onChange',
+		value: function onChange(state) {
+			this.setState(state);
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			return _react2.default.createElement(
+				'span',
+				{ className: 'form__error' },
+				this.state.errors
+			);
+		}
+	}]);
+
+	return ErrorMessage;
+}(_react.Component);
+
+exports.default = ErrorMessage;
+
+},{"../actions/ErrorActions":1,"../stores/ErrorStore":9,"react":"react"}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -179,7 +259,7 @@ var Home = function (_Component) {
 				_react2.default.createElement(
 					"h1",
 					{ className: "alpha" },
-					"Hello from Home Component"
+					"Game Room"
 				)
 			);
 		}
@@ -190,7 +270,7 @@ var Home = function (_Component) {
 
 exports.default = Home;
 
-},{"react":"react"}],5:[function(require,module,exports){
+},{"react":"react"}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -203,13 +283,9 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _ErrorActions = require('../actions/ErrorActions');
+var _ErrorMessage = require('./ErrorMessage');
 
-var _ErrorActions2 = _interopRequireDefault(_ErrorActions);
-
-var _ErrorStore = require('../stores/ErrorStore');
-
-var _ErrorStore2 = _interopRequireDefault(_ErrorStore);
+var _ErrorMessage2 = _interopRequireDefault(_ErrorMessage);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -228,31 +304,10 @@ var RoomPicker = function (_Component) {
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(RoomPicker).call(this, props));
 
 		_this.requestJoin = _this.props.requestJoin;
-		_this.state = _ErrorStore2.default.getState();
-
-		socket.on('request rejected', function (data) {
-			console.log(data);
-			//ErrorActions.updateErrors(data);
-		});
 		return _this;
 	}
 
 	_createClass(RoomPicker, [{
-		key: 'componentDidMount',
-		value: function componentDidMount() {
-			_ErrorStore2.default.listen(this.onChange);
-		}
-	}, {
-		key: 'componentWillUnmount',
-		value: function componentWillUnmount() {
-			_ErrorStore2.default.unlisten(this.onChange);
-		}
-	}, {
-		key: 'onChange',
-		value: function onChange(state) {
-			this.setState(state);
-		}
-	}, {
 		key: 'authenticate',
 		value: function authenticate(e) {
 			e.preventDefault();
@@ -279,11 +334,7 @@ var RoomPicker = function (_Component) {
 				_react2.default.createElement(
 					'form',
 					{ 'data-js': 'room.join', className: 'form', onSubmit: this.authenticate.bind(this) },
-					_react2.default.createElement(
-						'span',
-						{ className: 'form__error' },
-						this.state.errors
-					),
+					_react2.default.createElement(_ErrorMessage2.default, { socket: this.props.socket }),
 					_react2.default.createElement(
 						'ul',
 						null,
@@ -419,7 +470,7 @@ var RoomPicker = function (_Component) {
 
 exports.default = RoomPicker;
 
-},{"../actions/ErrorActions":1,"../stores/ErrorStore":8,"react":"react"}],6:[function(require,module,exports){
+},{"./ErrorMessage":4,"react":"react"}],7:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -450,7 +501,7 @@ _reactDom2.default.render(_react2.default.createElement(
   _routes2.default
 ), document.getElementById('app'));
 
-},{"./routes":7,"history/lib/createBrowserHistory":17,"react":"react","react-dom":"react-dom","react-router":"react-router"}],7:[function(require,module,exports){
+},{"./routes":8,"history/lib/createBrowserHistory":18,"react":"react","react-dom":"react-dom","react-router":"react-router"}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -471,9 +522,9 @@ var _RoomPicker = require('./components/RoomPicker');
 
 var _RoomPicker2 = _interopRequireDefault(_RoomPicker);
 
-var _Home = require('./components/Home');
+var _GameRoom = require('./components/GameRoom');
 
-var _Home2 = _interopRequireDefault(_Home);
+var _GameRoom2 = _interopRequireDefault(_GameRoom);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -481,10 +532,10 @@ exports.default = _react2.default.createElement(
 	_reactRouter.Route,
 	{ component: _App2.default },
 	_react2.default.createElement(_reactRouter.Route, { path: '/', component: _RoomPicker2.default }),
-	_react2.default.createElement(_reactRouter.Route, { path: '/home', component: _Home2.default })
+	_react2.default.createElement(_reactRouter.Route, { path: '/rooms/:roomId', component: _GameRoom2.default })
 );
 
-},{"./components/App":3,"./components/Home":4,"./components/RoomPicker":5,"react":"react","react-router":"react-router"}],8:[function(require,module,exports){
+},{"./components/App":3,"./components/GameRoom":5,"./components/RoomPicker":6,"react":"react","react-router":"react-router"}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -528,7 +579,7 @@ var ErrorStore = function () {
 
 exports.default = _alt2.default.createStore(ErrorStore, 'ErrorStore');
 
-},{"../actions/ErrorActions":1,"../alt":2}],9:[function(require,module,exports){
+},{"../actions/ErrorActions":1,"../alt":2}],10:[function(require,module,exports){
 var pSlice = Array.prototype.slice;
 var objectKeys = require('./lib/keys.js');
 var isArguments = require('./lib/is_arguments.js');
@@ -624,7 +675,7 @@ function objEquiv(a, b, opts) {
   return typeof a === typeof b;
 }
 
-},{"./lib/is_arguments.js":10,"./lib/keys.js":11}],10:[function(require,module,exports){
+},{"./lib/is_arguments.js":11,"./lib/keys.js":12}],11:[function(require,module,exports){
 var supportsArgumentsClass = (function(){
   return Object.prototype.toString.call(arguments)
 })() == '[object Arguments]';
@@ -646,7 +697,7 @@ function unsupported(object){
     false;
 };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 exports = module.exports = typeof Object.keys === 'function'
   ? Object.keys : shim;
 
@@ -657,7 +708,7 @@ function shim (obj) {
   return keys;
 }
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 /**
  * Indicates that navigation was caused by a call to history.push.
  */
@@ -689,7 +740,7 @@ exports['default'] = {
   REPLACE: REPLACE,
   POP: POP
 };
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -716,7 +767,7 @@ function loopAsync(turns, work, callback) {
 
   next();
 }
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 (function (process){
 /*eslint-disable no-empty */
 'use strict';
@@ -788,7 +839,7 @@ function readState(key) {
 }
 }).call(this,require('_process'))
 
-},{"_process":26,"warning":27}],15:[function(require,module,exports){
+},{"_process":27,"warning":28}],16:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -869,13 +920,13 @@ function supportsGoWithoutReloadUsingHash() {
   var ua = navigator.userAgent;
   return ua.indexOf('Firefox') === -1;
 }
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
 var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
 exports.canUseDOM = canUseDOM;
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -1057,7 +1108,7 @@ exports['default'] = createBrowserHistory;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"./Actions":12,"./DOMStateStorage":14,"./DOMUtils":15,"./ExecutionEnvironment":16,"./createDOMHistory":18,"./parsePath":23,"_process":26,"invariant":25}],18:[function(require,module,exports){
+},{"./Actions":13,"./DOMStateStorage":15,"./DOMUtils":16,"./ExecutionEnvironment":17,"./createDOMHistory":19,"./parsePath":24,"_process":27,"invariant":26}],19:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -1101,7 +1152,7 @@ exports['default'] = createDOMHistory;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"./DOMUtils":15,"./ExecutionEnvironment":16,"./createHistory":19,"_process":26,"invariant":25}],19:[function(require,module,exports){
+},{"./DOMUtils":16,"./ExecutionEnvironment":17,"./createHistory":20,"_process":27,"invariant":26}],20:[function(require,module,exports){
 //import warning from 'warning'
 'use strict';
 
@@ -1393,7 +1444,7 @@ function createHistory() {
 
 exports['default'] = createHistory;
 module.exports = exports['default'];
-},{"./Actions":12,"./AsyncUtils":13,"./createLocation":20,"./deprecate":21,"./parsePath":23,"./runTransitionHook":24,"deep-equal":9}],20:[function(require,module,exports){
+},{"./Actions":13,"./AsyncUtils":14,"./createLocation":21,"./deprecate":22,"./parsePath":24,"./runTransitionHook":25,"deep-equal":10}],21:[function(require,module,exports){
 //import warning from 'warning'
 'use strict';
 
@@ -1448,7 +1499,7 @@ function createLocation() {
 
 exports['default'] = createLocation;
 module.exports = exports['default'];
-},{"./Actions":12,"./parsePath":23}],21:[function(require,module,exports){
+},{"./Actions":13,"./parsePath":24}],22:[function(require,module,exports){
 //import warning from 'warning'
 
 "use strict";
@@ -1464,7 +1515,7 @@ function deprecate(fn) {
 
 exports["default"] = deprecate;
 module.exports = exports["default"];
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -1478,7 +1529,7 @@ function extractPath(string) {
 
 exports["default"] = extractPath;
 module.exports = exports["default"];
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -1526,7 +1577,7 @@ exports['default'] = parsePath;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"./extractPath":22,"_process":26,"warning":27}],24:[function(require,module,exports){
+},{"./extractPath":23,"_process":27,"warning":28}],25:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -1554,7 +1605,7 @@ exports['default'] = runTransitionHook;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"_process":26,"warning":27}],25:[function(require,module,exports){
+},{"_process":27,"warning":28}],26:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -1610,7 +1661,7 @@ module.exports = invariant;
 
 }).call(this,require('_process'))
 
-},{"_process":26}],26:[function(require,module,exports){
+},{"_process":27}],27:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -1731,7 +1782,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -1796,7 +1847,7 @@ module.exports = warning;
 
 }).call(this,require('_process'))
 
-},{"_process":26}]},{},[6])
+},{"_process":27}]},{},[7])
 
 
 //# sourceMappingURL=bundle.js.map

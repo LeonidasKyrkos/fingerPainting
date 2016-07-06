@@ -284,6 +284,7 @@ h1, h2, h3, h4, h5 {
     display: block;
     margin-bottom: 1em; }
   .form__error {
+    display: block;
     color: red;
     padding: 0.5em 0; }
   .form__label {

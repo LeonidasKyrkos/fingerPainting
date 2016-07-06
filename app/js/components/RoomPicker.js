@@ -1,31 +1,11 @@
 import React, { Component } from 'react';
-import ErrorActions from '../actions/ErrorActions';
-import ErrorStore from '../stores/ErrorStore';
+import ErrorMessage from './ErrorMessage';
 
 export default class RoomPicker extends Component {
 	constructor(props) {
 		super(props);
-
-		this.requestJoin = this.props.requestJoin;
-		this.state = ErrorStore.getState();
-
-		socket.on('request rejected',(data)=>{
-			console.log(data);
-			//ErrorActions.updateErrors(data);
-		});
-	}
-
-	componentDidMount() {
-		ErrorStore.listen(this.onChange);
-	}
-
-	componentWillUnmount() {
-		ErrorStore.unlisten(this.onChange);
-	}
-
-	onChange(state) {
-		this.setState(state);
-	}
+		this.requestJoin = this.props.requestJoin;		
+	}	
 
 	authenticate(e) {
 		e.preventDefault();
@@ -44,7 +24,7 @@ export default class RoomPicker extends Component {
 			<div className="wrapper">
 				<h2 className="alpha">Join a room</h2>
 				<form data-js="room.join" className="form" onSubmit={this.authenticate.bind(this)}>
-					<span className="form__error">{this.state.errors}</span>
+					<ErrorMessage socket={this.props.socket} />
 					<ul>
 						<li>
 							<label className="form__control">

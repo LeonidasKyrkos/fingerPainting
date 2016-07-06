@@ -3,11 +3,11 @@ import {Route} from 'react-router';
 
 import App from './components/App';
 import RoomPicker from './components/RoomPicker';
-import Home from './components/Home';
+import GameRoom from './components/GameRoom';
 
 export default (
 	<Route component={App}>
 		<Route path="/" component={RoomPicker} />
-		<Route path='/home' component={Home} />
+		<Route path='/rooms/:roomId' component={GameRoom} />
 	</Route>		
 );

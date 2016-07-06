@@ -17,7 +17,7 @@ app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/*', function (req, res) {
-  res.sendfile(__dirname + '/views/index.html');
+  res.sendFile(__dirname + '/views/index.html');
 });
 
 // configure firebase
@@ -67,7 +67,9 @@ io.on('connection', function (socket) {
 		let status = roomTests(request);
 
 		if(status.status) {
-			socket.emit('request accepted',{ firebase: 'https://pictionareo.firebaseio.com/rooms/' +  request.id })
+			socket.emit('request accepted',{ firebase: 'https://pictionareo.firebaseio.com/rooms/' +  request.id, room: request.id })
+		} else {
+			socket.emit('request rejected',{ errors: status.reason });
 		}
 	});
 
@@ -126,7 +128,7 @@ function testCompare(args) {
 
 function testIn(args) {
 	for(var prop in args[0]) {
-		if(args[1] === args[0][prop].name) {
+		if(args[1] === prop) {
 			return { status: false,  reason: args[2] };
 		}
 	}

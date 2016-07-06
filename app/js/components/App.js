@@ -8,7 +8,6 @@ export default class App extends Component {
 		socket.on('connected', this.init.bind(this));
 		//socket.on('dictionary');
 		socket.on('request accepted', this.joinRoom.bind(this));
-
 	}
 
 	init() {
@@ -16,13 +15,14 @@ export default class App extends Component {
 
 		if(!username) {
 			username = (new Date()).getTime();
+			localStorage.setItem('picuser',username);
 		}
 
 		socket.emit('user',username);
 	}
 
-	joinRoom(firebase) {
-		this.props.history.push('/home');
+	joinRoom(data) {
+		this.props.history.push('/rooms/' + data.room);
 	}
 
 	requestJoin(name,id,password) {
@@ -31,7 +31,10 @@ export default class App extends Component {
 
 	renderChildren() {
 		let childrenWithProps = React.Children.map(this.props.children, (child)=> {
-			return React.cloneElement(child, { requestJoin: this.requestJoin });
+			return React.cloneElement(child, { 
+				requestJoin: this.requestJoin,
+				socket: socket
+			});
 		});
 
 		return childrenWithProps;

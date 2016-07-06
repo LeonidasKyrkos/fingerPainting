@@ -28,6 +28,7 @@ $module: 		'form';
 	}
 
 	&__error {
+		display: block;
 		color: red;
 		padding: em(10) 0;
 	}
