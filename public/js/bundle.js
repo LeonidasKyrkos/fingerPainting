@@ -7,9 +7,62 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _alt = require('../alt');
+
+var _alt2 = _interopRequireDefault(_alt);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ErrorActions = function () {
+	function ErrorActions() {
+		_classCallCheck(this, ErrorActions);
+	}
+
+	_createClass(ErrorActions, [{
+		key: 'updateErrors',
+		value: function updateErrors(errors) {
+			return errors;
+		}
+	}]);
+
+	return ErrorActions;
+}();
+
+exports.default = _alt2.default.createActions(ErrorActions);
+
+},{"../alt":2}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _alt = require('alt');
+
+var _alt2 = _interopRequireDefault(_alt);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = new _alt2.default();
+
+},{"alt":"alt"}],3:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _ErrorStore = require('../stores/ErrorStore');
+
+var _ErrorStore2 = _interopRequireDefault(_ErrorStore);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31,12 +84,53 @@ var App = function (_Component) {
 	}
 
 	_createClass(App, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			socket.on('connected', this.init.bind(this));
+			//socket.on('dictionary');
+			socket.on('request accepted', this.joinRoom.bind(this));
+		}
+	}, {
+		key: 'init',
+		value: function init() {
+			var username = localStorage.getItem('picuser');
+
+			if (!username) {
+				username = new Date().getTime();
+			}
+
+			socket.emit('user', username);
+		}
+	}, {
+		key: 'joinRoom',
+		value: function joinRoom(firebase) {
+			this.props.history.push('/home');
+		}
+	}, {
+		key: 'requestJoin',
+		value: function requestJoin(name, id, password) {
+			socket.emit('join request', { name: name, id: id, password: password });
+		}
+	}, {
+		key: 'renderChildren',
+		value: function renderChildren() {
+			var _this2 = this;
+
+			var childrenWithProps = _react2.default.Children.map(this.props.children, function (child) {
+				return _react2.default.cloneElement(child, { requestJoin: _this2.requestJoin });
+			});
+
+			return childrenWithProps;
+		}
+	}, {
 		key: 'render',
 		value: function render() {
+			var children = this.renderChildren();
+
 			return _react2.default.createElement(
 				'div',
 				null,
-				this.props.children
+				children
 			);
 		}
 	}]);
@@ -46,7 +140,7 @@ var App = function (_Component) {
 
 exports.default = App;
 
-},{"react":"react"}],2:[function(require,module,exports){
+},{"../stores/ErrorStore":8,"react":"react"}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -96,8 +190,8 @@ var Home = function (_Component) {
 
 exports.default = Home;
 
-},{"react":"react"}],3:[function(require,module,exports){
-"use strict";
+},{"react":"react"}],5:[function(require,module,exports){
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -105,9 +199,17 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _ErrorActions = require('../actions/ErrorActions');
+
+var _ErrorActions2 = _interopRequireDefault(_ErrorActions);
+
+var _ErrorStore = require('../stores/ErrorStore');
+
+var _ErrorStore2 = _interopRequireDefault(_ErrorStore);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -120,77 +222,190 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var RoomPicker = function (_Component) {
 	_inherits(RoomPicker, _Component);
 
-	function RoomPicker() {
+	function RoomPicker(props) {
 		_classCallCheck(this, RoomPicker);
 
-		return _possibleConstructorReturn(this, Object.getPrototypeOf(RoomPicker).apply(this, arguments));
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(RoomPicker).call(this, props));
+
+		_this.requestJoin = _this.props.requestJoin;
+		_this.state = _ErrorStore2.default.getState();
+
+		socket.on('request rejected', function (data) {
+			console.log(data);
+			//ErrorActions.updateErrors(data);
+		});
+		return _this;
 	}
 
 	_createClass(RoomPicker, [{
-		key: "authenticate",
-		value: function authenticate(e) {
-			e.preventDefault();
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			_ErrorStore2.default.listen(this.onChange);
 		}
 	}, {
-		key: "render",
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			_ErrorStore2.default.unlisten(this.onChange);
+		}
+	}, {
+		key: 'onChange',
+		value: function onChange(state) {
+			this.setState(state);
+		}
+	}, {
+		key: 'authenticate',
+		value: function authenticate(e) {
+			e.preventDefault();
+
+			var form = {};
+			form.el = e.target;
+			form.id = form.el.querySelector('[data-js="room.id"]').value;
+			form.password = form.el.querySelector('[data-js="room.password"]').value;
+			form.name = form.el.querySelector('[data-js="room.name"]').value;
+
+			this.requestJoin(form.name, form.id, form.password);
+		}
+	}, {
+		key: 'render',
 		value: function render() {
 			return _react2.default.createElement(
-				"div",
-				{ className: "wrapper" },
+				'div',
+				{ className: 'wrapper' },
 				_react2.default.createElement(
-					"h1",
-					{ className: "alpha" },
-					"Join a room"
+					'h2',
+					{ className: 'alpha' },
+					'Join a room'
 				),
 				_react2.default.createElement(
-					"form",
-					{ id: "login", className: "form", onSubmit: this.authenticate },
+					'form',
+					{ 'data-js': 'room.join', className: 'form', onSubmit: this.authenticate.bind(this) },
 					_react2.default.createElement(
-						"ul",
+						'span',
+						{ className: 'form__error' },
+						this.state.errors
+					),
+					_react2.default.createElement(
+						'ul',
 						null,
 						_react2.default.createElement(
-							"li",
+							'li',
 							null,
 							_react2.default.createElement(
-								"label",
-								{ className: "form__control" },
+								'label',
+								{ className: 'form__control' },
 								_react2.default.createElement(
-									"span",
-									{ className: "form__label" },
-									"Username:"
+									'span',
+									{ className: 'form__label' },
+									'Name'
 								),
 								_react2.default.createElement(
-									"span",
-									{ className: "form__input-wrap" },
-									_react2.default.createElement("input", { autoComplete: "off", type: "text", className: "form__input" })
+									'span',
+									{ className: 'form__input-wrap' },
+									_react2.default.createElement('input', { required: true, 'data-js': 'room.name', autoComplete: 'off', type: 'text', className: 'form__input' })
 								)
 							)
 						),
 						_react2.default.createElement(
-							"li",
+							'li',
 							null,
 							_react2.default.createElement(
-								"label",
-								{ className: "form__control" },
+								'label',
+								{ className: 'form__control' },
 								_react2.default.createElement(
-									"span",
-									{ className: "form__label" },
-									"Password"
+									'span',
+									{ className: 'form__label' },
+									'Room number'
 								),
 								_react2.default.createElement(
-									"span",
-									{ className: "form__input-wrap" },
-									_react2.default.createElement("input", { type: "password", className: "form__input" })
+									'span',
+									{ className: 'form__input-wrap' },
+									_react2.default.createElement('input', { required: true, 'data-js': 'room.id', autoComplete: 'off', type: 'text', className: 'form__input' })
 								)
 							)
 						),
 						_react2.default.createElement(
-							"li",
-							{ className: "align-right" },
+							'li',
+							null,
 							_react2.default.createElement(
-								"button",
-								{ className: "btn--primary" },
-								"Submit"
+								'label',
+								{ className: 'form__control' },
+								_react2.default.createElement(
+									'span',
+									{ className: 'form__label' },
+									'Password'
+								),
+								_react2.default.createElement(
+									'span',
+									{ className: 'form__input-wrap' },
+									_react2.default.createElement('input', { required: true, 'data-js': 'room.password', type: 'password', className: 'form__input' })
+								)
+							)
+						),
+						_react2.default.createElement(
+							'li',
+							{ className: 'align-right' },
+							_react2.default.createElement(
+								'button',
+								{ className: 'btn--primary' },
+								'Submit'
+							)
+						)
+					)
+				),
+				_react2.default.createElement(
+					'h2',
+					{ className: 'beta' },
+					'Spawn room'
+				),
+				_react2.default.createElement(
+					'form',
+					{ 'data-js': 'room.spawn', className: 'form', onSubmit: this.authenticate },
+					_react2.default.createElement(
+						'ul',
+						null,
+						_react2.default.createElement(
+							'li',
+							null,
+							_react2.default.createElement(
+								'label',
+								{ className: 'form__control' },
+								_react2.default.createElement(
+									'span',
+									{ className: 'form__label' },
+									'Name'
+								),
+								_react2.default.createElement(
+									'span',
+									{ className: 'form__input-wrap' },
+									_react2.default.createElement('input', { defaultValue: this.props.username, 'data-js': 'room.username', autoComplete: 'off', type: 'text', className: 'form__input' })
+								)
+							)
+						),
+						_react2.default.createElement(
+							'li',
+							null,
+							_react2.default.createElement(
+								'label',
+								{ className: 'form__control' },
+								_react2.default.createElement(
+									'span',
+									{ className: 'form__label' },
+									'Password'
+								),
+								_react2.default.createElement(
+									'span',
+									{ className: 'form__input-wrap' },
+									_react2.default.createElement('input', { 'data-js': 'room.spawnPassword', type: 'password', className: 'form__input' })
+								)
+							)
+						),
+						_react2.default.createElement(
+							'li',
+							{ className: 'align-right' },
+							_react2.default.createElement(
+								'button',
+								{ className: 'btn--primary' },
+								'Spawn'
 							)
 						)
 					)
@@ -204,7 +419,7 @@ var RoomPicker = function (_Component) {
 
 exports.default = RoomPicker;
 
-},{"react":"react"}],4:[function(require,module,exports){
+},{"../actions/ErrorActions":1,"../stores/ErrorStore":8,"react":"react"}],6:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -235,7 +450,7 @@ _reactDom2.default.render(_react2.default.createElement(
   _routes2.default
 ), document.getElementById('app'));
 
-},{"./routes":5,"history/lib/createBrowserHistory":14,"react":"react","react-dom":"react-dom","react-router":"react-router"}],5:[function(require,module,exports){
+},{"./routes":7,"history/lib/createBrowserHistory":17,"react":"react","react-dom":"react-dom","react-router":"react-router"}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -263,17 +478,57 @@ var _Home2 = _interopRequireDefault(_Home);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _react2.default.createElement(
-	'div',
-	null,
-	_react2.default.createElement(
-		_reactRouter.Route,
-		{ component: _App2.default },
-		_react2.default.createElement(_reactRouter.Route, { path: '/', component: Login })
-	),
-	_react2.default.createElement(_reactRouter.Route, { path: '/games', component: _Home2.default })
+	_reactRouter.Route,
+	{ component: _App2.default },
+	_react2.default.createElement(_reactRouter.Route, { path: '/', component: _RoomPicker2.default }),
+	_react2.default.createElement(_reactRouter.Route, { path: '/home', component: _Home2.default })
 );
 
-},{"./components/App":1,"./components/Home":2,"./components/RoomPicker":3,"react":"react","react-router":"react-router"}],6:[function(require,module,exports){
+},{"./components/App":3,"./components/Home":4,"./components/RoomPicker":5,"react":"react","react-router":"react-router"}],8:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _alt = require('../alt');
+
+var _alt2 = _interopRequireDefault(_alt);
+
+var _ErrorActions = require('../actions/ErrorActions');
+
+var _ErrorActions2 = _interopRequireDefault(_ErrorActions);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ErrorStore = function () {
+	function ErrorStore() {
+		_classCallCheck(this, ErrorStore);
+
+		this.errors = '';
+
+		this.bindListeners({
+			handleUpdateErrors: _ErrorActions2.default.UPDATE_ERRORS
+		});
+	}
+
+	_createClass(ErrorStore, [{
+		key: 'handleUpdateErrors',
+		value: function handleUpdateErrors(errors) {
+			this.errors = errors;
+		}
+	}]);
+
+	return ErrorStore;
+}();
+
+exports.default = _alt2.default.createStore(ErrorStore, 'ErrorStore');
+
+},{"../actions/ErrorActions":1,"../alt":2}],9:[function(require,module,exports){
 var pSlice = Array.prototype.slice;
 var objectKeys = require('./lib/keys.js');
 var isArguments = require('./lib/is_arguments.js');
@@ -369,7 +624,7 @@ function objEquiv(a, b, opts) {
   return typeof a === typeof b;
 }
 
-},{"./lib/is_arguments.js":7,"./lib/keys.js":8}],7:[function(require,module,exports){
+},{"./lib/is_arguments.js":10,"./lib/keys.js":11}],10:[function(require,module,exports){
 var supportsArgumentsClass = (function(){
   return Object.prototype.toString.call(arguments)
 })() == '[object Arguments]';
@@ -391,7 +646,7 @@ function unsupported(object){
     false;
 };
 
-},{}],8:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 exports = module.exports = typeof Object.keys === 'function'
   ? Object.keys : shim;
 
@@ -402,7 +657,7 @@ function shim (obj) {
   return keys;
 }
 
-},{}],9:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /**
  * Indicates that navigation was caused by a call to history.push.
  */
@@ -434,7 +689,7 @@ exports['default'] = {
   REPLACE: REPLACE,
   POP: POP
 };
-},{}],10:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -461,7 +716,7 @@ function loopAsync(turns, work, callback) {
 
   next();
 }
-},{}],11:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 (function (process){
 /*eslint-disable no-empty */
 'use strict';
@@ -533,7 +788,7 @@ function readState(key) {
 }
 }).call(this,require('_process'))
 
-},{"_process":23,"warning":24}],12:[function(require,module,exports){
+},{"_process":26,"warning":27}],15:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -614,13 +869,13 @@ function supportsGoWithoutReloadUsingHash() {
   var ua = navigator.userAgent;
   return ua.indexOf('Firefox') === -1;
 }
-},{}],13:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
 var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
 exports.canUseDOM = canUseDOM;
-},{}],14:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -802,7 +1057,7 @@ exports['default'] = createBrowserHistory;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"./Actions":9,"./DOMStateStorage":11,"./DOMUtils":12,"./ExecutionEnvironment":13,"./createDOMHistory":15,"./parsePath":20,"_process":23,"invariant":22}],15:[function(require,module,exports){
+},{"./Actions":12,"./DOMStateStorage":14,"./DOMUtils":15,"./ExecutionEnvironment":16,"./createDOMHistory":18,"./parsePath":23,"_process":26,"invariant":25}],18:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -846,7 +1101,7 @@ exports['default'] = createDOMHistory;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"./DOMUtils":12,"./ExecutionEnvironment":13,"./createHistory":16,"_process":23,"invariant":22}],16:[function(require,module,exports){
+},{"./DOMUtils":15,"./ExecutionEnvironment":16,"./createHistory":19,"_process":26,"invariant":25}],19:[function(require,module,exports){
 //import warning from 'warning'
 'use strict';
 
@@ -1138,7 +1393,7 @@ function createHistory() {
 
 exports['default'] = createHistory;
 module.exports = exports['default'];
-},{"./Actions":9,"./AsyncUtils":10,"./createLocation":17,"./deprecate":18,"./parsePath":20,"./runTransitionHook":21,"deep-equal":6}],17:[function(require,module,exports){
+},{"./Actions":12,"./AsyncUtils":13,"./createLocation":20,"./deprecate":21,"./parsePath":23,"./runTransitionHook":24,"deep-equal":9}],20:[function(require,module,exports){
 //import warning from 'warning'
 'use strict';
 
@@ -1193,7 +1448,7 @@ function createLocation() {
 
 exports['default'] = createLocation;
 module.exports = exports['default'];
-},{"./Actions":9,"./parsePath":20}],18:[function(require,module,exports){
+},{"./Actions":12,"./parsePath":23}],21:[function(require,module,exports){
 //import warning from 'warning'
 
 "use strict";
@@ -1209,7 +1464,7 @@ function deprecate(fn) {
 
 exports["default"] = deprecate;
 module.exports = exports["default"];
-},{}],19:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -1223,7 +1478,7 @@ function extractPath(string) {
 
 exports["default"] = extractPath;
 module.exports = exports["default"];
-},{}],20:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -1271,7 +1526,7 @@ exports['default'] = parsePath;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"./extractPath":19,"_process":23,"warning":24}],21:[function(require,module,exports){
+},{"./extractPath":22,"_process":26,"warning":27}],24:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -1299,7 +1554,7 @@ exports['default'] = runTransitionHook;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"_process":23,"warning":24}],22:[function(require,module,exports){
+},{"_process":26,"warning":27}],25:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -1355,7 +1610,7 @@ module.exports = invariant;
 
 }).call(this,require('_process'))
 
-},{"_process":23}],23:[function(require,module,exports){
+},{"_process":26}],26:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -1476,7 +1731,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],24:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -1541,7 +1796,7 @@ module.exports = warning;
 
 }).call(this,require('_process'))
 
-},{"_process":23}]},{},[4])
+},{"_process":26}]},{},[6])
 
 
 //# sourceMappingURL=bundle.js.map

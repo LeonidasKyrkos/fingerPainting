@@ -133,6 +133,9 @@ textarea {
 .ib {
   display: inline-block !important; }
 
+.hide {
+  display: none !important; }
+
 * {
   box-sizing: border-box; }
 
@@ -186,7 +189,7 @@ h1, h2, h3, h4, h5 {
   width: 100%; }
 
 .beta, .game__title {
-  margin-bottom: 1.25em; }
+  margin-bottom: 0.75em; }
 
 .gamma {
   font-size: 32px;

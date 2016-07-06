@@ -6,10 +6,8 @@ import RoomPicker from './components/RoomPicker';
 import Home from './components/Home';
 
 export default (
-	<div>
-		<Route component={App}>
-			<Route path="/" component={Login} />
-		</Route>
-		<Route path='/games' component={Home} />
-	</div>
+	<Route component={App}>
+		<Route path="/" component={RoomPicker} />
+		<Route path='/home' component={Home} />
+	</Route>		
 );
