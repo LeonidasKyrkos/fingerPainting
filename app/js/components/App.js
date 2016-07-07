@@ -1,28 +1,32 @@
 import React, { Component } from 'react';
 import ErrorStore from '../stores/ErrorStore';
+import DataStore from '../stores/DataStore';
+import createDatabaseHookups from '../modules/createDatabaseHookups';
 
 const socket = io.connect('http://localhost:3000');
 
 export default class App extends Component {
 	componentDidMount() {
 		socket.on('connected', this.init.bind(this));
-		//socket.on('dictionary');
-		socket.on('request accepted', this.joinRoom.bind(this));
+		socket.on('request accepted',(data)=>{
+			createDatabaseHookups(data.room);
+			this.joinRoom(data.room);
+		});
 	}
 
 	init() {
-		let username = localStorage.getItem('picuser');
+		let userID = localStorage.getItem('picuser');
 
-		if(!username) {
-			username = (new Date()).getTime();
-			localStorage.setItem('picuser',username);
+		if(!userID) {
+			userID = (new Date()).getTime();
+			localStorage.setItem('picuser',userID);
 		}
 
-		socket.emit('user',username);
+		socket.emit('user',userID);
 	}
 
-	joinRoom(data) {
-		this.props.history.push('/rooms/' + data.room);
+	joinRoom(room) {
+		this.props.history.push('/rooms/' + room);
 	}
 
 	requestJoin(name,id,password) {

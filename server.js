@@ -35,25 +35,12 @@ Firebase.initializeApp(config);
 // configure firebase references
 var db = Firebase.database();
 
-var dictionaryRef = db.ref('dictionary/');
-var dictionary = [];
-
 var roomsRef = db.ref('rooms/');
 var rooms = [];
-
-// configure firebase data listeners
-dictionaryRef.once('value',function(snapshot) {
-	dictionary = snapshot.val();
-	io.sockets.emit('dictionary',dictionary);
-}, function(err) {
-	io.sockets.emit('error','Could not load dictionary - please complain to Leo');
-});
 
 roomsRef.on('value',function(snapshot){
 	rooms = snapshot.val();
 });
-
-
 
 // socket events
 io.on('connection', function (socket) {
@@ -64,18 +51,23 @@ io.on('connection', function (socket) {
 	});
 
 	socket.on('join request',function(request){
-		let status = roomTests(request);
+		// run some room tests (room existence / user.name / password)
+		var status = roomTests(request);
 
 		if(status.status) {
+			// update the users object of the requested room.
+			var userRef = db.ref('rooms/' + request.id + '/users/' + request.name);
+			userRef.set({
+				id: socket.username
+			})
+			
+			// inform the client that they can redirect to the room and hand them the database reference.
 			socket.emit('request accepted',{ firebase: 'https://pictionareo.firebaseio.com/rooms/' +  request.id, room: request.id })
 		} else {
+			// inform the client that they're a fucking jerk and let them know why.
 			socket.emit('request rejected',{ errors: status.reason });
 		}
 	});
-
-	if(dictionary) {
-		socket.emit('dictionary',dictionary);
-	}	
 });
 
 // UTILITIES
