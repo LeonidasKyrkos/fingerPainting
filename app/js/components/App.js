@@ -1,43 +1,41 @@
 import React, { Component } from 'react';
-import ErrorStore from '../stores/ErrorStore';
-import DataStore from '../stores/DataStore';
-import createDatabaseHookups from '../modules/createDatabaseHookups';
+import UsersActions from '../actions/UsersActions';
+import UserActions from '../actions/UserActions';
+import firebase from 'firebase';
+import config from '../firebaseConf.js';
 
 const socket = io.connect('http://localhost:3000');
 
 export default class App extends Component {
 	componentDidMount() {
-		socket.on('connected', this.init.bind(this));
+		socket.on('connected',(userId)=>{
+			this.userId = userId;
+		});
+
 		socket.on('request accepted',(data)=>{
-			createDatabaseHookups(data.room);
+			firebase.initializeApp(config);
+			this.db = firebase.database();
+
+
+			UsersActions.bindToRoom(this.db.ref(data.room + '/users'));
 			this.joinRoom(data.room);
 		});
-	}
-
-	init() {
-		let userID = localStorage.getItem('picuser');
-
-		if(!userID) {
-			userID = (new Date()).getTime();
-			localStorage.setItem('picuser',userID);
-		}
-
-		socket.emit('user',userID);
-	}
-
-	joinRoom(room) {
-		this.props.history.push('/rooms/' + room);
 	}
 
 	requestJoin(name,id,password) {
 		socket.emit('join request',{ name: name, id: id, password: password });
 	}
 
+	joinRoom(room) {
+		this.props.history.push(room);
+	}
+
 	renderChildren() {
 		let childrenWithProps = React.Children.map(this.props.children, (child)=> {
 			return React.cloneElement(child, { 
 				requestJoin: this.requestJoin,
-				socket: socket
+				socket: socket,
+				userId: this.userId
 			});
 		});
 

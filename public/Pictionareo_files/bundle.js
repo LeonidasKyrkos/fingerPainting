@@ -277,29 +277,16 @@ var Canvas = function (_Component) {
 
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Canvas).call(this, props));
 
-		_this.userId = _this.props.userId;
+		_this.player = true;
 		_this.points = [];
 		_this.painting = false;
 
 		_this.state = { users: _UsersStore2.default.getState() };
-		_this.areWeTheCaptainNow();
+		console.log(_this.state);
 		return _this;
 	}
 
 	_createClass(Canvas, [{
-		key: 'areWeTheCaptainNow',
-		value: function areWeTheCaptainNow() {
-			var _this2 = this;
-
-			Object.keys(this.state.users).forEach(function (item, index) {
-				if (item.toString() === _this2.userId.toString() && _this2.state.users[item].status === 'captain') {
-					_this2.setState({
-						player: true
-					});
-				}
-			});
-		}
-	}, {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
 			_UsersStore2.default.listen(this.onChange.bind(this));
@@ -313,8 +300,9 @@ var Canvas = function (_Component) {
 	}, {
 		key: 'onChange',
 		value: function onChange(state) {
+			console.log(state);
 			this.setState(state);
-			this.areWeTheCaptainNow();
+			console.log(this.state);
 		}
 	}, {
 		key: 'setupCanvas',
@@ -328,6 +316,8 @@ var Canvas = function (_Component) {
 			this.ctx.lineJoin = "round";
 			this.ctx.lineWidth = 5;
 			this.ctx.translate(0.5, 0.5);
+
+			//this.redraw();
 		}
 
 		// start
@@ -543,7 +533,7 @@ var Canvas = function (_Component) {
 				//this.redraw();
 			}
 
-			if (this.state.player) {
+			if (this.player) {
 				var canvasSettings = _react2.default.createElement(_CanvasSettings2.default, { scope: this, fullClear: this.fullClear, changeBrushSize: this.changeBrushSize, updateColor: this.updateColor });
 				var canvas = _react2.default.createElement('canvas', { width: '100', height: '600px', className: 'canvas', id: 'canvas',
 					onMouseDown: this.startDrawing.bind(this),

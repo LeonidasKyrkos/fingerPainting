@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import UsersActions from '../actions/UsersActions';
 import UsersStore from '../stores/UsersStore';
 
 export default class Users extends Component {
@@ -22,9 +21,15 @@ export default class Users extends Component {
 	}
 
 	render() {
+		let users = Object.keys(this.state.users).map((user,index)=>{
+			let status = this.state.users[user].status === 'captain' ? '*' : '';
+
+			return <li key={user}>{status + ' ' + this.state.users[user].name}</li>
+		});
+
 		return (
 			<ul className="users__list">
-				{this.state.users}
+				{users}
 			</ul>
 		)
 	}

@@ -16,7 +16,11 @@ server.listen(port);
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/*', function (req, res) {
+app.get('/rooms/*',function(req, res){
+	res.redirect('/');
+})
+
+app.get('/', function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
@@ -35,8 +39,10 @@ Firebase.initializeApp(config);
 // configure firebase references
 var db = Firebase.database();
 
-var roomsRef = db.ref('rooms/');
+var roomsPath = '/rooms/';
+var roomsRef = db.ref(roomsPath);
 var rooms = [];
+
 
 roomsRef.on('value',function(snapshot){
 	rooms = snapshot.val();
@@ -44,37 +50,74 @@ roomsRef.on('value',function(snapshot){
 
 // socket events
 io.on('connection', function (socket) {
-	socket.emit('connected');
-
-	socket.on('user',function(username){
-		socket.username = username;
-	});
+	socket.username = (new Date()).getTime();
+	socket.emit('connected',socket.username);
 
 	socket.on('join request',function(request){
 		// run some room tests (room existence / user.name / password)
-		var status = roomTests(request);
+		var status = roomTests(request,socket);
 
-		if(status.status) {
-			// update the users object of the requested room.
-			var userRef = db.ref('rooms/' + request.id + '/users/' + request.name);
-			userRef.set({
-				id: socket.username
-			})
+		if(status.status) {			
+			gameroomHandler(request,socket);			
+
+			// store gamerooms array in socket data
+			socket.gamerooms = socket.gamerooms || [];
+			socket.gamerooms.push(request.id);
 			
 			// inform the client that they can redirect to the room and hand them the database reference.
-			socket.emit('request accepted',{ firebase: 'https://pictionareo.firebaseio.com/rooms/' +  request.id, room: request.id })
+			socket.emit('request accepted',{ room: roomsPath + request.id })
+
+			
 		} else {
 			// inform the client that they're a fucking jerk and let them know why.
 			socket.emit('request rejected',{ errors: status.reason });
 		}
 	});
+
+	socket.on('disconnect',function(){
+		deleteUserFromRoom(socket)
+	});
 });
 
 // UTILITIES
 
+function gameroomHandler(request,socket) {
+	// update the users object of the requested room.
+	updateReference(request.id + '/users/' + socket.username + '/name/', request.name);
+
+	// update gameroom status [playing/not playing]
+	var room = rooms[request.id];
+
+	if(room.users && Object.keys(room.users).length === 1) {
+		updateReference(request.id + '/users/' + socket.username + '/status/', 'captain');
+	}
+}
+
+function updateReference(path,updVal) {
+	var obj = {};
+	obj[path] = updVal;
+
+	roomsRef.update(obj);
+}
+
+function deleteUserFromRoom(socket) {
+	if(socket.gamerooms) {
+		socket.gamerooms.forEach(function(room){
+			var users = rooms[room].users;
+
+			if(users[socket.username]) {
+				var userRef = db.ref(roomsPath + room + '/users/' + socket.username);
+				userRef.remove();
+				socket.gamerooms.slice(socket.gamerooms.indexOf(room),1);
+			}
+		});
+	}
+}
+
+
 // room joining tests
 
-function roomTests(request) {
+function roomTests(request,socket) {
 	var room = rooms[request.id];
 
 	if(!room) { return { status: false, reason: `Room not found or password incorrect` } }
@@ -86,7 +129,7 @@ function roomTests(request) {
 		},
 		name: {
 			func: testIn,
-			args: [room.users, request.name, 'Sorry there is already someone called ' + request.name + ' in that room. Please choose another name.']
+			args: [room.users, socket.username, 'Sorry there is already someone called ' + request.name + ' in that room. Please choose another name.']
 		}
 	}
 
@@ -119,15 +162,39 @@ function testCompare(args) {
 }
 
 function testIn(args) {
+	if(args[0]) {
+		for(var prop in args[0]) {
+			if(args[1] === prop) {
+				return { status: false,  reason: args[2] };
+			}
+		}		
+	}
+
+	return { status: true };	
+}
+
+function testInSecondLevel(args) {
 	for(var prop in args[0]) {
-		if(args[1] === prop) {
+		if(args[1] === args[0][prop].id) {
 			return { status: false,  reason: args[2] };
 		}
 	}
-	return { status: true };
+
+	return { status: true };	
 }
 
 /////// end of tests ////////
+
+
+
+
+
+
+
+
+
+
+
 
 
 

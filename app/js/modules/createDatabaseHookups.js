@@ -8,8 +8,6 @@ export default function createDatabaseHookups(roomId) {
 	};
 	firebase.initializeApp(config);
 
-	console.log('https://pictionareo.firebaseio.com' + '/rooms/' + roomId + '/users');
-
 	var db = firebase.database();
 
 	db.ref('/rooms/' + roomId + '/users').on('value',(snapshot)=>{
