@@ -120,12 +120,12 @@ function deleteUserFromRoom(socket) {
 function roomTests(request,socket) {
 	var room = rooms[request.id];
 
-	if(!room) { return { status: false, reason: `Room not found or password incorrect` } }
+	if(!room) { return { status: false, reason: 'Room not found or password incorrect' } }
 
 	var tests = {
 		password: {
 			func: testCompare,
-			args: [room.password, request.password, `Room number not found or password incorrect`]
+			args: [room.password, request.password, 'Room number not found or password incorrect']
 		},
 		name: {
 			func: testIn,
