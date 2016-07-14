@@ -134,8 +134,8 @@ function roomTests(request,socket) {
 	}
 
 	for(var test in tests) {
-		let func = tests[test].func;
-		let args = tests[test].args;
+		var func = tests[test].func;
+		var args = tests[test].args;
 
 		if(!func(args).status) {
 			return func(args);
