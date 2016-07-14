@@ -3,7 +3,7 @@ var path = require('path');
 var logger = require('morgan');
 
 // server
-var port = process.env.PORT || 80;
+var port = process.env.PORT || 443;
 var express = require('express');
 var app = express();
 var server = require('http').Server(app);
