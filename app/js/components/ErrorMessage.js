@@ -1,27 +1,39 @@
 import React, { Component, PropTypes } from 'react';
 import ErrorActions from '../actions/ErrorActions';
 import ErrorStore from '../stores/ErrorStore';
+import ClientConfigStore from '../stores/ClientConfigStore';
 
 export default class ErrorMessage extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {};
 
-		this.state = ErrorStore.getState();
+		this.onChange = this.onChange.bind(this);
+		this.configChange = this.configChange.bind(this);
+		this.state.errors = '';
+		this.state.config = ClientConfigStore.getState().config;
 
-		this.props.socket.on('request rejected',(data)=>{
-			ErrorActions.updateErrors(data.errors);
-		});
+		if(this.state.config && this.state.config.socket) {
+			this.state.config.socket.on('request rejected',(data)=>{
+				ErrorActions.updateErrors(data.errors);
+			});
+		}
 	}
 
 	componentDidMount() {
-		ErrorStore.listen(this.onChange.bind(this));
+		ClientConfigStore.listen(this.configChange);
+		ErrorStore.listen(this.onChange);
 	}
 
 	componentWillUnmount() {
-		ErrorStore.unlisten(this.onChange.bind(this));
+		ErrorStore.unlisten(this.onChange);
 	}
 
 	onChange(state) {
+		this.setState(state);
+	}
+
+	configChange(state) {
 		this.setState(state);
 	}
 

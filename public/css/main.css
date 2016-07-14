@@ -160,6 +160,15 @@ body {
     content: "";
     display: table; }
 
+.innerwrapper {
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex; }
+
 #memCanvas {
   visibility: hidden;
   max-height: 0;
@@ -477,15 +486,14 @@ h1, h2, h3, h4, h5 {
       display: table; }
   .chat__label {
     float: left;
-    width: 3.125em;
+    max-width: 5em;
     overflow: hidden;
-    margin-right: -3.125em;
     color: salmon; }
   .chat__text {
     padding-right: 0.3125em;
     width: auto;
     overflow: auto;
-    padding-left: 3.5em;
+    padding-left: 0.5em;
     margin: 0;
     word-break: break-word;
     display: block; }

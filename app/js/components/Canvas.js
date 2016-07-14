@@ -1,17 +1,34 @@
 import React, { Component, PropTypes } from 'react';
+import firebase from 'firebase';
 
 import CanvasSettings from './CanvasSettings';
 import UsersStore from '../stores/UsersStore';
+import UserStore from '../stores/UserStore';
+import ClientConfigStore from '../stores/ClientConfigStore';
+import CanvasActions from '../actions/CanvasActions';
+import CanvasStore from '../stores/CanvasStore';
+
 
 export default class Canvas extends Component {
 	constructor(props) {
 		super(props);
 
-		this.userId = this.props.userId;
-		this.points = [];
-		this.painting = false;
+		this.state = {};
+		this.state.config = ClientConfigStore.getState().config;
+		this.state.user = UserStore.getState().user;
+		this.state.users = {};
+		this.state.canvasPaths = [];
 
-		this.state = { users: UsersStore.getState() };
+		// firebase stuff
+		this.db = this.state.config.db;
+		this.room = this.state.config.room;
+		this.pathsRef = this.db.ref(this.room + '/paths/')
+		CanvasActions.bindToFirebase(this.pathsRef);
+
+		this.userId = this.state.user.id;
+		this.points = [];
+		this.pathChange = this.pathChange.bind(this);
+
 		this.areWeTheCaptainNow();
 	}
 
@@ -23,20 +40,33 @@ export default class Canvas extends Component {
 				});
 			}
 		});
+
+		if(this.state.player) {
+			CanvasStore.unlisten(this.pathChange);
+		} else {
+			CanvasStore.listen(this.pathChange);
+		}
+		
 	}
 
 	componentDidMount() {
 		UsersStore.listen(this.onChange.bind(this));
+
 		this.setupCanvas();
 	}
 
 	componentWillUnmount() {
 		UsersStore.unlisten(this.onChange.bind(this));
+		CanvasStore.unlisten(this.pathChange);
 	}
 
 	onChange(state) {
 		this.setState(state);
 		this.areWeTheCaptainNow();
+	}
+
+	pathChange(state) {
+		this.setState(state);
 	}
 
 	setupCanvas() {
@@ -116,12 +146,17 @@ export default class Canvas extends Component {
 			dragging: dragStatus
 		})
 
+		this.pushPathsToFirebase();
 		this.redraw();
+	}
+
+	pushPathsToFirebase() {
+		this.pathsRef.set({ path: this.points[this.current] });
 	}
 
 	//client redraw function
 	redraw() {
-		let points = this.points;
+		let points = this.state.player ? this.points : this.state.canvasPaths;
 
 		if(!points.length) {
 			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -194,6 +229,7 @@ export default class Canvas extends Component {
 	// empty points array
 	clearArrays() {
 		this.points = [];
+		this.pathsRef.remove();
 	}
 
 	// empty contexts and points
@@ -222,7 +258,10 @@ export default class Canvas extends Component {
 		if(this.canvas) {
 			this.canvasX = this.canvas.offsetLeft;
 			this.canvasY = this.canvas.offsetTop;
-			//this.redraw();
+
+			if(!this.state.player) {
+				this.redraw();
+			}
 		}
 
 		if(this.state.player) {

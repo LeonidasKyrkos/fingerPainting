@@ -3,7 +3,7 @@ import UsersActions from '../actions/UsersActions';
 
 class UsersStore {
 	constructor() {
-		this.users = '';
+		this.users = {};
 
 		this.bindListeners({
 			handleUpdateUsers: UsersActions.UPDATE_USERS

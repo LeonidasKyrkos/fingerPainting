@@ -65,7 +65,7 @@ io.on('connection', function (socket) {
 			socket.gamerooms.push(request.id);
 			
 			// inform the client that they can redirect to the room and hand them the database reference.
-			socket.emit('request accepted',{ room: roomsPath + request.id })
+			socket.emit('request accepted',{ room: roomsPath + request.id, user: { id: socket.username, name: request.name } })
 
 			
 		} else {

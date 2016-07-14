@@ -1,9 +1,9 @@
 import alt from '../alt';
-import UserActions from '../actions/UsersActions';
+import UserActions from '../actions/UserActions';
 
 class UserStore {
 	constructor() {
-		this.user = '';
+		this.user = {};
 
 		this.bindListeners({
 			handleUpdateUser: UserActions.UPDATE_USER

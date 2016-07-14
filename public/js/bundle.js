@@ -11,6 +11,153 @@ var _alt = require('../alt');
 
 var _alt2 = _interopRequireDefault(_alt);
 
+var _firebase = require('firebase');
+
+var _firebase2 = _interopRequireDefault(_firebase);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var CanvasActions = function () {
+	function CanvasActions() {
+		_classCallCheck(this, CanvasActions);
+	}
+
+	_createClass(CanvasActions, [{
+		key: 'updatePaths',
+		value: function updatePaths(path) {
+			return path;
+		}
+	}, {
+		key: 'emptyPaths',
+		value: function emptyPaths() {
+			return [];
+		}
+	}, {
+		key: 'bindToFirebase',
+		value: function bindToFirebase(ref) {
+			var _this = this;
+
+			ref.on('value', function (snapshot) {
+				var data = snapshot.val();
+
+				if (data) {
+					_this.actions.updatePaths(data.path);
+				} else {
+					_this.actions.emptyPaths();
+				}
+			});
+		}
+	}]);
+
+	return CanvasActions;
+}();
+
+exports.default = _alt2.default.createActions(CanvasActions);
+
+},{"../alt":7,"firebase":29}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _alt = require('../alt');
+
+var _alt2 = _interopRequireDefault(_alt);
+
+var _firebase = require('firebase');
+
+var _firebase2 = _interopRequireDefault(_firebase);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ChatActions = function () {
+	function ChatActions() {
+		_classCallCheck(this, ChatActions);
+	}
+
+	_createClass(ChatActions, [{
+		key: 'updateChatLog',
+		value: function updateChatLog(chatLog) {
+			return chatLog;
+		}
+	}, {
+		key: 'bindToFirebase',
+		value: function bindToFirebase(ref) {
+			var _this = this;
+
+			ref.on('value', function (snapshot) {
+				var data = snapshot.val();
+
+				if (data) {
+					_this.actions.updateChatLog(data);
+				}
+			});
+		}
+	}]);
+
+	return ChatActions;
+}();
+
+exports.default = _alt2.default.createActions(ChatActions);
+
+},{"../alt":7,"firebase":29}],3:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _alt = require('../alt');
+
+var _alt2 = _interopRequireDefault(_alt);
+
+var _firebase = require('firebase');
+
+var _firebase2 = _interopRequireDefault(_firebase);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ClientConfigActions = function () {
+	function ClientConfigActions() {
+		_classCallCheck(this, ClientConfigActions);
+	}
+
+	_createClass(ClientConfigActions, [{
+		key: 'updateConfig',
+		value: function updateConfig(config) {
+			return config;
+		}
+	}]);
+
+	return ClientConfigActions;
+}();
+
+exports.default = _alt2.default.createActions(ClientConfigActions);
+
+},{"../alt":7,"firebase":29}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _alt = require('../alt');
+
+var _alt2 = _interopRequireDefault(_alt);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -32,7 +179,7 @@ var ErrorActions = function () {
 
 exports.default = _alt2.default.createActions(ErrorActions);
 
-},{"../alt":4}],2:[function(require,module,exports){
+},{"../alt":7}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -70,7 +217,7 @@ var UserActions = function () {
 
 exports.default = _alt2.default.createActions(UserActions);
 
-},{"../alt":4,"firebase":20}],3:[function(require,module,exports){
+},{"../alt":7,"firebase":29}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -117,7 +264,7 @@ var UsersActions = function () {
 
 exports.default = _alt2.default.createActions(UsersActions);
 
-},{"../alt":4,"firebase":20}],4:[function(require,module,exports){
+},{"../alt":7,"firebase":29}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -132,7 +279,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = new _alt2.default();
 
-},{"alt":"alt"}],5:[function(require,module,exports){
+},{"alt":"alt"}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -152,6 +299,10 @@ var _UsersActions2 = _interopRequireDefault(_UsersActions);
 var _UserActions = require('../actions/UserActions');
 
 var _UserActions2 = _interopRequireDefault(_UserActions);
+
+var _ClientConfigActions = require('../actions/ClientConfigActions');
+
+var _ClientConfigActions2 = _interopRequireDefault(_ClientConfigActions);
 
 var _firebase = require('firebase');
 
@@ -174,10 +325,13 @@ var socket = io.connect('http://localhost:3000');
 var App = function (_Component) {
 	_inherits(App, _Component);
 
-	function App() {
+	function App(props) {
 		_classCallCheck(this, App);
 
-		return _possibleConstructorReturn(this, Object.getPrototypeOf(App).apply(this, arguments));
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(App).call(this, props));
+
+		_ClientConfigActions2.default.updateConfig({ socket: socket });
+		return _this;
 	}
 
 	_createClass(App, [{
@@ -191,10 +345,14 @@ var App = function (_Component) {
 
 			socket.on('request accepted', function (data) {
 				_firebase2.default.initializeApp(_firebaseConf2.default);
-				_this2.db = _firebase2.default.database();
+				var db = _firebase2.default.database();
+				var room = data.room;
 
-				_UsersActions2.default.bindToRoom(_this2.db.ref(data.room + '/users'));
-				_this2.joinRoom(data.room);
+				_ClientConfigActions2.default.updateConfig({ db: _firebase2.default.database(), room: data.room, socket: socket });
+				_UserActions2.default.updateUser(data.user);
+				_UsersActions2.default.bindToRoom(db.ref(room + '/users'));
+
+				_this2.joinRoom(room);
 			});
 		}
 	}, {
@@ -214,9 +372,7 @@ var App = function (_Component) {
 
 			var childrenWithProps = _react2.default.Children.map(this.props.children, function (child) {
 				return _react2.default.cloneElement(child, {
-					requestJoin: _this3.requestJoin,
-					socket: socket,
-					userId: _this3.userId
+					requestJoin: _this3.requestJoin
 				});
 			});
 
@@ -240,7 +396,7 @@ var App = function (_Component) {
 
 exports.default = App;
 
-},{"../actions/UserActions":2,"../actions/UsersActions":3,"../firebaseConf.js":12,"firebase":20,"react":"react"}],6:[function(require,module,exports){
+},{"../actions/ClientConfigActions":3,"../actions/UserActions":5,"../actions/UsersActions":6,"../firebaseConf.js":17,"firebase":29,"react":"react"}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -253,6 +409,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _firebase = require('firebase');
+
+var _firebase2 = _interopRequireDefault(_firebase);
+
 var _CanvasSettings = require('./CanvasSettings');
 
 var _CanvasSettings2 = _interopRequireDefault(_CanvasSettings);
@@ -260,6 +420,22 @@ var _CanvasSettings2 = _interopRequireDefault(_CanvasSettings);
 var _UsersStore = require('../stores/UsersStore');
 
 var _UsersStore2 = _interopRequireDefault(_UsersStore);
+
+var _UserStore = require('../stores/UserStore');
+
+var _UserStore2 = _interopRequireDefault(_UserStore);
+
+var _ClientConfigStore = require('../stores/ClientConfigStore');
+
+var _ClientConfigStore2 = _interopRequireDefault(_ClientConfigStore);
+
+var _CanvasActions = require('../actions/CanvasActions');
+
+var _CanvasActions2 = _interopRequireDefault(_CanvasActions);
+
+var _CanvasStore = require('../stores/CanvasStore');
+
+var _CanvasStore2 = _interopRequireDefault(_CanvasStore);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -277,11 +453,22 @@ var Canvas = function (_Component) {
 
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Canvas).call(this, props));
 
-		_this.userId = _this.props.userId;
-		_this.points = [];
-		_this.painting = false;
+		_this.state = {};
+		_this.state.config = _ClientConfigStore2.default.getState().config;
+		_this.state.user = _UserStore2.default.getState().user;
+		_this.state.users = {};
+		_this.state.canvasPaths = [];
 
-		_this.state = { users: _UsersStore2.default.getState() };
+		// firebase stuff
+		_this.db = _this.state.config.db;
+		_this.room = _this.state.config.room;
+		_this.pathsRef = _this.db.ref(_this.room + '/paths/');
+		_CanvasActions2.default.bindToFirebase(_this.pathsRef);
+
+		_this.userId = _this.state.user.id;
+		_this.points = [];
+		_this.pathChange = _this.pathChange.bind(_this);
+
 		_this.areWeTheCaptainNow();
 		return _this;
 	}
@@ -298,23 +485,36 @@ var Canvas = function (_Component) {
 					});
 				}
 			});
+
+			if (this.state.player) {
+				_CanvasStore2.default.unlisten(this.pathChange);
+			} else {
+				_CanvasStore2.default.listen(this.pathChange);
+			}
 		}
 	}, {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
 			_UsersStore2.default.listen(this.onChange.bind(this));
+
 			this.setupCanvas();
 		}
 	}, {
 		key: 'componentWillUnmount',
 		value: function componentWillUnmount() {
 			_UsersStore2.default.unlisten(this.onChange.bind(this));
+			_CanvasStore2.default.unlisten(this.pathChange);
 		}
 	}, {
 		key: 'onChange',
 		value: function onChange(state) {
 			this.setState(state);
 			this.areWeTheCaptainNow();
+		}
+	}, {
+		key: 'pathChange',
+		value: function pathChange(state) {
+			this.setState(state);
 		}
 	}, {
 		key: 'setupCanvas',
@@ -414,7 +614,13 @@ var Canvas = function (_Component) {
 				dragging: dragStatus
 			});
 
+			this.pushPathsToFirebase();
 			this.redraw();
+		}
+	}, {
+		key: 'pushPathsToFirebase',
+		value: function pushPathsToFirebase() {
+			this.pathsRef.set({ path: this.points[this.current] });
 		}
 
 		//client redraw function
@@ -422,7 +628,7 @@ var Canvas = function (_Component) {
 	}, {
 		key: 'redraw',
 		value: function redraw() {
-			var points = this.points;
+			var points = this.state.player ? this.points : this.state.canvasPaths;
 
 			if (!points.length) {
 				this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -504,6 +710,7 @@ var Canvas = function (_Component) {
 		key: 'clearArrays',
 		value: function clearArrays() {
 			this.points = [];
+			this.pathsRef.remove();
 		}
 
 		// empty contexts and points
@@ -540,7 +747,10 @@ var Canvas = function (_Component) {
 			if (this.canvas) {
 				this.canvasX = this.canvas.offsetLeft;
 				this.canvasY = this.canvas.offsetTop;
-				//this.redraw();
+
+				if (!this.state.player) {
+					this.redraw();
+				}
 			}
 
 			if (this.state.player) {
@@ -570,7 +780,7 @@ var Canvas = function (_Component) {
 
 exports.default = Canvas;
 
-},{"../stores/UsersStore":16,"./CanvasSettings":7,"react":"react"}],7:[function(require,module,exports){
+},{"../actions/CanvasActions":1,"../stores/CanvasStore":20,"../stores/ClientConfigStore":22,"../stores/UserStore":24,"../stores/UsersStore":25,"./CanvasSettings":10,"firebase":29,"react":"react"}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -710,7 +920,159 @@ CanvasSettings.propTypes = {
 	scope: _react.PropTypes.object.isRequired
 };
 
-},{"react":"react"}],8:[function(require,module,exports){
+},{"react":"react"}],11:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _UserStore = require('../stores/UserStore');
+
+var _UserStore2 = _interopRequireDefault(_UserStore);
+
+var _ClientConfigStore = require('../stores/ClientConfigStore');
+
+var _ClientConfigStore2 = _interopRequireDefault(_ClientConfigStore);
+
+var _ChatActions = require('../actions/ChatActions');
+
+var _ChatActions2 = _interopRequireDefault(_ChatActions);
+
+var _ChatStore = require('../stores/ChatStore');
+
+var _ChatStore2 = _interopRequireDefault(_ChatStore);
+
+var _Message = require('./Message');
+
+var _Message2 = _interopRequireDefault(_Message);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Chat = function (_Component) {
+	_inherits(Chat, _Component);
+
+	function Chat(props) {
+		_classCallCheck(this, Chat);
+
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Chat).call(this, props));
+
+		_this.userChange = _this.userChange.bind(_this);
+		_this.chatChange = _this.chatChange.bind(_this);
+
+		var clientConfigStore = _ClientConfigStore2.default.getState().config;
+		_this.state = { chatLog: [], user: _UserStore2.default.getState().user, db: clientConfigStore.db, room: clientConfigStore.room };
+		return _this;
+	}
+
+	_createClass(Chat, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			_UserStore2.default.listen(this.userChange);
+			_ChatStore2.default.listen(this.chatChange);
+			_ChatActions2.default.bindToFirebase(this.state.db.ref(this.state.room + '/chatLog'));
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			_UserStore2.default.unlisten(this.userChange);
+			_ChatStore2.default.unlisten(this.chatChange);
+		}
+	}, {
+		key: 'userChange',
+		value: function userChange(state) {
+			this.setState(state);
+		}
+	}, {
+		key: 'chatChange',
+		value: function chatChange(state) {
+			this.setState(state);
+		}
+	}, {
+		key: 'parseChatForm',
+		value: function parseChatForm(e) {
+			e.preventDefault();
+			var form = e.target;
+			var input = form.querySelector('#chat-input');
+			var msg = input.value;
+			var chatHistory = document.querySelector('#chat-history');
+			input.value = "";
+
+			if (msg.length) {
+				var timestamp = new Date().getTime();
+				var data = {};
+				data.name = this.state.user.name;
+				data.message = msg;
+				data.timestamp = timestamp;
+
+				// if(data.message === this.state.puzzle) {
+				// 	input.value = "";
+				// 	window.alert(`correct! well done ${this.state.userId}`);
+				// } else {
+				this.state.db.ref(this.state.room + '/chatLog').push(data);
+				// }
+			}
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var chatHistory = document.querySelector('#chat-history');
+
+			var chatLog = this.state.chatLog;
+
+			var chats = Object.keys(chatLog).map(function (item, index) {
+				var chat = chatLog[item];
+				return _react2.default.createElement(_Message2.default, { chat: chat, key: chat.timestamp });
+			});
+
+			console.log(chats);
+
+			if (chatHistory) {
+				setTimeout(function () {
+					chatHistory.scrollTop = chatHistory.scrollHeight;
+				}, 32);
+			};
+
+			return _react2.default.createElement(
+				'div',
+				{ className: 'chat' },
+				_react2.default.createElement(
+					'div',
+					{ id: 'chat-history', className: 'chat__history' },
+					chats
+				),
+				_react2.default.createElement(
+					'form',
+					{ className: 'form--chat', onSubmit: this.parseChatForm.bind(this) },
+					_react2.default.createElement('input', { autoComplete: 'off', id: 'chat-input', type: 'text', className: 'form__input' }),
+					_react2.default.createElement(
+						'button',
+						{ className: 'btn--submit flex-right' },
+						'»'
+					)
+				)
+			);
+		}
+	}]);
+
+	return Chat;
+}(_react.Component);
+
+exports.default = Chat;
+
+},{"../actions/ChatActions":2,"../stores/ChatStore":21,"../stores/ClientConfigStore":22,"../stores/UserStore":24,"./Message":14,"react":"react"}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -731,6 +1093,10 @@ var _ErrorStore = require('../stores/ErrorStore');
 
 var _ErrorStore2 = _interopRequireDefault(_ErrorStore);
 
+var _ClientConfigStore = require('../stores/ClientConfigStore');
+
+var _ClientConfigStore2 = _interopRequireDefault(_ClientConfigStore);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -747,27 +1113,40 @@ var ErrorMessage = function (_Component) {
 
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ErrorMessage).call(this, props));
 
-		_this.state = _ErrorStore2.default.getState();
+		_this.state = {};
 
-		_this.props.socket.on('request rejected', function (data) {
-			_ErrorActions2.default.updateErrors(data.errors);
-		});
+		_this.onChange = _this.onChange.bind(_this);
+		_this.configChange = _this.configChange.bind(_this);
+		_this.state.errors = '';
+		_this.state.config = _ClientConfigStore2.default.getState().config;
+
+		if (_this.state.config && _this.state.config.socket) {
+			_this.state.config.socket.on('request rejected', function (data) {
+				_ErrorActions2.default.updateErrors(data.errors);
+			});
+		}
 		return _this;
 	}
 
 	_createClass(ErrorMessage, [{
 		key: 'componentDidMount',
 		value: function componentDidMount() {
-			_ErrorStore2.default.listen(this.onChange.bind(this));
+			_ClientConfigStore2.default.listen(this.configChange);
+			_ErrorStore2.default.listen(this.onChange);
 		}
 	}, {
 		key: 'componentWillUnmount',
 		value: function componentWillUnmount() {
-			_ErrorStore2.default.unlisten(this.onChange.bind(this));
+			_ErrorStore2.default.unlisten(this.onChange);
 		}
 	}, {
 		key: 'onChange',
 		value: function onChange(state) {
+			this.setState(state);
+		}
+	}, {
+		key: 'configChange',
+		value: function configChange(state) {
 			this.setState(state);
 		}
 	}, {
@@ -786,7 +1165,7 @@ var ErrorMessage = function (_Component) {
 
 exports.default = ErrorMessage;
 
-},{"../actions/ErrorActions":1,"../stores/ErrorStore":15,"react":"react"}],9:[function(require,module,exports){
+},{"../actions/ErrorActions":4,"../stores/ClientConfigStore":22,"../stores/ErrorStore":23,"react":"react"}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -806,6 +1185,10 @@ var _Users2 = _interopRequireDefault(_Users);
 var _Canvas = require('./Canvas.js');
 
 var _Canvas2 = _interopRequireDefault(_Canvas);
+
+var _Chat = require('./Chat.js');
+
+var _Chat2 = _interopRequireDefault(_Chat);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -836,7 +1219,12 @@ var Home = function (_Component) {
 					'Pictionareo'
 				),
 				_react2.default.createElement(_Users2.default, { userId: this.props.userId }),
-				_react2.default.createElement(_Canvas2.default, { userId: this.props.userId })
+				_react2.default.createElement(
+					'div',
+					{ className: 'innerwrapper' },
+					_react2.default.createElement(_Canvas2.default, { userId: this.props.userId, db: this.props.db, room: this.props.room }),
+					_react2.default.createElement(_Chat2.default, null)
+				)
 			);
 		}
 	}]);
@@ -846,7 +1234,65 @@ var Home = function (_Component) {
 
 exports.default = Home;
 
-},{"./Canvas.js":6,"./Users.js":11,"react":"react"}],10:[function(require,module,exports){
+},{"./Canvas.js":9,"./Chat.js":11,"./Users.js":16,"react":"react"}],14:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Message = function (_Component) {
+	_inherits(Message, _Component);
+
+	function Message(props) {
+		_classCallCheck(this, Message);
+
+		return _possibleConstructorReturn(this, Object.getPrototypeOf(Message).call(this, props));
+	}
+
+	_createClass(Message, [{
+		key: "render",
+		value: function render() {
+			var chat = this.props.chat;
+
+			return _react2.default.createElement(
+				"div",
+				{ key: chat.timestamp, className: "chat__msg-wrap" },
+				_react2.default.createElement(
+					"span",
+					{ className: "chat__label" },
+					chat.name,
+					":"
+				),
+				_react2.default.createElement(
+					"span",
+					{ className: "chat__text" },
+					chat.message
+				)
+			);
+		}
+	}]);
+
+	return Message;
+}(_react.Component);
+
+exports.default = Message;
+
+},{"react":"react"}],15:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1046,7 +1492,7 @@ var RoomPicker = function (_Component) {
 
 exports.default = RoomPicker;
 
-},{"./ErrorMessage":8,"react":"react"}],11:[function(require,module,exports){
+},{"./ErrorMessage":12,"react":"react"}],16:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1126,7 +1572,7 @@ var Users = function (_Component) {
 
 exports.default = Users;
 
-},{"../stores/UsersStore":16,"react":"react"}],12:[function(require,module,exports){
+},{"../stores/UsersStore":25,"react":"react"}],17:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1141,7 +1587,7 @@ var config = {
 
 exports.default = config;
 
-},{}],13:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -1172,7 +1618,7 @@ _reactDom2.default.render(_react2.default.createElement(
   _routes2.default
 ), document.getElementById('app'));
 
-},{"./routes":14,"history/lib/createBrowserHistory":27,"react":"react","react-dom":"react-dom","react-router":"react-router"}],14:[function(require,module,exports){
+},{"./routes":19,"history/lib/createBrowserHistory":36,"react":"react","react-dom":"react-dom","react-router":"react-router"}],19:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1206,7 +1652,145 @@ exports.default = _react2.default.createElement(
 	_react2.default.createElement(_reactRouter.Route, { path: '/rooms/:roomId', component: _GameRoom2.default })
 );
 
-},{"./components/App":5,"./components/GameRoom":9,"./components/RoomPicker":10,"react":"react","react-router":"react-router"}],15:[function(require,module,exports){
+},{"./components/App":8,"./components/GameRoom":13,"./components/RoomPicker":15,"react":"react","react-router":"react-router"}],20:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _alt = require('../alt');
+
+var _alt2 = _interopRequireDefault(_alt);
+
+var _CanvasActions = require('../actions/CanvasActions');
+
+var _CanvasActions2 = _interopRequireDefault(_CanvasActions);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var CanvasStore = function () {
+	function CanvasStore() {
+		_classCallCheck(this, CanvasStore);
+
+		this.canvasPaths = [];
+
+		this.bindListeners({
+			handleUpdatePaths: _CanvasActions2.default.UPDATE_PATHS,
+			handleEmptyPaths: _CanvasActions2.default.EMPTY_PATHS
+		});
+	}
+
+	_createClass(CanvasStore, [{
+		key: 'handleUpdatePaths',
+		value: function handleUpdatePaths(path) {
+			this.canvasPaths.push(path);
+		}
+	}, {
+		key: 'handleEmptyPaths',
+		value: function handleEmptyPaths(arr) {
+			this.canvasPaths = arr;
+		}
+	}]);
+
+	return CanvasStore;
+}();
+
+exports.default = _alt2.default.createStore(CanvasStore, 'CanvasStore');
+
+},{"../actions/CanvasActions":1,"../alt":7}],21:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _alt = require('../alt');
+
+var _alt2 = _interopRequireDefault(_alt);
+
+var _ChatActions = require('../actions/ChatActions');
+
+var _ChatActions2 = _interopRequireDefault(_ChatActions);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ChatStore = function () {
+	function ChatStore() {
+		_classCallCheck(this, ChatStore);
+
+		this.chatLog = [];
+
+		this.bindListeners({
+			handleUpdateChatLog: _ChatActions2.default.UPDATE_CHAT_LOG
+		});
+	}
+
+	_createClass(ChatStore, [{
+		key: 'handleUpdateChatLog',
+		value: function handleUpdateChatLog(chatLog) {
+			this.chatLog = chatLog;
+		}
+	}]);
+
+	return ChatStore;
+}();
+
+exports.default = _alt2.default.createStore(ChatStore, 'ChatStore');
+
+},{"../actions/ChatActions":2,"../alt":7}],22:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _alt = require('../alt');
+
+var _alt2 = _interopRequireDefault(_alt);
+
+var _ClientConfigActions = require('../actions/ClientConfigActions');
+
+var _ClientConfigActions2 = _interopRequireDefault(_ClientConfigActions);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ClientConfigStore = function () {
+	function ClientConfigStore() {
+		_classCallCheck(this, ClientConfigStore);
+
+		this.config = {};
+
+		this.bindListeners({
+			handleUpdateConfig: _ClientConfigActions2.default.UPDATE_CONFIG
+		});
+	}
+
+	_createClass(ClientConfigStore, [{
+		key: 'handleUpdateConfig',
+		value: function handleUpdateConfig(config) {
+			this.config = config;
+		}
+	}]);
+
+	return ClientConfigStore;
+}();
+
+exports.default = _alt2.default.createStore(ClientConfigStore, 'ClientConfigStore');
+
+},{"../actions/ClientConfigActions":3,"../alt":7}],23:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1250,7 +1834,51 @@ var ErrorStore = function () {
 
 exports.default = _alt2.default.createStore(ErrorStore, 'ErrorStore');
 
-},{"../actions/ErrorActions":1,"../alt":4}],16:[function(require,module,exports){
+},{"../actions/ErrorActions":4,"../alt":7}],24:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _alt = require('../alt');
+
+var _alt2 = _interopRequireDefault(_alt);
+
+var _UserActions = require('../actions/UserActions');
+
+var _UserActions2 = _interopRequireDefault(_UserActions);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var UserStore = function () {
+	function UserStore() {
+		_classCallCheck(this, UserStore);
+
+		this.user = {};
+
+		this.bindListeners({
+			handleUpdateUser: _UserActions2.default.UPDATE_USER
+		});
+	}
+
+	_createClass(UserStore, [{
+		key: 'handleUpdateUser',
+		value: function handleUpdateUser(user) {
+			this.user = user;
+		}
+	}]);
+
+	return UserStore;
+}();
+
+exports.default = _alt2.default.createStore(UserStore, 'UserStore');
+
+},{"../actions/UserActions":5,"../alt":7}],25:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1275,7 +1903,7 @@ var UsersStore = function () {
 	function UsersStore() {
 		_classCallCheck(this, UsersStore);
 
-		this.users = '';
+		this.users = {};
 
 		this.bindListeners({
 			handleUpdateUsers: _UsersActions2.default.UPDATE_USERS
@@ -1294,7 +1922,7 @@ var UsersStore = function () {
 
 exports.default = _alt2.default.createStore(UsersStore, 'UsersStore');
 
-},{"../actions/UsersActions":3,"../alt":4}],17:[function(require,module,exports){
+},{"../actions/UsersActions":6,"../alt":7}],26:[function(require,module,exports){
 var pSlice = Array.prototype.slice;
 var objectKeys = require('./lib/keys.js');
 var isArguments = require('./lib/is_arguments.js');
@@ -1390,7 +2018,7 @@ function objEquiv(a, b, opts) {
   return typeof a === typeof b;
 }
 
-},{"./lib/is_arguments.js":18,"./lib/keys.js":19}],18:[function(require,module,exports){
+},{"./lib/is_arguments.js":27,"./lib/keys.js":28}],27:[function(require,module,exports){
 var supportsArgumentsClass = (function(){
   return Object.prototype.toString.call(arguments)
 })() == '[object Arguments]';
@@ -1412,7 +2040,7 @@ function unsupported(object){
     false;
 };
 
-},{}],19:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 exports = module.exports = typeof Object.keys === 'function'
   ? Object.keys : shim;
 
@@ -1423,7 +2051,7 @@ function shim (obj) {
   return keys;
 }
 
-},{}],20:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 /**
  *  Firebase libraries for browser - npm package.
  *
@@ -1434,7 +2062,7 @@ function shim (obj) {
 require('./firebase');
 module.exports = firebase;
 
-},{"./firebase":21}],21:[function(require,module,exports){
+},{"./firebase":30}],30:[function(require,module,exports){
 (function (global){
 /*! @license Firebase v3.1.0
     Build: 3.1.0-rc.3
@@ -2004,7 +2632,7 @@ ra.STATE_CHANGED="state_changed";sa.RUNNING="running";sa.PAUSED="paused";sa.SUCC
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{}],22:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 /**
  * Indicates that navigation was caused by a call to history.push.
  */
@@ -2036,7 +2664,7 @@ exports['default'] = {
   REPLACE: REPLACE,
   POP: POP
 };
-},{}],23:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -2063,7 +2691,7 @@ function loopAsync(turns, work, callback) {
 
   next();
 }
-},{}],24:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 (function (process){
 /*eslint-disable no-empty */
 'use strict';
@@ -2135,7 +2763,7 @@ function readState(key) {
 }
 }).call(this,require('_process'))
 
-},{"_process":36,"warning":37}],25:[function(require,module,exports){
+},{"_process":45,"warning":46}],34:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -2216,13 +2844,13 @@ function supportsGoWithoutReloadUsingHash() {
   var ua = navigator.userAgent;
   return ua.indexOf('Firefox') === -1;
 }
-},{}],26:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
 var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
 exports.canUseDOM = canUseDOM;
-},{}],27:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -2404,7 +3032,7 @@ exports['default'] = createBrowserHistory;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"./Actions":22,"./DOMStateStorage":24,"./DOMUtils":25,"./ExecutionEnvironment":26,"./createDOMHistory":28,"./parsePath":33,"_process":36,"invariant":35}],28:[function(require,module,exports){
+},{"./Actions":31,"./DOMStateStorage":33,"./DOMUtils":34,"./ExecutionEnvironment":35,"./createDOMHistory":37,"./parsePath":42,"_process":45,"invariant":44}],37:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -2448,7 +3076,7 @@ exports['default'] = createDOMHistory;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"./DOMUtils":25,"./ExecutionEnvironment":26,"./createHistory":29,"_process":36,"invariant":35}],29:[function(require,module,exports){
+},{"./DOMUtils":34,"./ExecutionEnvironment":35,"./createHistory":38,"_process":45,"invariant":44}],38:[function(require,module,exports){
 //import warning from 'warning'
 'use strict';
 
@@ -2740,7 +3368,7 @@ function createHistory() {
 
 exports['default'] = createHistory;
 module.exports = exports['default'];
-},{"./Actions":22,"./AsyncUtils":23,"./createLocation":30,"./deprecate":31,"./parsePath":33,"./runTransitionHook":34,"deep-equal":17}],30:[function(require,module,exports){
+},{"./Actions":31,"./AsyncUtils":32,"./createLocation":39,"./deprecate":40,"./parsePath":42,"./runTransitionHook":43,"deep-equal":26}],39:[function(require,module,exports){
 //import warning from 'warning'
 'use strict';
 
@@ -2795,7 +3423,7 @@ function createLocation() {
 
 exports['default'] = createLocation;
 module.exports = exports['default'];
-},{"./Actions":22,"./parsePath":33}],31:[function(require,module,exports){
+},{"./Actions":31,"./parsePath":42}],40:[function(require,module,exports){
 //import warning from 'warning'
 
 "use strict";
@@ -2811,7 +3439,7 @@ function deprecate(fn) {
 
 exports["default"] = deprecate;
 module.exports = exports["default"];
-},{}],32:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -2825,7 +3453,7 @@ function extractPath(string) {
 
 exports["default"] = extractPath;
 module.exports = exports["default"];
-},{}],33:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -2873,7 +3501,7 @@ exports['default'] = parsePath;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"./extractPath":32,"_process":36,"warning":37}],34:[function(require,module,exports){
+},{"./extractPath":41,"_process":45,"warning":46}],43:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -2901,7 +3529,7 @@ exports['default'] = runTransitionHook;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"_process":36,"warning":37}],35:[function(require,module,exports){
+},{"_process":45,"warning":46}],44:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -2957,7 +3585,7 @@ module.exports = invariant;
 
 }).call(this,require('_process'))
 
-},{"_process":36}],36:[function(require,module,exports){
+},{"_process":45}],45:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -3078,7 +3706,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],37:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -3143,7 +3771,7 @@ module.exports = warning;
 
 }).call(this,require('_process'))
 
-},{"_process":36}]},{},[13])
+},{"_process":45}]},{},[18])
 
 
 //# sourceMappingURL=bundle.js.map

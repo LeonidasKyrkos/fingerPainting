@@ -1,12 +1,19 @@
 import React, { Component } from 'react';
 import UsersActions from '../actions/UsersActions';
 import UserActions from '../actions/UserActions';
+import ClientConfigActions from '../actions/ClientConfigActions';
 import firebase from 'firebase';
 import config from '../firebaseConf.js';
 
 const socket = io.connect('http://localhost:3000');
 
 export default class App extends Component {
+	constructor(props) {
+		super(props);
+
+		ClientConfigActions.updateConfig({ socket: socket });
+	}
+
 	componentDidMount() {
 		socket.on('connected',(userId)=>{
 			this.userId = userId;
@@ -14,11 +21,14 @@ export default class App extends Component {
 
 		socket.on('request accepted',(data)=>{
 			firebase.initializeApp(config);
-			this.db = firebase.database();
+			let db = firebase.database();
+			let room = data.room;
 
+			ClientConfigActions.updateConfig({ db: firebase.database(), room: data.room, socket: socket });
+			UserActions.updateUser(data.user);
+			UsersActions.bindToRoom(db.ref(room + '/users'));
 
-			UsersActions.bindToRoom(this.db.ref(data.room + '/users'));
-			this.joinRoom(data.room);
+			this.joinRoom(room);
 		});
 	}
 
@@ -33,9 +43,7 @@ export default class App extends Component {
 	renderChildren() {
 		let childrenWithProps = React.Children.map(this.props.children, (child)=> {
 			return React.cloneElement(child, { 
-				requestJoin: this.requestJoin,
-				socket: socket,
-				userId: this.userId
+				requestJoin: this.requestJoin
 			});
 		});
 

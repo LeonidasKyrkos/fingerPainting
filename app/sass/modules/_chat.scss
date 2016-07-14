@@ -27,9 +27,8 @@ $module: 		'chat';
 
 	&__label {
 		float: left;
-		width: em(50,$fontSize);		
-		overflow: hidden;				
-		margin-right: em(-50,$fontSize);
+		max-width: em(100);	
+		overflow: hidden;
 		color: salmon;
 	}
 
@@ -37,7 +36,7 @@ $module: 		'chat';
 		padding-right: em(5,$fontSize);
 		width: auto;
 		overflow: auto;
-		padding-left: em(70);
+		padding-left: em(10);
 		margin: 0;
 		word-break: break-word;
 		display: block;

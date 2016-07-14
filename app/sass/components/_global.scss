@@ -24,6 +24,10 @@ body {
 	@include clearfix;
 }
 
+.innerwrapper {
+	@include display(flex);
+}
+
 #memCanvas {
 	visibility: hidden;
 	max-height: 0;
