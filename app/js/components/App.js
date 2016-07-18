@@ -5,7 +5,7 @@ import ClientConfigActions from '../actions/ClientConfigActions';
 import firebase from 'firebase';
 import config from '../firebaseConf.js';
 
-const socket = io.connect('http://52.209.86.125:443/');
+const socket = io.connect('http://localhost:3000');
 
 export default class App extends Component {
 	constructor(props) {
