@@ -320,7 +320,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var socket = io.connect('http://52.209.86.125:443/');
+var socket = io.connect('http://localhost:3000');
 
 var App = function (_Component) {
 	_inherits(App, _Component);
@@ -353,6 +353,14 @@ var App = function (_Component) {
 				_UsersActions2.default.bindToRoom(db.ref(room + '/users'));
 
 				_this2.joinRoom(room);
+			});
+
+			socket.on('countdown', function (data) {
+				console.log(data);
+			});
+
+			socket.on('round end', function () {
+				console.log('ended');
 			});
 		}
 	}, {
@@ -464,6 +472,8 @@ var Canvas = function (_Component) {
 		_this.room = _this.state.config.room;
 		_this.pathsRef = _this.db.ref(_this.room + '/paths/');
 		_CanvasActions2.default.bindToFirebase(_this.pathsRef);
+
+		_this.socket = _this.state.config.socket;
 
 		_this.userId = _this.state.user.id;
 		_this.points = [];
@@ -754,7 +764,7 @@ var Canvas = function (_Component) {
 			}
 
 			if (this.state.player) {
-				var canvasSettings = _react2.default.createElement(_CanvasSettings2.default, { scope: this, fullClear: this.fullClear, changeBrushSize: this.changeBrushSize, updateColor: this.updateColor });
+				var canvasSettings = _react2.default.createElement(_CanvasSettings2.default, { scope: this, socket: this.socket, fullClear: this.fullClear, changeBrushSize: this.changeBrushSize, updateColor: this.updateColor });
 				var canvas = _react2.default.createElement('canvas', { width: '100', height: '600px', className: 'canvas', id: 'canvas',
 					onMouseDown: this.startDrawing.bind(this),
 					onMouseUp: this.stopDrawing.bind(this),
@@ -781,7 +791,7 @@ var Canvas = function (_Component) {
 exports.default = Canvas;
 
 },{"../actions/CanvasActions":1,"../stores/CanvasStore":20,"../stores/ClientConfigStore":22,"../stores/UserStore":24,"../stores/UsersStore":25,"./CanvasSettings":10,"firebase":29,"react":"react"}],10:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -789,7 +799,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
@@ -804,14 +814,28 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var CanvasSettings = function (_React$Component) {
 	_inherits(CanvasSettings, _React$Component);
 
-	function CanvasSettings() {
+	function CanvasSettings(props) {
 		_classCallCheck(this, CanvasSettings);
 
-		return _possibleConstructorReturn(this, Object.getPrototypeOf(CanvasSettings).apply(this, arguments));
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CanvasSettings).call(this, props));
+
+		_this.state = {
+			status: 'start game'
+		};
+		_this.socket = _this.props.socket;
+		return _this;
 	}
 
 	_createClass(CanvasSettings, [{
-		key: "render",
+		key: 'startGame',
+		value: function startGame() {
+			this.socket.emit('start game');
+			this.setState({
+				status: 'Pause game'
+			});
+		}
+	}, {
+		key: 'render',
 		value: function render() {
 			var scope = this.props.scope;
 			var small = 3;
@@ -820,86 +844,95 @@ var CanvasSettings = function (_React$Component) {
 			var huge = 12;
 
 			return _react2.default.createElement(
-				"ul",
-				{ className: "canvas__settings" },
+				'ul',
+				{ className: 'canvas__settings' },
 				_react2.default.createElement(
-					"li",
+					'li',
 					null,
 					_react2.default.createElement(
-						"button",
-						{ className: "btn--primary", onClick: this.props.fullClear.bind(scope) },
-						"Reset"
+						'button',
+						{ className: 'canvas__settings-btn', onClick: this.startGame.bind(this) },
+						this.state.status
 					)
 				),
 				_react2.default.createElement(
-					"li",
-					{ className: "canvas__brush-sizes" },
+					'li',
+					null,
 					_react2.default.createElement(
-						"ul",
+						'button',
+						{ className: 'canvas__settings-btn', onClick: this.props.fullClear.bind(scope) },
+						'Reset'
+					)
+				),
+				_react2.default.createElement(
+					'li',
+					{ className: 'canvas__brush-sizes' },
+					_react2.default.createElement(
+						'ul',
 						null,
 						_react2.default.createElement(
-							"li",
-							{ className: "ib" },
+							'li',
+							{ className: 'ib' },
 							_react2.default.createElement(
-								"span",
-								{ className: "canvas__brush-size-wrap", "data-size": small, onClick: this.props.changeBrushSize.bind(scope) },
-								_react2.default.createElement("span", { className: "canvas__brush-size", style: { width: small + 'px', height: small + 'px' } })
+								'span',
+								{ className: 'canvas__brush-size-wrap', 'data-size': small, onClick: this.props.changeBrushSize.bind(scope) },
+								_react2.default.createElement('span', { className: 'canvas__brush-size', style: { width: small + 'px', height: small + 'px' } })
 							)
 						),
 						_react2.default.createElement(
-							"li",
-							{ className: "ib" },
+							'li',
+							{ className: 'ib' },
 							_react2.default.createElement(
-								"span",
-								{ className: "canvas__brush-size-wrap", "data-size": medium, onClick: this.props.changeBrushSize.bind(scope) },
-								_react2.default.createElement("span", { className: "canvas__brush-size", style: { width: medium + 'px', height: medium + 'px' } })
+								'span',
+								{ className: 'canvas__brush-size-wrap', 'data-size': medium, onClick: this.props.changeBrushSize.bind(scope) },
+								_react2.default.createElement('span', { className: 'canvas__brush-size', style: { width: medium + 'px', height: medium + 'px' } })
 							)
 						),
 						_react2.default.createElement(
-							"li",
-							{ className: "ib" },
+							'li',
+							{ className: 'ib' },
 							_react2.default.createElement(
-								"span",
-								{ className: "canvas__brush-size-wrap", "data-size": large, onClick: this.props.changeBrushSize.bind(scope) },
-								_react2.default.createElement("span", { className: "canvas__brush-size", style: { width: large + 'px', height: large + 'px' } })
+								'span',
+								{ className: 'canvas__brush-size-wrap', 'data-size': large, onClick: this.props.changeBrushSize.bind(scope) },
+								_react2.default.createElement('span', { className: 'canvas__brush-size', style: { width: large + 'px', height: large + 'px' } })
 							)
 						),
 						_react2.default.createElement(
-							"li",
-							{ className: "ib" },
+							'li',
+							{ className: 'ib' },
 							_react2.default.createElement(
-								"span",
-								{ className: "canvas__brush-size-wrap", "data-size": huge, onClick: this.props.changeBrushSize.bind(scope) },
-								_react2.default.createElement("span", { className: "canvas__brush-size", style: { width: huge + 'px', height: huge + 'px' } })
+								'span',
+								{ className: 'canvas__brush-size-wrap', 'data-size': huge, onClick: this.props.changeBrushSize.bind(scope) },
+								_react2.default.createElement('span', { className: 'canvas__brush-size', style: { width: huge + 'px', height: huge + 'px' } })
 							)
 						)
 					)
 				),
 				_react2.default.createElement(
-					"li",
-					{ className: "canvas__colours" },
+					'li',
+					{ className: 'canvas__colours' },
 					_react2.default.createElement(
-						"ul",
+						'ul',
 						null,
 						_react2.default.createElement(
-							"li",
-							{ className: "ib" },
-							_react2.default.createElement("span", { "data-color": "#FFFFFF", style: { backgroundColor: '#FFFFFF' }, className: "canvas__colour", onClick: this.props.updateColor.bind(scope) })
+							'li',
+							{ className: 'ib' },
+							_react2.default.createElement('span', { 'data-color': '#FFFFFF', style: { backgroundColor: '#FFFFFF' }, className: 'canvas__colour', onClick: this.props.updateColor.bind(scope) })
 						),
 						_react2.default.createElement(
-							"li",
-							{ className: "ib" },
-							_react2.default.createElement("span", { "data-color": "#d15d0a", style: { backgroundColor: '#d15d0a' }, className: "canvas__colour", onClick: this.props.updateColor.bind(scope) })
+							'li',
+							{ className: 'ib' },
+							_react2.default.createElement('span', { 'data-color': '#d15d0a', style: { backgroundColor: '#d15d0a' }, className: 'canvas__colour', onClick: this.props.updateColor.bind(scope) })
 						),
 						_react2.default.createElement(
-							"li",
-							{ className: "ib" },
-							_react2.default.createElement("span", { "data-color": "#FFFB21", style: { backgroundColor: '#FFFB21' }, className: "canvas__colour", onClick: this.props.updateColor.bind(scope) })
+							'li',
+							{ className: 'ib' },
+							_react2.default.createElement('span', { 'data-color': '#FFFB21', style: { backgroundColor: '#FFFB21' }, className: 'canvas__colour', onClick: this.props.updateColor.bind(scope) })
 						),
 						_react2.default.createElement(
-							"li",
-							{ className: "ib" },
-							_react2.default.createElement("span", { "data-color": "#363CFF", style: { backgroundColor: '#363CFF' }, className: "canvas__colour", onClick: this.props.updateColor.bind(scope) })
+							'li',
+							{ className: 'ib' },
+							_react2.default.createElement('span', { 'data-color': '#363CFF', style: { backgroundColor: '#363CFF' }, className: 'canvas__colour', onClick: this.props.updateColor.bind(scope) })
 						)
 					)
 				)
@@ -917,7 +950,8 @@ CanvasSettings.propTypes = {
 	fullClear: _react.PropTypes.func.isRequired,
 	changeBrushSize: _react.PropTypes.func.isRequired,
 	updateColor: _react.PropTypes.func.isRequired,
-	scope: _react.PropTypes.object.isRequired
+	scope: _react.PropTypes.object.isRequired,
+	socket: _react.PropTypes.object.isRequired
 };
 
 },{"react":"react"}],11:[function(require,module,exports){
@@ -1036,8 +1070,6 @@ var Chat = function (_Component) {
 				var chat = chatLog[item];
 				return _react2.default.createElement(_Message2.default, { chat: chat, key: chat.timestamp });
 			});
-
-			console.log(chats);
 
 			if (chatHistory) {
 				setTimeout(function () {
@@ -1190,6 +1222,10 @@ var _Chat = require('./Chat.js');
 
 var _Chat2 = _interopRequireDefault(_Chat);
 
+var _ClientConfigStore = require('../stores/ClientConfigStore');
+
+var _ClientConfigStore2 = _interopRequireDefault(_ClientConfigStore);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1222,7 +1258,7 @@ var Home = function (_Component) {
 				_react2.default.createElement(
 					'div',
 					{ className: 'innerwrapper' },
-					_react2.default.createElement(_Canvas2.default, { userId: this.props.userId, db: this.props.db, room: this.props.room }),
+					_react2.default.createElement(_Canvas2.default, null),
 					_react2.default.createElement(_Chat2.default, null)
 				)
 			);
@@ -1234,7 +1270,7 @@ var Home = function (_Component) {
 
 exports.default = Home;
 
-},{"./Canvas.js":9,"./Chat.js":11,"./Users.js":16,"react":"react"}],14:[function(require,module,exports){
+},{"../stores/ClientConfigStore":22,"./Canvas.js":9,"./Chat.js":11,"./Users.js":16,"react":"react"}],14:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

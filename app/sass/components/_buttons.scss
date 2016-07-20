@@ -22,7 +22,6 @@ $module: 		'btn';
 		background-color: $color1;
 		color: white;
 		padding: em(10,$fontSize);
-		width: em(60,$fontSize);
 
 		&:hover {
 			background-color: darken($color1,10%);

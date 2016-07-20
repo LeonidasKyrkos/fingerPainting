@@ -30,6 +30,14 @@ export default class App extends Component {
 
 			this.joinRoom(room);
 		});
+
+		socket.on('countdown',(data)=>{
+			console.log(data);
+		});
+
+		socket.on('round end',()=>{
+			console.log('ended');
+		});
 	}
 
 	requestJoin(name,id,password) {

@@ -25,6 +25,8 @@ export default class Canvas extends Component {
 		this.pathsRef = this.db.ref(this.room + '/paths/')
 		CanvasActions.bindToFirebase(this.pathsRef);
 
+		this.socket = this.state.config.socket;
+
 		this.userId = this.state.user.id;
 		this.points = [];
 		this.pathChange = this.pathChange.bind(this);
@@ -265,14 +267,14 @@ export default class Canvas extends Component {
 		}
 
 		if(this.state.player) {
-			var canvasSettings = <CanvasSettings scope={this} fullClear={this.fullClear} changeBrushSize={this.changeBrushSize} updateColor={this.updateColor} />;
+			var canvasSettings = <CanvasSettings scope={this} socket={this.socket} fullClear={this.fullClear} changeBrushSize={this.changeBrushSize} updateColor={this.updateColor} />;
 			var canvas = ( 
 				<canvas width="100" height="600px" className="canvas" id="canvas" 
 						onMouseDown={this.startDrawing.bind(this)} 
 						onMouseUp={this.stopDrawing.bind(this)} 
 						onMouseLeave={this.stopDrawing.bind(this)} 
 						onMouseMove={this.dragBrush.bind(this)} 
-				>				
+				>
 				</canvas>
 			)
 		} else {

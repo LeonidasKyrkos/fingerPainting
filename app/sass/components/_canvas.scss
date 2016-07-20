@@ -16,6 +16,11 @@ $module: 		'canvas';
 		@include align-items(baseline);
 	}
 
+	&__settings-btn {
+		@extend .btn--primary;
+		margin-right: em(5);
+	}
+
 	&__colours {
 		@include display(flex);
 		margin: 0 em(10) 0 auto;

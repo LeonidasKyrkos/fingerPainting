@@ -222,7 +222,7 @@ h1, h2, h3, h4, h5 {
 .delta {
   margin-bottom: 0.5em; }
 
-.btn, .btn--primary, .btn--secondary, .btn--submit {
+.btn, .btn--primary, .canvas__settings-btn, .btn--secondary, .btn--submit {
   background-color: transparent;
   display: inline-block;
   margin-bottom: 0;
@@ -239,13 +239,12 @@ h1, h2, h3, h4, h5 {
   user-select: none;
   text-decoration: none !important;
   outline: 0; }
-  .btn--primary {
+  .btn--primary, .canvas__settings-btn {
     font-size: 0.9em;
     background-color: #B22222;
     color: white;
-    padding: 0.55556em;
-    width: 3.33333em; }
-    .btn--primary:hover {
+    padding: 0.55556em; }
+    .btn--primary:hover, .canvas__settings-btn:hover {
       background-color: #871a1a; }
   .btn--secondary, .btn--submit {
     background-color: #4e4e4e;
@@ -361,6 +360,8 @@ h1, h2, h3, h4, h5 {
     -o-align-items: baseline;
     align-items: baseline;
     -ms-flex-align: baseline; }
+  .canvas__settings-btn {
+    margin-right: 0.25em; }
   .canvas__colours {
     display: -webkit-box;
     display: -moz-box;

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Users from './Users.js';
 import Canvas from './Canvas.js';
 import Chat from './Chat.js';
+import ClientConfigStore from '../stores/ClientConfigStore';
 
 export default class Home extends Component {
 	render() {
@@ -11,9 +12,9 @@ export default class Home extends Component {
 				<h1 className="alpha">Pictionareo</h1>
 				<Users userId={this.props.userId} />
 				<div className="innerwrapper">					
-					<Canvas userId={this.props.userId} db={this.props.db} room={this.props.room} />
+					<Canvas />
 					<Chat />
-				</div>				
+				</div>
 			</div>
 		);
 	}

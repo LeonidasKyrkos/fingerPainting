@@ -74,8 +74,6 @@ export default class Chat extends Component {
 			)
 		});
 
-		console.log(chats);
-
 		if(chatHistory) { 
 			setTimeout(()=>{ chatHistory.scrollTop = chatHistory.scrollHeight},32); 
 		};

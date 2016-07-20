@@ -1,6 +1,22 @@
 import React, { Component, PropTypes } from 'react';
 
 export default class CanvasSettings extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			status: 'start game'
+		}
+		this.socket = this.props.socket;
+	}
+
+	startGame() {
+		this.socket.emit('start game');
+		this.setState({
+			status: 'Pause game'
+		})
+	}
+
 	render() {
 		let scope = this.props.scope;
 		let small = 3;
@@ -11,7 +27,10 @@ export default class CanvasSettings extends React.Component {
 		return (
 			<ul className="canvas__settings">
 				<li>
-					<button className="btn--primary" onClick={this.props.fullClear.bind(scope)} >Reset</button>
+					<button className="canvas__settings-btn" onClick={this.startGame.bind(this)}>{this.state.status}</button>
+				</li>
+				<li>
+					<button className="canvas__settings-btn" onClick={this.props.fullClear.bind(scope)} >Reset</button>
 				</li>
 				<li className="canvas__brush-sizes">
 					<ul>
@@ -55,5 +74,6 @@ CanvasSettings.propTypes = {
 	fullClear: PropTypes.func.isRequired,
 	changeBrushSize: PropTypes.func.isRequired,
 	updateColor: PropTypes.func.isRequired,
-	scope: PropTypes.object.isRequired
+	scope: PropTypes.object.isRequired,
+	socket: PropTypes.object.isRequired
 }
