@@ -39,5 +39,6 @@ function deleteUserFromRoom(socket) {
 
 module.exports = {
 	handler: handler,
-	deleteUserFromRoom: deleteUserFromRoom
+	deleteUserFromRoom: deleteUserFromRoom,
+	updateReference: updateReference
 }

@@ -744,16 +744,21 @@ var Chat = function (_Component) {
 			}
 		}
 	}, {
+		key: 'renderChats',
+		value: function renderChats(chatLog) {
+			return Object.keys(chatLog).map(function (item, index) {
+				var chat = chatLog[item];
+				return _react2.default.createElement(_Message2.default, { chat: chat, key: chat.timestamp });
+			});
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			var chatHistory = document.querySelector('#chat-history');
 
 			var chatLog = this.state.store.chatLog;
 
-			var chats = Object.keys(chatLog).map(function (item, index) {
-				var chat = chatLog[item];
-				return _react2.default.createElement(_Message2.default, { chat: chat, key: chat.timestamp });
-			});
+			var chats = typeof chatLog !== 'undefined' ? this.renderChats(chatLog) : '';
 
 			if (chatHistory) {
 				setTimeout(function () {
@@ -1254,12 +1259,21 @@ var Users = function (_Component) {
 			var _this2 = this;
 
 			var users = Object.keys(this.state.store.users).map(function (user, index) {
-				var status = _this2.state.store.users[user].status === 'captain' ? '*' : '';
+				var status = '';
+				var classname = 'users__user';
+				if (_this2.state.store.users[user].status === 'captain') {
+					status = '*';
+					classname += ' active';
+				}
 
 				return _react2.default.createElement(
 					'li',
 					{ key: user },
-					status + ' ' + _this2.state.store.users[user].name
+					_react2.default.createElement(
+						'span',
+						{ className: classname },
+						status + ' ' + _this2.state.store.users[user].name
+					)
 				);
 			});
 

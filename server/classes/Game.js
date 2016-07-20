@@ -47,20 +47,9 @@ Game.prototype = {
 		});
 	},
 
-	gameroomHandler(request,socket) {
-		// update the users object of the requested room.
-		updateReference(request.id + '/users/' + socket.username + '/name/', request.name);
-
-		// update gameroom status [playing/not playing]
-		var room = firebase.rooms[request.id];
-
-		if(room.users && Object.keys(room.users).length === 1) {
-			updateReference(request.id + '/users/' + socket.username + '/status/', 'captain');
-		}
-	},
-
 	parseMessage(message) {
-		console.log(message);
+		var ref = firebase.db.ref(firebase.roomsPath + this.id + '/chatLog/');
+		ref.push(message);
 	},
 
 	updateStore: function(snapshot) {

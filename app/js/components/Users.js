@@ -22,9 +22,20 @@ export default class Users extends Component {
 
 	render() {
 		let users = Object.keys(this.state.store.users).map((user,index)=>{
-			let status = this.state.store.users[user].status === 'captain' ? '*' : '';
+			let status = '';
+			let classname = 'users__user';
+			if(this.state.store.users[user].status === 'captain') {
+				status = '*';
+				classname += ' active';
+			}
 
-			return <li key={user}>{status + ' ' + this.state.store.users[user].name}</li>
+			return (
+				<li key={user}>
+						<span className={classname}>
+							{status + ' ' + this.state.store.users[user].name}
+						</span>						
+				</li>
+			)
 		});
 
 		return (

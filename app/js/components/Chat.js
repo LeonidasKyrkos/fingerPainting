@@ -41,22 +41,25 @@ export default class Chat extends Component {
 		}
 	}
 
-	render() {
-		const chatHistory = document.querySelector('#chat-history');
-
-		let chatLog = this.state.store.chatLog;
-
-		let chats = Object.keys(chatLog).map((item,index)=>{
+	renderChats(chatLog) {
+		return Object.keys(chatLog).map((item,index)=>{
 			let chat = chatLog[item];
 			return (
 				<Message chat={chat} key={chat.timestamp} />
 			)
 		});
+	}
+
+	render() {
+		const chatHistory = document.querySelector('#chat-history');
+
+		let chatLog = this.state.store.chatLog;
+
+		let chats = typeof chatLog !== 'undefined' ? this.renderChats(chatLog) : '';
 
 		if(chatHistory) { 
 			setTimeout(()=>{ chatHistory.scrollTop = chatHistory.scrollHeight},32); 
-		};
-		
+		};		
 
 		return (
 			<div className="chat">
