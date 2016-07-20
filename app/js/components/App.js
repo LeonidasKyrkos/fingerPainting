@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Actions from '../actions/Actions';
 import Store from '../stores/Store';
 
-const socket = io.connect('http://localhost:3000');
+const socket = io.connect('52.209.86.125:443');
 
 export default class App extends Component {
 	constructor(props) {
