@@ -1,38 +1,25 @@
 import React, { Component, PropTypes } from 'react';
 
-import UserStore from '../stores/UserStore';
-import ClientConfigStore from '../stores/ClientConfigStore';
-import ChatActions from '../actions/ChatActions';
-import ChatStore from '../stores/ChatStore';
+import Store from '../stores/Store';
 import Message from './Message';
 
 export default class Chat extends Component {
 	constructor(props) {
 		super(props);
 
-		this.userChange = this.userChange.bind(this);
-		this.chatChange = this.chatChange.bind(this);
-
-		let clientConfigStore = ClientConfigStore.getState().config;
-		this.state = { chatLog: [], user: UserStore.getState().user, db: clientConfigStore.db, room: clientConfigStore.room};
+		this.onChange = this.onChange.bind(this);
+		this.state = Store.getState();
 	}
 
 	componentDidMount() {
-		UserStore.listen(this.userChange);
-		ChatStore.listen(this.chatChange);
-		ChatActions.bindToFirebase(this.state.db.ref(this.state.room + '/chatLog'));
+		Store.listen(this.onChange);
 	}
 
 	componentWillUnmount() {
-		UserStore.unlisten(this.userChange);
-		ChatStore.unlisten(this.chatChange);
+		Store.unlisten(this.onChange);
 	}
 
-	userChange(state) {
-		this.setState(state);
-	}
-
-	chatChange(state) {
+	onChange(state) {
 		this.setState(state);
 	}
 
@@ -50,22 +37,14 @@ export default class Chat extends Component {
 			data.name = this.state.user.name;
 			data.message = msg;
 			data.timestamp = timestamp;
-
-			// if(data.message === this.state.puzzle) {
-			// 	input.value = "";
-			// 	window.alert(`correct! well done ${this.state.userId}`);
-			// } else {
-				this.state.db.ref(this.state.room + '/chatLog').push(data);
-			// }
-
-
+			this.state.socket.emit('message',data)
 		}
 	}
 
 	render() {
 		const chatHistory = document.querySelector('#chat-history');
 
-		let chatLog = this.state.chatLog;
+		let chatLog = this.state.store.chatLog;
 
 		let chats = Object.keys(chatLog).map((item,index)=>{
 			let chat = chatLog[item];

@@ -1,19 +1,19 @@
 import React, { Component, PropTypes } from 'react';
-import UsersStore from '../stores/UsersStore';
+import Store from '../stores/Store';
 
 export default class Users extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = UsersStore.getState();
+		this.state = Store.getState();
 	}
 
 	componentDidMount() {
-		UsersStore.listen(this.onChange.bind(this));
+		Store.listen(this.onChange.bind(this));
 	}
 
 	componentWillUnmount() {
-		UsersStore.unlisten(this.onChange.bind(this));
+		Store.unlisten(this.onChange.bind(this));
 	}
 
 	onChange(state) {
@@ -21,10 +21,10 @@ export default class Users extends Component {
 	}
 
 	render() {
-		let users = Object.keys(this.state.users).map((user,index)=>{
-			let status = this.state.users[user].status === 'captain' ? '*' : '';
+		let users = Object.keys(this.state.store.users).map((user,index)=>{
+			let status = this.state.store.users[user].status === 'captain' ? '*' : '';
 
-			return <li key={user}>{status + ' ' + this.state.users[user].name}</li>
+			return <li key={user}>{status + ' ' + this.state.store.users[user].name}</li>
 		});
 
 		return (

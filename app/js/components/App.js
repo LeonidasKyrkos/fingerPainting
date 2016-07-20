@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import UsersActions from '../actions/UsersActions';
-import UserActions from '../actions/UserActions';
-import ClientConfigActions from '../actions/ClientConfigActions';
-import firebase from 'firebase';
-import config from '../firebaseConf.js';
+import Actions from '../actions/Actions';
+import Store from '../stores/Store';
 
 const socket = io.connect('http://localhost:3000');
 
@@ -11,24 +8,21 @@ export default class App extends Component {
 	constructor(props) {
 		super(props);
 
-		ClientConfigActions.updateConfig({ socket: socket });
+		this.state = Store.getState();
 	}
 
 	componentDidMount() {
-		socket.on('connected',(userId)=>{
-			this.userId = userId;
+		socket.on('connected',(user)=>{
+			Actions.updateSocket(socket);
+			Actions.updateUser(user);
 		});
 
-		socket.on('request accepted',(data)=>{
-			firebase.initializeApp(config);
-			let db = firebase.database();
-			let room = data.room;
+		socket.on('store update',(store)=>{
+			Actions.updateStore(store)
+		})
 
-			ClientConfigActions.updateConfig({ db: firebase.database(), room: data.room, socket: socket });
-			UserActions.updateUser(data.user);
-			UsersActions.bindToRoom(db.ref(room + '/users'));
-
-			this.joinRoom(room);
+		socket.on('user update',(user)=>{
+			Actions.updateUser(user);
 		});
 
 		socket.on('countdown',(data)=>{
@@ -38,6 +32,19 @@ export default class App extends Component {
 		socket.on('round end',()=>{
 			console.log('ended');
 		});
+		
+		socket.on('test',()=>{
+			console.log('test received');
+		})
+
+		Store.listen(this.onChange.bind(this));
+	}
+
+	onChange(state) {
+		if(state.store.currentRoom !== this.state.store.currentRoom) {
+			this.setState(state);
+			this.joinRoom(state.store.currentRoom);
+		}
 	}
 
 	requestJoin(name,id,password) {

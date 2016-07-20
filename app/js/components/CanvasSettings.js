@@ -3,18 +3,11 @@ import React, { Component, PropTypes } from 'react';
 export default class CanvasSettings extends React.Component {
 	constructor(props) {
 		super(props);
-
-		this.state = {
-			status: 'start game'
-		}
 		this.socket = this.props.socket;
 	}
 
 	startGame() {
 		this.socket.emit('start game');
-		this.setState({
-			status: 'Pause game'
-		})
 	}
 
 	render() {
@@ -27,7 +20,7 @@ export default class CanvasSettings extends React.Component {
 		return (
 			<ul className="canvas__settings">
 				<li>
-					<button className="canvas__settings-btn" onClick={this.startGame.bind(this)}>{this.state.status}</button>
+					<button className="canvas__settings-btn" onClick={this.startGame.bind(this)}>Start game</button>
 				</li>
 				<li>
 					<button className="canvas__settings-btn" onClick={this.props.fullClear.bind(scope)} >Reset</button>

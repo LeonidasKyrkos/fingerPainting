@@ -1,73 +1,31 @@
 import React, { Component, PropTypes } from 'react';
-import firebase from 'firebase';
 
 import CanvasSettings from './CanvasSettings';
-import UsersStore from '../stores/UsersStore';
-import UserStore from '../stores/UserStore';
-import ClientConfigStore from '../stores/ClientConfigStore';
-import CanvasActions from '../actions/CanvasActions';
-import CanvasStore from '../stores/CanvasStore';
-
+import Store from '../stores/Store';
 
 export default class Canvas extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {};
-		this.state.config = ClientConfigStore.getState().config;
-		this.state.user = UserStore.getState().user;
-		this.state.users = {};
-		this.state.canvasPaths = [];
+		this.state = Store.getState();
+		this.state.player = this.state.user.captain || false;
 
-		// firebase stuff
-		this.db = this.state.config.db;
-		this.room = this.state.config.room;
-		this.pathsRef = this.db.ref(this.room + '/paths/')
-		CanvasActions.bindToFirebase(this.pathsRef);
-
-		this.socket = this.state.config.socket;
-
-		this.userId = this.state.user.id;
 		this.points = [];
-		this.pathChange = this.pathChange.bind(this);
 
-		this.areWeTheCaptainNow();
-	}
-
-	areWeTheCaptainNow() {
-		Object.keys(this.state.users).forEach((item,index)=>{
-			if(item.toString() === this.userId.toString() && this.state.users[item].status === 'captain') {
-				this.setState({
-					player: true
-				});
-			}
-		});
-
-		if(this.state.player) {
-			CanvasStore.unlisten(this.pathChange);
-		} else {
-			CanvasStore.listen(this.pathChange);
-		}
-		
+		this.onChange = this.onChange.bind(this);
 	}
 
 	componentDidMount() {
-		UsersStore.listen(this.onChange.bind(this));
+		Store.listen(this.onChange);
 
 		this.setupCanvas();
 	}
 
 	componentWillUnmount() {
-		UsersStore.unlisten(this.onChange.bind(this));
-		CanvasStore.unlisten(this.pathChange);
+		Store.unlisten(this.onChange);
 	}
 
 	onChange(state) {
-		this.setState(state);
-		this.areWeTheCaptainNow();
-	}
-
-	pathChange(state) {
 		this.setState(state);
 	}
 
@@ -87,23 +45,23 @@ export default class Canvas extends Component {
 	startDrawing(e) {
 		this.painting = true;
 		this.current = this.points.length || 0;
-		this.setupCurrent();
+		this.clearArrays();
 		this.addToArray(this.getX(e),this.getY(e),false);
 	}
 
 	// drag
 	dragBrush(e) {
 		if(this.painting) {
-			if(this.points[this.current].length > 30) {
-				let prevArr = this.points[this.current];
+			if(this.points.length > 30) {
+				let prevArr = this.points;
 				this.current++;
-				this.setupCurrent();
+				this.clearArrays();
 				
 				let obj = prevArr[prevArr.length - 1];
 				let counter = 0;
 
 				for(let i = prevArr.length - 8; i < prevArr.length -1; i++) {
-					this.points[this.current][counter] = prevArr[i];
+					this.points[counter] = prevArr[i];
 					counter++;
 				}
 			}
@@ -117,14 +75,7 @@ export default class Canvas extends Component {
 		this.painting = false;
 	}
 
-
 	// UTILITIES
-
-	// setup latest (current) path item
-
-	setupCurrent() {		
-		this.points[this.current] = [];	
-	}	
 
 	// get x coordinate
 	getX(e) {
@@ -140,7 +91,7 @@ export default class Canvas extends Component {
 
 	// add to points array
 	addToArray(mx,my,dragStatus) {		
-		this.points[this.current].push({
+		this.points.push({
 			x: mx, 
 			y: my, 
 			color: this.ctx.strokeStyle, 
@@ -148,24 +99,28 @@ export default class Canvas extends Component {
 			dragging: dragStatus
 		})
 
-		this.pushPathsToFirebase();
+		this.pushPaths();
 		this.redraw();
 	}
 
-	pushPathsToFirebase() {
-		this.pathsRef.set({ path: this.points[this.current] });
+	pushPaths() {
+		this.state.socket.emit('path update',{ path: this.points });
 	}
 
 	//client redraw function
 	redraw() {
-		let points = this.state.player ? this.points : this.state.canvasPaths;
+		let path = [];
 
-		if(!points.length) {
+		if(this.state.player) {
+			path = this.points;
+		} else if (this.state.store.paths) {
+			path = this.state.store.paths.path;
+		}
+
+		if(!path.length) {
 			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 			return;
 		}
-
-		let path = points[points.length - 1];
 
 		if(path.length > 4) {
 			this.ctx.beginPath();		
@@ -214,7 +169,7 @@ export default class Canvas extends Component {
 	// line renderer
 
 	renderDot(path) {
-		let obj = path[0];
+		let obj = path;
 
 		this.ctx.beginPath();
 		this.ctx.arc(obj.x, obj.y, obj.size / 2, 0, 2 * Math.PI, false);
@@ -231,13 +186,13 @@ export default class Canvas extends Component {
 	// empty points array
 	clearArrays() {
 		this.points = [];
-		this.pathsRef.remove();
 	}
 
 	// empty contexts and points
 	fullClear() {
 		this.clearContext(this.ctx);
 		this.clearArrays();
+		this.pushPaths();
 	}
 
 
@@ -267,7 +222,16 @@ export default class Canvas extends Component {
 		}
 
 		if(this.state.player) {
-			var canvasSettings = <CanvasSettings scope={this} socket={this.socket} fullClear={this.fullClear} changeBrushSize={this.changeBrushSize} updateColor={this.updateColor} />;
+			var canvasSettings = (
+				<CanvasSettings 
+					scope={this} 
+					socket={this.state.socket} 
+					fullClear={this.fullClear} 
+					changeBrushSize={this.changeBrushSize} 
+					updateColor={this.updateColor} 
+				/>
+			);
+
 			var canvas = ( 
 				<canvas width="100" height="600px" className="canvas" id="canvas" 
 						onMouseDown={this.startDrawing.bind(this)} 

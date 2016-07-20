@@ -1,33 +1,82 @@
 var io = require('../../configureServer').io;
 var firebase = require('../modules/firebaseConfig');
+var room = require('../modules/room');
 
-function Game(socket) {
-	this.socket = socket;
-	this.init();
+function Game(socket,gameId,database) {
+	this.id = gameId;
+	this.sockets = [];
+	this.database = database;
+	this.init(socket);
 }
 
 Game.prototype = {
-	init: function() {
+	init: function(socket) {
 		this.store = {};
 
+		this.attachListeners(socket);
 		this.attachFirebase();
-		this.attachListeners();
 		//this.startRound();
 	},
 
 	attachFirebase() {
-		this.socket.database.on('value',this.updateStore.bind(this));
+		this.database.on('value',this.updateStore.bind(this));
 	},
 
-	attachListeners() {
-		this.socket.on('start round',this.startRound.bind(this));
-		this.socket.on('pause round',this.pauseRound.bind(this));
-		this.socket.on('continue round',this.unpauseRound.bind(this));
+	attachListeners(socket) {
+		this.sockets.push(socket);
+
+		// join room and add to db
+		room.handler(this.id,socket);
+
+		socket.on('path update',(path)=>{
+			var ref = firebase.db.ref(firebase.roomsPath + this.id + '/paths/');
+			ref.set(path);
+		});
+
+		socket.on('start round',this.startRound.bind(this));
+		socket.on('pause round',this.pauseRound.bind(this));
+		socket.on('continue round',this.unpauseRound.bind(this));
+		socket.on('message',this.parseMessage.bind(this));
+		socket.on('disconnect',()=>{
+			for(var i = 0; i < this.sockets.length; i++) {
+				
+				if(socket.id === this.sockets[i].id) {
+					this.sockets.splice(i, 1);
+				}
+			}
+		});
+	},
+
+	gameroomHandler(request,socket) {
+		// update the users object of the requested room.
+		updateReference(request.id + '/users/' + socket.username + '/name/', request.name);
+
+		// update gameroom status [playing/not playing]
+		var room = firebase.rooms[request.id];
+
+		if(room.users && Object.keys(room.users).length === 1) {
+			updateReference(request.id + '/users/' + socket.username + '/status/', 'captain');
+		}
+	},
+
+	parseMessage(message) {
+		console.log(message);
 	},
 
 	updateStore: function(snapshot) {
 		this.store = snapshot.val();
-		io.emit('storeUpdate',this.store);
+		this.store.currentRoom = '/rooms/' + this.id;
+
+		if(this.store.users && this.sockets.length && Object.keys(this.store.users).length === 1) {
+			let user = {
+				id: this.sockets[0].username, 
+				name: this.sockets[0].name, 
+				captain: true
+			};
+			this.sockets[0].emit('user update',user);
+		}
+
+		io.emit('store update',this.store);
 	},
 
 	startRound: function() {

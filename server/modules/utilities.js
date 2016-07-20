@@ -14,22 +14,32 @@ function joinHandler(request,socket){
 	var status = tests.roomTests(request,socket);
 
 	if(status.status) {
-		gameroomHandler(request,socket);
-
-		// store gameroom in socket data
+		// setup
+		socket.name = request.name
 		socket.gameroom = request.id;
-		
-		// inform the client that they can redirect to the room and hand them the database reference.
-		socket.emit('request accepted',{
-			database: firebase.db.ref(firebase.roomsPath + this.socket.gameroom),
-			room: firebase.roomsPath + request.id,
-			user: { id: socket.username, name: request.name }
-		})
+
+		// hand client their user credentials.
+		socket.emit('user update',{ id: socket.username, name: socket.name });		
+
+		// attach database listener 
+		var database = firebase.db.ref(firebase.roomsPath + request.id);
 
 		// initialise game if necessary
-		if(activeGames.indexOf(request.id) === -1) {
-			var game = new Game(socket);
-			activeGames.push(request.id);
+		var found = false;
+
+		for(var i = 0; i < activeGames.length; i++) {
+			var item = activeGames[i];
+
+			if(item.game.id === request.id) {
+				item.game.attachListeners(socket);
+				found = true;
+			} 
+		}
+
+		if(!found) {
+			var game = new Game(socket,request.id,database);
+			var gameItem = { game: game };
+			activeGames.push(gameItem);
 		}
 		
 	} else {
@@ -46,49 +56,10 @@ function deleteActiveGame(id) {
 	}
 }
 
-function gameroomHandler(request,socket) {
-	// update the users object of the requested room.
-	updateReference(request.id + '/users/' + socket.username + '/name/', request.name);
-
-	// update gameroom status [playing/not playing]
-	var room = firebase.rooms[request.id];
-
-	if(room.users && Object.keys(room.users).length === 1) {
-		updateReference(request.id + '/users/' + socket.username + '/status/', 'captain');
-	}
-}
-
-function updateReference(path,updVal) {
-	var obj = {};
-	obj[path] = updVal;
-
-	firebase.roomsRef.update(obj);
-}
-
-function deleteUserFromRoom(socket) {
-	if(socket.gameroom) {
-		var users = firebase.rooms[socket.gameroom].users;
-
-		if(users[socket.username]) {
-			var userRef = firebase.db.ref(firebase.roomsPath + socket.gameroom + '/users/' + socket.username);
-			userRef.remove();
-
-			if(users.length === 1) {
-				deleteActiveGame(socket.gameroom);
-			}
-
-			delete socket.gameroom;
-		}
-	}
-}
-
 // end of utils //
 
 
 module.exports = {
-	gameroomHandler: gameroomHandler,
-	updateReference: updateReference,
-	deleteUserFromRoom: deleteUserFromRoom,
 	joinHandler: joinHandler,
 	deleteActiveGame: deleteActiveGame
 }
