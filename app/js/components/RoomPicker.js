@@ -30,7 +30,7 @@ export default class RoomPicker extends Component {
 							<label className="form__control">
 								<span className="form__label">Name</span>
 								<span className="form__input-wrap">
-									<input required data-js="room.name" autoComplete="off" type="text" className="form__input"/>
+									<input maxLength="10" required data-js="room.name" autoComplete="off" type="text" className="form__input"/>
 								</span>
 							</label>
 						</li>

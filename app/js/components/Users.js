@@ -35,8 +35,10 @@ export default class Users extends Component {
 	}
 
 	render() {
+		let users = '';
+
 		if(this.state.store.users) {
-			let users = Object.keys(this.state.store.users).map((user,index)=>{
+			users = Object.keys(this.state.store.users).map((user,index)=>{
 				let status = '';
 				let classname = 'users__user ' + this.getClassName(user);
 
@@ -48,12 +50,12 @@ export default class Users extends Component {
 					</li>
 				)
 			});
-
-			return (
-				<ul className="users__list">
-					{users}
-				</ul>
-			)
 		}
+
+		return (
+			<ul className="users__list">
+				{users}
+			</ul>
+		)		
 	}
 }

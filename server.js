@@ -13,8 +13,4 @@ io.on('connection', function (socket) {
 	socket.on('join request',function(request){
 		utils.joinHandler(request,socket);
 	});
-
-	socket.on('disconnect',function(){
-		room.deleteUserFromRoom(socket);	
-	});
 });
