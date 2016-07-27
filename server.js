@@ -7,8 +7,8 @@ var io = server.io;
 
 // socket events
 io.on('connection', function (socket) {
-	socket.username = (new Date()).getTime().toString();
-	socket.emit('connected',{ id: socket.username });
+	socket.userId = socket.client.conn.id;
+	socket.emit('connected',{ id: socket.userId });
 
 	socket.on('join request',function(request){
 		utils.joinHandler(request,socket);

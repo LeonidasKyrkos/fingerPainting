@@ -14,7 +14,7 @@ function roomTests(request,socket) {
 		},
 		name: {
 			func: testIn,
-			args: [room.users, socket.username, 'Sorry there is already someone called ' + request.name + ' in that room. Please choose another name.']
+			args: [room.users, socket.userId, 'Sorry there is already someone called ' + request.name + ' in that room. Please choose another name.']
 		}
 	}
 

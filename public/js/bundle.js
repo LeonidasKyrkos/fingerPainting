@@ -35,6 +35,11 @@ var Actions = function () {
 		value: function updateUser(user) {
 			return user;
 		}
+	}, {
+		key: 'updatePuzzle',
+		value: function updatePuzzle(puzzle) {
+			return puzzle;
+		}
 	}]);
 
 	return Actions;
@@ -105,15 +110,10 @@ var App = function (_Component) {
 		value: function componentDidMount() {
 			socket.on('connected', function (user) {
 				_Actions2.default.updateSocket(socket);
-				_Actions2.default.updateUser(user);
 			});
 
 			socket.on('store update', function (store) {
 				_Actions2.default.updateStore(store);
-			});
-
-			socket.on('user update', function (user) {
-				_Actions2.default.updateUser(user);
 			});
 
 			socket.on('countdown', function (data) {
@@ -124,8 +124,12 @@ var App = function (_Component) {
 				console.log('ended');
 			});
 
-			socket.on('test', function () {
-				console.log('test received');
+			socket.on('correct', function () {
+				console.log('correct!');
+			});
+
+			socket.on('puzzle', function (puzzle) {
+				_Actions2.default.updatePuzzle(puzzle);
 			});
 
 			_Store2.default.listen(this.onChange.bind(this));
@@ -179,7 +183,7 @@ var App = function (_Component) {
 
 exports.default = App;
 
-},{"../actions/Actions":1,"../stores/Store":14,"react":"react"}],4:[function(require,module,exports){
+},{"../actions/Actions":1,"../stores/Store":17,"react":"react"}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -217,8 +221,7 @@ var Canvas = function (_Component) {
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Canvas).call(this, props));
 
 		_this.state = _Store2.default.getState();
-		_this.state.player = _this.state.user.captain || false;
-
+		_this.setPlayerStatus();
 		_this.points = [];
 
 		_this.onChange = _this.onChange.bind(_this);
@@ -229,7 +232,6 @@ var Canvas = function (_Component) {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
 			_Store2.default.listen(this.onChange);
-
 			this.setupCanvas();
 		}
 	}, {
@@ -241,6 +243,16 @@ var Canvas = function (_Component) {
 		key: 'onChange',
 		value: function onChange(state) {
 			this.setState(state);
+		}
+	}, {
+		key: 'setPlayerStatus',
+		value: function setPlayerStatus() {
+			var user = this.state.store.users[this.state.socket.id] || {};
+			if (user.status === 'captain') {
+				this.state.player = true;
+			} else {
+				this.state.player = false;
+			}
 		}
 	}, {
 		key: 'setupCanvas',
@@ -466,6 +478,7 @@ var Canvas = function (_Component) {
 	}, {
 		key: 'render',
 		value: function render() {
+			this.setPlayerStatus();
 			if (this.canvas) {
 				this.canvasX = this.canvas.offsetLeft;
 				this.canvasY = this.canvas.offsetTop;
@@ -478,7 +491,6 @@ var Canvas = function (_Component) {
 			if (this.state.player) {
 				var canvasSettings = _react2.default.createElement(_CanvasSettings2.default, {
 					scope: this,
-					socket: this.state.socket,
 					fullClear: this.fullClear,
 					changeBrushSize: this.changeBrushSize,
 					updateColor: this.updateColor
@@ -509,7 +521,7 @@ var Canvas = function (_Component) {
 
 exports.default = Canvas;
 
-},{"../stores/Store":14,"./CanvasSettings":5,"react":"react"}],5:[function(require,module,exports){
+},{"../stores/Store":17,"./CanvasSettings":5,"react":"react"}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -521,6 +533,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _Store = require('../stores/Store');
+
+var _Store2 = _interopRequireDefault(_Store);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -538,14 +554,69 @@ var CanvasSettings = function (_React$Component) {
 
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CanvasSettings).call(this, props));
 
-		_this.socket = _this.props.socket;
+		_this.onChange = _this.onChange.bind(_this);
+		_this.state = _Store2.default.getState();
 		return _this;
 	}
 
 	_createClass(CanvasSettings, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			_Store2.default.listen(this.onChange);
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			_Store2.default.unlisten(this.onChange);
+		}
+	}, {
+		key: 'onChange',
+		value: function onChange(state) {
+			this.setState(state);
+		}
+	}, {
 		key: 'startGame',
 		value: function startGame() {
-			this.socket.emit('start game');
+			this.state.socket.emit('start round');
+		}
+	}, {
+		key: 'pause',
+		value: function pause() {
+			this.state.socket.emit('pause round');
+		}
+	}, {
+		key: 'unpause',
+		value: function unpause() {
+			this.state.socket.emit('unpause round');
+		}
+	}, {
+		key: 'getButton',
+		value: function getButton() {
+			if (this.state.store.status === 'pending') {
+				return _react2.default.createElement(
+					'button',
+					{ className: 'canvas__settings-btn', onClick: this.startGame.bind(this) },
+					'Start game'
+				);
+			}
+
+			if (this.state.store.status === 'playing') {
+				return _react2.default.createElement(
+					'button',
+					{ className: 'canvas__settings-btn', onClick: this.pause.bind(this) },
+					'Pause game'
+				);
+			}
+
+			if (this.state.store.status === 'paused') {
+				return _react2.default.createElement(
+					'button',
+					{ className: 'canvas__settings-btn', onClick: this.unpause.bind(this) },
+					'Unpause'
+				);
+			}
+
+			return '';
 		}
 	}, {
 		key: 'render',
@@ -556,17 +627,15 @@ var CanvasSettings = function (_React$Component) {
 			var large = 7;
 			var huge = 12;
 
+			var button = this.getButton();
+
 			return _react2.default.createElement(
 				'ul',
 				{ className: 'canvas__settings' },
 				_react2.default.createElement(
 					'li',
 					null,
-					_react2.default.createElement(
-						'button',
-						{ className: 'canvas__settings-btn', onClick: this.startGame.bind(this) },
-						'Start game'
-					)
+					button
 				),
 				_react2.default.createElement(
 					'li',
@@ -663,11 +732,10 @@ CanvasSettings.propTypes = {
 	fullClear: _react.PropTypes.func.isRequired,
 	changeBrushSize: _react.PropTypes.func.isRequired,
 	updateColor: _react.PropTypes.func.isRequired,
-	scope: _react.PropTypes.object.isRequired,
-	socket: _react.PropTypes.object.isRequired
+	scope: _react.PropTypes.object.isRequired
 };
 
-},{"react":"react"}],6:[function(require,module,exports){
+},{"../stores/Store":17,"react":"react"}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -737,7 +805,8 @@ var Chat = function (_Component) {
 			if (msg.length) {
 				var timestamp = new Date().getTime();
 				var data = {};
-				data.name = this.state.user.name;
+				data.id = this.state.socket.id;
+				data.name = this.state.store.users[data.id].name;
 				data.message = msg;
 				data.timestamp = timestamp;
 				this.state.socket.emit('message', data);
@@ -793,7 +862,85 @@ var Chat = function (_Component) {
 
 exports.default = Chat;
 
-},{"../stores/Store":14,"./Message":9,"react":"react"}],7:[function(require,module,exports){
+},{"../stores/Store":17,"./Message":10,"react":"react"}],7:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Store = require('../stores/Store');
+
+var _Store2 = _interopRequireDefault(_Store);
+
+var _Scoreboard = require('./Scoreboard');
+
+var _Scoreboard2 = _interopRequireDefault(_Scoreboard);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var EndGame = function (_Component) {
+	_inherits(EndGame, _Component);
+
+	function EndGame(props) {
+		_classCallCheck(this, EndGame);
+
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(EndGame).call(this, props));
+
+		_this.onChange = _this.onChange.bind(_this);
+		_this.state = _Store2.default.getState();
+		return _this;
+	}
+
+	_createClass(EndGame, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			_Store2.default.listen(this.onChange);
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			_Store2.default.unlisten(this.onChange);
+		}
+	}, {
+		key: 'onChange',
+		value: function onChange(state) {
+			this.setState(state);
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			return _react2.default.createElement(
+				'div',
+				{ className: 'game__over' },
+				_react2.default.createElement(
+					'h1',
+					{ className: 'alpha' },
+					'GAME OVER'
+				),
+				_react2.default.createElement(_Scoreboard2.default, null)
+			);
+		}
+	}]);
+
+	return EndGame;
+}(_react.Component);
+
+exports.default = EndGame;
+
+},{"../stores/Store":17,"./Scoreboard":13,"react":"react"}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -870,7 +1017,7 @@ var ErrorMessage = function (_Component) {
 
 exports.default = ErrorMessage;
 
-},{"../stores/Store":14,"react":"react"}],8:[function(require,module,exports){
+},{"../stores/Store":17,"react":"react"}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -899,6 +1046,14 @@ var _Chat = require('./Chat.js');
 
 var _Chat2 = _interopRequireDefault(_Chat);
 
+var _Puzzle = require('./Puzzle.js');
+
+var _Puzzle2 = _interopRequireDefault(_Puzzle);
+
+var _Endgame = require('./Endgame');
+
+var _Endgame2 = _interopRequireDefault(_Endgame);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -913,27 +1068,59 @@ var Home = function (_Component) {
 	function Home() {
 		_classCallCheck(this, Home);
 
-		return _possibleConstructorReturn(this, Object.getPrototypeOf(Home).apply(this, arguments));
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Home).call(this));
+
+		_this.state = _Store2.default.getState();
+		_this.onChange = _this.onChange.bind(_this);
+		return _this;
 	}
 
 	_createClass(Home, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			_Store2.default.listen(this.onChange);
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			_Store2.default.unlisten(this.onChange);
+		}
+	}, {
+		key: 'onChange',
+		value: function onChange(state) {
+			this.setState(state);
+		}
+	}, {
+		key: 'renderItems',
+		value: function renderItems() {
+			if (this.state.store.status === 'finished') {
+				return _react2.default.createElement(
+					'div',
+					{ className: 'game__wrap' },
+					_react2.default.createElement(_Endgame2.default, null)
+				);
+			} else {
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(_Users2.default, { userId: this.props.userId }),
+					_react2.default.createElement(
+						'div',
+						{ className: 'game__wrap' },
+						_react2.default.createElement(_Puzzle2.default, null),
+						_react2.default.createElement(_Canvas2.default, null),
+						_react2.default.createElement(_Chat2.default, null)
+					)
+				);
+			}
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			return _react2.default.createElement(
 				'div',
 				{ className: 'wrapper' },
-				_react2.default.createElement(
-					'h1',
-					{ className: 'alpha' },
-					'Pictionareo'
-				),
-				_react2.default.createElement(_Users2.default, { userId: this.props.userId }),
-				_react2.default.createElement(
-					'div',
-					{ className: 'innerwrapper' },
-					_react2.default.createElement(_Canvas2.default, null),
-					_react2.default.createElement(_Chat2.default, null)
-				)
+				this.renderItems()
 			);
 		}
 	}]);
@@ -943,7 +1130,7 @@ var Home = function (_Component) {
 
 exports.default = Home;
 
-},{"../stores/Store":14,"./Canvas.js":4,"./Chat.js":6,"./Users.js":11,"react":"react"}],9:[function(require,module,exports){
+},{"../stores/Store":17,"./Canvas.js":4,"./Chat.js":6,"./Endgame":7,"./Puzzle.js":11,"./Users.js":14,"react":"react"}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1001,7 +1188,85 @@ var Message = function (_Component) {
 
 exports.default = Message;
 
-},{"react":"react"}],10:[function(require,module,exports){
+},{"react":"react"}],11:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Store = require('../stores/Store');
+
+var _Store2 = _interopRequireDefault(_Store);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Puzzle = function (_Component) {
+	_inherits(Puzzle, _Component);
+
+	function Puzzle() {
+		_classCallCheck(this, Puzzle);
+
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Puzzle).call(this));
+
+		_this.onChange = _this.onChange.bind(_this);
+		_this.state = _Store2.default.getState();
+		return _this;
+	}
+
+	_createClass(Puzzle, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			_Store2.default.listen(this.onChange);
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			_Store2.default.unlisten(this.onChange);
+		}
+	}, {
+		key: 'onChange',
+		value: function onChange(state) {
+			this.setState(state);
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			return _react2.default.createElement(
+				'div',
+				{ className: 'game__top' },
+				_react2.default.createElement(
+					'span',
+					{ className: 'game__timer' },
+					this.state.store.clock
+				),
+				_react2.default.createElement(
+					'span',
+					{ className: 'game__puzzle' },
+					this.state.puzzle
+				)
+			);
+		}
+	}]);
+
+	return Puzzle;
+}(_react.Component);
+
+exports.default = Puzzle;
+
+},{"../stores/Store":17,"react":"react"}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1201,7 +1466,111 @@ var RoomPicker = function (_Component) {
 
 exports.default = RoomPicker;
 
-},{"./ErrorMessage":7,"react":"react"}],11:[function(require,module,exports){
+},{"./ErrorMessage":8,"react":"react"}],13:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Store = require('../stores/Store');
+
+var _Store2 = _interopRequireDefault(_Store);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Scoreboard = function (_Component) {
+	_inherits(Scoreboard, _Component);
+
+	function Scoreboard(props) {
+		_classCallCheck(this, Scoreboard);
+
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Scoreboard).call(this, props));
+
+		_this.onChange = _this.onChange.bind(_this);
+		_this.state = _Store2.default.getState();
+		return _this;
+	}
+
+	_createClass(Scoreboard, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			_Store2.default.listen(this.onChange);
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			_Store2.default.unlisten(this.onChange);
+		}
+	}, {
+		key: 'onChange',
+		value: function onChange(state) {
+			this.setState(state);
+		}
+	}, {
+		key: 'renderUsers',
+		value: function renderUsers() {
+			var users = this.state.store.users || {};
+			var usersArr = Object.keys(users);
+
+			return usersArr.map(function (item, index) {
+				var user = users[item];
+				var username = user.name;
+				var score = user.score;
+
+				return _react2.default.createElement(
+					'li',
+					{ key: item },
+					_react2.default.createElement(
+						'div',
+						{ className: 'scoreboard__item' },
+						_react2.default.createElement(
+							'span',
+							{ className: 'scoreboard__item-name' },
+							username
+						),
+						_react2.default.createElement(
+							'span',
+							{ className: 'scoreboard__item-score' },
+							score
+						)
+					)
+				);
+			});
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			return _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					'ul',
+					{ className: 'scoreboard__items' },
+					this.renderUsers()
+				)
+			);
+		}
+	}]);
+
+	return Scoreboard;
+}(_react.Component);
+
+exports.default = Scoreboard;
+
+},{"../stores/Store":17,"react":"react"}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1234,6 +1603,7 @@ var Users = function (_Component) {
 
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Users).call(this, props));
 
+		_this.onChange = _this.onChange.bind(_this);
 		_this.state = _Store2.default.getState();
 		return _this;
 	}
@@ -1241,12 +1611,12 @@ var Users = function (_Component) {
 	_createClass(Users, [{
 		key: 'componentDidMount',
 		value: function componentDidMount() {
-			_Store2.default.listen(this.onChange.bind(this));
+			_Store2.default.listen(this.onChange);
 		}
 	}, {
 		key: 'componentWillUnmount',
 		value: function componentWillUnmount() {
-			_Store2.default.unlisten(this.onChange.bind(this));
+			_Store2.default.unlisten(this.onChange);
 		}
 	}, {
 		key: 'onChange',
@@ -1254,34 +1624,46 @@ var Users = function (_Component) {
 			this.setState(state);
 		}
 	}, {
+		key: 'getClassName',
+		value: function getClassName(user) {
+			var status = this.state.store.users[user].status;
+			var correct = this.state.store.users[user].correct;
+
+			if (status === 'captain') {
+				return 'active';
+			}
+
+			if (correct) {
+				return 'correct';
+			}
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			var _this2 = this;
 
-			var users = Object.keys(this.state.store.users).map(function (user, index) {
-				var status = '';
-				var classname = 'users__user';
-				if (_this2.state.store.users[user].status === 'captain') {
-					status = '*';
-					classname += ' active';
-				}
+			if (this.state.store.users) {
+				var users = Object.keys(this.state.store.users).map(function (user, index) {
+					var status = '';
+					var classname = 'users__user ' + _this2.getClassName(user);
+
+					return _react2.default.createElement(
+						'li',
+						{ key: user },
+						_react2.default.createElement(
+							'span',
+							{ className: classname },
+							_this2.state.store.users[user].name
+						)
+					);
+				});
 
 				return _react2.default.createElement(
-					'li',
-					{ key: user },
-					_react2.default.createElement(
-						'span',
-						{ className: classname },
-						status + ' ' + _this2.state.store.users[user].name
-					)
+					'ul',
+					{ className: 'users__list' },
+					users
 				);
-			});
-
-			return _react2.default.createElement(
-				'ul',
-				{ className: 'users__list' },
-				users
-			);
+			}
 		}
 	}]);
 
@@ -1290,7 +1672,7 @@ var Users = function (_Component) {
 
 exports.default = Users;
 
-},{"../stores/Store":14,"react":"react"}],12:[function(require,module,exports){
+},{"../stores/Store":17,"react":"react"}],15:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -1321,7 +1703,7 @@ _reactDom2.default.render(_react2.default.createElement(
   _routes2.default
 ), document.getElementById('app'));
 
-},{"./routes":13,"history/lib/createBrowserHistory":23,"react":"react","react-dom":"react-dom","react-router":"react-router"}],13:[function(require,module,exports){
+},{"./routes":16,"history/lib/createBrowserHistory":26,"react":"react","react-dom":"react-dom","react-router":"react-router"}],16:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1355,7 +1737,7 @@ exports.default = _react2.default.createElement(
 	_react2.default.createElement(_reactRouter.Route, { path: '/rooms/:roomId', component: _GameRoom2.default })
 );
 
-},{"./components/App":3,"./components/GameRoom":8,"./components/RoomPicker":10,"react":"react","react-router":"react-router"}],14:[function(require,module,exports){
+},{"./components/App":3,"./components/GameRoom":9,"./components/RoomPicker":12,"react":"react","react-router":"react-router"}],17:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1386,12 +1768,13 @@ var Store = function () {
 
 		this.store = {};
 		this.socket = {};
-		this.user = {};
+		this.puzzle = '';
 
 		this.bindListeners({
 			handleUpdateStore: _Actions2.default.UPDATE_STORE,
 			handleUpdateSocket: _Actions2.default.UPDATE_SOCKET,
-			handleUpdateUser: _Actions2.default.UPDATE_USER
+			handleUpdateUser: _Actions2.default.UPDATE_USER,
+			handleUpdatePuzzle: _Actions2.default.UPDATE_PUZZLE
 		});
 	}
 
@@ -1410,6 +1793,11 @@ var Store = function () {
 		value: function handleUpdateUser(user) {
 			this.user = user;
 		}
+	}, {
+		key: 'handleUpdatePuzzle',
+		value: function handleUpdatePuzzle(puzzle) {
+			this.puzzle = puzzle;
+		}
 	}]);
 
 	return Store;
@@ -1417,7 +1805,7 @@ var Store = function () {
 
 exports.default = _alt2.default.createStore(Store, 'Store');
 
-},{"../actions/Actions":1,"../alt":2,"../components/App":3}],15:[function(require,module,exports){
+},{"../actions/Actions":1,"../alt":2,"../components/App":3}],18:[function(require,module,exports){
 var pSlice = Array.prototype.slice;
 var objectKeys = require('./lib/keys.js');
 var isArguments = require('./lib/is_arguments.js');
@@ -1513,7 +1901,7 @@ function objEquiv(a, b, opts) {
   return typeof a === typeof b;
 }
 
-},{"./lib/is_arguments.js":16,"./lib/keys.js":17}],16:[function(require,module,exports){
+},{"./lib/is_arguments.js":19,"./lib/keys.js":20}],19:[function(require,module,exports){
 var supportsArgumentsClass = (function(){
   return Object.prototype.toString.call(arguments)
 })() == '[object Arguments]';
@@ -1535,7 +1923,7 @@ function unsupported(object){
     false;
 };
 
-},{}],17:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 exports = module.exports = typeof Object.keys === 'function'
   ? Object.keys : shim;
 
@@ -1546,7 +1934,7 @@ function shim (obj) {
   return keys;
 }
 
-},{}],18:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 /**
  * Indicates that navigation was caused by a call to history.push.
  */
@@ -1578,7 +1966,7 @@ exports['default'] = {
   REPLACE: REPLACE,
   POP: POP
 };
-},{}],19:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -1605,7 +1993,7 @@ function loopAsync(turns, work, callback) {
 
   next();
 }
-},{}],20:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 (function (process){
 /*eslint-disable no-empty */
 'use strict';
@@ -1677,7 +2065,7 @@ function readState(key) {
 }
 }).call(this,require('_process'))
 
-},{"_process":32,"warning":33}],21:[function(require,module,exports){
+},{"_process":35,"warning":36}],24:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -1758,13 +2146,13 @@ function supportsGoWithoutReloadUsingHash() {
   var ua = navigator.userAgent;
   return ua.indexOf('Firefox') === -1;
 }
-},{}],22:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
 var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
 exports.canUseDOM = canUseDOM;
-},{}],23:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -1946,7 +2334,7 @@ exports['default'] = createBrowserHistory;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"./Actions":18,"./DOMStateStorage":20,"./DOMUtils":21,"./ExecutionEnvironment":22,"./createDOMHistory":24,"./parsePath":29,"_process":32,"invariant":31}],24:[function(require,module,exports){
+},{"./Actions":21,"./DOMStateStorage":23,"./DOMUtils":24,"./ExecutionEnvironment":25,"./createDOMHistory":27,"./parsePath":32,"_process":35,"invariant":34}],27:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -1990,7 +2378,7 @@ exports['default'] = createDOMHistory;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"./DOMUtils":21,"./ExecutionEnvironment":22,"./createHistory":25,"_process":32,"invariant":31}],25:[function(require,module,exports){
+},{"./DOMUtils":24,"./ExecutionEnvironment":25,"./createHistory":28,"_process":35,"invariant":34}],28:[function(require,module,exports){
 //import warning from 'warning'
 'use strict';
 
@@ -2282,7 +2670,7 @@ function createHistory() {
 
 exports['default'] = createHistory;
 module.exports = exports['default'];
-},{"./Actions":18,"./AsyncUtils":19,"./createLocation":26,"./deprecate":27,"./parsePath":29,"./runTransitionHook":30,"deep-equal":15}],26:[function(require,module,exports){
+},{"./Actions":21,"./AsyncUtils":22,"./createLocation":29,"./deprecate":30,"./parsePath":32,"./runTransitionHook":33,"deep-equal":18}],29:[function(require,module,exports){
 //import warning from 'warning'
 'use strict';
 
@@ -2337,7 +2725,7 @@ function createLocation() {
 
 exports['default'] = createLocation;
 module.exports = exports['default'];
-},{"./Actions":18,"./parsePath":29}],27:[function(require,module,exports){
+},{"./Actions":21,"./parsePath":32}],30:[function(require,module,exports){
 //import warning from 'warning'
 
 "use strict";
@@ -2353,7 +2741,7 @@ function deprecate(fn) {
 
 exports["default"] = deprecate;
 module.exports = exports["default"];
-},{}],28:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -2367,7 +2755,7 @@ function extractPath(string) {
 
 exports["default"] = extractPath;
 module.exports = exports["default"];
-},{}],29:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -2415,7 +2803,7 @@ exports['default'] = parsePath;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"./extractPath":28,"_process":32,"warning":33}],30:[function(require,module,exports){
+},{"./extractPath":31,"_process":35,"warning":36}],33:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -2443,7 +2831,7 @@ exports['default'] = runTransitionHook;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"_process":32,"warning":33}],31:[function(require,module,exports){
+},{"_process":35,"warning":36}],34:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -2499,7 +2887,7 @@ module.exports = invariant;
 
 }).call(this,require('_process'))
 
-},{"_process":32}],32:[function(require,module,exports){
+},{"_process":35}],35:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -2620,7 +3008,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],33:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -2685,7 +3073,7 @@ module.exports = warning;
 
 }).call(this,require('_process'))
 
-},{"_process":32}]},{},[12])
+},{"_process":35}]},{},[15])
 
 
 //# sourceMappingURL=bundle.js.map

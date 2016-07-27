@@ -443,6 +443,22 @@ h1, h2, h3, h4, h5 {
   text-align: center;
   width: calc(80% - 20px); }
 
+.game__top {
+  width: 100%; }
+
+.game__timer {
+  font-size: 5em;
+  text-align: right;
+  display: block; }
+
+.game__puzzle {
+  font-size: 2.4em;
+  text-align: center;
+  display: block;
+  width: 100%;
+  height: 1.04167em;
+  line-height: 1.04167em; }
+
 .chat {
   width: 20%;
   padding-top: 3.125em;
@@ -508,4 +524,53 @@ h1, h2, h3, h4, h5 {
     margin-right: 1.5em; }
 
 .users__user.active {
-  color: #B22222; }
+  color: gold; }
+
+.users__user.correct {
+  color: LAWNGREEN; }
+
+.scoreboard__items {
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  box-orient: vertical;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  box-direction: normal;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-direction: column;
+  width: 10em;
+  max-width: 100%; }
+
+.scoreboard__item {
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  box-direction: normal;
+  -webkit-flex-direction: row;
+  -moz-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-direction: row; }
+
+.scoreboard__item-name {
+  padding-right: 1.5em; }
+
+.scoreboard__item-score {
+  margin-left: auto; }

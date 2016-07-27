@@ -15,7 +15,11 @@ $module:			'users';
 
 	&__user {
 		&.active {
-			color: $color1;
+			color: $color5;
+		}
+
+		&.correct {
+			color: $color6;
 		}
 	}
 }
