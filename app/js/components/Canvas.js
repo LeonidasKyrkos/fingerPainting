@@ -8,8 +8,7 @@ export default class Canvas extends Component {
 		super(props);
 
 		this.state = Store.getState();
-		this.state.player = this.state.user.captain || false;
-
+		this.setPlayerStatus();
 		this.points = [];
 
 		this.onChange = this.onChange.bind(this);
@@ -17,7 +16,6 @@ export default class Canvas extends Component {
 
 	componentDidMount() {
 		Store.listen(this.onChange);
-
 		this.setupCanvas();
 	}
 
@@ -27,6 +25,15 @@ export default class Canvas extends Component {
 
 	onChange(state) {
 		this.setState(state);
+	}
+
+	setPlayerStatus() {
+		let user = this.state.store.users[this.state.socket.id] || {};
+		if(user.status === 'captain') {
+			this.state.player = true;
+		} else {
+			this.state.player = false;
+		}
 	}
 
 	setupCanvas() {
@@ -210,8 +217,10 @@ export default class Canvas extends Component {
 		let newSize = e.target.getAttribute('data-size');
 		this.ctx.lineWidth = newSize;
 	}
+	
 
 	render() {
+		this.setPlayerStatus();
 		if(this.canvas) {
 			this.canvasX = this.canvas.offsetLeft;
 			this.canvasY = this.canvas.offsetTop;
@@ -225,7 +234,6 @@ export default class Canvas extends Component {
 			var canvasSettings = (
 				<CanvasSettings 
 					scope={this} 
-					socket={this.state.socket} 
 					fullClear={this.fullClear} 
 					changeBrushSize={this.changeBrushSize} 
 					updateColor={this.updateColor} 

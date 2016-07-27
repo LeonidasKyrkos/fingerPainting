@@ -4,17 +4,54 @@ import Store from '../stores/Store';
 import Users from './Users.js';
 import Canvas from './Canvas.js';
 import Chat from './Chat.js';
+import Puzzle from './Puzzle.js';
+import EndGame from './Endgame';
 
 export default class Home extends Component {
+	constructor() {
+		super();
+
+		this.state = Store.getState();
+		this.onChange = this.onChange.bind(this);
+	}
+
+	componentDidMount() {
+		Store.listen(this.onChange);
+	}
+
+	componentWillUnmount() {
+		Store.unlisten(this.onChange);
+	}
+
+	onChange(state) {
+		this.setState(state);
+	}
+
+	renderItems() {
+		if(this.state.store.status === 'finished') {
+			return (
+				<div className="game__wrap">
+					<EndGame />
+				</div>
+			)
+		} else {
+			return (
+				<div>
+					<Users userId={this.props.userId} />
+					<div className="game__wrap">
+						<Puzzle />			
+						<Canvas />
+						<Chat />
+					</div>	
+				</div>						
+			)
+		}
+	}
+
 	render() {
 		return (
 			<div className="wrapper">
-				<h1 className="alpha">Pictionareo</h1>
-				<Users userId={this.props.userId} />
-				<div className="innerwrapper">					
-					<Canvas />
-					<Chat />
-				</div>
+				{this.renderItems()}
 			</div>
 		);
 	}

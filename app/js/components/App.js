@@ -14,16 +14,11 @@ export default class App extends Component {
 	componentDidMount() {
 		socket.on('connected',(user)=>{
 			Actions.updateSocket(socket);
-			Actions.updateUser(user);
 		});
 
 		socket.on('store update',(store)=>{
 			Actions.updateStore(store)
 		})
-
-		socket.on('user update',(user)=>{
-			Actions.updateUser(user);
-		});
 
 		socket.on('countdown',(data)=>{
 			console.log(data);
@@ -32,9 +27,13 @@ export default class App extends Component {
 		socket.on('round end',()=>{
 			console.log('ended');
 		});
-		
-		socket.on('test',()=>{
-			console.log('test received');
+
+		socket.on('correct',()=>{
+			console.log('correct!');
+		})
+
+		socket.on('puzzle',(puzzle)=>{
+			Actions.updatePuzzle(puzzle)
 		})
 
 		Store.listen(this.onChange.bind(this));

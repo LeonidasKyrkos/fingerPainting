@@ -6,12 +6,13 @@ class Store {
 	constructor() {
 		this.store = {};
 		this.socket = {};
-		this.user = {};
+		this.puzzle = '';
 
 		this.bindListeners({
 			handleUpdateStore: Actions.UPDATE_STORE,
 			handleUpdateSocket: Actions.UPDATE_SOCKET,
-			handleUpdateUser: Actions.UPDATE_USER
+			handleUpdateUser: Actions.UPDATE_USER,
+			handleUpdatePuzzle: Actions.UPDATE_PUZZLE
 		})
 	}
 
@@ -25,6 +26,10 @@ class Store {
 
 	handleUpdateUser(user) {
 		this.user = user;
+	}
+
+	handleUpdatePuzzle(puzzle) {
+		this.puzzle = puzzle;
 	}
 }
 

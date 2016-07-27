@@ -12,6 +12,10 @@ class Actions {
 	updateUser(user) {
 		return user;
 	}
+
+	updatePuzzle(puzzle) {
+		return puzzle;
+	}
 }
 
 export default alt.createActions(Actions);
