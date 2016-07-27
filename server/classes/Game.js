@@ -7,6 +7,7 @@ function Game(socket,gameId,database) {
 	this.sockets = {};
 	this.database = database;
 	this.roomRef = firebase.db.ref(firebase.roomsPath + this.id);
+	this.gameLength = 90;
 
 	firebase.db.ref('/dictionary').on('value',(snapshot)=>{
 		this.dictionary = [];
@@ -17,7 +18,7 @@ function Game(socket,gameId,database) {
 
 		firebase.db.ref('/dictionary').off();
 		this.init(socket);
-	});	
+	});
 }
 
 Game.prototype = {
@@ -48,13 +49,27 @@ Game.prototype = {
 		socket.on('pause round',this.pauseRound.bind(this));
 		socket.on('unpause round',this.unpauseRound.bind(this));
 		socket.on('message',this.parseMessage.bind(this));
-		socket.on('disconnect',()=>{
-			for(let object in this.sockets) {
-				if(socket.id === this.sockets[object].id) {
-					delete this.sockets[object];
-				}
+		socket.on('disconnect',this.handleDisconnect.bind(this,socket));
+	},
+
+	handleDisconnect(socket) {
+		let users = this.store.users || {};
+		let user = users[socket.conn.id] || {};
+		if(users && user && user.status === 'captain') {
+			this.endRound();
+		}
+
+		for(let object in this.sockets) {
+			if(socket.id === this.sockets[object].id) {
+				delete this.sockets[object];
 			}
-		});
+		}
+
+		this.removeUserFromGame(socket.conn.id);
+	},
+
+	removeUserFromGame(user) {
+		this.roomRef.child('users').child(user).remove();
 	},
 
 	updateStore: function(snapshot) {
@@ -132,7 +147,7 @@ Game.prototype = {
 		let newScore = currentScore + this.timer;
 		return newScore;
 	},
-
+	
 	countdown: function() {
 		if(this.timer < 1) {
 			this.endRound();
@@ -146,15 +161,17 @@ Game.prototype = {
 
 	endRound: function() {
 		clearInterval(this.interval);
+		usersArr = Object.keys(this.store.users) || [];
+		console.log(usersArr.length);
 
-		if(this.roundCount >= Object.keys(this.store.users).length) {
-			setTimeout(()=>{
-				this.endGame();
-			},4000)			
+		if(this.roundCount >= usersArr.length * 2) {
+			this.endGame();
 		} else {
-			setTimeout(()=>{
+			if(usersArr.length <= 1) {
+				this.resetRoom();				
+			} else {
 				this.newRound();
-			},4000)
+			}
 		}		
 	},
 
@@ -162,6 +179,7 @@ Game.prototype = {
 		this.roundCount++;
 		this.resetGame();
 		this.newCaptain();
+		this.startRound();
 	},
 
 	newCaptain: function() {
@@ -173,9 +191,7 @@ Game.prototype = {
 			let user = users[username];
 
 			if(user.status === 'captain') {
-				this.roomRef.child('users').child(username).update({
-					status: 'sailor'
-				})
+				this.setSailor(username);
 
 				if(i === usersArr.length - 1) {
 					var nextUsername = usersArr[0];
@@ -183,24 +199,23 @@ Game.prototype = {
 					var nextUsername = usersArr[i+1];
 				}
 
-				let nextUser = users[nextUsername];
-
-				this.roomRef.child('users').child(nextUsername).update({
-					status: 'captain'
-				})
+				this.setCaptain(nextUsername);	
 
 				break;
 			}
 		}
+	},
 
-		for(let i = 0; i < usersArr.length; i++) {
-			let username = usersArr[i];
-			let user = users[username];
+	setSailor: function(username) {
+		this.roomRef.child('users').child(username).update({
+			status: 'sailor'
+		})
+	},
 
-			this.roomRef.child('users').child(username).update({
-				correct: false
-			})
-		}
+	setCaptain: function(username) {
+		this.roomRef.child('users').child(username).update({
+			status: 'captain'
+		})
 	},
 
 	endGame: function() {
@@ -217,14 +232,33 @@ Game.prototype = {
 		this.roomRef.update({
 			status: 'pending'
 		});
+
 		this.roomRef.child('paths').remove();
 		this.cleverSailors = 0;
 		this.resetClock();
+		this.resetCorrectStatus();		
+
 		io.emit('puzzle','');
 	},
 
+	resetCorrectStatus: function() {
+		if(this.store.users) {
+			let users = this.store.users;
+			let usersArr = Object.keys(users) || [];
+
+			for(let i = 0; i < usersArr.length; i++) {
+				let username = usersArr[i];
+				let user = users[username];
+
+				this.roomRef.child('users').child(username).update({
+					correct: false
+				})
+			}
+		}
+	},
+
 	resetClock: function() {
-		this.timer = 10;
+		this.timer = this.gameLength;
 		this.roomRef.update({
 			clock: this.timer
 		})

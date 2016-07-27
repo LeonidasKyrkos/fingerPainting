@@ -48,6 +48,7 @@ function joinHandler(request,socket){
 	}
 }
 
+
 function deleteActiveGame(id) {
 	var index = activeGames.indexOf(id);
 
@@ -57,7 +58,6 @@ function deleteActiveGame(id) {
 }
 
 // end of utils //
-
 
 module.exports = {
 	joinHandler: joinHandler,

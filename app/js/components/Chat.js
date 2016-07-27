@@ -13,10 +13,7 @@ export default class Chat extends Component {
 
 	componentDidMount() {
 		Store.listen(this.onChange);
-		this.chatHistory = document.querySelector('#chat-history');
-		if(this.chatHistory) { 
-			this.chatHistory.scrollTop = this.chatHistory.scrollHeight; 
-		};
+		this.scrollChat();
 	}
 
 	componentWillUnmount() {
@@ -55,9 +52,18 @@ export default class Chat extends Component {
 		});
 	}
 
+	scrollChat() {
+		this.chatHistory = document.querySelector('#chat-history');
+		if(this.chatHistory) { 
+			this.chatHistory.scrollTop = this.chatHistory.scrollHeight; 
+		};
+	}
+
 	render() {
 		this.chatLog = this.state.store.chatLog || {};
 		this.chats = this.renderChats(this.chatLog);
+
+		setTimeout(()=>{ this.scrollChat() },32);
 
 		return (
 			<div className="chat">

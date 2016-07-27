@@ -781,10 +781,7 @@ var Chat = function (_Component) {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
 			_Store2.default.listen(this.onChange);
-			this.chatHistory = document.querySelector('#chat-history');
-			if (this.chatHistory) {
-				this.chatHistory.scrollTop = this.chatHistory.scrollHeight;
-			};
+			this.scrollChat();
 		}
 	}, {
 		key: 'componentWillUnmount',
@@ -825,10 +822,24 @@ var Chat = function (_Component) {
 			});
 		}
 	}, {
+		key: 'scrollChat',
+		value: function scrollChat() {
+			this.chatHistory = document.querySelector('#chat-history');
+			if (this.chatHistory) {
+				this.chatHistory.scrollTop = this.chatHistory.scrollHeight;
+			};
+		}
+	}, {
 		key: 'render',
 		value: function render() {
+			var _this2 = this;
+
 			this.chatLog = this.state.store.chatLog || {};
 			this.chats = this.renderChats(this.chatLog);
+
+			setTimeout(function () {
+				_this2.scrollChat();
+			}, 32);
 
 			return _react2.default.createElement(
 				'div',
@@ -1327,7 +1338,7 @@ var RoomPicker = function (_Component) {
 								_react2.default.createElement(
 									'span',
 									{ className: 'form__input-wrap' },
-									_react2.default.createElement('input', { required: true, 'data-js': 'room.name', autoComplete: 'off', type: 'text', className: 'form__input' })
+									_react2.default.createElement('input', { maxLength: '10', required: true, 'data-js': 'room.name', autoComplete: 'off', type: 'text', className: 'form__input' })
 								)
 							)
 						),
@@ -1635,8 +1646,10 @@ var Users = function (_Component) {
 		value: function render() {
 			var _this2 = this;
 
+			var users = '';
+
 			if (this.state.store.users) {
-				var users = Object.keys(this.state.store.users).map(function (user, index) {
+				users = Object.keys(this.state.store.users).map(function (user, index) {
 					var status = '';
 					var classname = 'users__user ' + _this2.getClassName(user);
 
@@ -1650,13 +1663,13 @@ var Users = function (_Component) {
 						)
 					);
 				});
-
-				return _react2.default.createElement(
-					'ul',
-					{ className: 'users__list' },
-					users
-				);
 			}
+
+			return _react2.default.createElement(
+				'ul',
+				{ className: 'users__list' },
+				users
+			);
 		}
 	}]);
 

@@ -19,26 +19,7 @@ function updateReference(path,updVal) {
 	firebase.roomsRef.update(obj);
 }
 
-function deleteUserFromRoom(socket) {
-	if(socket.gameroom) {
-		var users = firebase.rooms[socket.gameroom].users;
-
-		if(users && users[socket.userId]) {
-			var userRef = firebase.db.ref(firebase.roomsPath + socket.gameroom + '/users/' + socket.userId);
-			userRef.remove();
-
-			if(users.length === 1) {
-				deleteActiveGame(socket.gameroom);
-			}
-
-			delete socket.gameroom;
-		}
-	}
-}
-
-
 module.exports = {
 	handler: handler,
-	deleteUserFromRoom: deleteUserFromRoom,
 	updateReference: updateReference
 }
