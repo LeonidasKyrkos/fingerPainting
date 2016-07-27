@@ -767,13 +767,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Chat = function (_Component) {
 	_inherits(Chat, _Component);
 
-	function Chat(props) {
+	function Chat() {
 		_classCallCheck(this, Chat);
 
-		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Chat).call(this, props));
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Chat).call(this));
 
-		_this.onChange = _this.onChange.bind(_this);
 		_this.state = _Store2.default.getState();
+		_this.onChange = _this.onChange.bind(_this);
 		return _this;
 	}
 
@@ -781,6 +781,10 @@ var Chat = function (_Component) {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
 			_Store2.default.listen(this.onChange);
+			this.chatHistory = document.querySelector('#chat-history');
+			if (this.chatHistory) {
+				this.chatHistory.scrollTop = this.chatHistory.scrollHeight;
+			};
 		}
 	}, {
 		key: 'componentWillUnmount',
@@ -823,17 +827,8 @@ var Chat = function (_Component) {
 	}, {
 		key: 'render',
 		value: function render() {
-			var chatHistory = document.querySelector('#chat-history');
-
-			var chatLog = this.state.store.chatLog;
-
-			var chats = typeof chatLog !== 'undefined' ? this.renderChats(chatLog) : '';
-
-			if (chatHistory) {
-				setTimeout(function () {
-					chatHistory.scrollTop = chatHistory.scrollHeight;
-				}, 32);
-			};
+			this.chatLog = this.state.store.chatLog || {};
+			this.chats = this.renderChats(this.chatLog);
 
 			return _react2.default.createElement(
 				'div',
@@ -841,7 +836,7 @@ var Chat = function (_Component) {
 				_react2.default.createElement(
 					'div',
 					{ id: 'chat-history', className: 'chat__history' },
-					chats
+					this.chats
 				),
 				_react2.default.createElement(
 					'form',
@@ -1071,26 +1066,10 @@ var Home = function (_Component) {
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Home).call(this));
 
 		_this.state = _Store2.default.getState();
-		_this.onChange = _this.onChange.bind(_this);
 		return _this;
 	}
 
 	_createClass(Home, [{
-		key: 'componentDidMount',
-		value: function componentDidMount() {
-			_Store2.default.listen(this.onChange);
-		}
-	}, {
-		key: 'componentWillUnmount',
-		value: function componentWillUnmount() {
-			_Store2.default.unlisten(this.onChange);
-		}
-	}, {
-		key: 'onChange',
-		value: function onChange(state) {
-			this.setState(state);
-		}
-	}, {
 		key: 'renderItems',
 		value: function renderItems() {
 			if (this.state.store.status === 'finished') {
@@ -1520,9 +1499,23 @@ var Scoreboard = function (_Component) {
 			this.setState(state);
 		}
 	}, {
+		key: 'sortUsers',
+		value: function sortUsers() {
+			var users = this.state.store.users || {};
+			var usersArr = [];
+
+			Object.keys(users).map(function (user, index) {
+				usersArr.push(users[user]);
+			});
+
+			return usersArr.sort(function (a, b) {
+				return a.score - b.score;
+			});
+		}
+	}, {
 		key: 'renderUsers',
 		value: function renderUsers() {
-			var users = this.state.store.users || {};
+			var users = this.sortUsers();
 			var usersArr = Object.keys(users);
 
 			return usersArr.map(function (item, index) {

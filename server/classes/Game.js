@@ -133,22 +133,6 @@ Game.prototype = {
 		return newScore;
 	},
 
-	resetGame: function() {
-		this.roomRef.update({
-			status: 'pending'
-		});
-		this.roomRef.child('paths').remove();
-		this.cleverSailors = 0;
-		this.resetClock();
-	},
-
-	resetClock: function() {
-		this.timer = 10;
-		this.roomRef.update({
-			clock: this.timer
-		})
-	},
-
 	countdown: function() {
 		if(this.timer < 1) {
 			this.endRound();
@@ -227,6 +211,23 @@ Game.prototype = {
 		setTimeout(()=>{
 			this.resetRoom();
 		},10000);
+	},
+
+	resetGame: function() {
+		this.roomRef.update({
+			status: 'pending'
+		});
+		this.roomRef.child('paths').remove();
+		this.cleverSailors = 0;
+		this.resetClock();
+		io.emit('puzzle','');
+	},
+
+	resetClock: function() {
+		this.timer = 10;
+		this.roomRef.update({
+			clock: this.timer
+		})
 	},
 
 	resetRoom: function() {
