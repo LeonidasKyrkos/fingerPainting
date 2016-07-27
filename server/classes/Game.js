@@ -7,6 +7,7 @@ function Game(socket,gameId,database) {
 	this.sockets = {};
 	this.database = database;
 	this.roomRef = firebase.db.ref(firebase.roomsPath + this.id);
+	this.gameLength = 90;
 
 	firebase.db.ref('/dictionary').on('value',(snapshot)=>{
 		this.dictionary = [];
@@ -143,7 +144,7 @@ Game.prototype = {
 	},
 
 	resetClock: function() {
-		this.timer = 10;
+		this.timer = this.gameLength;
 		this.roomRef.update({
 			clock: this.timer
 		})
@@ -163,7 +164,7 @@ Game.prototype = {
 	endRound: function() {
 		clearInterval(this.interval);
 
-		if(this.roundCount >= Object.keys(this.store.users).length) {
+		if(this.roundCount >= Object.keys(this.store.users).length * 2) {
 			setTimeout(()=>{
 				this.endGame();
 			},4000)			
