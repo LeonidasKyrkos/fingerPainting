@@ -21,8 +21,21 @@ export default class Scoreboard extends Component {
 		this.setState(state);
 	}
 
-	renderUsers() {
+	sortUsers() {
 		let users = this.state.store.users || {};
+		let usersArr = [];
+
+		Object.keys(users).map((user,index)=>{
+			usersArr.push(users[user]);
+		});
+
+		return usersArr.sort((a,b)=>{
+			return a.score - b.score;
+		});
+	}
+
+	renderUsers() {
+		let users = this.sortUsers();
 		let usersArr = Object.keys(users);
 
 		return usersArr.map((item,index)=>{

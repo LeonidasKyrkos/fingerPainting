@@ -18,7 +18,7 @@ export default class App extends Component {
 
 		socket.on('store update',(store)=>{
 			Actions.updateStore(store)
-		})
+		});
 
 		socket.on('countdown',(data)=>{
 			console.log(data);
@@ -30,11 +30,11 @@ export default class App extends Component {
 
 		socket.on('correct',()=>{
 			console.log('correct!');
-		})
+		});
 
 		socket.on('puzzle',(puzzle)=>{
 			Actions.updatePuzzle(puzzle)
-		})
+		});
 
 		Store.listen(this.onChange.bind(this));
 	}

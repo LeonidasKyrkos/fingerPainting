@@ -12,19 +12,6 @@ export default class Home extends Component {
 		super();
 
 		this.state = Store.getState();
-		this.onChange = this.onChange.bind(this);
-	}
-
-	componentDidMount() {
-		Store.listen(this.onChange);
-	}
-
-	componentWillUnmount() {
-		Store.unlisten(this.onChange);
-	}
-
-	onChange(state) {
-		this.setState(state);
 	}
 
 	renderItems() {

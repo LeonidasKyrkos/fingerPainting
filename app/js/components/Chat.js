@@ -1,18 +1,22 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 
 import Store from '../stores/Store';
 import Message from './Message';
 
 export default class Chat extends Component {
-	constructor(props) {
-		super(props);
+	constructor() {
+		super();
 
-		this.onChange = this.onChange.bind(this);
 		this.state = Store.getState();
+		this.onChange = this.onChange.bind(this);		
 	}
 
 	componentDidMount() {
 		Store.listen(this.onChange);
+		this.chatHistory = document.querySelector('#chat-history');
+		if(this.chatHistory) { 
+			this.chatHistory.scrollTop = this.chatHistory.scrollHeight; 
+		};
 	}
 
 	componentWillUnmount() {
@@ -52,20 +56,13 @@ export default class Chat extends Component {
 	}
 
 	render() {
-		const chatHistory = document.querySelector('#chat-history');
-
-		let chatLog = this.state.store.chatLog;
-
-		let chats = typeof chatLog !== 'undefined' ? this.renderChats(chatLog) : '';
-
-		if(chatHistory) { 
-			setTimeout(()=>{ chatHistory.scrollTop = chatHistory.scrollHeight},32); 
-		};		
+		this.chatLog = this.state.store.chatLog || {};
+		this.chats = this.renderChats(this.chatLog);
 
 		return (
 			<div className="chat">
 				<div id="chat-history" className="chat__history">
-					{chats}
+					{this.chats}
 				</div>
 				<form className="form--chat" onSubmit={this.parseChatForm.bind(this)}>
 					<input autoComplete="off" id="chat-input" type="text" className="form__input"/>
