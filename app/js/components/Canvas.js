@@ -28,11 +28,13 @@ export default class Canvas extends Component {
 	}
 
 	setPlayerStatus() {
-		let user = this.state.store.users[this.state.socket.id] || {};
-		if(user.status === 'captain') {
-			this.state.player = true;
-		} else {
-			this.state.player = false;
+		if(this.state.store.users) {
+			let user = this.state.store.users[this.state.socket.id] || {};
+			if(user.status === 'captain') {
+				this.state.player = true;
+			} else {
+				this.state.player = false;
+			}
 		}
 	}
 

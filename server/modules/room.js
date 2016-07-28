@@ -2,7 +2,10 @@ var firebase = require('./firebaseConfig');
 
 function handler(request,socket) {
 	// update the users object of the requested room.
-	updateReference(request + '/users/' + socket.userId + '/name/', socket.name);
+	firebase.roomsRef.child(request).child('users').child(socket.userId).update({
+		name: socket.name,
+		score: 0
+	});
 
 	// update gameroom status [playing/not playing]
 	var room = firebase.rooms[request];

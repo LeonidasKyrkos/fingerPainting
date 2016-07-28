@@ -22,7 +22,8 @@ export default class RoomPicker extends Component {
 	render() {
 		return (
 			<div className="wrapper">
-				<h2 className="alpha">Join a room</h2>
+				<h1 className="alpha">finger painting</h1>
+				<h2 className="beta">Join a room</h2>
 				<form data-js="room.join" className="form" onSubmit={this.authenticate.bind(this)}>
 					<ErrorMessage socket={this.props.socket} />
 					<ul>

@@ -247,11 +247,13 @@ var Canvas = function (_Component) {
 	}, {
 		key: 'setPlayerStatus',
 		value: function setPlayerStatus() {
-			var user = this.state.store.users[this.state.socket.id] || {};
-			if (user.status === 'captain') {
-				this.state.player = true;
-			} else {
-				this.state.player = false;
+			if (this.state.store.users) {
+				var user = this.state.store.users[this.state.socket.id] || {};
+				if (user.status === 'captain') {
+					this.state.player = true;
+				} else {
+					this.state.player = false;
+				}
 			}
 		}
 	}, {
@@ -1071,16 +1073,32 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Home = function (_Component) {
 	_inherits(Home, _Component);
 
-	function Home() {
+	function Home(props) {
 		_classCallCheck(this, Home);
 
-		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Home).call(this));
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Home).call(this, props));
 
+		_this.onChange = _this.onChange.bind(_this);
 		_this.state = _Store2.default.getState();
 		return _this;
 	}
 
 	_createClass(Home, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			_Store2.default.listen(this.onChange);
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			_Store2.default.unlisten(this.onChange);
+		}
+	}, {
+		key: 'onChange',
+		value: function onChange(state) {
+			this.setState(state);
+		}
+	}, {
 		key: 'renderItems',
 		value: function renderItems() {
 			if (this.state.store.status === 'finished') {
@@ -1121,7 +1139,7 @@ var Home = function (_Component) {
 exports.default = Home;
 
 },{"../stores/Store":17,"./Canvas.js":4,"./Chat.js":6,"./Endgame":7,"./Puzzle.js":11,"./Users.js":14,"react":"react"}],10:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -1129,9 +1147,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _Store = require('../stores/Store');
+
+var _Store2 = _interopRequireDefault(_Store);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1144,29 +1166,49 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Message = function (_Component) {
 	_inherits(Message, _Component);
 
-	function Message(props) {
+	function Message() {
 		_classCallCheck(this, Message);
 
-		return _possibleConstructorReturn(this, Object.getPrototypeOf(Message).call(this, props));
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Message).call(this));
+
+		_this.state = _Store2.default.getState();
+		_this.onChange = _this.onChange.bind(_this);
+		return _this;
 	}
 
 	_createClass(Message, [{
-		key: "render",
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			_Store2.default.listen(this.onChange);
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			_Store2.default.unlisten(this.onChange);
+		}
+	}, {
+		key: 'onChange',
+		value: function onChange(state) {
+			this.setState(state);
+		}
+	}, {
+		key: 'render',
 		value: function render() {
 			var chat = this.props.chat;
+			var classname = this.state.socket.id === chat.id ? "chat__msg-wrap active" : "chat__msg-wrap";
 
 			return _react2.default.createElement(
-				"div",
-				{ key: chat.timestamp, className: "chat__msg-wrap" },
+				'div',
+				{ key: chat.timestamp, className: classname },
 				_react2.default.createElement(
-					"span",
-					{ className: "chat__label" },
+					'span',
+					{ className: 'chat__label' },
 					chat.name,
-					":"
+					':'
 				),
 				_react2.default.createElement(
-					"span",
-					{ className: "chat__text" },
+					'span',
+					{ className: 'chat__text' },
 					chat.message
 				)
 			);
@@ -1178,7 +1220,7 @@ var Message = function (_Component) {
 
 exports.default = Message;
 
-},{"react":"react"}],11:[function(require,module,exports){
+},{"../stores/Store":17,"react":"react"}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1239,13 +1281,13 @@ var Puzzle = function (_Component) {
 				{ className: 'game__top' },
 				_react2.default.createElement(
 					'span',
-					{ className: 'game__timer' },
-					this.state.store.clock
+					{ className: 'game__puzzle' },
+					this.state.puzzle
 				),
 				_react2.default.createElement(
 					'span',
-					{ className: 'game__puzzle' },
-					this.state.puzzle
+					{ className: 'game__timer' },
+					this.state.store.clock
 				)
 			);
 		}
@@ -1313,8 +1355,13 @@ var RoomPicker = function (_Component) {
 				'div',
 				{ className: 'wrapper' },
 				_react2.default.createElement(
-					'h2',
+					'h1',
 					{ className: 'alpha' },
+					'finger painting'
+				),
+				_react2.default.createElement(
+					'h2',
+					{ className: 'beta' },
 					'Join a room'
 				),
 				_react2.default.createElement(
@@ -1520,7 +1567,7 @@ var Scoreboard = function (_Component) {
 			});
 
 			return usersArr.sort(function (a, b) {
-				return a.score - b.score;
+				return b.score - a.score;
 			});
 		}
 	}, {
@@ -1581,6 +1628,8 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
@@ -1616,11 +1665,13 @@ var Users = function (_Component) {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
 			_Store2.default.listen(this.onChange);
+			this.attachKeyBinding();
 		}
 	}, {
 		key: 'componentWillUnmount',
 		value: function componentWillUnmount() {
 			_Store2.default.unlisten(this.onChange);
+			this.detachKeyBinding();
 		}
 	}, {
 		key: 'onChange',
@@ -1630,8 +1681,8 @@ var Users = function (_Component) {
 	}, {
 		key: 'getClassName',
 		value: function getClassName(user) {
-			var status = this.state.store.users[user].status;
-			var correct = this.state.store.users[user].correct;
+			var status = user.status;
+			var correct = user.correct;
 
 			if (status === 'captain') {
 				return 'active';
@@ -1642,33 +1693,107 @@ var Users = function (_Component) {
 			}
 		}
 	}, {
-		key: 'render',
-		value: function render() {
+		key: 'attachKeyBinding',
+		value: function attachKeyBinding() {
+			this.users = document.querySelector('[data-js="users"]');
+
+			if (this.users) {
+				window.addEventListener('keydown', this.openUsers.bind(this));
+				window.addEventListener('keyup', this.closeUsers.bind(this));
+			}
+		}
+	}, {
+		key: 'detachKeyBinding',
+		value: function detachKeyBinding() {
+			window.removeEventListener('keydown', this.openUsers.bind(this));
+			window.removeEventListener('keyup', this.closeUsers.bind(this));
+		}
+	}, {
+		key: 'openUsers',
+		value: function openUsers(e) {
+			if (e.keyCode === 9) {
+				e.preventDefault();
+				this.users.className = "users active";
+			}
+		}
+	}, {
+		key: 'closeUsers',
+		value: function closeUsers(e) {
+			if (e.keyCode === 9) {
+				e.preventDefault();
+				this.users.className = "users";
+			}
+		}
+	}, {
+		key: 'sortUsers',
+		value: function sortUsers() {
+			var users = this.state.store.users || {};
+			var usersArr = [];
+
+			Object.keys(users).map(function (user, index) {
+				usersArr.push(users[user]);
+			});
+
+			return usersArr.sort(function (a, b) {
+				return b.score - a.score;
+			});
+		}
+	}, {
+		key: 'renderUsers',
+		value: function renderUsers() {
 			var _this2 = this;
 
-			var users = '';
-
 			if (this.state.store.users) {
-				users = Object.keys(this.state.store.users).map(function (user, index) {
-					var status = '';
-					var classname = 'users__user ' + _this2.getClassName(user);
+				var _ret = function () {
+					var users = _this2.sortUsers();
+					var usersArr = Object.keys(users);
 
-					return _react2.default.createElement(
-						'li',
-						{ key: user },
-						_react2.default.createElement(
-							'span',
-							{ className: classname },
-							_this2.state.store.users[user].name
-						)
-					);
-				});
+					return {
+						v: usersArr.map(function (username, index) {
+							var user = users[username];
+							var classname = 'users__user ' + _this2.getClassName(user);
+
+							return _react2.default.createElement(
+								'li',
+								{ key: user.name },
+								_react2.default.createElement(
+									'span',
+									{ className: classname },
+									_react2.default.createElement(
+										'span',
+										{ className: 'users__user-name' },
+										user.name
+									),
+									_react2.default.createElement(
+										'span',
+										{ className: 'users__user-score' },
+										user.score
+									)
+								)
+							);
+						})
+					};
+				}();
+
+				if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
 			}
-
+		}
+	}, {
+		key: 'render',
+		value: function render() {
 			return _react2.default.createElement(
-				'ul',
-				{ className: 'users__list' },
-				users
+				'div',
+				{ 'data-js': 'users', className: 'users' },
+				_react2.default.createElement(
+					'h3',
+					{ className: 'gamma' },
+					'Current scores'
+				),
+				_react2.default.createElement(
+					'ul',
+					{ className: 'users__list' },
+					this.renderUsers()
+				)
 			);
 		}
 	}]);

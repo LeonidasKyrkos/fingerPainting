@@ -8,10 +8,23 @@ import Puzzle from './Puzzle.js';
 import EndGame from './Endgame';
 
 export default class Home extends Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 
+		this.onChange = this.onChange.bind(this);
 		this.state = Store.getState();
+	}
+
+	componentDidMount() {
+		Store.listen(this.onChange);
+	}
+
+	componentWillUnmount() {
+		Store.unlisten(this.onChange);
+	}
+
+	onChange(state) {
+		this.setState(state);
 	}
 
 	renderItems() {
