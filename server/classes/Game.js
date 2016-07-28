@@ -7,7 +7,7 @@ function Game(socket,gameId,database) {
 	this.sockets = {};
 	this.database = database;
 	this.roomRef = firebase.db.ref(firebase.roomsPath + this.id);
-	this.gameLength = 10;
+	this.gameLength = 90;
 	this.getDictionary(socket);
 }
 
