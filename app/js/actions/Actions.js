@@ -16,6 +16,10 @@ class Actions {
 	updatePuzzle(puzzle) {
 		return puzzle;
 	}
+
+	updateError(error) {
+		return error;
+	}
 }
 
 export default alt.createActions(Actions);

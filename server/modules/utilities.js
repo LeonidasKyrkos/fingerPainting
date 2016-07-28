@@ -44,7 +44,7 @@ function joinHandler(request,socket){
 		
 	} else {
 		// inform the client that they're a fucking jerk and let them know why.
-		socket.emit('request rejected',{ errors: status.reason });
+		socket.emit('request rejected',status.reason);
 	}
 }
 

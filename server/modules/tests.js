@@ -14,7 +14,7 @@ function roomTests(request,socket) {
 		},
 		name: {
 			func: testIn,
-			args: [room.users, socket.userId, 'Sorry there is already someone called ' + request.name + ' in that room. Please choose another name.']
+			args: [room.users, request.name, 'Sorry there is already someone called ' + request.name + ' in that room. Please choose another name.']
 		}
 	}
 
@@ -49,7 +49,7 @@ function testCompare(args) {
 function testIn(args) {
 	if(args[0]) {
 		for(var prop in args[0]) {
-			if(args[1] === prop) {
+			if(args[1] === args[0][prop].name) {
 				return { status: false,  reason: args[2] };
 			}
 		}		

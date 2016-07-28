@@ -36,6 +36,10 @@ export default class App extends Component {
 			Actions.updatePuzzle(puzzle)
 		});
 
+		socket.on('request rejected',(error)=>{
+			Actions.updateError(error);
+		});
+
 		Store.listen(this.onChange.bind(this));
 	}
 
