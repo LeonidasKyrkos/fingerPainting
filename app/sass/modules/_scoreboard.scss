@@ -11,6 +11,10 @@ $module: 		'scoreboard';
 	&__item {
 		@include display(flex);
 		@include flex-direction(row);
+
+		li:first-child > & {
+			color: $color5;
+		}
 	}
 
 	&__item-name {

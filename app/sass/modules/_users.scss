@@ -2,18 +2,29 @@ $module:			'users';
 
 
 .#{$module} {
-	&__list {
-		text-align: right;
-		margin-bottom: em(30);
+	width: em(500);
+	max-width: 100%;
+	position: fixed;
+	top: 50%;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+	@include transform(translateY(-50%));
+	background-color: rgba(black,0.85);
+	min-height: em(400);
+	padding: em(20);
+	display: none;
+	z-index: 10;
 
-		> li {
-			display: inline-block;
-			vertical-align: bottom;
-			margin-right: em(30);
-		}
+	&.active {
+		display: block;
 	}
 
 	&__user {
+		@include display(flex);
+		padding: em(5);
+		border-bottom: em(1) solid rgba(dimgray,0.4);
+
 		&.active {
 			color: $color5;
 		}
@@ -21,5 +32,9 @@ $module:			'users';
 		&.correct {
 			color: $color6;
 		}
+	}
+
+	&__user-score {
+		margin-left: auto;
 	}
 }

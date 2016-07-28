@@ -11,10 +11,12 @@ export default class Users extends Component {
 
 	componentDidMount() {
 		Store.listen(this.onChange);
+		this.attachKeyBinding();
 	}
 
 	componentWillUnmount() {
 		Store.unlisten(this.onChange);
+		this.detachKeyBinding();
 	}
 
 	onChange(state) {
@@ -22,8 +24,8 @@ export default class Users extends Component {
 	}
 
 	getClassName(user) {
-		let status = this.state.store.users[user].status;
-		let correct = this.state.store.users[user].correct;
+		let status = user.status;
+		let correct = user.correct;
 
 		if(status === 'captain') {
 			return 'active';
@@ -34,28 +36,76 @@ export default class Users extends Component {
 		}
 	}
 
-	render() {
-		let users = '';
+	attachKeyBinding() {
+		this.users = document.querySelector('[data-js="users"]');
 
+		if(this.users) {
+			window.addEventListener('keydown',this.openUsers.bind(this));
+			window.addEventListener('keyup',this.closeUsers.bind(this));
+		}
+	}
+
+	detachKeyBinding() {
+		window.removeEventListener('keydown',this.openUsers.bind(this));
+		window.removeEventListener('keyup',this.closeUsers.bind(this));
+	}
+
+	openUsers(e) {
+		if(e.keyCode === 9) {
+			e.preventDefault();
+			this.users.className = "users active";
+		}
+	}
+
+	closeUsers(e) {
+		if(e.keyCode === 9) {
+			e.preventDefault();
+			this.users.className = "users";
+		}
+	}
+
+	sortUsers() {
+		let users = this.state.store.users || {};
+		let usersArr = [];
+
+		Object.keys(users).map((user,index)=>{
+			usersArr.push(users[user]);
+		});
+
+		return usersArr.sort((a,b)=>{
+			return b.score - a.score;
+		});
+	}
+
+	renderUsers() {
 		if(this.state.store.users) {
-			users = Object.keys(this.state.store.users).map((user,index)=>{
-				let status = '';
+			let users = this.sortUsers();
+			let usersArr = Object.keys(users);
+
+			return usersArr.map((username,index)=>{
+				let user = users[username];
 				let classname = 'users__user ' + this.getClassName(user);
 
 				return (
-					<li key={user}>
+					<li key={user.name}>
 							<span className={classname}>
-								{this.state.store.users[user].name}
+								<span className="users__user-name">{user.name}</span>
+								<span className="users__user-score">{user.score}</span>								 
 							</span>						
 					</li>
 				)
 			});
 		}
+	}
 
+	render() {
 		return (
-			<ul className="users__list">
-				{users}
-			</ul>
+			<div data-js="users" className="users">
+				<h3 className="gamma">Current scores</h3>
+				<ul className="users__list">
+					{this.renderUsers()}
+				</ul>
+			</div>			
 		)		
 	}
 }

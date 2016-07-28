@@ -8,17 +8,7 @@ function Game(socket,gameId,database) {
 	this.database = database;
 	this.roomRef = firebase.db.ref(firebase.roomsPath + this.id);
 	this.gameLength = 90;
-
-	firebase.db.ref('/dictionary').on('value',(snapshot)=>{
-		this.dictionary = [];
-		this.dictionaryObj = snapshot.val();
-		for(word in this.dictionaryObj) {
-			this.dictionary.push(word);
-		}
-
-		firebase.db.ref('/dictionary').off();
-		this.init(socket);
-	});
+	this.getDictionary(socket);
 }
 
 Game.prototype = {
@@ -28,6 +18,21 @@ Game.prototype = {
 		this.attachListeners(socket);
 		this.attachFirebase();
 		this.resetGame();
+	},
+
+	getDictionary: function(socket) {
+		firebase.db.ref('/dictionary').on('value',(snapshot)=>{
+			this.dictionary = [];
+			this.dictionaryObj = snapshot.val();
+			for(word in this.dictionaryObj) {
+				this.dictionary.push(word);
+			}
+			firebase.db.ref('/dictionary').off();
+			
+			if(socket) { 
+				this.init(socket);
+			}
+		});		
 	},
 
 	attachFirebase() {
@@ -167,6 +172,7 @@ Game.prototype = {
 			this.endGame();
 		} else {
 			if(usersArr.length <= 1) {
+				this.getDictionary();
 				this.resetRoom();				
 			} else {
 				this.newRound();
