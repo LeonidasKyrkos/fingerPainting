@@ -7,12 +7,12 @@ function Game(socket,gameId,database) {
 	this.sockets = {};
 	this.database = database;
 	this.roomRef = firebase.db.ref(firebase.roomsPath + this.id);
-	this.gameLength = 90;
+	this.gameLength = 10;
 	this.getDictionary(socket);
 }
 
 Game.prototype = {
-	init: function(socket) {
+	init(socket) {
 		this.store = {};
 		this.roundCount = 1;
 		this.attachListeners(socket);
@@ -20,13 +20,14 @@ Game.prototype = {
 		this.resetGame();
 	},
 
-	getDictionary: function(socket) {
+	getDictionary(socket) {
 		firebase.db.ref('/dictionary').on('value',(snapshot)=>{
 			this.dictionary = [];
 			this.dictionaryObj = snapshot.val();
 			for(word in this.dictionaryObj) {
 				this.dictionary.push(word);
 			}
+			this.dictionaryBackup = this.dictionary.slice(0);
 			firebase.db.ref('/dictionary').off();
 			
 			if(socket) { 
@@ -60,10 +61,21 @@ Game.prototype = {
 	handleDisconnect(socket) {
 		let users = this.store.users || {};
 		let user = users[socket.conn.id] || {};
-		if(users && user && user.status === 'captain') {
-			this.endRound();
-		}
 
+		if(users && user && user.status === 'captain') {
+			this.pauseRound();
+
+			setTimeout(()=>{
+				this.endRound();
+				this.deleteUser(socket);				
+			},5000);
+
+		} else {
+			this.deleteUser(socket);
+		}		
+	},
+
+	deleteUser(socket={}) {
 		for(let object in this.sockets) {
 			if(socket.id === this.sockets[object].id) {
 				delete this.sockets[object];
@@ -77,13 +89,13 @@ Game.prototype = {
 		this.roomRef.child('users').child(user).remove();
 	},
 
-	updateStore: function(snapshot) {
+	updateStore(snapshot) {
 		this.store = snapshot.val();
 		this.store.currentRoom = '/rooms/' + this.id;
 		io.emit('store update',this.store);
 	},
 
-	startRound: function() {
+	startRound() {
 		this.getPuzzle();
 		this.startInterval();
 		this.roomRef.update({
@@ -91,44 +103,74 @@ Game.prototype = {
 		})
 	},
 
-	startInterval: function() {
+	startInterval() {
 		this.interval = setInterval(this.countdown.bind(this),1000);
 	},
 
-	pauseRound: function() {
+	pauseRound() {
 		clearInterval(this.interval);
 		this.roomRef.update({
 			status: 'paused'
 		})
 	},
 
-	unpauseRound: function() {
+	unpauseRound() {
 		this.startInterval();
 		this.roomRef.update({
 			status: 'playing'
 		})
 	},
 
-	getPuzzle: function() {
+	getPuzzle() {
+		if(!this.dictionary.length) {
+			this.dictionary = this.dictionaryBackup.slice(0);
+		}
+
 		let max = this.dictionary.length - 1;
-		let min = 1;		
-		let random = Math.floor(Math.random() * (max - min)) + min;
+		let random = Math.floor(Math.random() * (max - 1)) + 1;
 		this.puzzle = this.dictionary[random];
 		let puzzleIndex = this.dictionary.indexOf(this.puzzle);
 		this.dictionary.splice(puzzleIndex,1);
 
-		this.informTheCaptain(this.puzzle);
+		this.informTheCaptain();
 	},
 
-	informTheCaptain(puzzle) {
+	informTheCaptain() {
+		this.wordLength = [];
+		for(var i = 0; i < this.puzzle.length; i++) { this.wordLength.push('_ ') };
+
 		for(user in this.store.users) {
 			if(this.store.users[user].status === 'captain') {
-				this.sockets[user].emit('puzzle',puzzle)
+				this.sockets[user].emit('puzzle',this.puzzle)
+			} else {
+				this.sockets[user].emit('puzzle',this.wordLength)
 			}
 		}
 	},
 
+	clueForTheSailors() {
+		let clue = this.getClue();
+
+		for(user in this.store.users) {
+			let userObj = this.store.users[user];
+
+			if(userObj.status !== 'captain' && !userObj.correct) {
+				this.sockets[user].emit('puzzle',this.wordLength)
+			}
+		}
+	},
+
+	getClue() {
+		let random = Math.floor(Math.random() * this.wordLength.length);
+
+		if(this.wordLength[random] === '_ ') {
+			return this.wordLength[random] = this.puzzle.charAt(random);
+		}
+	},
+
 	parseMessage(message) {
+		message.message = message.message.toString().toLowerCase();
+
 		if(message.message === this.puzzle) {
 			this.cleverSailor(message);			
 		} else {
@@ -136,10 +178,11 @@ Game.prototype = {
 		}
 	},
 
-	cleverSailor: function(message) {
+	cleverSailor(message) {
 		let newScore = this.calculatePoints(message.id);
 
 		this.roomRef.child('/users/').child(message.id).update({ correct: true, score: newScore } );
+		this.sockets[message.id].emit('puzzle',this.puzzle);
 		this.cleverSailors++;
 
 		if(this.cleverSailors >= Object.keys(this.store.users).length - 1) {
@@ -147,26 +190,36 @@ Game.prototype = {
 		}
 	},
 
-	calculatePoints: function(id) {
+	calculatePoints(id) {
 		let currentScore = this.store.users[id].score || 0;
 		let newScore = currentScore + this.timer;
 		return newScore;
 	},
 	
-	countdown: function() {
+	countdown() {
 		if(this.timer < 1) {
-			this.endRound();
+			io.emit('puzzle',this.puzzle);
+
+			setTimeout(()=>{
+				this.endRound();
+			},5000);			
 		} else {
 			this.timer--;
 			this.roomRef.update({
 				clock: this.timer
 			})
+
+			if(this.timer === 45 || this.timer === 25) {
+				this.clueForTheSailors();
+			}
 		}
 	},
 
-	endRound: function() {
+	endRound() {
 		clearInterval(this.interval);
-		usersArr = Object.keys(this.store.users) || [];
+
+		let users = this.store.users || {};
+		usersArr = Object.keys(users) || [];
 
 		if(this.roundCount >= usersArr.length * 2) {
 			this.endGame();
@@ -180,14 +233,14 @@ Game.prototype = {
 		}		
 	},
 
-	newRound: function() {
+	newRound() {
 		this.roundCount++;
 		this.resetGame();
 		this.newCaptain();
 		this.startRound();
 	},
 
-	newCaptain: function() {
+	newCaptain() {
 		let users = this.store.users;
 		let usersArr = Object.keys(users) || [];
 
@@ -211,19 +264,19 @@ Game.prototype = {
 		}
 	},
 
-	setSailor: function(username) {
+	setSailor(username) {
 		this.roomRef.child('users').child(username).update({
 			status: 'sailor'
 		})
 	},
 
-	setCaptain: function(username) {
+	setCaptain(username) {
 		this.roomRef.child('users').child(username).update({
 			status: 'captain'
 		})
 	},
 
-	endGame: function() {
+	endGame() {
 		this.roomRef.update({
 			status: 'finished'
 		})
@@ -233,7 +286,7 @@ Game.prototype = {
 		},10000);
 	},
 
-	resetGame: function() {
+	resetGame() {
 		this.roomRef.update({
 			status: 'pending'
 		});
@@ -246,7 +299,7 @@ Game.prototype = {
 		io.emit('puzzle','');
 	},
 
-	resetCorrectStatus: function() {
+	resetCorrectStatus() {
 		if(this.store.users) {
 			let users = this.store.users;
 			let usersArr = Object.keys(users) || [];
@@ -262,20 +315,20 @@ Game.prototype = {
 		}
 	},
 
-	resetClock: function() {
+	resetClock() {
 		this.timer = this.gameLength;
 		this.roomRef.update({
 			clock: this.timer
 		})
 	},
 
-	resetRoom: function() {
+	resetRoom() {
 		this.resetGame();
 		this.resetUsers();
 		this.roundCount = 1;
 	},
 
-	resetUsers: function() {
+	resetUsers() {
 		let users = this.store.users;
 		
 		for(let user in users) {

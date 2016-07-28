@@ -40,6 +40,11 @@ var Actions = function () {
 		value: function updatePuzzle(puzzle) {
 			return puzzle;
 		}
+	}, {
+		key: 'updateError',
+		value: function updateError(error) {
+			return error;
+		}
 	}]);
 
 	return Actions;
@@ -130,6 +135,10 @@ var App = function (_Component) {
 
 			socket.on('puzzle', function (puzzle) {
 				_Actions2.default.updatePuzzle(puzzle);
+			});
+
+			socket.on('request rejected', function (error) {
+				_Actions2.default.updateError(error);
 			});
 
 			_Store2.default.listen(this.onChange.bind(this));
@@ -832,6 +841,28 @@ var Chat = function (_Component) {
 			};
 		}
 	}, {
+		key: 'renderForm',
+		value: function renderForm() {
+			var users = this.state.store.users || {};
+			var user = users[this.state.socket.id];
+
+			if (user.status !== 'captain' && !user.correct) {
+				console.log('hello');
+				return _react2.default.createElement(
+					'form',
+					{ className: 'form--chat', onSubmit: this.parseChatForm.bind(this) },
+					_react2.default.createElement('input', { autoComplete: 'off', id: 'chat-input', type: 'text', className: 'form__input' }),
+					_react2.default.createElement(
+						'button',
+						{ className: 'btn--submit flex-right' },
+						'»'
+					)
+				);
+			} else {
+				return " ";
+			}
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			var _this2 = this;
@@ -843,6 +874,8 @@ var Chat = function (_Component) {
 				_this2.scrollChat();
 			}, 32);
 
+			var form = this.renderForm();
+
 			return _react2.default.createElement(
 				'div',
 				{ className: 'chat' },
@@ -851,16 +884,7 @@ var Chat = function (_Component) {
 					{ id: 'chat-history', className: 'chat__history' },
 					this.chats
 				),
-				_react2.default.createElement(
-					'form',
-					{ className: 'form--chat', onSubmit: this.parseChatForm.bind(this) },
-					_react2.default.createElement('input', { autoComplete: 'off', id: 'chat-input', type: 'text', className: 'form__input' }),
-					_react2.default.createElement(
-						'button',
-						{ className: 'btn--submit flex-right' },
-						'»'
-					)
-				)
+				form
 			);
 		}
 	}]);
@@ -976,14 +1000,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var ErrorMessage = function (_Component) {
 	_inherits(ErrorMessage, _Component);
 
-	function ErrorMessage(props) {
+	function ErrorMessage() {
 		_classCallCheck(this, ErrorMessage);
 
-		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ErrorMessage).call(this, props));
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ErrorMessage).call(this));
 
 		_this.state = _Store2.default.getState();
-		_this.state.errors = '';
-
 		_this.onChange = _this.onChange.bind(_this);
 		return _this;
 	}
@@ -1001,13 +1023,7 @@ var ErrorMessage = function (_Component) {
 	}, {
 		key: 'onChange',
 		value: function onChange(state) {
-			var _this2 = this;
-
 			this.setState(state);
-
-			this.state.socket.on('request rejected', function (data) {
-				_this2.state.errors = data.errors;
-			});
 		}
 	}, {
 		key: 'render',
@@ -1015,7 +1031,7 @@ var ErrorMessage = function (_Component) {
 			return _react2.default.createElement(
 				'span',
 				{ className: 'form__error' },
-				this.state.errors
+				this.state.error
 			);
 		}
 	}]);
@@ -1900,12 +1916,14 @@ var Store = function () {
 		this.store = {};
 		this.socket = {};
 		this.puzzle = '';
+		this.error = '';
 
 		this.bindListeners({
 			handleUpdateStore: _Actions2.default.UPDATE_STORE,
 			handleUpdateSocket: _Actions2.default.UPDATE_SOCKET,
 			handleUpdateUser: _Actions2.default.UPDATE_USER,
-			handleUpdatePuzzle: _Actions2.default.UPDATE_PUZZLE
+			handleUpdatePuzzle: _Actions2.default.UPDATE_PUZZLE,
+			handleUpdateError: _Actions2.default.UPDATE_ERROR
 		});
 	}
 
@@ -1928,6 +1946,11 @@ var Store = function () {
 		key: 'handleUpdatePuzzle',
 		value: function handleUpdatePuzzle(puzzle) {
 			this.puzzle = puzzle;
+		}
+	}, {
+		key: 'handleUpdateError',
+		value: function handleUpdateError(error) {
+			this.error = error;
 		}
 	}]);
 

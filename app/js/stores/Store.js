@@ -7,12 +7,14 @@ class Store {
 		this.store = {};
 		this.socket = {};
 		this.puzzle = '';
+		this.error = '';
 
 		this.bindListeners({
 			handleUpdateStore: Actions.UPDATE_STORE,
 			handleUpdateSocket: Actions.UPDATE_SOCKET,
 			handleUpdateUser: Actions.UPDATE_USER,
-			handleUpdatePuzzle: Actions.UPDATE_PUZZLE
+			handleUpdatePuzzle: Actions.UPDATE_PUZZLE,
+			handleUpdateError: Actions.UPDATE_ERROR
 		})
 	}
 
@@ -30,6 +32,10 @@ class Store {
 
 	handleUpdatePuzzle(puzzle) {
 		this.puzzle = puzzle;
+	}
+
+	handleUpdateError(error) {
+		this.error = error;
 	}
 }
 
