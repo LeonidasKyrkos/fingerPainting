@@ -1024,6 +1024,11 @@ var Chat = function (_Component) {
 			this.setState(state);
 		}
 	}, {
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate(nextProps, nextState) {
+			return Object.keys(this.state.store.chatLog)[Object.keys(this.state.store.chatLog).length - 1] !== Object.keys(nextState.store.chatLog)[Object.keys(nextState.store.chatLog).length - 1];
+		}
+	}, {
 		key: 'parseChatForm',
 		value: function parseChatForm(e) {
 			e.preventDefault();
