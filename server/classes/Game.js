@@ -12,7 +12,6 @@ function Game(socket,gameId,database) {
 		let dictionary = snapshot.val();
 		this.getDictionary(socket,dictionary);
 	});
-	
 }
 
 Game.prototype = {
@@ -211,7 +210,7 @@ Game.prototype = {
 	countdown() {
 		if(this.timer < 1) {
 			for(let socket in this.sockets) {
-				sockets[socket].emit('puzzle', this.puzzle);
+				this.sockets[socket].emit('puzzle', this.puzzle);
 			};
 
 			setTimeout(()=>{
@@ -311,7 +310,7 @@ Game.prototype = {
 		this.resetCorrectStatus();		
 
 		for(let socket in this.sockets) {
-			sockets[socket].emit('puzzle', '');
+			this.sockets[socket].emit('puzzle', '');
 		};
 
 
