@@ -1,9 +1,10 @@
 // custom modules
 var utils = require('./server/modules/utilities');
-var room = require('./server/modules/room');
 var firebase = require('./server/modules/firebaseConfig');
-var server = require('./configureServer');
-var io = server.io;
+var io = require('./configureServer').io;
+var AdminPanel = require('./server/classes/AdminPanel');
+var adminPanel = new AdminPanel();
+var adminSocket = io.of('/admin');
 
 // socket events
 io.on('connection', function (socket) {
@@ -13,4 +14,8 @@ io.on('connection', function (socket) {
 	socket.on('join request',function(request){
 		utils.joinHandler(request,socket);
 	});
+});
+
+io.of('/admin').on('connection',(socket)=>{
+	adminPanel.newAdmin(socket);
 });

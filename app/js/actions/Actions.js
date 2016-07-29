@@ -20,6 +20,10 @@ class Actions {
 	updateError(error) {
 		return error;
 	}
+
+	updateDictionarys(dictionarys) {
+		return dictionarys;
+	}
 }
 
 export default alt.createActions(Actions);

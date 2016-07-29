@@ -20,7 +20,6 @@ export default class Puzzle extends Component {
 	onChange(state) {
 		this.setState(state);
 	}
-
 	render() {
 		return (
 			<div className="game__top">

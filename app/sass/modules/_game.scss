@@ -34,5 +34,6 @@ $module: 			'game';
 		height: em(100,$fontSize);
 		line-height: em(100,$fontSize);
 		width: 100%;
+		white-space: pre-wrap;
 	}
 }

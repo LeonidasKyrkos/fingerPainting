@@ -6,9 +6,12 @@ function Game(socket,gameId,database) {
 	this.id = gameId;
 	this.sockets = {};
 	this.database = database;
-	this.roomRef = firebase.db.ref(firebase.roomsPath + this.id);
 	this.gameLength = 90;
-	this.getDictionary(socket);
+
+	this.database.child('dictionary').on('value',(snapshot)=>{
+		let dictionary = snapshot.val();
+		this.getDictionary(socket,dictionary);
+	});
 }
 
 Game.prototype = {
@@ -20,8 +23,8 @@ Game.prototype = {
 		this.resetGame();
 	},
 
-	getDictionary(socket) {
-		firebase.db.ref('/dictionary').on('value',(snapshot)=>{
+	getDictionary(socket, dictionary='default') {
+		firebase.db.ref('/dictionarys/' + dictionary).on('value',(snapshot)=>{
 			this.dictionary = [];
 			this.dictionaryObj = snapshot.val();
 			for(word in this.dictionaryObj) {
@@ -47,7 +50,7 @@ Game.prototype = {
 		room.handler(this.id,socket);
 
 		socket.on('path update',(path)=>{
-			let ref = this.roomRef.child('/paths/');
+			let ref = this.database.child('/paths/');
 			ref.set(path);
 		});
 
@@ -86,7 +89,7 @@ Game.prototype = {
 	},
 
 	removeUserFromGame(user) {
-		this.roomRef.child('users').child(user).remove();
+		this.database.child('users').child(user).remove();
 	},
 
 	updateStore(snapshot) {
@@ -98,7 +101,7 @@ Game.prototype = {
 	startRound() {
 		this.getPuzzle();
 		this.startInterval();
-		this.roomRef.update({
+		this.database.update({
 			status: 'playing'
 		})
 	},
@@ -109,14 +112,14 @@ Game.prototype = {
 
 	pauseRound() {
 		clearInterval(this.interval);
-		this.roomRef.update({
+		this.database.update({
 			status: 'paused'
 		})
 	},
 
 	unpauseRound() {
 		this.startInterval();
-		this.roomRef.update({
+		this.database.update({
 			status: 'playing'
 		})
 	},
@@ -136,8 +139,14 @@ Game.prototype = {
 	},
 
 	informTheCaptain() {
-		this.wordLength = [];
-		for(var i = 0; i < this.puzzle.length; i++) { this.wordLength.push('_ ') };
+		this.wordLength = '';
+		for(var i = 0; i < this.puzzle.length; i++) { 
+			if(this.puzzle.charAt(i) === ' ') {
+				this.wordLength += '    ';
+			} else {
+				this.wordLength += '_ ';
+			}			
+		};
 
 		for(user in this.store.users) {
 			if(this.store.users[user].status === 'captain') {
@@ -174,14 +183,14 @@ Game.prototype = {
 		if(message.message === this.puzzle) {
 			this.cleverSailor(message);			
 		} else {
-			let ref = this.roomRef.child('/chatLog/').push(message);
+			let ref = this.database.child('/chatLog/').push(message);
 		}
 	},
 
 	cleverSailor(message) {
 		let newScore = this.calculatePoints(message.id);
 
-		this.roomRef.child('/users/').child(message.id).update({ correct: true, score: newScore } );
+		this.database.child('/users/').child(message.id).update({ correct: true, score: newScore } );
 		this.sockets[message.id].emit('puzzle',this.puzzle);
 		this.cleverSailors++;
 
@@ -205,7 +214,7 @@ Game.prototype = {
 			},5000);			
 		} else {
 			this.timer--;
-			this.roomRef.update({
+			this.database.update({
 				clock: this.timer
 			})
 
@@ -265,19 +274,19 @@ Game.prototype = {
 	},
 
 	setSailor(username) {
-		this.roomRef.child('users').child(username).update({
+		this.database.child('users').child(username).update({
 			status: 'sailor'
 		})
 	},
 
 	setCaptain(username) {
-		this.roomRef.child('users').child(username).update({
+		this.database.child('users').child(username).update({
 			status: 'captain'
 		})
 	},
 
 	endGame() {
-		this.roomRef.update({
+		this.database.update({
 			status: 'finished'
 		})
 
@@ -287,11 +296,11 @@ Game.prototype = {
 	},
 
 	resetGame() {
-		this.roomRef.update({
+		this.database.update({
 			status: 'pending'
 		});
 
-		this.roomRef.child('paths').remove();
+		this.database.child('paths').remove();
 		this.cleverSailors = 0;
 		this.resetClock();
 		this.resetCorrectStatus();		
@@ -308,7 +317,7 @@ Game.prototype = {
 				let username = usersArr[i];
 				let user = users[username];
 
-				this.roomRef.child('users').child(username).update({
+				this.database.child('users').child(username).update({
 					correct: false
 				})
 			}
@@ -317,7 +326,7 @@ Game.prototype = {
 
 	resetClock() {
 		this.timer = this.gameLength;
-		this.roomRef.update({
+		this.database.update({
 			clock: this.timer
 		})
 	},
@@ -332,7 +341,7 @@ Game.prototype = {
 		let users = this.store.users;
 		
 		for(let user in users) {
-			this.roomRef.child('users').child(user).update({
+			this.database.child('users').child(user).update({
 				correct: false,
 				score: 0
 			})

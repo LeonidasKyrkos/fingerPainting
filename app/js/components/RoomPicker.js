@@ -1,11 +1,26 @@
 import React, { Component } from 'react';
+import Store from '../stores/Store';
 import ErrorMessage from './ErrorMessage';
 
 export default class RoomPicker extends Component {
 	constructor(props) {
 		super(props);
-		this.requestJoin = this.props.requestJoin;		
-	}	
+		
+		this.onChange = this.onChange.bind(this);
+		this.state = Store.getState();
+	}
+
+	componentDidMount() {
+		Store.listen(this.onChange);
+	}
+
+	componentWillUnmount() {
+		Store.unlisten(this.onChange);
+	}
+
+	onChange(state) {
+		this.setState(state);
+	}
 
 	authenticate(e) {
 		e.preventDefault();
@@ -19,13 +34,17 @@ export default class RoomPicker extends Component {
 		this.requestJoin(form.name,form.id,form.password);
 	}
 
+	requestJoin(name,id,password) {
+		this.state.socket.emit('join request',{ name: name, id: id, password: password });
+	}
+
 	render() {
 		return (
 			<div className="wrapper">
 				<h1 className="alpha">finger painting</h1>
 				<h2 className="beta">Join a room</h2>
 				<form data-js="room.join" className="form" onSubmit={this.authenticate.bind(this)}>
-					<ErrorMessage socket={this.props.socket} />
+					<ErrorMessage socket={this.state.socket} />
 					<ul>
 						<li>
 							<label className="form__control">
@@ -64,7 +83,7 @@ export default class RoomPicker extends Component {
 							<label className="form__control">
 								<span className="form__label">Name</span>
 								<span className="form__input-wrap">
-									<input defaultValue={this.props.username} data-js="room.username" autoComplete="off" type="text" className="form__input"/>
+									<input data-js="room.username" autoComplete="off" type="text" className="form__input"/>
 								</span>
 							</label>
 						</li>

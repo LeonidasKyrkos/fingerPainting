@@ -10,8 +10,18 @@ $module: 		'form';
 		@include display(flex);
 	}
 
+	&--inline {
+		@extend .#{$module};
+		@include display(flex);
+	}
+
 	&__items {
 		@include display(flex);
+
+		.#{$module}--inline & {
+			@include align-items(center);
+			@include flex-wrap(wrap);
+		}
 	}
 
 	&__item {
@@ -22,15 +32,39 @@ $module: 		'form';
 		}
 	}
 
+	&__item-wrap--wide {
+		width: 100%;
+	}
+
+	&__button--inline {
+		@extend .btn--primary;
+		padding: 0 em(10,18);
+		line-height: em(34,18);
+	}
+
 	&__control {
 		display: block;
 		margin-bottom: em(20);
+
+		.#{$module}--inline & {
+			@include display(flex);
+			@include align-items(center);
+		}
 	}
 
 	&__error {
 		display: block;
 		color: red;
-		padding: em(10) 0;
+		margin: em(10) 0;
+
+		.#{$module}--inline & {
+			width: 100%;
+		}
+	}
+
+	&__success {
+		@extend .#{$module}__error;
+		color: $color6;
 	}
 
 	&__label {
@@ -38,6 +72,11 @@ $module: 		'form';
 		font-size: em($fontSize);
 		display: block;
 		margin-bottom: em(3,$fontSize);
+		padding-right: em(20);
+
+		.#{$module}--inline & {
+			margin-bottom: 0;	
+		}
 	}
 
 	&__control--select {
@@ -55,16 +94,43 @@ $module: 		'form';
 			border-right: 10px solid transparent;
 		}
 	}
-	&__select {
+
+	&__select-wrap {
+		display: block;
+		position: relative;
 		width: em(350);
 		max-width: 100%;
-		border-radius: em(5);
+
+		&:after {
+			content: "";
+			border-top: em(10) solid white;
+			border-left: em(5) solid transparent;
+			border-right: em(5) solid transparent;
+			position: absolute;
+			right: em(15);
+			top: 50%;
+			@include transform(translateY(-50%));
+			pointer-events: none;
+		}
+	}
+
+	&__select {
+		$fontSize: 14;
+		font-size: em($fontSize);
+		width: 100%;
+		border-radius: em(5,$fontSize);
 		background-color: rgba(white,0.1);
 		-webkit-appearance: none;
-		padding: em(7) em(15) em(10);
+		padding: em(7,$fontSize) em(15,$fontSize) em(10,$fontSize);
 		border: 0;
 		outline: 0;
 		color: white;
+	}
+
+	&__input-wrap {
+		.#{$module}--inline & {
+			padding-right: em(20);
+		}
 	}
 
 	&__input {
@@ -81,5 +147,12 @@ $module: 		'form';
 		.#{$module}--chat & {
 			width: calc(100% - 30px);	
 		}		
+	}
+
+	&__delete {
+		position: absolute;
+		right: em(15);
+		top: 50%;
+		@include transform(translateY(-50%));
 	}
 }

@@ -43,6 +43,21 @@ $module: 		'btn';
 		}
 	}
 
+	&--tertiary {
+		@extend .btn;
+		$fontSize: 14;
+		@include font-size($fontSize);
+		background-color: red;
+		color: white;
+		border-radius: 100%;
+		width: em(15,$fontSize);
+		display: block;
+		height: em(15,$fontSize);
+		line-height: em(15,$fontSize);
+		padding: 0;
+		text-align: center;
+	}
+
 	&--submit {
 		@extend .#{$module}--secondary;
 		$fontSize: 12;
