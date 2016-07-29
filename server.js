@@ -16,6 +16,6 @@ io.on('connection', function (socket) {
 	});
 });
 
-io.of('/admin').on('connection',(socket)=>{
+adminSocket.on('connection',(socket)=>{
 	adminPanel.newAdmin(socket);
 });
