@@ -245,7 +245,7 @@ var AdminPanel = function (_Component) {
 
 		_this.state = _Store2.default.getState();
 		_this.onChange = _this.onChange.bind(_this);
-		_this.socket = io.connect('http://localhost:3000/admin');
+		_this.socket = io.connect('52.209.86.125:443');
 		_this.attachListeners();
 		return _this;
 	}
@@ -3594,7 +3594,7 @@ function drainQueue() {
     if (draining) {
         return;
     }
-    var timeout = cachedSetTimeout(cleanUpNextTick);
+    var timeout = cachedSetTimeout.call(null, cleanUpNextTick);
     draining = true;
 
     var len = queue.length;
@@ -3611,7 +3611,7 @@ function drainQueue() {
     }
     currentQueue = null;
     draining = false;
-    cachedClearTimeout(timeout);
+    cachedClearTimeout.call(null, timeout);
 }
 
 process.nextTick = function (fun) {
@@ -3623,7 +3623,7 @@ process.nextTick = function (fun) {
     }
     queue.push(new Item(fun, args));
     if (queue.length === 1 && !draining) {
-        cachedSetTimeout(drainQueue, 0);
+        cachedSetTimeout.call(null, drainQueue, 0);
     }
 };
 
