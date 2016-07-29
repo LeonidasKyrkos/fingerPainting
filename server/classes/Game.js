@@ -96,7 +96,7 @@ Game.prototype = {
 		this.store = snapshot.val();
 		this.store.currentRoom = '/rooms/' + this.id;
 		for(let socket in this.sockets) {
-			sockets[socket].emit('store update', this.store);
+			this.sockets[socket].emit('store update', this.store);
 		};
 	},
 
@@ -210,7 +210,7 @@ Game.prototype = {
 	countdown() {
 		if(this.timer < 1) {
 			for(let socket in this.sockets) {
-				sockets[socket].emit('puzzle', this.puzzle);
+				this.sockets[socket].emit('puzzle', this.puzzle);
 			};
 
 			setTimeout(()=>{
@@ -310,7 +310,7 @@ Game.prototype = {
 		this.resetCorrectStatus();		
 
 		for(let socket in this.sockets) {
-			sockets[socket].emit('puzzle', '');
+			this.sockets[socket].emit('puzzle', '');
 		};
 
 
