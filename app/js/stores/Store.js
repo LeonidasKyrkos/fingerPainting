@@ -8,13 +8,15 @@ class Store {
 		this.socket = {};
 		this.puzzle = '';
 		this.error = '';
+		this.dictionarys = {};
 
 		this.bindListeners({
 			handleUpdateStore: Actions.UPDATE_STORE,
 			handleUpdateSocket: Actions.UPDATE_SOCKET,
 			handleUpdateUser: Actions.UPDATE_USER,
 			handleUpdatePuzzle: Actions.UPDATE_PUZZLE,
-			handleUpdateError: Actions.UPDATE_ERROR
+			handleUpdateError: Actions.UPDATE_ERROR,
+			handleUpdateDictionarys: Actions.UPDATE_DICTIONARYS
 		})
 	}
 
@@ -36,6 +38,10 @@ class Store {
 
 	handleUpdateError(error) {
 		this.error = error;
+	}
+
+	handleUpdateDictionarys(dictionarys) {
+		this.dictionarys = dictionarys;
 	}
 }
 

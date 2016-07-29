@@ -37,7 +37,7 @@ function joinHandler(request,socket){
 		}
 
 		if(!found) {
-			var game = new Game(socket,request.id,database);
+			var game = new Game(socket, request.id, database);
 			var gameItem = { game: game };
 			activeGames.push(gameItem);
 		}
