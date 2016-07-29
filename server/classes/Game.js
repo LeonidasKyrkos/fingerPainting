@@ -96,7 +96,9 @@ Game.prototype = {
 	updateStore(snapshot) {
 		this.store = snapshot.val();
 		this.store.currentRoom = '/rooms/' + this.id;
-		io.emit('store update',this.store);
+		for(let socket in this.sockets) {
+			this.sockets[socket].emit('store update', this.store);
+		};
 	},
 
 	startRound() {
@@ -208,7 +210,9 @@ Game.prototype = {
 	
 	countdown() {
 		if(this.timer < 1) {
-			io.emit('puzzle',this.puzzle);
+			for(let socket in this.sockets) {
+				sockets[socket].emit('puzzle', this.puzzle);
+			};
 
 			setTimeout(()=>{
 				this.endRound();
@@ -306,7 +310,11 @@ Game.prototype = {
 		this.resetClock();
 		this.resetCorrectStatus();		
 
-		io.emit('puzzle','');
+		for(let socket in this.sockets) {
+			sockets[socket].emit('puzzle', '');
+		};
+
+
 	},
 
 	resetCorrectStatus() {
