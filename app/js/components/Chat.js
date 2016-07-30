@@ -24,8 +24,10 @@ export default class Chat extends Component {
 		this.setState(state);
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
-		return Object.keys(this.state.store.chatLog)[Object.keys(this.state.store.chatLog).length - 1] !== Object.keys(nextState.store.chatLog)[Object.keys(nextState.store.chatLog).length - 1];
+	shouldComponentUpdate(nextProps, nextState) {		
+		if(this.state.store.chatLog) {
+			return Object.keys(this.state.store.chatLog)[Object.keys(this.state.store.chatLog).length - 1] !== Object.keys(nextState.store.chatLog)[Object.keys(nextState.store.chatLog).length - 1];
+		}
 	}
 
 	parseChatForm(e) {
