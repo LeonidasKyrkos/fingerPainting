@@ -945,6 +945,21 @@ var CanvasSettings = function (_React$Component) {
 							'li',
 							{ className: 'ib' },
 							_react2.default.createElement('span', { 'data-color': '#363CFF', style: { backgroundColor: '#363CFF' }, className: 'canvas__colour', onClick: this.props.updateColor.bind(scope) })
+						),
+						_react2.default.createElement(
+							'li',
+							{ className: 'ib' },
+							_react2.default.createElement('span', { 'data-color': '#ff3399', style: { backgroundColor: '#ff3399' }, className: 'canvas__colour', onClick: this.props.updateColor.bind(scope) })
+						),
+						_react2.default.createElement(
+							'li',
+							{ className: 'ib' },
+							_react2.default.createElement('span', { 'data-color': '#33cc33', style: { backgroundColor: '#33cc33' }, className: 'canvas__colour', onClick: this.props.updateColor.bind(scope) })
+						),
+						_react2.default.createElement(
+							'li',
+							{ className: 'ib' },
+							_react2.default.createElement('span', { 'data-color': '#00ccff', style: { backgroundColor: '#00ccff' }, className: 'canvas__colour', onClick: this.props.updateColor.bind(scope) })
 						)
 					)
 				)

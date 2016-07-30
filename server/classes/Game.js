@@ -28,7 +28,7 @@ Game.prototype = {
 			this.dictionary = [];
 			this.dictionaryObj = snapshot.val();
 			for(word in this.dictionaryObj) {
-				this.dictionary.push(word);
+				this.dictionary.push(word.toLowerCase());
 			}
 			this.dictionaryBackup = this.dictionary.slice(0);
 			firebase.db.ref('/dictionary').off();
@@ -257,6 +257,7 @@ Game.prototype = {
 
 		let users = this.store.users || {};
 		usersArr = Object.keys(users) || [];
+		this.resetPaths();
 
 		if(this.roundCount >= usersArr.length * 2) {
 			this.endGame();
@@ -328,7 +329,7 @@ Game.prototype = {
 			status: 'pending'
 		});
 
-		this.database.child('paths').remove();
+		this.resetPaths();
 		this.cleverSailors = 0;
 		this.resetClock();
 		this.resetCorrectStatus();		
@@ -336,8 +337,10 @@ Game.prototype = {
 		for(let socket in this.sockets) {
 			this.sockets[socket].emit('puzzle', []);
 		};
+	},
 
-
+	resetPaths() {
+		this.database.child('paths').remove();
 	},
 
 	resetCorrectStatus() {

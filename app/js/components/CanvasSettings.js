@@ -95,6 +95,9 @@ export default class CanvasSettings extends React.Component {
 						<li className="ib"><span data-color="#d15d0a" style={{backgroundColor: '#d15d0a'}} className="canvas__colour" onClick={this.props.updateColor.bind(scope)}></span></li>
 						<li className="ib"><span data-color="#FFFB21" style={{backgroundColor: '#FFFB21'}} className="canvas__colour" onClick={this.props.updateColor.bind(scope)}></span></li>
 						<li className="ib"><span data-color="#363CFF" style={{backgroundColor: '#363CFF'}} className="canvas__colour" onClick={this.props.updateColor.bind(scope)}></span></li>
+						<li className="ib"><span data-color="#ff3399" style={{backgroundColor: '#ff3399'}} className="canvas__colour" onClick={this.props.updateColor.bind(scope)}></span></li>
+						<li className="ib"><span data-color="#33cc33" style={{backgroundColor: '#33cc33'}} className="canvas__colour" onClick={this.props.updateColor.bind(scope)}></span></li>
+						<li className="ib"><span data-color="#00ccff" style={{backgroundColor: '#00ccff'}} className="canvas__colour" onClick={this.props.updateColor.bind(scope)}></span></li>
 					</ul>
 				</li>
 			</ul>
