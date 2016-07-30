@@ -331,7 +331,7 @@ var App = function (_Component) {
 
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(App).call(this, props));
 
-		_this.socket = io.connect('52.209.86.125:443');
+		_this.socket = io.connect('http://localhost:3000');
 		_this.state = _Store2.default.getState();
 		return _this;
 	}
@@ -367,6 +367,10 @@ var App = function (_Component) {
 
 			this.socket.on('request rejected', function (error) {
 				_Actions2.default.updateError(error);
+			});
+
+			this.socket.on('debug', function (debug) {
+				console.log(debug);
 			});
 
 			_Store2.default.listen(this.onChange.bind(this));
