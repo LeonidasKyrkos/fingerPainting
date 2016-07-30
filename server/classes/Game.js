@@ -190,11 +190,22 @@ Game.prototype = {
 		 return string.substr(0, index) + char + string.substr(index+char.length);
 	},
 
+	checkIfCaptain(id) {
+		if(this.store.users && this.store.users[id] && this.store.users[id].status === 'captain') {
+			return true;
+		} else {
+			return false;
+		}
+	},
+
 	parseMessage(message) {
 		message.message = message.message.toString().toLowerCase();
+		let captain = this.checkIfCaptain(message.id);
 
 		if(message.message === this.puzzle) {
-			this.cleverSailor(message);			
+			if(!captain) {
+				this.cleverSailor(message);	
+			}					
 		} else {
 			let ref = this.database.child('/chatLog/').push(message);
 		}
