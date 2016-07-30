@@ -1312,13 +1312,9 @@ var Dictionarys = function (_Component) {
 						'td',
 						null,
 						item,
-						_react2.default.createElement(
-							'button',
-							{ 'data-js': 'dictionary.remove', onClick: function onClick() {
-									_this3.deleteWord(item, title);
-								}, className: 'btn--tertiary form__delete' },
-							'x'
-						)
+						_react2.default.createElement('button', { 'data-js': 'dictionary.remove', onClick: function onClick() {
+								_this3.deleteWord(item, title);
+							}, className: 'form__delete' })
 					)
 				);
 			});

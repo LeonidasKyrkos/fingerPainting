@@ -225,7 +225,7 @@ h1, h2, h3, h4, h5 {
 .alpha {
   text-align: center; }
 
-.btn, .btn--primary, .form__button--inline, .canvas__settings-btn, .btn--secondary, .btn--submit, .btn--tertiary {
+.btn, .btn--primary, .form__button--inline, .canvas__settings-btn, .btn--secondary, .btn--submit {
   background-color: transparent;
   display: inline-block;
   margin-bottom: 0;
@@ -258,18 +258,6 @@ h1, h2, h3, h4, h5 {
     border-radius: 0.5em; }
     .btn--secondary:hover, .btn--submit:hover {
       background-color: #353535; }
-  .btn--tertiary {
-    font-size: 14px;
-    font-size: 1.4rem;
-    background-color: red;
-    color: white;
-    border-radius: 100%;
-    width: 1.07143em;
-    display: block;
-    height: 1.07143em;
-    line-height: 1.07143em;
-    padding: 0;
-    text-align: center; }
   .btn--submit {
     width: 2.5em;
     padding: 0.25em;
@@ -412,6 +400,9 @@ h1, h2, h3, h4, h5 {
     border: 0;
     outline: 0;
     color: white; }
+    .form__select > option {
+      background-color: white;
+      color: black; }
   .form--inline .form__input-wrap {
     padding-right: 1em; }
   .form__input {
@@ -426,14 +417,33 @@ h1, h2, h3, h4, h5 {
     .form--chat .form__input {
       width: calc(100% - 30px); }
   .form__delete {
+    font-size: 14px;
+    font-size: 1.4rem;
     position: absolute;
-    right: 0.75em;
+    right: 1.07143em;
     top: 50%;
     -webkit-transform: translateY(-50%);
     -moz-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
     -o-transform: translateY(-50%);
-    transform: translateY(-50%); }
+    transform: translateY(-50%);
+    height: 1.07143em;
+    width: 1.07143em;
+    background-color: red;
+    border: 0;
+    color: white; }
+    .form__delete:after {
+      content: "x";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      text-align: center;
+      -webkit-transform: translateY(-50%);
+      -moz-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+      -o-transform: translateY(-50%);
+      transform: translateY(-50%); }
 
 .canvas {
   background-color: #4e4e4e;
@@ -537,8 +547,7 @@ h1, h2, h3, h4, h5 {
       .table tbody tr:nth-child(even) {
         background-color: #424242; }
     .table tbody td {
-      padding-top: 0.625em;
-      padding-bottom: 0; }
+      padding: 0.25em; }
   .table td {
     line-height: 1.2;
     padding: 0.5em;
