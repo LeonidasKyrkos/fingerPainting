@@ -133,26 +133,35 @@ Game.prototype = {
 
 		let max = this.dictionary.length - 1;
 		let random = Math.floor(Math.random() * (max - 1)) + 1;
-		this.puzzle = this.dictionary[random];
+		this.createPuzzleArray(this.dictionary[random]);		
 		let puzzleIndex = this.dictionary.indexOf(this.puzzle);
 		this.dictionary.splice(puzzleIndex,1);
 
 		this.informTheCaptain();
 	},
 
-	informTheCaptain() {
-		this.wordLength = '';
-		for(var i = 0; i < this.puzzle.length; i++) { 
-			if(this.puzzle.charAt(i) === ' ') {
-				this.wordLength += '    ';
-			} else {
-				this.wordLength += '_ ';
-			}			
-		};
+	createPuzzleArray(word) {
+		this.puzzle = word;
+		this.puzzleArray = [];
+		this.wordLength = []
+		let words = word.split(' ');
 
+		words.forEach((arrWord,index)=>{
+			this.puzzleArray[index] = this.puzzleArray[index] || [];
+			this.wordLength[index] = this.wordLength[index] || [];
+
+			for(var i = 0; i < arrWord.length; i++) {
+				this.puzzleArray[index].push(arrWord.charAt(i));
+				this.wordLength[index].push('_');
+			}
+		});
+	},
+
+	informTheCaptain() {
 		for(user in this.store.users) {
 			if(this.store.users[user].status === 'captain') {
-				this.sockets[user].emit('puzzle',this.puzzle)
+				console.log(this.puzzleArray);
+				this.sockets[user].emit('puzzle',this.puzzleArray)
 			} else {
 				this.sockets[user].emit('puzzle',this.wordLength)
 			}
@@ -160,23 +169,26 @@ Game.prototype = {
 	},
 
 	clueForTheSailors() {
-		let clue = this.getClue();
+		this.getClue();
 
 		for(user in this.store.users) {
 			let userObj = this.store.users[user];
 
 			if(userObj.status !== 'captain' && !userObj.correct) {
-				this.sockets[user].emit('puzzle',this.wordLength)
+				this.sockets[user].emit('puzzle',this.wordLength);
 			}
 		}
 	},
 
 	getClue() {
-		let random = Math.floor(Math.random() * this.wordLength.length);
+		let random = Math.floor((Math.random() * this.puzzleArray.length));
+		let random2 = Math.floor((Math.random() * this.puzzleArray[random].length));
 
-		if(this.wordLength[random] === '_ ') {
-			return this.wordLength[random] = this.puzzle.charAt(random);
-		}
+		this.wordLength[random][random2] = this.puzzleArray[random][random2];
+	},
+
+	replaceChar(string, index, char) {
+		 return string.substr(0, index) + char + string.substr(index+char.length);
 	},
 
 	parseMessage(message) {
@@ -193,7 +205,7 @@ Game.prototype = {
 		let newScore = this.calculatePoints(message.id);
 
 		this.database.child('/users/').child(message.id).update({ correct: true, score: newScore } );
-		this.sockets[message.id].emit('puzzle',this.puzzle);
+		this.sockets[message.id].emit('puzzle',this.puzzleArray);
 		this.cleverSailors++;
 
 		if(this.cleverSailors >= Object.keys(this.store.users).length - 1) {
@@ -209,20 +221,22 @@ Game.prototype = {
 	
 	countdown() {
 		if(this.timer < 1) {
+			clearInterval(this.interval);
+
 			for(let socket in this.sockets) {
-				this.sockets[socket].emit('puzzle', this.puzzle);
+				this.sockets[socket].emit('puzzle', this.puzzleArray);
 			};
 
 			setTimeout(()=>{
 				this.endRound();
-			},5000);			
+			},5000);
 		} else {
 			this.timer--;
 			this.database.update({
 				clock: this.timer
 			})
 
-			if(this.timer === 45 || this.timer === 25) {
+			if(this.timer === 5 || this.timer === 2) {
 				this.clueForTheSailors();
 			}
 		}
@@ -310,7 +324,7 @@ Game.prototype = {
 		this.resetCorrectStatus();		
 
 		for(let socket in this.sockets) {
-			this.sockets[socket].emit('puzzle', '');
+			this.sockets[socket].emit('puzzle', []);
 		};
 
 

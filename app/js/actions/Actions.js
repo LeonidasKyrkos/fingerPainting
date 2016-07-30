@@ -13,8 +13,8 @@ class Actions {
 		return user;
 	}
 
-	updatePuzzle(puzzle) {
-		return puzzle;
+	updatePuzzle(puzzleArray) {
+		return puzzleArray;
 	}
 
 	updateError(error) {

@@ -37,8 +37,8 @@ var Actions = function () {
 		}
 	}, {
 		key: 'updatePuzzle',
-		value: function updatePuzzle(puzzle) {
-			return puzzle;
+		value: function updatePuzzle(puzzleArray) {
+			return puzzleArray;
 		}
 	}, {
 		key: 'updateError',
@@ -361,8 +361,8 @@ var App = function (_Component) {
 				console.log('correct!');
 			});
 
-			this.socket.on('puzzle', function (puzzle) {
-				_Actions2.default.updatePuzzle(puzzle);
+			this.socket.on('puzzle', function (puzzleArray) {
+				_Actions2.default.updatePuzzle(puzzleArray);
 			});
 
 			this.socket.on('request rejected', function (error) {
@@ -1749,6 +1749,17 @@ var Puzzle = function (_Component) {
 			this.setState(state);
 		}
 	}, {
+		key: 'renderPuzzle',
+		value: function renderPuzzle() {
+			return this.state.puzzleArray.map(function (item, index) {
+				return _react2.default.createElement(
+					'span',
+					{ className: 'game__puzzle-word', key: index },
+					item
+				);
+			});
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			return _react2.default.createElement(
@@ -1757,7 +1768,7 @@ var Puzzle = function (_Component) {
 				_react2.default.createElement(
 					'span',
 					{ className: 'game__puzzle' },
-					this.state.puzzle
+					this.renderPuzzle()
 				),
 				_react2.default.createElement(
 					'span',
@@ -2408,7 +2419,7 @@ var Store = function () {
 
 		this.store = {};
 		this.socket = {};
-		this.puzzle = '';
+		this.puzzleArray = [];
 		this.error = '';
 		this.dictionarys = {};
 
@@ -2416,7 +2427,7 @@ var Store = function () {
 			handleUpdateStore: _Actions2.default.UPDATE_STORE,
 			handleUpdateSocket: _Actions2.default.UPDATE_SOCKET,
 			handleUpdateUser: _Actions2.default.UPDATE_USER,
-			handleUpdatePuzzle: _Actions2.default.UPDATE_PUZZLE,
+			handleUpdatePuzzleArray: _Actions2.default.UPDATE_PUZZLE,
 			handleUpdateError: _Actions2.default.UPDATE_ERROR,
 			handleUpdateDictionarys: _Actions2.default.UPDATE_DICTIONARYS
 		});
@@ -2438,9 +2449,9 @@ var Store = function () {
 			this.user = user;
 		}
 	}, {
-		key: 'handleUpdatePuzzle',
-		value: function handleUpdatePuzzle(puzzle) {
-			this.puzzle = puzzle;
+		key: 'handleUpdatePuzzleArray',
+		value: function handleUpdatePuzzleArray(puzzleArray) {
+			this.puzzleArray = puzzleArray;
 		}
 	}, {
 		key: 'handleUpdateError',
@@ -3594,7 +3605,7 @@ function drainQueue() {
     if (draining) {
         return;
     }
-    var timeout = cachedSetTimeout(cleanUpNextTick);
+    var timeout = cachedSetTimeout.call(null, cleanUpNextTick);
     draining = true;
 
     var len = queue.length;
@@ -3611,7 +3622,7 @@ function drainQueue() {
     }
     currentQueue = null;
     draining = false;
-    cachedClearTimeout(timeout);
+    cachedClearTimeout.call(null, timeout);
 }
 
 process.nextTick = function (fun) {
@@ -3623,7 +3634,7 @@ process.nextTick = function (fun) {
     }
     queue.push(new Item(fun, args));
     if (queue.length === 1 && !draining) {
-        cachedSetTimeout(drainQueue, 0);
+        cachedSetTimeout.call(null, drainQueue, 0);
     }
 };
 
