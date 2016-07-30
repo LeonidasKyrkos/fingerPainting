@@ -39,6 +39,10 @@ export default class App extends Component {
 			Actions.updateError(error);
 		});
 
+		this.socket.on('debug',(debug)=>{
+			console.log(debug);
+		});
+
 		Store.listen(this.onChange.bind(this));
 	}
 
