@@ -236,7 +236,7 @@ Game.prototype = {
 				clock: this.timer
 			})
 
-			if(this.timer === 5 || this.timer === 2) {
+			if(this.timer === 60 || this.timer === 30 || this.timer === 10) {
 				this.clueForTheSailors();
 			}
 		}
