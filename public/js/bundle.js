@@ -1024,11 +1024,6 @@ var Chat = function (_Component) {
 			this.setState(state);
 		}
 	}, {
-		key: 'shouldComponentUpdate',
-		value: function shouldComponentUpdate(nextProps, nextState) {
-			return Object.keys(this.state.store.chatLog)[Object.keys(this.state.store.chatLog).length - 1] !== Object.keys(nextState.store.chatLog)[Object.keys(nextState.store.chatLog).length - 1];
-		}
-	}, {
 		key: 'parseChatForm',
 		value: function parseChatForm(e) {
 			e.preventDefault();
@@ -1067,23 +1062,16 @@ var Chat = function (_Component) {
 	}, {
 		key: 'renderForm',
 		value: function renderForm() {
-			var users = this.state.store.users || {};
-			var user = users[this.state.socket.id] || {};
-
-			if (user.status !== 'captain' && !user.correct) {
-				return _react2.default.createElement(
-					'form',
-					{ className: 'form--chat', onSubmit: this.parseChatForm.bind(this) },
-					_react2.default.createElement('input', { autoComplete: 'off', id: 'chat-input', type: 'text', className: 'form__input' }),
-					_react2.default.createElement(
-						'button',
-						{ className: 'btn--submit flex-right' },
-						'»'
-					)
-				);
-			} else {
-				return " ";
-			}
+			return _react2.default.createElement(
+				'form',
+				{ className: 'form--chat', onSubmit: this.parseChatForm.bind(this) },
+				_react2.default.createElement('input', { autoComplete: 'off', id: 'chat-input', type: 'text', className: 'form__input' }),
+				_react2.default.createElement(
+					'button',
+					{ className: 'btn--submit flex-right' },
+					'»'
+				)
+			);
 		}
 	}, {
 		key: 'render',
