@@ -60,19 +60,12 @@ export default class Chat extends Component {
 	}
 
 	renderForm() {
-		let users = this.state.store.users || {};
-		let user = users[this.state.socket.id] || {};
-
-		if(user.status !== 'captain' && !user.correct) {
-			return (
-				<form className="form--chat" onSubmit={this.parseChatForm.bind(this)}>
-					<input autoComplete="off" id="chat-input" type="text" className="form__input"/>
-					<button className="btn--submit flex-right">»</button>
-				</form>
-			)
-		} else {
-			return " ";
-		}
+		return (
+			<form className="form--chat" onSubmit={this.parseChatForm.bind(this)}>
+				<input autoComplete="off" id="chat-input" type="text" className="form__input"/>
+				<button className="btn--submit flex-right">»</button>
+			</form>
+		)
 	}
 
 	render() {

@@ -160,7 +160,6 @@ Game.prototype = {
 	informTheCaptain() {
 		for(user in this.store.users) {
 			if(this.store.users[user].status === 'captain') {
-				console.log(this.puzzleArray);
 				this.sockets[user].emit('puzzle',this.puzzleArray)
 			} else {
 				this.sockets[user].emit('puzzle',this.wordLength)
