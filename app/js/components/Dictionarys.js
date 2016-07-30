@@ -38,7 +38,7 @@ export default class Dictionarys extends Component {
 		return Object.keys(dictionary).map((item,index)=>{
 			return (
 				<tr key={index}>
-					<td>{item}<button data-js="dictionary.remove" onClick={()=>{ this.deleteWord(item,title) }} className="btn--tertiary form__delete">x</button></td>
+					<td>{item}<button data-js="dictionary.remove" onClick={()=>{ this.deleteWord(item,title) }} className="form__delete"></button></td>
 				</tr>
 			)
 		});

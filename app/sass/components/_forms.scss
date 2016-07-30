@@ -155,9 +155,26 @@ $module: 		'form';
 	}
 
 	&__delete {
+		$fontSize: 14;
+		@include font-size($fontSize);
 		position: absolute;
-		right: em(15);
+		right: em(15,$fontSize);
 		top: 50%;
 		@include transform(translateY(-50%));
+		height: em(15,$fontSize);
+		width: em(15,$fontSize);
+		background-color: red;
+		border: 0;
+		color: white;
+
+		&:after {
+			content: "x";
+			position: absolute;
+			top: 50%;
+			left: 0;
+			right: 0;
+			text-align: center;
+			@include transform(translateY(-50%));
+		}
 	}
 }
