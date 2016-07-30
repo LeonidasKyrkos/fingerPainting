@@ -27,13 +27,22 @@ $module: 			'game';
 	}
 
 	&__puzzle {
-		$fontSize: 48;
-		font-size: em($fontSize);
 		text-align: center;
 		display: block;
-		height: em(100,$fontSize);
-		line-height: em(100,$fontSize);
+		height: em(100);
+		line-height: em(100);
 		width: 100%;
 		white-space: pre-wrap;
+	}
+
+	&__puzzle-word {
+		$fontSize: 48;
+		font-size: em($fontSize);
+		display: inline-block;
+		padding-right: em(20,$fontSize);
+
+		span {
+			padding-right: em(5,$fontSize);
+		}
 	}
 }

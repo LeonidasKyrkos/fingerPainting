@@ -589,13 +589,19 @@ h1, h2, h3, h4, h5 {
   min-width: 0.9em; }
 
 .game__puzzle {
-  font-size: 2.4em;
   text-align: center;
   display: block;
-  height: 2.08333em;
-  line-height: 2.08333em;
+  height: 5em;
+  line-height: 5em;
   width: 100%;
   white-space: pre-wrap; }
+
+.game__puzzle-word {
+  font-size: 2.4em;
+  display: inline-block;
+  padding-right: 0.41667em; }
+  .game__puzzle-word span {
+    padding-right: 0.10417em; }
 
 .chat {
   width: 20%;

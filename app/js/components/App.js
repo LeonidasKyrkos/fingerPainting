@@ -31,8 +31,8 @@ export default class App extends Component {
 			console.log('correct!');
 		});
 
-		this.socket.on('puzzle',(puzzle)=>{
-			Actions.updatePuzzle(puzzle)
+		this.socket.on('puzzle',(puzzleArray)=>{
+			Actions.updatePuzzle(puzzleArray)
 		});
 
 		this.socket.on('request rejected',(error)=>{

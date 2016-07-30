@@ -6,7 +6,7 @@ class Store {
 	constructor() {
 		this.store = {};
 		this.socket = {};
-		this.puzzle = '';
+		this.puzzleArray = [];
 		this.error = '';
 		this.dictionarys = {};
 
@@ -14,7 +14,7 @@ class Store {
 			handleUpdateStore: Actions.UPDATE_STORE,
 			handleUpdateSocket: Actions.UPDATE_SOCKET,
 			handleUpdateUser: Actions.UPDATE_USER,
-			handleUpdatePuzzle: Actions.UPDATE_PUZZLE,
+			handleUpdatePuzzleArray: Actions.UPDATE_PUZZLE,
 			handleUpdateError: Actions.UPDATE_ERROR,
 			handleUpdateDictionarys: Actions.UPDATE_DICTIONARYS
 		})
@@ -32,8 +32,8 @@ class Store {
 		this.user = user;
 	}
 
-	handleUpdatePuzzle(puzzle) {
-		this.puzzle = puzzle;
+	handleUpdatePuzzleArray(puzzleArray) {
+		this.puzzleArray = puzzleArray;
 	}
 
 	handleUpdateError(error) {
