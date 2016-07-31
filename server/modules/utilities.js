@@ -31,8 +31,13 @@ function joinHandler(request,socket){
 			var item = activeGames[i];
 
 			if(item.game.id === request.id) {
-				item.game.attachListeners(socket);
 				found = true;
+
+				if(firebase.rooms[request.id].status === 'pending') {
+					item.game.attachListeners(socket);
+				} else {
+					socket.emit('request rejected','Sorry that room has a game underway');
+				}				
 			} 
 		}
 
