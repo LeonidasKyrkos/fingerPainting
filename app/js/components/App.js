@@ -6,8 +6,7 @@ export default class App extends Component {
 	constructor(props) {
 		super(props);
 
-
-		this.socket = io.connect('52.209.86.125:443');
+		this.socket = io.connect('52.209.86.125:443',{ rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling'] });
 		this.state = Store.getState();
 	}
 

@@ -5,7 +5,7 @@ var port = 443;
 var express = require('express');
 var app = express();
 var server = require('http').Server(app);
-var io = require('socket.io')(server);
+var io = require('socket.io',{ rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling'] })(server);
 var basicAuth = require('basic-auth');
 
 // configure server
