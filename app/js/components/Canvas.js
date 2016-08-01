@@ -210,7 +210,7 @@ export default class Canvas extends Component {
 			}
 		}
 
-		if(this.state.player) {
+		if(this.state.player && this.ctx) {
 			var canvasSettings = (
 				<CanvasSettings 
 					scope={this} 
