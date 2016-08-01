@@ -6,10 +6,41 @@ export default class CanvasSettings extends React.Component {
 		super(props);
 		this.onChange = this.onChange.bind(this);
 		this.state = Store.getState();
+		this.setupVariables();
 	}
 
 	componentDidMount() {
 		Store.listen(this.onChange);
+		this.setupCtx();
+	}
+
+	setupVariables() {
+		this.colors = {
+			white: '#FFFFFF',
+			brown: '#d15d0a',
+			yellow: '#FFFB21',
+			blue: '#363CFF',
+			pink: '#ff3399',
+			green: '#33cc33',
+			lightBlue: '#00ccff',
+			red: '#ff0000'
+		}
+
+		this.sizes = {
+			small: 3,
+			medium: 5,
+			large: 7,
+			huge: 12
+		}
+	}
+
+	setupCtx() {
+		this.props.ctx.strokeStyle = "#FFFFFF";
+		this.props.ctx.shadowColor = "#FFFFFF";
+		this.props.ctx.shadowBlur = 0;
+		this.props.ctx.lineJoin = "round";
+  		this.props.ctx.lineWidth = 5;
+  		this.props.ctx.translate(0.5, 0.5);
 	}
 
 	componentWillUnmount() {
@@ -48,57 +79,64 @@ export default class CanvasSettings extends React.Component {
 		return '';
 	}
 
-	render() {
-		let scope = this.props.scope;
-		let small = 3;
-		let medium = 5;
-		let large = 7;
-		let huge = 12;
+	handleColorChange(e) {
+		let colorPickers = document.querySelectorAll('[data-js="colorPicker"]');
 
-		let button = this.getButton();		
-		
+		colorPickers.forEach((color,index)=>{
+			color.className = 'canvas__colour';
+		});
+		e.target.className = 'canvas__colour active';
+
+		let newColor = e.target.getAttribute('data-color');
+
+		this.props.ctx.strokeStyle = newColor;
+		this.props.ctx.shadowColor = newColor;
+	}
+
+	renderColorPicker() {
+		let colors = this.colors || {};
+		return Object.keys(colors).map((item, index)=>{
+			let color = colors[item];
+			return <li key={index} className="ib"><span data-js="colorPicker" data-color={color} style={{backgroundColor:  color}} className="canvas__colour" onClick={this.handleColorChange.bind(this)}></span></li>
+		});
+	}
+
+	renderSizePicker() {
+		let sizes = this.sizes || {};
+		return Object.keys(sizes).map((item, index)=>{
+			let size = sizes[item];
+			return (
+				<li key={index} className="ib">
+					<span className="canvas__brush-size-wrap" data-size={size} onClick={this.changeBrushSize.bind(this)}>
+						<span className="canvas__brush-size" style={{width: size + 'px', height: size + 'px'}}></span>
+					</span>
+				</li>
+			)
+		});
+	}
+
+	changeBrushSize(e) {
+		let newSize = e.target.getAttribute('data-size');
+		this.props.ctx.lineWidth = newSize;
+	}
+
+	render() {		
 		return (
 			<ul className="canvas__settings">
 				<li>
-					{button}
+					{this.getButton()}
 				</li>
 				<li>
-					<button className="canvas__settings-btn" onClick={this.props.fullClear.bind(scope)} >Reset</button>
+					<button className="canvas__settings-btn" onClick={this.props.fullClear.bind(this.props.scope)} >Reset</button>
 				</li>
 				<li className="canvas__brush-sizes">
 					<ul>
-						<li className="ib">
-							<span className="canvas__brush-size-wrap" data-size={small} onClick={this.props.changeBrushSize.bind(scope)}>
-								<span className="canvas__brush-size" style={{width: small + 'px', height: small + 'px'}}></span>
-							</span>
-						</li>
-						<li className="ib">
-							<span className="canvas__brush-size-wrap" data-size={medium} onClick={this.props.changeBrushSize.bind(scope)}>
-								<span className="canvas__brush-size" style={{width: medium + 'px', height: medium + 'px'}}></span>
-							</span>
-						</li>
-						<li className="ib">
-							<span className="canvas__brush-size-wrap" data-size={large} onClick={this.props.changeBrushSize.bind(scope)}>
-								<span className="canvas__brush-size" style={{width: large + 'px', height: large + 'px'}}></span>
-							</span>
-						</li>
-						<li className="ib">
-							<span className="canvas__brush-size-wrap" data-size={huge} onClick={this.props.changeBrushSize.bind(scope)}>
-								<span className="canvas__brush-size" style={{width: huge + 'px', height: huge + 'px'}}></span>
-							</span>
-						</li>
+						{this.renderSizePicker()}
 					</ul>
 				</li>
 				<li className="canvas__colours">
 					<ul>
-						<li className="ib"><span data-color="#FFFFFF" style={{backgroundColor: '#FFFFFF'}} className="canvas__colour" onClick={this.props.updateColor.bind(scope)}></span></li>
-						<li className="ib"><span data-color="#d15d0a" style={{backgroundColor: '#d15d0a'}} className="canvas__colour" onClick={this.props.updateColor.bind(scope)}></span></li>
-						<li className="ib"><span data-color="#FFFB21" style={{backgroundColor: '#FFFB21'}} className="canvas__colour" onClick={this.props.updateColor.bind(scope)}></span></li>
-						<li className="ib"><span data-color="#363CFF" style={{backgroundColor: '#363CFF'}} className="canvas__colour" onClick={this.props.updateColor.bind(scope)}></span></li>
-						<li className="ib"><span data-color="#ff3399" style={{backgroundColor: '#ff3399'}} className="canvas__colour" onClick={this.props.updateColor.bind(scope)}></span></li>
-						<li className="ib"><span data-color="#33cc33" style={{backgroundColor: '#33cc33'}} className="canvas__colour" onClick={this.props.updateColor.bind(scope)}></span></li>
-						<li className="ib"><span data-color="#00ccff" style={{backgroundColor: '#00ccff'}} className="canvas__colour" onClick={this.props.updateColor.bind(scope)}></span></li>
-						<li className="ib"><span data-color="#ff0000" style={{backgroundColor: '#ff0000'}} className="canvas__colour" onClick={this.props.updateColor.bind(scope)}></span></li>
+						{this.renderColorPicker()}
 					</ul>
 				</li>
 			</ul>
@@ -109,7 +147,5 @@ export default class CanvasSettings extends React.Component {
 
 CanvasSettings.propTypes = {
 	fullClear: PropTypes.func.isRequired,
-	changeBrushSize: PropTypes.func.isRequired,
-	updateColor: PropTypes.func.isRequired,
 	scope: PropTypes.object.isRequired
 }
