@@ -250,7 +250,7 @@ h1, h2, h3, h4, h5 {
     .btn--primary:hover, .form__button--inline:hover, .canvas__settings-btn:hover {
       background-color: #871a1a; }
   .btn--secondary, .btn--submit {
-    background-color: #4e4e4e;
+    background-color: #4E4E4E;
     font-size: 0.6em;
     width: 5.83333em;
     padding: 0.66667em 0.5em;
@@ -446,7 +446,7 @@ h1, h2, h3, h4, h5 {
       transform: translateY(-50%); }
 
 .canvas {
-  background-color: #4e4e4e;
+  background-color: #4E4E4E;
   cursor: pointer;
   display: block; }
   .canvas__wrap {
@@ -542,7 +542,7 @@ h1, h2, h3, h4, h5 {
     font-size: 1.6rem;
     padding-bottom: 0.625em; }
     .table tbody tr {
-      border-bottom: 0.05em solid #4e4e4e;
+      border-bottom: 0.05em solid #4E4E4E;
       background-color: #3a3a3a; }
       .table tbody tr:nth-child(even) {
         background-color: #424242; }

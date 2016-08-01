@@ -23,7 +23,8 @@ export default class CanvasSettings extends React.Component {
 			pink: '#ff3399',
 			green: '#33cc33',
 			lightBlue: '#00ccff',
-			red: '#ff0000'
+			red: '#ff0000',
+			canvasGrey: '#4E4E4E'
 		}
 
 		this.sizes = {
