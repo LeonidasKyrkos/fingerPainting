@@ -730,7 +730,7 @@ var Canvas = function (_Component) {
 					updateColor: this.updateColor
 				});
 
-				var canvas = _react2.default.createElement('canvas', { width: '100', height: '600px', className: 'canvas', id: 'canvas',
+				var canvas = _react2.default.createElement('canvas', { width: '100', height: '900px', className: 'canvas', id: 'canvas',
 					onMouseDown: this.startDrawing.bind(this),
 					onMouseUp: this.stopDrawing.bind(this),
 					onMouseLeave: this.stopDrawing.bind(this),

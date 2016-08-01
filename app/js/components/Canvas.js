@@ -243,7 +243,7 @@ export default class Canvas extends Component {
 			);
 
 			var canvas = ( 
-				<canvas width="100" height="600px" className="canvas" id="canvas" 
+				<canvas width="100" height="900px" className="canvas" id="canvas" 
 						onMouseDown={this.startDrawing.bind(this)} 
 						onMouseUp={this.stopDrawing.bind(this)} 
 						onMouseLeave={this.stopDrawing.bind(this)} 
