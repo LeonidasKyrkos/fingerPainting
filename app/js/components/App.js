@@ -18,6 +18,14 @@ export default class App extends Component {
 			Actions.updateStore(store)
 		});
 
+		this.socket.on('promotion',()=>{
+			Actions.updatePlayerStatus(true);
+		});
+
+		this.socket.on('demotion',()=>{
+			Actions.updatePlayerStatus(false);
+		});
+
 		this.socket.on('countdown',(data)=>{
 			console.log(data);
 		});

@@ -284,6 +284,7 @@ Game.prototype = {
 
 			if(user.status === 'captain') {
 				this.setSailor(username);
+				this.sockets[username].emit('demotion');
 
 				if(i === usersArr.length - 1) {
 					var nextUsername = usersArr[0];
@@ -292,6 +293,7 @@ Game.prototype = {
 				}
 
 				this.setCaptain(nextUsername);	
+				this.sockets[nextUsername].emit('promotion');
 
 				break;
 			}
@@ -311,13 +313,14 @@ Game.prototype = {
 	},
 
 	endGame() {
+		// update the status of the room to trigger the scoreboard and then wait 5s to reset for next round
 		this.database.update({
 			status: 'finished'
 		})
 
 		setTimeout(()=>{
 			this.resetRoom();
-		},10000);
+		},5000);
 	},
 
 	resetGame() {

@@ -24,6 +24,10 @@ class Actions {
 	updateDictionarys(dictionarys) {
 		return dictionarys;
 	}
+
+	updatePlayerStatus(playerStatus) {
+		return playerStatus;
+	}
 }
 
 export default alt.createActions(Actions);

@@ -11,7 +11,9 @@ function handler(request,socket) {
 	var room = firebase.rooms[request];
 
 	if(room.users && Object.keys(room.users).length === 1) {
+		// update database reference and inform user that they're the captain
 		updateReference(request + '/users/' + socket.userId + '/status/', 'captain');
+		socket.emit('promotion');
 	}
 }
 
