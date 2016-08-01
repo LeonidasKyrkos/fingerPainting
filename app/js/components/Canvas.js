@@ -178,7 +178,7 @@ export default class Canvas extends Component {
 	// line renderer
 
 	renderDot(path) {
-		let obj = path;
+		let obj = path[0];
 
 		this.ctx.beginPath();
 		this.ctx.arc(obj.x, obj.y, obj.size / 2, 0, 2 * Math.PI, false);
