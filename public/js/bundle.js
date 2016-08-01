@@ -730,7 +730,8 @@ var Canvas = function (_Component) {
 				var canvasSettings = _react2.default.createElement(_CanvasSettings2.default, {
 					scope: this,
 					fullClear: this.fullClear,
-					ctx: this.ctx
+					ctx: this.ctx,
+					playerStatus: this.state.playerStatus
 				});
 
 				var canvas = _react2.default.createElement('canvas', { width: '100', height: '750px', className: 'canvas', id: 'canvas',
@@ -850,11 +851,15 @@ var CanvasSettings = function (_React$Component) {
 	}, {
 		key: 'runUpdateTests',
 		value: function runUpdateTests(nextProps, nextState) {
-			if (!(0, _lodash.isEqual)(nextProps, this.props) || nextState.store.status !== this.state.store.status) {
+			if (!(0, _lodash.isEqual)(nextProps, this.props)) {
 				return true;
-			} else {
-				return false;
 			}
+
+			if (nextState.store.status !== this.state.store.status) {
+				return true;
+			}
+
+			return false;
 		}
 	}, {
 		key: 'onChange',
