@@ -1832,6 +1832,10 @@ var Puzzle = function (_Component) {
 				return true;
 			}
 
+			if (nextState.store.clock !== this.state.store.clock) {
+				return true;
+			}
+
 			return false;
 		}
 	}, {
