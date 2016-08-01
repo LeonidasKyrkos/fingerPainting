@@ -197,10 +197,10 @@ Game.prototype = {
 	},
 
 	parseMessage(message) {
-		message.message = message.message.toString().toLowerCase();
+		message.message = message.message.toString();
 		let captain = this.checkIfCaptain(message.id);
 
-		if(message.message === this.puzzle) {
+		if(message.message.toLowerCase() === this.puzzle) {
 			if(!captain) {
 				this.cleverSailor(message);	
 			}					
