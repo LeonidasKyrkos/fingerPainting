@@ -17,6 +17,7 @@ export default class Canvas extends Component {
 	componentDidMount() {
 		Store.listen(this.onChange);
 		this.setupCanvas();
+
 		if(this.state.socket) {
 			this.state.socket.on('new round',()=>{
 				this.clearContext(this.ctx);
@@ -56,6 +57,7 @@ export default class Canvas extends Component {
 		this.canvas = document.querySelector('#canvas');
 		this.canvas.setAttribute('width',this.canvas.parentElement.offsetWidth);
 		this.ctx = this.canvas.getContext('2d');
+		this.forceUpdate();
 	}
 
 	// start
@@ -232,8 +234,13 @@ export default class Canvas extends Component {
 					playerStatus={this.state.playerStatus}
 				/>
 			);
+		} else {
+			var canvasSettings = '';
+		}
 
-			var canvas = (
+		return (
+			<div className="canvas__wrap">
+				{canvasSettings}
 				<canvas width="100" height="750px" className="canvas" id="canvas" 
 						onMouseDown={this.startDrawing.bind(this)} 
 						onMouseUp={this.stopDrawing.bind(this)} 
@@ -241,18 +248,6 @@ export default class Canvas extends Component {
 						onMouseMove={this.dragBrush.bind(this)} 
 				>
 				</canvas>
-			)
-		} else {
-			var canvasSettings = '';
-			var canvas = (
-				<canvas width="100" height="600px" className="canvas" id="canvas"></canvas>
-			)
-		}
-
-		return (
-			<div className="canvas__wrap">
-				{canvasSettings}
-				{canvas}
 			</div>
 		)
 	}
