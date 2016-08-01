@@ -2,13 +2,13 @@ import React, { Component, PropTypes } from 'react';
 
 import CanvasSettings from './CanvasSettings';
 import Store from '../stores/Store';
+import { isEqual as _isEqual } from 'lodash';
 
 export default class Canvas extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = Store.getState();
-		this.setPlayerStatus();
+		this.state = Store.getState();		
 		this.points = [];
 
 		this.onChange = this.onChange.bind(this);
@@ -28,19 +28,28 @@ export default class Canvas extends Component {
 		Store.unlisten(this.onChange);
 	}
 
-	onChange(state) {
-		this.setState(state);
+	shouldComponentUpdate(nextProps,nextState) {
+		return this.runUpdateTests(nextProps,nextState);
 	}
 
-	setPlayerStatus() {
-		if(this.state.store.users) {
-			let user = this.state.store.users[this.state.socket.id] || {};
-			if(user.status === 'captain') {
-				this.state.player = true;
-			} else {
-				this.state.player = false;
-			}
+	runUpdateTests(nextProps,nextState) {
+		if (!_isEqual(nextProps,this.props)) {
+			return true;
 		}
+
+		if(!_isEqual(nextState.store.paths,this.state.store.paths)) {
+			return true;
+		}
+		
+		if(nextState.playerStatus !==  this.state.playerStatus) {
+			return true;
+		}
+
+		return false;
+	}
+
+	onChange(state) {
+		this.setState(state);
 	}
 
 	setupCanvas() {
@@ -119,7 +128,7 @@ export default class Canvas extends Component {
 	redraw() {
 		let path = [];
 
-		if(this.state.player) {
+		if( this.state.playerStatus) {
 			path = this.points;
 		} else if (this.state.store.paths) {
 			path = this.state.store.paths.path;
@@ -205,17 +214,16 @@ export default class Canvas extends Component {
 	
 
 	render() {
-		this.setPlayerStatus();
 		if(this.canvas) {
 			this.canvasX = this.canvas.offsetLeft;
 			this.canvasY = this.canvas.offsetTop;
 
-			if(!this.state.player) {
+			if(!this.state.playerStatus) {
 				this.redraw();
 			}
 		}
 
-		if(this.state.player && this.ctx) {
+		if(this.state.playerStatus && this.ctx) {
 			var canvasSettings = (
 				<CanvasSettings 
 					scope={this} 
@@ -224,7 +232,7 @@ export default class Canvas extends Component {
 				/>
 			);
 
-			var canvas = ( 
+			var canvas = (
 				<canvas width="100" height="750px" className="canvas" id="canvas" 
 						onMouseDown={this.startDrawing.bind(this)} 
 						onMouseUp={this.stopDrawing.bind(this)} 

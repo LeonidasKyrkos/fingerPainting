@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Store from '../stores/Store';
+import { isEqual as _isEqual } from 'lodash';
 
 export default class Puzzle extends Component {
 	constructor() {
@@ -19,6 +20,22 @@ export default class Puzzle extends Component {
 
 	onChange(state) {
 		this.setState(state);
+	}
+
+	shouldComponentUpdate(nextProps,nextState) {
+		return this.runUpdateTests(nextProps,nextState);
+	}
+
+	runUpdateTests(nextProps,nextState) {
+		if (!_isEqual(nextProps,this.props)) {
+			return true;
+		}
+
+		if(!_isEqual(nextState.puzzleArray,this.state.puzzleArray)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	renderPuzzle() {

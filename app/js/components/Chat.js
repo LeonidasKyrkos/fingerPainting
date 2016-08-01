@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import Store from '../stores/Store';
 import Message from './Message';
+import { isEqual as _isEqual } from 'lodash';
 
 export default class Chat extends Component {
 	constructor() {
@@ -18,6 +19,22 @@ export default class Chat extends Component {
 
 	componentWillUnmount() {
 		Store.unlisten(this.onChange);
+	}
+
+	shouldComponentUpdate(nextProps,nextState) {
+		return this.runUpdateTests(nextProps,nextState);
+	}
+
+	runUpdateTests(nextProps,nextState) {
+		if (!_isEqual(nextProps,this.props)) {
+			return true;
+		}
+
+		if(!_isEqual(nextState.store.chatLog,this.state.store.chatLog)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	onChange(state) {

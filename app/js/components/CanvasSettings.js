@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Store from '../stores/Store';
+import { isEqual as _isEqual } from 'lodash';
 
 export default class CanvasSettings extends React.Component {
 	constructor(props) {
@@ -7,11 +8,6 @@ export default class CanvasSettings extends React.Component {
 		this.onChange = this.onChange.bind(this);
 		this.state = Store.getState();
 		this.setupVariables();
-	}
-
-	componentDidMount() {
-		Store.listen(this.onChange);
-		this.setupCtx();
 	}
 
 	setupVariables() {
@@ -44,8 +40,25 @@ export default class CanvasSettings extends React.Component {
   		this.props.ctx.translate(0.5, 0.5);
 	}
 
+	componentDidMount() {
+		Store.listen(this.onChange);
+		this.setupCtx();
+	}	
+
 	componentWillUnmount() {
 		Store.unlisten(this.onChange);
+	}
+
+	shouldComponentUpdate(nextProps,nextState) {
+		return this.runUpdateTests(nextProps,nextState);
+	}
+
+	runUpdateTests(nextProps,nextState) {
+		if (!_isEqual(nextProps,this.props) || nextState.store.status !== this.state.store.status) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	onChange(state) {
@@ -121,7 +134,7 @@ export default class CanvasSettings extends React.Component {
 		this.props.ctx.lineWidth = newSize;
 	}
 
-	render() {		
+	render() {
 		return (
 			<ul className="canvas__settings">
 				<li>
