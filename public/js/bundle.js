@@ -494,12 +494,6 @@ var Canvas = function (_Component) {
 			this.canvas = document.querySelector('#canvas');
 			this.canvas.setAttribute('width', this.canvas.parentElement.offsetWidth);
 			this.ctx = this.canvas.getContext('2d');
-			this.ctx.strokeStyle = "#FFFFFF";
-			this.ctx.shadowColor = "#FFFFFF";
-			this.ctx.shadowBlur = 0;
-			this.ctx.lineJoin = "round";
-			this.ctx.lineWidth = 5;
-			this.ctx.translate(0.5, 0.5);
 		}
 
 		// start
@@ -655,7 +649,7 @@ var Canvas = function (_Component) {
 	}, {
 		key: 'renderDot',
 		value: function renderDot(path) {
-			var obj = path;
+			var obj = path[0];
 
 			this.ctx.beginPath();
 			this.ctx.arc(obj.x, obj.y, obj.size / 2, 0, 2 * Math.PI, false);
@@ -689,26 +683,6 @@ var Canvas = function (_Component) {
 			this.clearArrays();
 			this.pushPaths();
 		}
-
-		// change the current stroke colour
-
-	}, {
-		key: 'updateColor',
-		value: function updateColor(e) {
-			var newColor = e.target.getAttribute('data-color');
-
-			this.ctx.strokeStyle = newColor;
-			this.ctx.shadowColor = newColor;
-		}
-
-		// change brush size
-
-	}, {
-		key: 'changeBrushSize',
-		value: function changeBrushSize(e) {
-			var newSize = e.target.getAttribute('data-size');
-			this.ctx.lineWidth = newSize;
-		}
 	}, {
 		key: 'render',
 		value: function render() {
@@ -726,11 +700,10 @@ var Canvas = function (_Component) {
 				var canvasSettings = _react2.default.createElement(_CanvasSettings2.default, {
 					scope: this,
 					fullClear: this.fullClear,
-					changeBrushSize: this.changeBrushSize,
-					updateColor: this.updateColor
+					ctx: this.ctx
 				});
 
-				var canvas = _react2.default.createElement('canvas', { width: '100', height: '600px', className: 'canvas', id: 'canvas',
+				var canvas = _react2.default.createElement('canvas', { width: '100', height: '750px', className: 'canvas', id: 'canvas',
 					onMouseDown: this.startDrawing.bind(this),
 					onMouseUp: this.stopDrawing.bind(this),
 					onMouseLeave: this.stopDrawing.bind(this),
@@ -790,6 +763,7 @@ var CanvasSettings = function (_React$Component) {
 
 		_this.onChange = _this.onChange.bind(_this);
 		_this.state = _Store2.default.getState();
+		_this.setupVariables();
 		return _this;
 	}
 
@@ -797,6 +771,38 @@ var CanvasSettings = function (_React$Component) {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
 			_Store2.default.listen(this.onChange);
+			this.setupCtx();
+		}
+	}, {
+		key: 'setupVariables',
+		value: function setupVariables() {
+			this.colors = {
+				white: '#FFFFFF',
+				brown: '#d15d0a',
+				yellow: '#FFFB21',
+				blue: '#363CFF',
+				pink: '#ff3399',
+				green: '#33cc33',
+				lightBlue: '#00ccff',
+				red: '#ff0000'
+			};
+
+			this.sizes = {
+				small: 3,
+				medium: 5,
+				large: 7,
+				huge: 12
+			};
+		}
+	}, {
+		key: 'setupCtx',
+		value: function setupCtx() {
+			this.props.ctx.strokeStyle = "#FFFFFF";
+			this.props.ctx.shadowColor = "#FFFFFF";
+			this.props.ctx.shadowBlur = 0;
+			this.props.ctx.lineJoin = "round";
+			this.props.ctx.lineWidth = 5;
+			this.props.ctx.translate(0.5, 0.5);
 		}
 	}, {
 		key: 'componentWillUnmount',
@@ -853,30 +859,77 @@ var CanvasSettings = function (_React$Component) {
 			return '';
 		}
 	}, {
+		key: 'handleColorChange',
+		value: function handleColorChange(e) {
+			var colorPickers = document.querySelectorAll('[data-js="colorPicker"]');
+
+			colorPickers.forEach(function (color, index) {
+				color.className = 'canvas__colour';
+			});
+			e.target.className = 'canvas__colour active';
+
+			var newColor = e.target.getAttribute('data-color');
+
+			this.props.ctx.strokeStyle = newColor;
+			this.props.ctx.shadowColor = newColor;
+		}
+	}, {
+		key: 'renderColorPicker',
+		value: function renderColorPicker() {
+			var _this2 = this;
+
+			var colors = this.colors || {};
+			return Object.keys(colors).map(function (item, index) {
+				var color = colors[item];
+				return _react2.default.createElement(
+					'li',
+					{ key: index, className: 'ib' },
+					_react2.default.createElement('span', { 'data-js': 'colorPicker', 'data-color': color, style: { backgroundColor: color }, className: 'canvas__colour', onClick: _this2.handleColorChange.bind(_this2) })
+				);
+			});
+		}
+	}, {
+		key: 'renderSizePicker',
+		value: function renderSizePicker() {
+			var _this3 = this;
+
+			var sizes = this.sizes || {};
+			return Object.keys(sizes).map(function (item, index) {
+				var size = sizes[item];
+				return _react2.default.createElement(
+					'li',
+					{ key: index, className: 'ib' },
+					_react2.default.createElement(
+						'span',
+						{ className: 'canvas__brush-size-wrap', 'data-size': size, onClick: _this3.changeBrushSize.bind(_this3) },
+						_react2.default.createElement('span', { className: 'canvas__brush-size', style: { width: size + 'px', height: size + 'px' } })
+					)
+				);
+			});
+		}
+	}, {
+		key: 'changeBrushSize',
+		value: function changeBrushSize(e) {
+			var newSize = e.target.getAttribute('data-size');
+			this.props.ctx.lineWidth = newSize;
+		}
+	}, {
 		key: 'render',
 		value: function render() {
-			var scope = this.props.scope;
-			var small = 3;
-			var medium = 5;
-			var large = 7;
-			var huge = 12;
-
-			var button = this.getButton();
-
 			return _react2.default.createElement(
 				'ul',
 				{ className: 'canvas__settings' },
 				_react2.default.createElement(
 					'li',
 					null,
-					button
+					this.getButton()
 				),
 				_react2.default.createElement(
 					'li',
 					null,
 					_react2.default.createElement(
 						'button',
-						{ className: 'canvas__settings-btn', onClick: this.props.fullClear.bind(scope) },
+						{ className: 'canvas__settings-btn', onClick: this.props.fullClear.bind(this.props.scope) },
 						'Reset'
 					)
 				),
@@ -886,42 +939,7 @@ var CanvasSettings = function (_React$Component) {
 					_react2.default.createElement(
 						'ul',
 						null,
-						_react2.default.createElement(
-							'li',
-							{ className: 'ib' },
-							_react2.default.createElement(
-								'span',
-								{ className: 'canvas__brush-size-wrap', 'data-size': small, onClick: this.props.changeBrushSize.bind(scope) },
-								_react2.default.createElement('span', { className: 'canvas__brush-size', style: { width: small + 'px', height: small + 'px' } })
-							)
-						),
-						_react2.default.createElement(
-							'li',
-							{ className: 'ib' },
-							_react2.default.createElement(
-								'span',
-								{ className: 'canvas__brush-size-wrap', 'data-size': medium, onClick: this.props.changeBrushSize.bind(scope) },
-								_react2.default.createElement('span', { className: 'canvas__brush-size', style: { width: medium + 'px', height: medium + 'px' } })
-							)
-						),
-						_react2.default.createElement(
-							'li',
-							{ className: 'ib' },
-							_react2.default.createElement(
-								'span',
-								{ className: 'canvas__brush-size-wrap', 'data-size': large, onClick: this.props.changeBrushSize.bind(scope) },
-								_react2.default.createElement('span', { className: 'canvas__brush-size', style: { width: large + 'px', height: large + 'px' } })
-							)
-						),
-						_react2.default.createElement(
-							'li',
-							{ className: 'ib' },
-							_react2.default.createElement(
-								'span',
-								{ className: 'canvas__brush-size-wrap', 'data-size': huge, onClick: this.props.changeBrushSize.bind(scope) },
-								_react2.default.createElement('span', { className: 'canvas__brush-size', style: { width: huge + 'px', height: huge + 'px' } })
-							)
-						)
+						this.renderSizePicker()
 					)
 				),
 				_react2.default.createElement(
@@ -930,46 +948,7 @@ var CanvasSettings = function (_React$Component) {
 					_react2.default.createElement(
 						'ul',
 						null,
-						_react2.default.createElement(
-							'li',
-							{ className: 'ib' },
-							_react2.default.createElement('span', { 'data-color': '#FFFFFF', style: { backgroundColor: '#FFFFFF' }, className: 'canvas__colour', onClick: this.props.updateColor.bind(scope) })
-						),
-						_react2.default.createElement(
-							'li',
-							{ className: 'ib' },
-							_react2.default.createElement('span', { 'data-color': '#d15d0a', style: { backgroundColor: '#d15d0a' }, className: 'canvas__colour', onClick: this.props.updateColor.bind(scope) })
-						),
-						_react2.default.createElement(
-							'li',
-							{ className: 'ib' },
-							_react2.default.createElement('span', { 'data-color': '#FFFB21', style: { backgroundColor: '#FFFB21' }, className: 'canvas__colour', onClick: this.props.updateColor.bind(scope) })
-						),
-						_react2.default.createElement(
-							'li',
-							{ className: 'ib' },
-							_react2.default.createElement('span', { 'data-color': '#363CFF', style: { backgroundColor: '#363CFF' }, className: 'canvas__colour', onClick: this.props.updateColor.bind(scope) })
-						),
-						_react2.default.createElement(
-							'li',
-							{ className: 'ib' },
-							_react2.default.createElement('span', { 'data-color': '#ff3399', style: { backgroundColor: '#ff3399' }, className: 'canvas__colour', onClick: this.props.updateColor.bind(scope) })
-						),
-						_react2.default.createElement(
-							'li',
-							{ className: 'ib' },
-							_react2.default.createElement('span', { 'data-color': '#33cc33', style: { backgroundColor: '#33cc33' }, className: 'canvas__colour', onClick: this.props.updateColor.bind(scope) })
-						),
-						_react2.default.createElement(
-							'li',
-							{ className: 'ib' },
-							_react2.default.createElement('span', { 'data-color': '#00ccff', style: { backgroundColor: '#00ccff' }, className: 'canvas__colour', onClick: this.props.updateColor.bind(scope) })
-						),
-						_react2.default.createElement(
-							'li',
-							{ className: 'ib' },
-							_react2.default.createElement('span', { 'data-color': '#ff0000', style: { backgroundColor: '#ff0000' }, className: 'canvas__colour', onClick: this.props.updateColor.bind(scope) })
-						)
+						this.renderColorPicker()
 					)
 				)
 			);
@@ -984,8 +963,6 @@ exports.default = CanvasSettings;
 
 CanvasSettings.propTypes = {
 	fullClear: _react.PropTypes.func.isRequired,
-	changeBrushSize: _react.PropTypes.func.isRequired,
-	updateColor: _react.PropTypes.func.isRequired,
 	scope: _react.PropTypes.object.isRequired
 };
 

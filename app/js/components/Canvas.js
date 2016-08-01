@@ -42,12 +42,6 @@ export default class Canvas extends Component {
 		this.canvas = document.querySelector('#canvas');
 		this.canvas.setAttribute('width',this.canvas.parentElement.offsetWidth);
 		this.ctx = this.canvas.getContext('2d');
-		this.ctx.strokeStyle = "#FFFFFF";
-		this.ctx.shadowColor = "#FFFFFF";
-		this.ctx.shadowBlur = 0;
-		this.ctx.lineJoin = "round";
-  		this.ctx.lineWidth = 5;
-  		this.ctx.translate(0.5, 0.5);
 	}
 
 	// start
@@ -178,7 +172,7 @@ export default class Canvas extends Component {
 	// line renderer
 
 	renderDot(path) {
-		let obj = path;
+		let obj = path[0];
 
 		this.ctx.beginPath();
 		this.ctx.arc(obj.x, obj.y, obj.size / 2, 0, 2 * Math.PI, false);
@@ -203,22 +197,6 @@ export default class Canvas extends Component {
 		this.clearArrays();
 		this.pushPaths();
 	}
-
-
-	// change the current stroke colour
-	updateColor(e) {
-		let newColor = e.target.getAttribute('data-color');
-
-		this.ctx.strokeStyle = newColor;
-		this.ctx.shadowColor = newColor;
-	}
-
-
-	// change brush size
-	changeBrushSize(e) {
-		let newSize = e.target.getAttribute('data-size');
-		this.ctx.lineWidth = newSize;
-	}
 	
 
 	render() {
@@ -237,13 +215,12 @@ export default class Canvas extends Component {
 				<CanvasSettings 
 					scope={this} 
 					fullClear={this.fullClear} 
-					changeBrushSize={this.changeBrushSize} 
-					updateColor={this.updateColor} 
+					ctx={this.ctx}
 				/>
 			);
 
 			var canvas = ( 
-				<canvas width="100" height="600px" className="canvas" id="canvas" 
+				<canvas width="100" height="750px" className="canvas" id="canvas" 
 						onMouseDown={this.startDrawing.bind(this)} 
 						onMouseUp={this.stopDrawing.bind(this)} 
 						onMouseLeave={this.stopDrawing.bind(this)} 

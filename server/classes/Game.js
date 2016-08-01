@@ -95,9 +95,7 @@ Game.prototype = {
 	updateStore(snapshot) {
 		this.store = snapshot.val();
 		this.store.currentRoom = '/rooms/' + this.id;
-		for(let socket in this.sockets) {
-			this.sockets[socket].emit('store update', this.store);
-		};
+		this.emitToAllSockets('store update', this.store);
 	},
 
 	startRound() {
@@ -199,10 +197,10 @@ Game.prototype = {
 	},
 
 	parseMessage(message) {
-		message.message = message.message.toString().toLowerCase();
+		message.message = message.message.toString();
 		let captain = this.checkIfCaptain(message.id);
 
-		if(message.message === this.puzzle) {
+		if(message.message.toLowerCase() === this.puzzle) {
 			if(!captain) {
 				this.cleverSailor(message);	
 			}					
@@ -232,10 +230,7 @@ Game.prototype = {
 	countdown() {
 		if(this.timer < 1) {
 			clearInterval(this.interval);
-
-			for(let socket in this.sockets) {
-				this.sockets[socket].emit('puzzle', this.puzzleArray);
-			};
+			this.emitToAllSockets('puzzle', this.puzzleArray)
 
 			setTimeout(()=>{
 				this.endRound();
@@ -332,11 +327,8 @@ Game.prototype = {
 		this.resetPaths();
 		this.cleverSailors = 0;
 		this.resetClock();
-		this.resetCorrectStatus();		
-
-		for(let socket in this.sockets) {
-			this.sockets[socket].emit('puzzle', []);
-		};
+		this.resetCorrectStatus();
+		this.emitToAllSockets('puzzle',[]);
 	},
 
 	resetPaths() {
@@ -381,6 +373,12 @@ Game.prototype = {
 				score: 0
 			})
 		}
+	},
+
+	emitToAllSockets(type,emission) {
+		for(let socket in this.sockets) {
+			this.sockets[socket].emit(type, emission);
+		};
 	}
 }
 
