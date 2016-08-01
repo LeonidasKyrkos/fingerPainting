@@ -696,7 +696,7 @@ var Canvas = function (_Component) {
 				}
 			}
 
-			if (this.state.player) {
+			if (this.state.player && this.ctx) {
 				var canvasSettings = _react2.default.createElement(_CanvasSettings2.default, {
 					scope: this,
 					fullClear: this.fullClear,
