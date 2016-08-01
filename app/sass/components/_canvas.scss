@@ -2,7 +2,7 @@ $module: 		'canvas';
 
 
 .#{$module} {
-	background-color: lighten($color3,15%);
+	background-color: $color4;
 	cursor: pointer;
 	display: block;
 
