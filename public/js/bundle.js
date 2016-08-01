@@ -481,6 +481,7 @@ var Canvas = function (_Component) {
 
 			_Store2.default.listen(this.onChange);
 			this.setupCanvas();
+
 			if (this.state.socket) {
 				this.state.socket.on('new round', function () {
 					_this2.clearContext(_this2.ctx);
@@ -525,6 +526,7 @@ var Canvas = function (_Component) {
 			this.canvas = document.querySelector('#canvas');
 			this.canvas.setAttribute('width', this.canvas.parentElement.offsetWidth);
 			this.ctx = this.canvas.getContext('2d');
+			this.forceUpdate();
 		}
 
 		// start
@@ -733,23 +735,20 @@ var Canvas = function (_Component) {
 					ctx: this.ctx,
 					playerStatus: this.state.playerStatus
 				});
-
-				var canvas = _react2.default.createElement('canvas', { width: '100', height: '750px', className: 'canvas', id: 'canvas',
-					onMouseDown: this.startDrawing.bind(this),
-					onMouseUp: this.stopDrawing.bind(this),
-					onMouseLeave: this.stopDrawing.bind(this),
-					onMouseMove: this.dragBrush.bind(this)
-				});
 			} else {
 				var canvasSettings = '';
-				var canvas = _react2.default.createElement('canvas', { width: '100', height: '600px', className: 'canvas', id: 'canvas' });
 			}
 
 			return _react2.default.createElement(
 				'div',
 				{ className: 'canvas__wrap' },
 				canvasSettings,
-				canvas
+				_react2.default.createElement('canvas', { width: '100', height: '750px', className: 'canvas', id: 'canvas',
+					onMouseDown: this.startDrawing.bind(this),
+					onMouseUp: this.stopDrawing.bind(this),
+					onMouseLeave: this.stopDrawing.bind(this),
+					onMouseMove: this.dragBrush.bind(this)
+				})
 			);
 		}
 	}]);
