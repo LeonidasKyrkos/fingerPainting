@@ -271,6 +271,7 @@ Game.prototype = {
 		this.resetGame();
 		this.newCaptain();
 		this.startRound();
+		this.emitToAllSockets('new round');
 	},
 
 	newCaptain() {

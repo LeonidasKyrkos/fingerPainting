@@ -463,8 +463,15 @@ var Canvas = function (_Component) {
 	_createClass(Canvas, [{
 		key: 'componentDidMount',
 		value: function componentDidMount() {
+			var _this2 = this;
+
 			_Store2.default.listen(this.onChange);
 			this.setupCanvas();
+			if (this.state.socket) {
+				this.state.socket.on('new round', function () {
+					_this2.clearContext(_this2.ctx);
+				});
+			}
 		}
 	}, {
 		key: 'componentWillUnmount',

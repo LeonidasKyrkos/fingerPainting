@@ -17,6 +17,11 @@ export default class Canvas extends Component {
 	componentDidMount() {
 		Store.listen(this.onChange);
 		this.setupCanvas();
+		if(this.state.socket) {
+			this.state.socket.on('new round',()=>{
+				this.clearContext(this.ctx);
+			});
+		}		
 	}
 
 	componentWillUnmount() {
