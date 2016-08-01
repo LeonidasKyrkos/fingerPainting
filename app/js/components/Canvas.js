@@ -229,6 +229,7 @@ export default class Canvas extends Component {
 					scope={this} 
 					fullClear={this.fullClear} 
 					ctx={this.ctx}
+					playerStatus={this.state.playerStatus}
 				/>
 			);
 

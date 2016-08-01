@@ -54,11 +54,17 @@ export default class CanvasSettings extends React.Component {
 	}
 
 	runUpdateTests(nextProps,nextState) {
-		if (!_isEqual(nextProps,this.props) || nextState.store.status !== this.state.store.status) {
+		if (!_isEqual(nextProps,this.props)) {
 			return true;
-		} else {
-			return false;
 		}
+
+		if(nextState.store.status !== this.state.store.status) {
+			return true;
+		}
+
+		return false;
+
+
 	}
 
 	onChange(state) {
