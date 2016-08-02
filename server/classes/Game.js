@@ -50,8 +50,8 @@ Game.prototype = {
 		room.handler(this.id,socket);
 
 		socket.on('path update',(path)=>{
-			let ref = this.database.child('/paths/');
-			//ref.set(path);
+			let ref = this.database.child('/paths/');			
+			ref.set(path);
 		});
 
 		socket.on('start round',this.startRound.bind(this));
