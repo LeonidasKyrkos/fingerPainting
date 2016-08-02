@@ -368,6 +368,7 @@ Game.prototype = {
 		this.resetGame();
 		this.resetUsers();
 		this.roundCount = 1;
+		this.resetChatlog();
 	},
 
 	resetUsers() {
@@ -379,6 +380,10 @@ Game.prototype = {
 				score: 0
 			})
 		}
+	},
+
+	resetChatlog() {
+		this.database.child('chatLog').remove();
 	},
 
 	emitToAllSockets(type,emission) {
