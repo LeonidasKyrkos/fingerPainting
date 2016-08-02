@@ -228,7 +228,6 @@ export default class Canvas extends Component {
 			}
 		}
 
-		console.log(this.state.playerStatus);
 		if(this.state.playerStatus) {
 			canvas = (
 				<canvas width="100" height="750px" className="canvas" id="canvas" 
