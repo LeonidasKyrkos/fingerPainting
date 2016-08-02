@@ -40,7 +40,7 @@ Game.prototype = {
 	},
 
 	attachFirebase() {
-		//this.database.on('value',this.updateStore.bind(this));
+		this.database.on('value',this.updateStore.bind(this));
 	},
 
 	attachListeners(socket) {
@@ -51,7 +51,7 @@ Game.prototype = {
 
 		socket.on('path update',(path)=>{
 			let ref = this.database.child('/paths/');
-			ref.set(path);
+			//ref.set(path);
 		});
 
 		socket.on('start round',this.startRound.bind(this));
