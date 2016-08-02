@@ -51,6 +51,7 @@ Game.prototype = {
 
 		socket.on('path update',(path)=>{
 			let ref = this.database.child('/paths/');
+			
 			ref.set(path);
 		});
 
