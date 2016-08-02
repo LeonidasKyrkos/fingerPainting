@@ -1,11 +1,13 @@
 let io = require('../../configureServer').io;
 let firebase = require('../modules/firebaseConfig');
 let room = require('../modules/room');
+let _ = require('lodash');
 
 function Game(socket,gameId,database) {
 	this.id = gameId;
 	this.sockets = {};
 	this.database = database;
+	this.gameLength = 30;
 
 	this.database.child('dictionary').on('value',(snapshot)=>{
 		let dictionary = snapshot.val();
@@ -40,7 +42,10 @@ Game.prototype = {
 
 	attachFirebase() {
 		this.database.on('value',(snapshot)=>{
-			this.updateStore(snapshot.val());
+			let store = snapshot.val();
+			store.paths = _.clone(this.store.paths);
+
+			this.updateStore(store);
 		});
 	},
 

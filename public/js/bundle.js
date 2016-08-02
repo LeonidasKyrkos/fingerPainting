@@ -719,6 +719,9 @@ var Canvas = function (_Component) {
 	}, {
 		key: 'render',
 		value: function render() {
+			var canvas = _react2.default.createElement('canvas', { width: '100', height: '750px', className: 'canvas', id: 'canvas' });
+			var canvasSettings = '';
+
 			if (this.canvas) {
 				this.canvasX = this.canvas.offsetLeft;
 				this.canvasY = this.canvas.offsetTop;
@@ -728,27 +731,29 @@ var Canvas = function (_Component) {
 				}
 			}
 
-			if (this.state.playerStatus && this.ctx) {
-				var canvasSettings = _react2.default.createElement(_CanvasSettings2.default, {
-					scope: this,
-					fullClear: this.fullClear,
-					ctx: this.ctx,
-					playerStatus: this.state.playerStatus
-				});
-			} else {
-				var canvasSettings = '';
+			console.log(this.state.playerStatus);
+			if (this.state.playerStatus) {
+				canvas = _react2.default.createElement('canvas', { width: '100', height: '750px', className: 'canvas', id: 'canvas',
+					onMouseDown: this.startDrawing.bind(this),
+					onMouseUp: this.stopDrawing.bind(this),
+					onMouseLeave: this.stopDrawing.bind(this),
+					onMouseMove: this.dragBrush.bind(this) });
+
+				if (this.ctx) {
+					canvasSettings = _react2.default.createElement(_CanvasSettings2.default, {
+						scope: this,
+						fullClear: this.fullClear,
+						ctx: this.ctx,
+						playerStatus: this.state.playerStatus
+					});
+				}
 			}
 
 			return _react2.default.createElement(
 				'div',
 				{ className: 'canvas__wrap' },
 				canvasSettings,
-				_react2.default.createElement('canvas', { width: '100', height: '750px', className: 'canvas', id: 'canvas',
-					onMouseDown: this.startDrawing.bind(this),
-					onMouseUp: this.stopDrawing.bind(this),
-					onMouseLeave: this.stopDrawing.bind(this),
-					onMouseMove: this.dragBrush.bind(this)
-				})
+				canvas
 			);
 		}
 	}]);

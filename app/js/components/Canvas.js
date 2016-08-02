@@ -130,7 +130,7 @@ export default class Canvas extends Component {
 	redraw() {
 		let path = [];
 
-		if( this.state.playerStatus) {
+		if(this.state.playerStatus) {
 			path = this.points;
 		} else if (this.state.store.paths) {
 			path = this.state.store.paths.path;
@@ -216,6 +216,9 @@ export default class Canvas extends Component {
 	
 
 	render() {
+		let canvas = <canvas width="100" height="750px" className="canvas" id="canvas"></canvas>
+		let canvasSettings = '';
+
 		if(this.canvas) {
 			this.canvasX = this.canvas.offsetLeft;
 			this.canvasY = this.canvas.offsetTop;
@@ -225,29 +228,33 @@ export default class Canvas extends Component {
 			}
 		}
 
-		if(this.state.playerStatus && this.ctx) {
-			var canvasSettings = (
-				<CanvasSettings 
-					scope={this} 
-					fullClear={this.fullClear} 
-					ctx={this.ctx}
-					playerStatus={this.state.playerStatus}
-				/>
-			);
-		} else {
-			var canvasSettings = '';
+		console.log(this.state.playerStatus);
+		if(this.state.playerStatus) {
+			canvas = (
+				<canvas width="100" height="750px" className="canvas" id="canvas" 
+						onMouseDown={this.startDrawing.bind(this)} 
+						onMouseUp={this.stopDrawing.bind(this)} 
+						onMouseLeave={this.stopDrawing.bind(this)} 
+						onMouseMove={this.dragBrush.bind(this)}>
+				</canvas>
+			)
+
+			if(this.ctx) {
+				canvasSettings = (
+					<CanvasSettings 
+						scope={this} 
+						fullClear={this.fullClear} 
+						ctx={this.ctx}
+						playerStatus={this.state.playerStatus}
+					/>
+				)
+			}
 		}
 
 		return (
 			<div className="canvas__wrap">
 				{canvasSettings}
-				<canvas width="100" height="750px" className="canvas" id="canvas" 
-						onMouseDown={this.startDrawing.bind(this)} 
-						onMouseUp={this.stopDrawing.bind(this)} 
-						onMouseLeave={this.stopDrawing.bind(this)} 
-						onMouseMove={this.dragBrush.bind(this)} 
-				>
-				</canvas>
+				{canvas}
 			</div>
 		)
 	}
