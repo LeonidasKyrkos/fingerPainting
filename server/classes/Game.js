@@ -1,7 +1,6 @@
 let io = require('../../configureServer').io;
 let firebase = require('../modules/firebaseConfig');
 let room = require('../modules/room');
-let resets = require('../modules/game/resets');
 
 function Game(socket,gameId,database) {
 	this.id = gameId;
@@ -20,7 +19,7 @@ Game.prototype = {
 		this.roundCount = 1;
 		this.attachListeners(socket);
 		this.attachFirebase();
-		resets.resetGame.bind(this);
+		this.resetGame();
 	},
 
 	getDictionary(socket, dictionary='default') {
@@ -254,14 +253,14 @@ Game.prototype = {
 
 		let users = this.store.users || {};
 		usersArr = Object.keys(users) || [];
-		resets.resetPaths.bind(this);
+		this.resetPaths();
 
 		if(this.roundCount >= usersArr.length * 2) {
 			this.endGame();
 		} else {
 			if(usersArr.length <= 1) {
 				this.getDictionary();
-				resets.resetRoom.bind(this);				
+				this.resetRoom();				
 			} else {
 				this.newRound();
 			}
@@ -270,7 +269,7 @@ Game.prototype = {
 
 	newRound() {
 		this.roundCount++;
-		resets.resetGame.bind(this);
+		this.resetGame();
 		this.newCaptain();
 		this.startRound();
 		this.emitToAllSockets('new round');
@@ -321,8 +320,69 @@ Game.prototype = {
 		})
 
 		setTimeout(()=>{
-			resets.resetRoom.bind(this);
+			this.resetRoom();
 		},5000);
+	},
+
+	resetGame() {
+		this.database.update({
+			status: 'pending'
+		});
+
+		this.resetPaths();
+		this.cleverSailors = 0;
+		this.resetClock();
+		this.resetCorrectStatus();
+		this.emitToAllSockets('puzzle',[]);
+	},
+
+	resetPaths() {
+		this.database.child('paths').remove();
+	},
+
+	resetCorrectStatus() {
+		if(this.store.users) {
+			let users = this.store.users;
+			let usersArr = Object.keys(users) || [];
+
+			for(let i = 0; i < usersArr.length; i++) {
+				let username = usersArr[i];
+				let user = users[username];
+
+				this.database.child('users').child(username).update({
+					correct: false
+				})
+			}
+		}
+	},
+
+	resetClock() {
+		this.timer = this.gameLength;
+		this.database.update({
+			clock: this.timer
+		})
+	},
+
+	resetRoom() {
+		this.resetGame();
+		this.resetUsers();
+		this.roundCount = 1;
+		this.resetChatlog();
+	},
+
+	resetUsers() {
+		let users = this.store.users;
+		
+		for(let user in users) {
+			this.database.child('users').child(user).update({
+				correct: false,
+				score: 0
+			})
+		}
+	},
+
+	resetChatlog() {
+		this.database.child('chatLog').remove();
 	},
 
 	emitToAllSockets(type,emission) {
