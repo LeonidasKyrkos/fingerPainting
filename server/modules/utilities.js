@@ -16,6 +16,7 @@ function joinHandler(request,socket){
 
 	if(status.status) {
 		// setup
+		//let player = new Player(request,socket);
 		socket.name = request.name
 		socket.gameroom = request.id;
 
