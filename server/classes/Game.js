@@ -257,7 +257,7 @@ class Game {
 		clearInterval(this.interval);
 
 		let users = this.store.users || {};
-		usersArr = Object.keys(users) || [];
+		let usersArr = Object.keys(users) || [];
 		this.resetPaths();
 
 		if(this.roundCount >= usersArr.length * 2) {
