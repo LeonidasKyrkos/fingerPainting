@@ -731,7 +731,6 @@ var Canvas = function (_Component) {
 				}
 			}
 
-			console.log(this.state.playerStatus);
 			if (this.state.playerStatus) {
 				canvas = _react2.default.createElement('canvas', { width: '100', height: '750px', className: 'canvas', id: 'canvas',
 					onMouseDown: this.startDrawing.bind(this),
