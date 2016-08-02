@@ -40,7 +40,9 @@ Game.prototype = {
 	},
 
 	attachFirebase() {
-		this.database.on('value',this.updateStore.bind(this));
+		this.database.on('value',(snapshot)=>{
+			this.updateStore(snapshot.val());
+		});
 	},
 
 	attachListeners(socket) {
@@ -50,8 +52,8 @@ Game.prototype = {
 		room.handler(this.id,socket);
 
 		socket.on('path update',(path)=>{
-			let ref = this.database.child('/paths/');
-			ref.set(path);
+			this.store.paths = path;
+			this.updateStore(this.store);
 		});
 
 		socket.on('start round',this.startRound.bind(this));
@@ -92,8 +94,8 @@ Game.prototype = {
 		this.database.child('users').child(user).remove();
 	},
 
-	updateStore(snapshot) {
-		this.store = snapshot.val();
+	updateStore(store) {
+		this.store = store;
 		this.store.currentRoom = '/rooms/' + this.id;
 		this.emitToAllSockets('store update', this.store);
 	},
