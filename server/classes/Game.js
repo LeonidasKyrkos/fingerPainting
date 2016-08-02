@@ -162,7 +162,7 @@ class Game {
 	}
 
 	informTheCaptain() {
-		for(user in this.store.users) {
+		for(let user in this.store.users) {
 			if(this.store.users[user].status === 'captain') {
 				this.sockets[user].emit('puzzle',this.puzzleArray)
 			} else {
