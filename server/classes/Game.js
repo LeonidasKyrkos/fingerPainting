@@ -40,7 +40,7 @@ Game.prototype = {
 	},
 
 	attachFirebase() {
-		this.database.on('value',this.updateStore.bind(this));
+		//this.database.on('value',this.updateStore.bind(this));
 	},
 
 	attachListeners(socket) {
