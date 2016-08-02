@@ -1,6 +1,7 @@
 var tests = require('./tests');
 var firebase = require('./firebaseConfig');
 var Game = require('../classes/Game');
+var Player = require('../classes/Player');
 var activeGames = [];
 
 firebase.roomsRef.on('value',function(snapshot){
