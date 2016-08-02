@@ -51,6 +51,7 @@ export default class Home extends Component {
 	render() {
 		return (
 			<div className="wrapper">
+				<h1 className="gamma">finger painting</h1>
 				{this.renderItems()}
 			</div>
 		);

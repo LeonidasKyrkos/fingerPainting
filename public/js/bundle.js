@@ -1677,6 +1677,11 @@ var Home = function (_Component) {
 			return _react2.default.createElement(
 				'div',
 				{ className: 'wrapper' },
+				_react2.default.createElement(
+					'h1',
+					{ className: 'gamma' },
+					'finger painting'
+				),
 				this.renderItems()
 			);
 		}
