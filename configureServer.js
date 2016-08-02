@@ -1,7 +1,7 @@
 // server
 var path = require('path');
 var logger = require('morgan');
-var port = 443;
+var port = 3000;
 var express = require('express');
 var app = express();
 var server = require('http').Server(app);

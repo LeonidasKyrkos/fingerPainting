@@ -5,7 +5,7 @@ import Store from '../stores/Store';
 export default class App extends Component {
 	constructor(props) {
 		super(props);
-		this.socket = io.connect('52.209.86.125:443');
+		this.socket = io.connect('http://localhost:3000');
 		this.state = Store.getState();
 	}
 
