@@ -8,7 +8,7 @@ class Game {
 		this.id = gameId;
 		this.sockets = {};
 		this.database = database;
-		this.gameLength = 30;
+		this.gameLength = 90;
 
 		this.database.child('dictionary').on('value',(snapshot)=>{
 			let dictionary = snapshot.val();
