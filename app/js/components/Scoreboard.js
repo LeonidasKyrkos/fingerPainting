@@ -22,7 +22,7 @@ export default class Scoreboard extends Component {
 	}
 
 	sortUsers() {
-		let users = this.state.store.users || {};
+		let users = this.state.store.players || {};
 		let usersArr = [];
 
 		Object.keys(users).map((user,index)=>{

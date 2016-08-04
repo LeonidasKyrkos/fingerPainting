@@ -1,4 +1,4 @@
-$module:			'users';
+$module:			'players';
 
 
 .#{$module} {
@@ -20,7 +20,7 @@ $module:			'users';
 		display: block;
 	}
 
-	&__user {
+	&__player {
 		@include display(flex);
 		padding: em(5);
 		border-bottom: em(1) solid rgba(dimgray,0.4);
@@ -34,7 +34,7 @@ $module:			'users';
 		}
 	}
 
-	&__user-score {
+	&__score {
 		margin-left: auto;
 	}
 }

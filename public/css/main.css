@@ -672,7 +672,7 @@ h1, h2, h3, h4, h5 {
     .chat__msg-wrap.active .chat__text {
       color: LAWNGREEN; }
 
-.users {
+.players {
   width: 25em;
   max-width: 100%;
   position: fixed;
@@ -690,9 +690,9 @@ h1, h2, h3, h4, h5 {
   padding: 1em;
   display: none;
   z-index: 10; }
-  .users.active {
+  .players.active {
     display: block; }
-  .users__user {
+  .players__player {
     display: -webkit-box;
     display: -moz-box;
     display: box;
@@ -702,11 +702,11 @@ h1, h2, h3, h4, h5 {
     display: flex;
     padding: 0.25em;
     border-bottom: 0.05em solid rgba(105, 105, 105, 0.4); }
-    .users__user.active {
+    .players__player.active {
       color: gold; }
-    .users__user.correct {
+    .players__player.correct {
       color: LAWNGREEN; }
-  .users__user-score {
+  .players__score {
     margin-left: auto; }
 
 .scoreboard__items {

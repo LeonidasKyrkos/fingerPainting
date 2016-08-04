@@ -1,18 +1,10 @@
 class Player {
 	constructor(request,socket) {
-		this.request = request;
-		this.socket = socket;
-		this.player = this.setupPlayer();
-	}
-
-	setupPlayer() {
-		return {
-			name: this.request.name,
-			id: this.socket.userId,
-			gameroom: this.request.id,
-			correct: false,
-			status: 'sailor'
-		}
+		this.name = request.name,
+		this.id = socket.userId,
+		this.gameroom = request.id,
+		this.correct = false,
+		this.status = 'sailor'
 	}
 }
 
