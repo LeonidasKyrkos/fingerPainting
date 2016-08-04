@@ -16,14 +16,17 @@ export default class App extends Component {
 
 		this.socket.on('store update',(store)=>{
 			Actions.updateStore(store)
-		});
 
-		this.socket.on('promotion',()=>{
-			Actions.updatePlayerStatus(true);
-		});
+			for(let player in store.players) {
+				if(player === this.socket.id && store.players[player].status === 'captain') {
+					var found = true;
+					Actions.updatePlayerStatus(true);
+				}
+			}
 
-		this.socket.on('demotion',()=>{
-			Actions.updatePlayerStatus(false);
+			if(!found) {
+				Actions.updatePlayerStatus(false);
+			}
 		});
 
 		this.socket.on('countdown',(data)=>{

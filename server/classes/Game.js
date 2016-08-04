@@ -4,27 +4,18 @@ let room = require('../modules/room');
 let _ = require('lodash');
 
 class Game {
-	constructor(socket,gameId,database) {
-		this.id = gameId;
-		this.sockets = {};
+	constructor(player,socket,database) {
+		this.id = player.gameroom;
 		this.database = database;
 		this.gameLength = 90;
 
 		this.database.child('dictionary').on('value',(snapshot)=>{
 			let dictionary = snapshot.val();
-			this.getDictionary(socket,dictionary);
+			this.getDictionary(player,socket,dictionary);
 		});
 	}	
 
-	init(socket) {
-		this.store = {};
-		this.roundCount = 1;
-		this.attachListeners(socket);
-		this.attachFirebase();
-		this.resetGame();
-	}
-
-	getDictionary(socket, dictionary='default') {
+	getDictionary(player, socket, dictionary='default') {
 		firebase.db.ref('/dictionarys/' + dictionary).on('value',(snapshot)=>{
 			this.dictionary = [];
 			this.dictionaryObj = snapshot.val();
@@ -34,10 +25,41 @@ class Game {
 			this.dictionaryBackup = this.dictionary.slice(0);
 			firebase.db.ref('/dictionary').off();
 			
-			if(socket) { 
-				this.init(socket);
+			if(player) { 
+				this.init(player,socket);
 			}
 		});		
+	}
+
+	init(player, socket) {
+		this.store = {};
+		this.sockets = {};
+		this.roundCount = 1;
+		this.newPlayer(player, socket);
+		this.attachFirebase();
+		this.resetGame();
+	}
+
+	newPlayer(player,socket) {
+		this.sockets[player.id] = socket;
+
+		if(!this.store.players) {
+			player.status = 'captain';
+		}
+
+		// join room and add to db
+		room.handler(this.id,player);
+
+		socket.on('path update',(path)=>{
+			this.store.paths = path;
+			this.updateStore(this.store);
+		});
+
+		socket.on('start round',this.startRound.bind(this));
+		socket.on('pause round',this.pauseRound.bind(this));
+		socket.on('unpause round',this.unpauseRound.bind(this));
+		socket.on('message',this.parseMessage.bind(this));
+		socket.on('disconnect',this.handleDisconnect.bind(this,player));
 	}
 
 	attachFirebase() {
@@ -49,53 +71,23 @@ class Game {
 		});
 	}
 
-	attachListeners(socket) {
-		this.sockets[socket.userId] = socket;
-
-		// join room and add to db
-		room.handler(this.id,socket);
-
-		socket.on('path update',(path)=>{
-			this.store.paths = path;
-			this.updateStore(this.store);
-		});
-
-		socket.on('start round',this.startRound.bind(this));
-		socket.on('pause round',this.pauseRound.bind(this));
-		socket.on('unpause round',this.unpauseRound.bind(this));
-		socket.on('message',this.parseMessage.bind(this));
-		socket.on('disconnect',this.handleDisconnect.bind(this,socket));
-	}
-
-	handleDisconnect(socket) {
-		let users = this.store.users || {};
-		let user = users[socket.conn.id] || {};
-
-		if(users && user && user.status === 'captain') {
+	handleDisconnect(player) {
+		if(player.status === 'captain') {
 			this.pauseRound();
 
 			setTimeout(()=>{
 				this.endRound();
-				this.deleteUser(socket);				
+				this.removePlayerFromGame(player);				
 			},5000);
 
 		} else {
-			this.deleteUser(socket);
+			this.removePlayerFromGame(player);
 		}		
 	}
 
-	deleteUser(socket={}) {
-		for(let object in this.sockets) {
-			if(socket.id === this.sockets[object].id) {
-				delete this.sockets[object];
-			}
-		}
-
-		this.removeUserFromGame(socket.conn.id);
-	}
-
-	removeUserFromGame(user) {
-		this.database.child('users').child(user).remove();
+	removePlayerFromGame(player) {
+		this.database.child('players').child(player.id).remove();
+		delete(this.sockets[player.id]);
 	}
 
 	updateStore(store) {
@@ -162,8 +154,8 @@ class Game {
 	}
 
 	informTheCaptain() {
-		for(let user in this.store.users) {
-			if(this.store.users[user].status === 'captain') {
+		for(let user in this.store.players) {
+			if(this.store.players[user].status === 'captain') {
 				this.sockets[user].emit('puzzle',this.puzzleArray)
 			} else {
 				this.sockets[user].emit('puzzle',this.wordLength)
@@ -174,8 +166,8 @@ class Game {
 	clueForTheSailors() {
 		this.getClue();
 
-		for(let user in this.store.users) {
-			let userObj = this.store.users[user];
+		for(let user in this.store.players) {
+			let userObj = this.store.players[user];
 
 			if(userObj.status !== 'captain' && !userObj.correct) {
 				this.sockets[user].emit('puzzle',this.wordLength);
@@ -195,7 +187,7 @@ class Game {
 	}
 
 	checkIfCaptain(id) {
-		if(this.store.users && this.store.users[id] && this.store.users[id].status === 'captain') {
+		if(this.store.players && this.store.players[id] && this.store.players[id].status === 'captain') {
 			return true;
 		} else {
 			return false;
@@ -218,17 +210,17 @@ class Game {
 	cleverSailor(message) {
 		let newScore = this.calculatePoints(message.id);
 
-		this.database.child('/users/').child(message.id).update({ correct: true, score: newScore } );
+		this.database.child('players').child(message.id).update({ correct: true, score: newScore } );
 		this.sockets[message.id].emit('puzzle',this.puzzleArray);
 		this.cleverSailors++;
 
-		if(this.cleverSailors >= Object.keys(this.store.users).length - 1) {
+		if(this.cleverSailors >= Object.keys(this.store.players).length - 1) {
 			this.endRound();
 		}
 	}
 
 	calculatePoints(id) {
-		let currentScore = this.store.users[id].score || 0;
+		let currentScore = this.store.players[id].score || 0;
 		let newScore = currentScore + this.timer;
 		return newScore;
 	}
@@ -256,14 +248,14 @@ class Game {
 	endRound() {
 		clearInterval(this.interval);
 
-		let users = this.store.users || {};
-		let usersArr = Object.keys(users) || [];
+		let players = this.store.players || {};
+		let playersArr = Object.keys(players) || [];
 		this.resetPaths();
 
-		if(this.roundCount >= usersArr.length * 2) {
+		if(this.roundCount >= playersArr.length * 2) {
 			this.endGame();
 		} else {
-			if(usersArr.length <= 1) {
+			if(playersArr.length <= 1) {
 				this.getDictionary();
 				this.resetRoom();				
 			} else {
@@ -281,7 +273,7 @@ class Game {
 	}
 
 	newCaptain() {
-		let users = this.store.users;
+		let users = this.store.players;
 		let usersArr = Object.keys(users) || [];
 
 		for(let i = 0; i < usersArr.length; i++) {
@@ -290,7 +282,6 @@ class Game {
 
 			if(user.status === 'captain') {
 				this.setSailor(username);
-				this.sockets[username].emit('demotion');
 
 				if(i === usersArr.length - 1) {
 					var nextUsername = usersArr[0];
@@ -299,7 +290,6 @@ class Game {
 				}
 
 				this.setCaptain(nextUsername);	
-				this.sockets[nextUsername].emit('promotion');
 
 				break;
 			}
@@ -307,13 +297,13 @@ class Game {
 	}
 
 	setSailor(username) {
-		this.database.child('users').child(username).update({
+		this.database.child('players').child(username).update({
 			status: 'sailor'
 		})
 	}
 
 	setCaptain(username) {
-		this.database.child('users').child(username).update({
+		this.database.child('players').child(username).update({
 			status: 'captain'
 		})
 	}
@@ -346,15 +336,15 @@ class Game {
 	}
 
 	resetCorrectStatus() {
-		if(this.store.users) {
-			let users = this.store.users;
+		if(this.store.players) {
+			let users = this.store.players;
 			let usersArr = Object.keys(users) || [];
 
 			for(let i = 0; i < usersArr.length; i++) {
 				let username = usersArr[i];
 				let user = users[username];
 
-				this.database.child('users').child(username).update({
+				this.database.child('players').child(username).update({
 					correct: false
 				})
 			}
@@ -376,10 +366,10 @@ class Game {
 	}
 
 	resetUsers() {
-		let users = this.store.users;
+		let users = this.store.players;
 		
 		for(let user in users) {
-			this.database.child('users').child(user).update({
+			this.database.child('players').child(user).update({
 				correct: false,
 				score: 0
 			})

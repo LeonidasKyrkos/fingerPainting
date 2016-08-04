@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import Store from '../stores/Store';
-import Users from './Users.js';
+import Players from './Players.js';
 import Canvas from './Canvas.js';
 import Chat from './Chat.js';
 import Puzzle from './Puzzle.js';
@@ -37,7 +37,7 @@ export default class Home extends Component {
 		} else {
 			return (
 				<div>
-					<Users userId={this.props.userId} />
+					<Players userId={this.props.userId} />
 					<div className="game__wrap">
 						<Puzzle />			
 						<Canvas />

@@ -53,7 +53,7 @@ export default class Chat extends Component {
 			let timestamp = (new Date()).getTime();
 			let data = {};
 			data.id = this.state.socket.id;
-			data.name = this.state.store.users[data.id].name;
+			data.name = this.state.store.players[data.id].name;
 			data.message = msg;
 			data.timestamp = timestamp;
 			this.state.socket.emit('message',data)

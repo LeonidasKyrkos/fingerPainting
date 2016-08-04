@@ -4,7 +4,7 @@ var Game = require('../classes/Game');
 var Player = require('../classes/Player');
 var activeGames = [];
 
-firebase.roomsRef.on('value',function(snapshot){
+firebase.roomsRef.on('value',(snapshot)=>{
 	firebase.rooms = snapshot.val();
 });
 
@@ -16,35 +16,31 @@ function joinHandler(request,socket){
 
 	if(status.status) {
 		// setup
-		socket.name = request.name
-		socket.gameroom = request.id;
+		let player = new Player(request,socket);
 
 		// hand client their user credentials.
 		socket.emit('user update',{ id: socket.userId, name: socket.name });		
 
 		// attach database listener 
-		var database = firebase.db.ref(firebase.roomsPath + request.id);
+		var database = firebase.db.ref(firebase.roomsPath + player.gameroom);
 
 		// initialise game if necessary
 		var found = false;
 
-		for(var i = 0; i < activeGames.length; i++) {
-			var item = activeGames[i];
-
-			if(item.game.id === request.id) {
+		activeGames.forEach((item,index)=>{
+			if(item.game.id === player.gameroom) {
 				found = true;
 
 				if(firebase.rooms[request.id].status === 'pending') {
-					item.game.attachListeners(socket);
+					item.game.newPlayer(player,socket);
 				} else {
 					socket.emit('request rejected','Sorry that room has a game underway');
 				}				
 			} 
-		}
-
+		});
 
 		if(!found) {
-			var game = new Game(socket, request.id, database);
+			var game = new Game(player, socket, database);
 			var gameItem = { game: game };
 			activeGames.push(gameItem);
 		}
