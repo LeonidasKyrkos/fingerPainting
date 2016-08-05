@@ -320,6 +320,8 @@ var _Store = require('../stores/Store');
 
 var _Store2 = _interopRequireDefault(_Store);
 
+var _general = require('../utilities/general.js');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -353,14 +355,9 @@ var App = function (_Component) {
 			this.socket.on('store update', function (store) {
 				_Actions2.default.updateStore(store);
 
-				for (var player in store.players) {
-					if (player === _this2.socket.id && store.players[player].status === 'captain') {
-						var found = true;
-						_Actions2.default.updatePlayerStatus(true);
-					}
-				}
-
-				if (!found) {
+				if ((0, _general.captainTest)(_this2.state.store.players, _this2.state.socket.id)) {
+					_Actions2.default.updatePlayerStatus(true);
+				} else {
 					_Actions2.default.updatePlayerStatus(false);
 				}
 			});
@@ -431,7 +428,7 @@ var App = function (_Component) {
 
 exports.default = App;
 
-},{"../actions/Actions":1,"../stores/Store":21,"react":"react"}],6:[function(require,module,exports){
+},{"../actions/Actions":1,"../stores/Store":21,"../utilities/general.js":22,"react":"react"}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -765,7 +762,7 @@ var Canvas = function (_Component) {
 
 exports.default = Canvas;
 
-},{"../stores/Store":21,"./CanvasSettings":7,"lodash":39,"react":"react"}],7:[function(require,module,exports){
+},{"../stores/Store":21,"./CanvasSettings":7,"lodash":40,"react":"react"}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1024,7 +1021,7 @@ CanvasSettings.propTypes = {
 	scope: _react.PropTypes.object.isRequired
 };
 
-},{"../stores/Store":21,"lodash":39,"react":"react"}],8:[function(require,module,exports){
+},{"../stores/Store":21,"lodash":40,"react":"react"}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1184,7 +1181,7 @@ var Chat = function (_Component) {
 
 exports.default = Chat;
 
-},{"../stores/Store":21,"./Message":14,"lodash":39,"react":"react"}],9:[function(require,module,exports){
+},{"../stores/Store":21,"./Message":14,"lodash":40,"react":"react"}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2048,7 +2045,7 @@ var Puzzle = function (_Component) {
 
 exports.default = Puzzle;
 
-},{"../stores/Store":21,"lodash":39,"react":"react"}],17:[function(require,module,exports){
+},{"../stores/Store":21,"lodash":40,"react":"react"}],17:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2427,7 +2424,7 @@ _reactDom2.default.render(_react2.default.createElement(
   _routes2.default
 ), document.getElementById('app'));
 
-},{"./routes":20,"history/lib/createBrowserHistory":30,"react":"react","react-dom":"react-dom","react-router":"react-router"}],20:[function(require,module,exports){
+},{"./routes":20,"history/lib/createBrowserHistory":31,"react":"react","react-dom":"react-dom","react-router":"react-router"}],20:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2560,6 +2557,19 @@ var Store = function () {
 exports.default = _alt2.default.createStore(Store, 'Store');
 
 },{"../actions/Actions":1,"../alt":2,"../components/App":5}],22:[function(require,module,exports){
+'use strict';
+
+function captainTest(players, id) {
+	for (var player in players) {
+		if (player === id && players[player].status === 'captain') {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+},{}],23:[function(require,module,exports){
 var pSlice = Array.prototype.slice;
 var objectKeys = require('./lib/keys.js');
 var isArguments = require('./lib/is_arguments.js');
@@ -2655,7 +2665,7 @@ function objEquiv(a, b, opts) {
   return typeof a === typeof b;
 }
 
-},{"./lib/is_arguments.js":23,"./lib/keys.js":24}],23:[function(require,module,exports){
+},{"./lib/is_arguments.js":24,"./lib/keys.js":25}],24:[function(require,module,exports){
 var supportsArgumentsClass = (function(){
   return Object.prototype.toString.call(arguments)
 })() == '[object Arguments]';
@@ -2677,7 +2687,7 @@ function unsupported(object){
     false;
 };
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 exports = module.exports = typeof Object.keys === 'function'
   ? Object.keys : shim;
 
@@ -2688,7 +2698,7 @@ function shim (obj) {
   return keys;
 }
 
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 /**
  * Indicates that navigation was caused by a call to history.push.
  */
@@ -2720,7 +2730,7 @@ exports['default'] = {
   REPLACE: REPLACE,
   POP: POP
 };
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -2747,7 +2757,7 @@ function loopAsync(turns, work, callback) {
 
   next();
 }
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 (function (process){
 /*eslint-disable no-empty */
 'use strict';
@@ -2819,7 +2829,7 @@ function readState(key) {
 }
 }).call(this,require('_process'))
 
-},{"_process":40,"warning":41}],28:[function(require,module,exports){
+},{"_process":41,"warning":42}],29:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -2900,13 +2910,13 @@ function supportsGoWithoutReloadUsingHash() {
   var ua = navigator.userAgent;
   return ua.indexOf('Firefox') === -1;
 }
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
 var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
 exports.canUseDOM = canUseDOM;
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -3088,7 +3098,7 @@ exports['default'] = createBrowserHistory;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"./Actions":25,"./DOMStateStorage":27,"./DOMUtils":28,"./ExecutionEnvironment":29,"./createDOMHistory":31,"./parsePath":36,"_process":40,"invariant":38}],31:[function(require,module,exports){
+},{"./Actions":26,"./DOMStateStorage":28,"./DOMUtils":29,"./ExecutionEnvironment":30,"./createDOMHistory":32,"./parsePath":37,"_process":41,"invariant":39}],32:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -3132,7 +3142,7 @@ exports['default'] = createDOMHistory;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"./DOMUtils":28,"./ExecutionEnvironment":29,"./createHistory":32,"_process":40,"invariant":38}],32:[function(require,module,exports){
+},{"./DOMUtils":29,"./ExecutionEnvironment":30,"./createHistory":33,"_process":41,"invariant":39}],33:[function(require,module,exports){
 //import warning from 'warning'
 'use strict';
 
@@ -3424,7 +3434,7 @@ function createHistory() {
 
 exports['default'] = createHistory;
 module.exports = exports['default'];
-},{"./Actions":25,"./AsyncUtils":26,"./createLocation":33,"./deprecate":34,"./parsePath":36,"./runTransitionHook":37,"deep-equal":22}],33:[function(require,module,exports){
+},{"./Actions":26,"./AsyncUtils":27,"./createLocation":34,"./deprecate":35,"./parsePath":37,"./runTransitionHook":38,"deep-equal":23}],34:[function(require,module,exports){
 //import warning from 'warning'
 'use strict';
 
@@ -3479,7 +3489,7 @@ function createLocation() {
 
 exports['default'] = createLocation;
 module.exports = exports['default'];
-},{"./Actions":25,"./parsePath":36}],34:[function(require,module,exports){
+},{"./Actions":26,"./parsePath":37}],35:[function(require,module,exports){
 //import warning from 'warning'
 
 "use strict";
@@ -3495,7 +3505,7 @@ function deprecate(fn) {
 
 exports["default"] = deprecate;
 module.exports = exports["default"];
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -3509,7 +3519,7 @@ function extractPath(string) {
 
 exports["default"] = extractPath;
 module.exports = exports["default"];
-},{}],36:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -3557,7 +3567,7 @@ exports['default'] = parsePath;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"./extractPath":35,"_process":40,"warning":41}],37:[function(require,module,exports){
+},{"./extractPath":36,"_process":41,"warning":42}],38:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -3585,7 +3595,7 @@ exports['default'] = runTransitionHook;
 module.exports = exports['default'];
 }).call(this,require('_process'))
 
-},{"_process":40,"warning":41}],38:[function(require,module,exports){
+},{"_process":41,"warning":42}],39:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -3641,7 +3651,7 @@ module.exports = invariant;
 
 }).call(this,require('_process'))
 
-},{"_process":40}],39:[function(require,module,exports){
+},{"_process":41}],40:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -20050,7 +20060,7 @@ module.exports = invariant;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{}],40:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -20171,7 +20181,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],41:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -20236,7 +20246,7 @@ module.exports = warning;
 
 }).call(this,require('_process'))
 
-},{"_process":40}]},{},[19])
+},{"_process":41}]},{},[19])
 
 
 //# sourceMappingURL=bundle.js.map

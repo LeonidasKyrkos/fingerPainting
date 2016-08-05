@@ -19,7 +19,7 @@ function joinHandler(request,socket){
 		let player = new Player(request,socket);
 
 		// hand client their user credentials.
-		socket.emit('user update',{ id: socket.userId, name: socket.name });		
+		socket.emit('user update',player);		
 
 		// attach database listener 
 		var database = firebase.db.ref(firebase.roomsPath + player.gameroom);

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Actions from '../actions/Actions';
 import Store from '../stores/Store';
+import { captainTest } from '../utilities/general.js';
 
 export default class App extends Component {
 	constructor(props) {
@@ -17,14 +18,9 @@ export default class App extends Component {
 		this.socket.on('store update',(store)=>{
 			Actions.updateStore(store)
 
-			for(let player in store.players) {
-				if(player === this.socket.id && store.players[player].status === 'captain') {
-					var found = true;
-					Actions.updatePlayerStatus(true);
-				}
-			}
-
-			if(!found) {
+			if(captainTest(this.state.store.players,this.state.socket.id)){
+				Actions.updatePlayerStatus(true);
+			} else {
 				Actions.updatePlayerStatus(false);
 			}
 		});
