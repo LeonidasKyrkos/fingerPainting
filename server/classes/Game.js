@@ -53,7 +53,7 @@ class Game {
 		this.data.listenToData(this,e);		
 	}	
 
-	getDictionary(dictionary='default') {
+	getDictionary(dictionary='other') {
 		let promise = this.data.getDictionary(dictionary);
 
 		promise.then((snapshot)=>{
