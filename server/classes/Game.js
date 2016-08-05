@@ -266,32 +266,31 @@ class Game {
 		let players = this.store.players;
 		let playersArr = Object.keys(players) || [];
 
-		for(let i = 0; i < playersArr.length; i++) {
-			let username = playersArr[i];
-			let player = players[username];
+		for(var index = 0; index <= playersArr.length - 1; i++) {
+			let playerId = playersArr[index];
+			let player = players[playerId];
 
 			if(player.status === 'painter') {
-				this.setGuesser(username);
+				this.setGuesser(playerId);
 
-				if(i === playersArr.length - 1) {
-					var nextUsername = playersArr[0];
+				if(index === playersArr.length - 1) {
+					var nextPlayerId = playersArr[0];
 				} else {
-					var nextUsername = playersArr[i+1];
+					var nextPlayerId = playersArr[index+1];
 				}
-
-				this.setPainter(nextUsername);	
+				this.setPainter(nextPlayerId);
 
 				break;
 			}
 		}
 	}
 
-	setGuesser(username) {
-		this.data.setPlayerStatus(username,'guesser');
+	setGuesser(playerId) {
+		this.data.setPlayerStatus(playerId,'guesser');
 	}
 
-	setPainter(username) {
-		this.data.setPlayerStatus(username,'painter');
+	setPainter(playerId) {
+		this.data.setPlayerStatus(playerId,'painter');
 	}
 
 	endGame() {

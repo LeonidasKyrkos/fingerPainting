@@ -4,7 +4,7 @@ class Player {
 		this.id = socket.userId,
 		this.gameroom = request.id,
 		this.correct = false,
-		this.status = 'sailor',
+		this.status = 'guesser',
 		this.score = 0
 	}
 }

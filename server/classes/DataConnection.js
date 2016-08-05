@@ -28,6 +28,7 @@ class DataConnection {
 	}
 
 	setPlayerStatus(player,status) {
+		console.log(player,status);
 		this.dbRef.child('players').child(player).update({
 			status: status
 		})
