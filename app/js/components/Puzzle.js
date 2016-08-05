@@ -52,7 +52,7 @@ export default class Puzzle extends Component {
 		return (
 			<div className="game__top">
 				<span className="game__puzzle">{this.renderPuzzle()}</span>
-				<span className="game__timer">{this.state.store.clock}</span>				
+				<span className="game__timer">{this.state.store.clock}</span>
 			</div>			
 		);
 	}

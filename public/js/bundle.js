@@ -357,18 +357,6 @@ var App = function (_Component) {
 				(0, _general.painterTest)(store.players, _this2.state.socket.id) ? _Actions2.default.updatePlayerStatus(true) : _Actions2.default.updatePlayerStatus(false);
 			});
 
-			this.socket.on('countdown', function (data) {
-				console.log(data);
-			});
-
-			this.socket.on('round end', function () {
-				console.log('ended');
-			});
-
-			this.socket.on('correct', function () {
-				console.log('correct!');
-			});
-
 			this.socket.on('puzzle', function (puzzleArray) {
 				_Actions2.default.updatePuzzle(puzzleArray);
 			});
@@ -1813,6 +1801,11 @@ var players = function (_Component) {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
 			_Store2.default.listen(this.onChange);
+			var audio = new Audio('/media/sound/335908__littlerainyseasons__correct.mp3');
+
+			this.state.socket.on('correct', function () {
+				audio.play();
+			});
 		}
 	}, {
 		key: 'componentWillUnmount',
@@ -1910,7 +1903,7 @@ var players = function (_Component) {
 				{ 'data-js': 'players', className: 'players' },
 				_react2.default.createElement(
 					'h3',
-					{ className: 'gamma' },
+					{ className: 'delta' },
 					'Current scores'
 				),
 				_react2.default.createElement(
@@ -2560,7 +2553,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.painterTest = painterTest;
 function painterTest(players, id) {
 	for (var player in players) {
-		console.log(player, players);
 		if (player === id && players[player].status === 'painter') {
 			return true;
 		}

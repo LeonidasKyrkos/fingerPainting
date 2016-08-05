@@ -206,6 +206,8 @@ class Game {
 		this.sockets[message.id].emit('puzzle',this.puzzleArray);
 		this.cleverGuessers++;
 
+		this.emitToAllSockets('correct');
+
 		if(this.cleverGuessers >= Object.keys(this.store.players).length - 1) {
 			this.endRound();
 		}
