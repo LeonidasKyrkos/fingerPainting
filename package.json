@@ -1,5 +1,5 @@
 {
-  "name": "finger painting",
+  "name": "fingerpainting",
   "description": "react pictionary with a nodejs/express/mongodb backend",
   "version": "1.0.0",
   "repository": {
