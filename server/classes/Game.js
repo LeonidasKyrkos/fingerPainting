@@ -266,9 +266,9 @@ class Game {
 		let players = this.store.players;
 		let playersArr = Object.keys(players) || [];
 
-		for(var index = 0; index <= playersArr.length - 1; i++) {
+		for(var index = 0; index <= playersArr.length - 1; index++) {
 			let playerId = playersArr[index];
-			let player = players[playerId];
+			let player = players[playerId];			
 
 			if(player.status === 'painter') {
 				this.setGuesser(playerId);
@@ -278,6 +278,7 @@ class Game {
 				} else {
 					var nextPlayerId = playersArr[index+1];
 				}
+
 				this.setPainter(nextPlayerId);
 
 				break;
@@ -295,7 +296,7 @@ class Game {
 
 	endGame() {
 		// update the status of the room to trigger the scoreboard and then wait 5s to reset for next round
-		if(this.store.users) {
+		if(this.store.players) {
 			this.data.setStatus('finished');
 
 			setTimeout(()=>{
@@ -306,15 +307,11 @@ class Game {
 		}
 	}
 
-	resetGame() {
-		this.data.setStatus('pending');
+	resetGame() {		
 		this.cleverGuessers = 0;
 		this.resetClock();
 		this.resetCorrectStatus();
 		this.emitToAllSockets('puzzle',[]);
-		if(this.store.players) {
-			this.setPainter(this.store.players[Object.keys(this.store.players)[0]].id);
-		}
 	}
 
 	resetCorrectStatus() {
@@ -335,10 +332,20 @@ class Game {
 	}
 
 	resetRoom() {
+		this.data.setStatus('pending');
 		this.resetGame();
 		this.resetPlayers();
 		this.roundCount = 1;
 		this.resetChatlog();
+
+		if(this.store.players) {
+			if(Object.keys(this.store.players).length === 1) {
+				this.setPainter(this.store.players[Object.keys(this.store.players)[0]].id);
+			} else {
+				this.newPainter();
+			}
+		}
+		
 	}
 
 	resetPlayers() {
