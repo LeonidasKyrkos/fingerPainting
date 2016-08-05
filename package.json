@@ -48,6 +48,7 @@
     "bower": "^1.6.5",
     "browserify": "^12.0.1",
     "bufferutil": "^1.2.1",
+    "eev": "0.0.4",
     "firebase": "^3.1.0",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.1.0",

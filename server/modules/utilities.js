@@ -21,9 +21,6 @@ function joinHandler(request,socket){
 		// hand client their user credentials.
 		socket.emit('user update',player);		
 
-		// attach database listener 
-		var database = firebase.db.ref(firebase.roomsPath + player.gameroom);
-
 		// initialise game if necessary
 		var found = false;
 
@@ -40,7 +37,7 @@ function joinHandler(request,socket){
 		});
 
 		if(!found) {
-			var game = new Game(player, socket, database);
+			var game = new Game(player, socket);
 			var gameItem = { game: game };
 			activeGames.push(gameItem);
 		}

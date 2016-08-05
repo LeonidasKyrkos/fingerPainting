@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import Actions from '../actions/Actions';
 import Store from '../stores/Store';
-import { captainTest } from '../utilities/general.js';
+import { painterTest } from '../utilities/general.js';
 
 export default class App extends Component {
 	constructor(props) {
 		super(props);
-		this.socket = io.connect('52.209.86.125:443');
+		this.socket = io.connect('http://localhost:3000');
 		this.state = Store.getState();
 	}
 
@@ -17,12 +17,9 @@ export default class App extends Component {
 
 		this.socket.on('store update',(store)=>{
 			Actions.updateStore(store)
-
-			if(captainTest(this.state.store.players,this.state.socket.id)){
-				Actions.updatePlayerStatus(true);
-			} else {
-				Actions.updatePlayerStatus(false);
-			}
+			painterTest(store.players,this.state.socket.id) ? 
+					Actions.updatePlayerStatus(true) : 
+					Actions.updatePlayerStatus(false);
 		});
 
 		this.socket.on('countdown',(data)=>{

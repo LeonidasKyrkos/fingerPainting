@@ -338,7 +338,7 @@ var App = function (_Component) {
 
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(App).call(this, props));
 
-		_this.socket = io.connect('52.209.86.125:443');
+		_this.socket = io.connect('http://localhost:3000');
 		_this.state = _Store2.default.getState();
 		return _this;
 	}
@@ -354,12 +354,7 @@ var App = function (_Component) {
 
 			this.socket.on('store update', function (store) {
 				_Actions2.default.updateStore(store);
-
-				if ((0, _general.captainTest)(_this2.state.store.players, _this2.state.socket.id)) {
-					_Actions2.default.updatePlayerStatus(true);
-				} else {
-					_Actions2.default.updatePlayerStatus(false);
-				}
+				(0, _general.painterTest)(store.players, _this2.state.socket.id) ? _Actions2.default.updatePlayerStatus(true) : _Actions2.default.updatePlayerStatus(false);
 			});
 
 			this.socket.on('countdown', function (data) {
@@ -1835,7 +1830,7 @@ var players = function (_Component) {
 			var status = player.status;
 			var correct = player.correct;
 
-			if (status === 'captain') {
+			if (status === 'painter') {
 				return 'active';
 			}
 
@@ -2559,9 +2554,14 @@ exports.default = _alt2.default.createStore(Store, 'Store');
 },{"../actions/Actions":1,"../alt":2,"../components/App":5}],22:[function(require,module,exports){
 'use strict';
 
-function captainTest(players, id) {
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.painterTest = painterTest;
+function painterTest(players, id) {
 	for (var player in players) {
-		if (player === id && players[player].status === 'captain') {
+		console.log(player, players);
+		if (player === id && players[player].status === 'painter') {
 			return true;
 		}
 	}

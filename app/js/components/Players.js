@@ -25,7 +25,7 @@ export default class players extends Component {
 		let status = player.status;
 		let correct = player.correct;
 
-		if(status === 'captain') {
+		if(status === 'painter') {
 			return 'active';
 		}
 
