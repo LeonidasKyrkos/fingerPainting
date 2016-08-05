@@ -22,18 +22,6 @@ export default class App extends Component {
 					Actions.updatePlayerStatus(false);
 		});
 
-		this.socket.on('countdown',(data)=>{
-			console.log(data);
-		});
-
-		this.socket.on('round end',()=>{
-			console.log('ended');
-		});
-
-		this.socket.on('correct',()=>{
-			console.log('correct!');
-		});
-
 		this.socket.on('puzzle',(puzzleArray)=>{
 			Actions.updatePuzzle(puzzleArray)
 		});

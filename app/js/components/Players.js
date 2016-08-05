@@ -11,6 +11,11 @@ export default class players extends Component {
 
 	componentDidMount() {
 		Store.listen(this.onChange);
+		let audio = new Audio('/media/sound/335908__littlerainyseasons__correct.mp3');
+
+		this.state.socket.on('correct',()=>{
+			audio.play();
+		});
 	}
 
 	componentWillUnmount() {
@@ -80,7 +85,7 @@ export default class players extends Component {
 	render() {
 		return (
 			<div data-js="players" className="players">
-				<h3 className="gamma">Current scores</h3>
+				<h3 className="delta">Current scores</h3>
 				<ul className="players__list">
 					{this.renderPlayers()}
 				</ul>

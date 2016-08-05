@@ -1,3 +1,4 @@
+@charset "UTF-8";
 html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video {
   margin: 0;
   padding: 0;
@@ -220,7 +221,7 @@ h1, h2, h3, h4, h5 {
   width: 100%; }
 
 .delta {
-  margin-bottom: 0.5em; }
+  margin-bottom: 1em; }
 
 .alpha {
   text-align: center; }
@@ -673,25 +674,15 @@ h1, h2, h3, h4, h5 {
       color: LAWNGREEN; }
 
 .players {
-  width: 25em;
+  width: 8em;
   max-width: 100%;
   position: fixed;
-  top: 50%;
+  top: 0;
   left: 0;
-  right: 0;
-  margin: 0 auto;
-  -webkit-transform: translateY(-50%);
-  -moz-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  -o-transform: translateY(-50%);
-  transform: translateY(-50%);
+  bottom: 0;
   background-color: rgba(0, 0, 0, 0.85);
-  min-height: 20em;
   padding: 1em;
-  display: none;
   z-index: 10; }
-  .players.active {
-    display: block; }
   .players__player {
     display: -webkit-box;
     display: -moz-box;
@@ -701,11 +692,23 @@ h1, h2, h3, h4, h5 {
     display: -ms-flexbox;
     display: flex;
     padding: 0.25em;
-    border-bottom: 0.05em solid rgba(105, 105, 105, 0.4); }
+    border-bottom: 0.05em solid rgba(105, 105, 105, 0.4);
+    position: relative; }
     .players__player.active {
       color: gold; }
     .players__player.correct {
       color: LAWNGREEN; }
+      .players__player.correct:after {
+        content: "✓";
+        position: absolute;
+        right: -0.75em;
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        -moz-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        -o-transform: translateY(-50%);
+        transform: translateY(-50%);
+        color: gold; }
   .players__score {
     margin-left: auto; }
 

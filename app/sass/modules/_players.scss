@@ -1,29 +1,21 @@
 $module:			'players';
 
-
 .#{$module} {
-	width: em(500);
+	width: em(160);
 	max-width: 100%;
 	position: fixed;
-	top: 50%;
+	top: 0;
 	left: 0;
-	right: 0;
-	margin: 0 auto;
-	@include transform(translateY(-50%));
+	bottom: 0;
 	background-color: rgba(black,0.85);
-	min-height: em(400);
 	padding: em(20);
-	display: none;
 	z-index: 10;
-
-	&.active {
-		display: block;
-	}
 
 	&__player {
 		@include display(flex);
 		padding: em(5);
 		border-bottom: em(1) solid rgba(dimgray,0.4);
+		position: relative;
 
 		&.active {
 			color: $color5;
@@ -31,6 +23,15 @@ $module:			'players';
 
 		&.correct {
 			color: $color6;
+
+			&:after {
+				content: "✓";
+				position: absolute;
+				right: em(-15);
+				top: 50%;
+				@include transform(translateY(-50%));
+				color: $color5;
+			}
 		}
 	}
 
