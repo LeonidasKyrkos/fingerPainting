@@ -1658,14 +1658,14 @@ var Home = function (_Component) {
 				return _react2.default.createElement(
 					'div',
 					null,
-					_react2.default.createElement(_Players2.default, { userId: this.props.userId }),
 					_react2.default.createElement(
 						'div',
 						{ className: 'game__wrap' },
 						_react2.default.createElement(_Puzzle2.default, null),
 						_react2.default.createElement(_Canvas2.default, null),
 						_react2.default.createElement(_Chat2.default, null)
-					)
+					),
+					_react2.default.createElement(_Players2.default, { userId: this.props.userId })
 				);
 			}
 		}

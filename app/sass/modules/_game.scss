@@ -5,6 +5,7 @@ $module: 			'game';
 	&__wrap {
 		@include display(flex);
 		@include flex-wrap(wrap);
+		margin-bottom: em(50);
 	}
 
 	&__title {

@@ -11,6 +11,11 @@ $module:			'players';
 	padding: em(20);
 	z-index: 10;
 
+	@media(max-width: 1410px) {
+		position: static;
+		width: auto;
+	}
+
 	&__player {
 		@include display(flex);
 		padding: em(5);
