@@ -213,6 +213,10 @@ export default class Canvas extends Component {
 		this.clearArrays();
 		this.pushPaths();
 	}
+
+	noDragging(e) {
+		e.preventDefault();
+	}
 	
 
 	render() {
@@ -251,7 +255,7 @@ export default class Canvas extends Component {
 		}
 
 		return (
-			<div className="canvas__wrap">
+			<div className="canvas__wrap" onDragStart={this.noDragging}>
 				{canvasSettings}
 				{canvas}
 			</div>

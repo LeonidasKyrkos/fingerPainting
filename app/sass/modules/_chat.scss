@@ -11,6 +11,7 @@ $module: 		'chat';
 	line-height: 1.4;
 	font-family: $font-family-secondary;
 	font-size: em($fontSize);
+	@include user-select(none);
 
 	&__history {
 		@include flex-grow(1);

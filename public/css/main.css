@@ -149,13 +149,13 @@ body {
   font-family: "Farsan", Tahoma, sans-serif;
   background-color: #282828;
   color: white;
-  line-height: 1.1; }
+  line-height: 1.1;
+  padding-right: 8em; }
 
 .wrapper {
   padding: 1.5em 0.75em;
   width: 60em;
-  margin: 0 auto;
-  max-width: 100%; }
+  margin: 0 auto; }
   .wrapper::after {
     clear: both;
     content: "";
@@ -452,7 +452,11 @@ h1, h2, h3, h4, h5 {
   display: block; }
   .canvas__wrap {
     width: calc(80% - 20px);
-    max-width: 100%; }
+    max-width: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none; }
   .canvas__settings {
     display: -webkit-box;
     display: -moz-box;
@@ -469,7 +473,11 @@ h1, h2, h3, h4, h5 {
     -ms-align-items: baseline;
     -o-align-items: baseline;
     align-items: baseline;
-    -ms-flex-align: baseline; }
+    -ms-flex-align: baseline;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none; }
   .canvas__settings-btn {
     margin-right: 0.25em; }
   .canvas__colours {
@@ -607,7 +615,11 @@ h1, h2, h3, h4, h5 {
 .game__timer {
   font-size: 5em;
   margin-left: auto;
-  min-width: 0.9em; }
+  min-width: 0.9em;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
 
 .game__puzzle {
   text-align: center;
@@ -647,7 +659,11 @@ h1, h2, h3, h4, h5 {
   -ms-flex-direction: column;
   line-height: 1.4;
   font-family: "Open Sans Condensed", Helvetica, sans-serif;
-  font-size: 0.8em; }
+  font-size: 0.8em;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
   .chat__history {
     -webkit-flex-grow: 1;
     -moz-flex-grow: 1;
@@ -689,7 +705,7 @@ h1, h2, h3, h4, h5 {
   max-width: 100%;
   position: fixed;
   top: 0;
-  left: 0;
+  right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.85);
   padding: 1em;

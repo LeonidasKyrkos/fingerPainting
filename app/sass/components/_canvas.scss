@@ -9,11 +9,13 @@ $module: 		'canvas';
 	&__wrap {
 		width: $layout-width-canvas;
 		max-width: 100%;
+		@include user-select(none);
 	}
 
 	&__settings {
 		@include display(flex);
 		@include align-items(baseline);
+		@include user-select(none);
 	}
 
 	&__settings-btn {

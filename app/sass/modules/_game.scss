@@ -24,6 +24,7 @@ $module: 			'game';
 		font-size: em($fontSize);
 		margin-left: auto;
 		min-width: em(90,$fontSize);
+		@include user-select(none);
 	}
 
 	&__puzzle {

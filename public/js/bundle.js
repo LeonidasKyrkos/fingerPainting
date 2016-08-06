@@ -705,6 +705,11 @@ var Canvas = function (_Component) {
 			this.pushPaths();
 		}
 	}, {
+		key: 'noDragging',
+		value: function noDragging(e) {
+			e.preventDefault();
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			var canvas = _react2.default.createElement('canvas', { width: '100', height: '750px', className: 'canvas', id: 'canvas' });
@@ -738,7 +743,7 @@ var Canvas = function (_Component) {
 
 			return _react2.default.createElement(
 				'div',
-				{ className: 'canvas__wrap' },
+				{ className: 'canvas__wrap', onDragStart: this.noDragging },
 				canvasSettings,
 				canvas
 			);
