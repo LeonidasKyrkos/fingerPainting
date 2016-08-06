@@ -181,6 +181,8 @@ export default class Canvas extends Component {
 
 			this.ctx.lineWidth = first.size;
 			this.ctx.strokeStyle = first.color;
+			this.ctx.shadowBlur = 1;
+			this.ctx.shadowColor = first.color;
 			this.ctx.stroke();
 		}
 	}
@@ -212,6 +214,10 @@ export default class Canvas extends Component {
 		this.clearContext(this.ctx);
 		this.clearArrays();
 		this.pushPaths();
+	}
+
+	noDragging(e) {
+		e.preventDefault();
 	}
 	
 
@@ -251,7 +257,7 @@ export default class Canvas extends Component {
 		}
 
 		return (
-			<div className="canvas__wrap">
+			<div className="canvas__wrap" onDragStart={this.noDragging}>
 				{canvasSettings}
 				{canvas}
 			</div>

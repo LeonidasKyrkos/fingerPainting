@@ -14,13 +14,13 @@ body {
 	background-color: $color3;
 	color: white;
 	line-height: ($font-lineheight-base/$font-size-base);
+	padding-right: em(160);
 }
 
 .wrapper {
 	padding: em(30) em(15);
 	width: em(1200);
 	margin: 0 auto;
-	max-width: 100%;
 	@include clearfix;
 }
 

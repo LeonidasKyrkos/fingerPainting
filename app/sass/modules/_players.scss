@@ -5,11 +5,16 @@ $module:			'players';
 	max-width: 100%;
 	position: fixed;
 	top: 0;
-	left: 0;
+	right: 0;
 	bottom: 0;
 	background-color: rgba(black,0.85);
 	padding: em(20);
 	z-index: 10;
+
+	@media(max-width: 1410px) {
+		position: static;
+		width: auto;
+	}
 
 	&__player {
 		@include display(flex);

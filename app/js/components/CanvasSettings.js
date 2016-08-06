@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import Store from '../stores/Store';
 import { isEqual as _isEqual } from 'lodash';
+import { ChromePicker } from 'react-color';
+
 
 export default class CanvasSettings extends React.Component {
 	constructor(props) {
@@ -8,21 +10,10 @@ export default class CanvasSettings extends React.Component {
 		this.onChange = this.onChange.bind(this);
 		this.state = Store.getState();
 		this.setupVariables();
+		this.state.lineColour = 'white';
 	}
 
 	setupVariables() {
-		this.colors = {
-			white: '#FFFFFF',
-			brown: '#d15d0a',
-			yellow: '#FFFB21',
-			blue: '#363CFF',
-			pink: '#ff3399',
-			green: '#33cc33',
-			lightBlue: '#00ccff',
-			red: '#ff0000',
-			canvasGrey: '#4E4E4E'
-		}
-
 		this.sizes = {
 			small: 3,
 			medium: 5,
@@ -34,7 +25,7 @@ export default class CanvasSettings extends React.Component {
 	setupCtx() {
 		this.props.ctx.strokeStyle = "#FFFFFF";
 		this.props.ctx.shadowColor = "#FFFFFF";
-		this.props.ctx.shadowBlur = 0;
+		this.props.ctx.shadowBlur = 1;
 		this.props.ctx.lineJoin = "round";
   		this.props.ctx.lineWidth = 5;
   		this.props.ctx.translate(0.5, 0.5);
@@ -99,18 +90,28 @@ export default class CanvasSettings extends React.Component {
 		return '';
 	}
 
-	handleColorChange(e) {
-		let colorPickers = document.querySelectorAll('[data-js="colorPicker"]');
+	openColourPicker(e) {
+		document.querySelector('[data-js="colour-picker"]').className = 'canvas__colour-picker active';
+	}
 
-		colorPickers.forEach((color,index)=>{
-			color.className = 'canvas__colour';
+	closeColourPicker(e) {
+		e.stopPropagation();
+		this.colourTimer = setTimeout(()=>{
+			document.querySelector('[data-js="colour-picker"]').className = 'canvas__colour-picker';
+		},600)
+	}
+
+	clearTimer(e) {
+		clearTimeout(this.colourTimer);
+	}
+
+	handleColorChange(colour) {
+		this.setState({
+			lineColour: colour.hex
 		});
-		e.target.className = 'canvas__colour active';
 
-		let newColor = e.target.getAttribute('data-color');
-
-		this.props.ctx.strokeStyle = newColor;
-		this.props.ctx.shadowColor = newColor;
+		this.props.ctx.strokeStyle = colour.hex;
+		this.props.ctx.shadowColor = colour.hex;		
 	}
 
 	renderColorPicker() {
@@ -155,9 +156,10 @@ export default class CanvasSettings extends React.Component {
 					</ul>
 				</li>
 				<li className="canvas__colours">
-					<ul>
-						{this.renderColorPicker()}
-					</ul>
+					<div onMouseOver={this.clearTimer.bind(this)} onMouseLeave={this.closeColourPicker.bind(this)} className="canvas__colour-picker" data-js="colour-picker">
+						<ChromePicker onChangeComplete={ this.handleColorChange.bind(this) } />
+					</div>
+					<span style={ { backgroundColor: this.state.lineColour } } onClick={this.openColourPicker.bind(this)} className="canvas__colour-opener"></span>			
 				</li>
 			</ul>
 		)

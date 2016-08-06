@@ -18,7 +18,6 @@ class Game {
 		this.sockets = {};
 		this.roundCount = 1;		
 		this.attachDataListener();
-		this.getDictionary();
 		this.newPlayer(player, socket);
 		this.resetGame();
 	}
@@ -47,13 +46,14 @@ class Game {
 
 	attachDataListener() {
 		e.on('store',(store)=>{
+			if(!this.dictionary) { this.getDictionary(store.dictionary); };
 			this.prepStoreAndCallUpdate(store);
 		});
 
 		this.data.listenToData(this,e);		
 	}	
 
-	getDictionary(dictionary='other') {
+	getDictionary(dictionary='default') {
 		let promise = this.data.getDictionary(dictionary);
 
 		promise.then((snapshot)=>{

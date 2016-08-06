@@ -5,6 +5,7 @@ $module: 			'game';
 	&__wrap {
 		@include display(flex);
 		@include flex-wrap(wrap);
+		margin-bottom: em(50);
 	}
 
 	&__title {
@@ -24,6 +25,7 @@ $module: 			'game';
 		font-size: em($fontSize);
 		margin-left: auto;
 		min-width: em(90,$fontSize);
+		@include user-select(none);
 	}
 
 	&__puzzle {

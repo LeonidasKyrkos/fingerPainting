@@ -36,13 +36,13 @@ export default class Home extends Component {
 			)
 		} else {
 			return (
-				<div>
-					<Players userId={this.props.userId} />
+				<div>					
 					<div className="game__wrap">
 						<Puzzle />			
 						<Canvas />
 						<Chat />
 					</div>	
+					<Players userId={this.props.userId} />
 				</div>						
 			)
 		}
