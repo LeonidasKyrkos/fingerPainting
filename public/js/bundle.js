@@ -661,6 +661,8 @@ var Canvas = function (_Component) {
 
 				this.ctx.lineWidth = first.size;
 				this.ctx.strokeStyle = first.color;
+				this.ctx.shadowBlur = 1;
+				this.ctx.shadowColor = first.color;
 				this.ctx.stroke();
 			}
 		}
@@ -814,7 +816,7 @@ var CanvasSettings = function (_React$Component) {
 		value: function setupCtx() {
 			this.props.ctx.strokeStyle = "#FFFFFF";
 			this.props.ctx.shadowColor = "#FFFFFF";
-			this.props.ctx.shadowBlur = 0;
+			this.props.ctx.shadowBlur = 1;
 			this.props.ctx.lineJoin = "round";
 			this.props.ctx.lineWidth = 5;
 			this.props.ctx.translate(0.5, 0.5);

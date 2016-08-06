@@ -181,6 +181,8 @@ export default class Canvas extends Component {
 
 			this.ctx.lineWidth = first.size;
 			this.ctx.strokeStyle = first.color;
+			this.ctx.shadowBlur = 1;
+			this.ctx.shadowColor = first.color;
 			this.ctx.stroke();
 		}
 	}

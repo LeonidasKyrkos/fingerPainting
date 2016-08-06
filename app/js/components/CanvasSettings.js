@@ -25,7 +25,7 @@ export default class CanvasSettings extends React.Component {
 	setupCtx() {
 		this.props.ctx.strokeStyle = "#FFFFFF";
 		this.props.ctx.shadowColor = "#FFFFFF";
-		this.props.ctx.shadowBlur = 0;
+		this.props.ctx.shadowBlur = 1;
 		this.props.ctx.lineJoin = "round";
   		this.props.ctx.lineWidth = 5;
   		this.props.ctx.translate(0.5, 0.5);
