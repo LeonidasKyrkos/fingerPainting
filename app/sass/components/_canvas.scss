@@ -59,4 +59,25 @@ $module: 		'canvas';
 		@include transform(translateY(-50%));
 		pointer-events: none;
 	}
+
+	&__colour-picker {
+		position: absolute;
+
+		> div {
+			display: none;
+		}
+
+		&.active {
+			> div {
+				display: block;
+			}
+		}
+	}
+
+	&__colour-opener {
+		display: block;
+		width: em(25);
+		height: em(25);
+		background-color: white;
+	}
 }

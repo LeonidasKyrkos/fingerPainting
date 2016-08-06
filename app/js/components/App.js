@@ -45,7 +45,7 @@ export default class App extends Component {
 	}
 
 	joinRoom(room) {
-		this.props.history.push(room);
+		this.context.router.push(room);
 	}
 
 	renderChildren() {
@@ -66,3 +66,7 @@ export default class App extends Component {
 		);
 	}
 }
+
+App.contextTypes = {
+	router: React.PropTypes.object.isRequired
+};

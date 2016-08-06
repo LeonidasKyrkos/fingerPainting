@@ -532,6 +532,17 @@ h1, h2, h3, h4, h5 {
     -o-transform: translateY(-50%);
     transform: translateY(-50%);
     pointer-events: none; }
+  .canvas__colour-picker {
+    position: absolute; }
+    .canvas__colour-picker > div {
+      display: none; }
+    .canvas__colour-picker.active > div {
+      display: block; }
+  .canvas__colour-opener {
+    display: block;
+    width: 1.25em;
+    height: 1.25em;
+    background-color: white; }
 
 .table {
   background-color: #424242;
