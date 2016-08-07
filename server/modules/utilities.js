@@ -13,7 +13,8 @@ firebase.roomsRef.on('value',(snapshot)=>{
 function joinHandler(request,socket){
 	// run some room tests (room existence / user.name / password)
 	let status = tests.roomTests(request,socket);
-	let cookie = socket.request.cookies['refresh_token'];
+	let cookie = socket.request.cookies['fingerpainting_refresh_token'] || '';
+	console.log(cookie);
 
 	if(status.status) {
 		// setup
