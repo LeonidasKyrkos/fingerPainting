@@ -7,6 +7,9 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io',{ rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling'] })(server);
 var basicAuth = require('basic-auth');
+var cookieParser = require('socket.io-cookie-parser');
+
+io.use(cookieParser());
 
 // configure server
 server.listen(port);

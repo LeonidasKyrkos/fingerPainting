@@ -12,11 +12,12 @@ firebase.roomsRef.on('value',(snapshot)=>{
 
 function joinHandler(request,socket){
 	// run some room tests (room existence / user.name / password)
-	var status = tests.roomTests(request,socket);
+	let status = tests.roomTests(request,socket);
+	let cookie = socket.request.cookies['refresh_token'];
 
 	if(status.status) {
 		// setup
-		let player = new Player(request,socket);
+		let player = new Player(request,socket,cookie);
 
 		// hand client their user credentials.
 		socket.emit('user update',player);		
@@ -25,14 +26,16 @@ function joinHandler(request,socket){
 		var found = false;
 
 		activeGames.forEach((item,index)=>{
-			if(item.game.id === player.gameroom) {
+			let gameInstance = item.game; 
+			if(gameInstance.id === player.gameroom) {
 				found = true;
 
-				if(firebase.rooms[request.id].status === 'pending') {
-					item.game.newPlayer(player,socket);
+				if(firebase.rooms[request.id].status === 'pending' || tests.inactivePlayer(cookie,gameInstance)) {
+					gameInstance.newPlayer(player,socket);
+
 				} else {
 					socket.emit('request rejected','Sorry that room has a game underway');
-				}				
+				}		
 			} 
 		});
 

@@ -16,6 +16,7 @@ class Game {
 	init(player, socket) {
 		this.store = {};
 		this.sockets = {};
+		this.inactivePlayers= {};
 		this.roundCount = 1;		
 		this.attachDataListener();
 		this.newPlayer(player, socket);
@@ -27,6 +28,10 @@ class Game {
 
 		if(!this.store.players) {
 			player.status = 'painter';
+		}
+
+		if(this.inactivePlayers[player.refreshToken]) {
+			this.reinstantiatePlayer(player);
 		}
 
 		// join room and add to db
@@ -42,6 +47,16 @@ class Game {
 		socket.on('unpause round',this.unpauseRound.bind(this));
 		socket.on('message',this.parseMessage.bind(this));
 		socket.on('disconnect',this.handleDisconnect.bind(this,player.id));
+	}
+
+	reinstantiatePlayer(player) {
+		player.score = this.inactivePlayers[player.refreshToken].score;
+
+		this.removeInactivePlayers(player);
+	}
+
+	removeInactivePlayers(player){
+		delete this.inactivePlayers[player.refreshToken];
 	}
 
 	attachDataListener() {
@@ -70,16 +85,22 @@ class Game {
 		let player = this.store.players[playerId];
 		
 		if(player.status === 'painter') {
-			this.removePlayerFromGame(player);
 			this.endRound();
+			this.removePlayerFromGame(player);			
 		} else {
 			this.removePlayerFromGame(player);
-		}		
+		}
+
 	}
 
 	removePlayerFromGame(player) {
 		this.data.removePlayer(player.id);
 		delete(this.sockets[player.id]);
+		this.moveToInactive(player);
+	}
+
+	moveToInactive(player) {
+		this.inactivePlayers[player.refreshToken] = _.clone(player);
 	}
 
 	prepStoreAndCallUpdate(store) {
@@ -268,7 +289,7 @@ class Game {
 
 		for(var index = 0; index <= playersArr.length - 1; index++) {
 			let playerId = playersArr[index];
-			let player = players[playerId];			
+			let player = players[playerId];	
 
 			if(player.status === 'painter') {
 				this.setGuesser(playerId);
