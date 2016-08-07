@@ -356,6 +356,7 @@ class Game {
 		this.data.setStatus('pending');
 		this.resetGame();
 		this.resetPlayers();
+		this.inactivePlayers = {};
 		this.roundCount = 1;
 		this.resetChatlog();
 
