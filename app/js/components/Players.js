@@ -29,14 +29,21 @@ export default class players extends Component {
 	getClassName(player) {
 		let status = player.status;
 		let correct = player.correct;
+		let classname = '';
 
 		if(status === 'painter') {
-			return 'active';
+			classname += ' active';
+		}
+
+		if(player.name === this.state.player.name) {
+			classname += ' player';
 		}
 
 		if(correct) {
-			return 'correct';
+			classname += ' correct';
 		}
+
+		return classname;
 	}
 
 	closeplayers(e) {
@@ -68,7 +75,7 @@ export default class players extends Component {
 
 			return sortedPlayersArr.map((item,index)=>{
 				let player = sortedPlayers[item];
-				let classname = 'players__player ' + this.getClassName(player);
+				let classname = 'players__player' + this.getClassName(player);
 
 				return (
 					<li key={player.id}>

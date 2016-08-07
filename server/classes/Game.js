@@ -37,6 +37,8 @@ class Game {
 		// join room and add to db
 		room.handler(this.id,player);
 
+		socket.emit('player',player);
+
 		socket.on('path update',(path)=>{
 			this.store.paths = path;
 			this.updateStore(this.store);
@@ -112,6 +114,17 @@ class Game {
 		this.store = store;
 		this.store.currentRoom = '/rooms/' + this.id;
 		this.emitToAllSockets('store update', this.store);
+		this.updateClientPlayerObject();
+	}
+
+	updateClientPlayerObject() {
+		for(let id in this.sockets) {
+			for(let playerId in this.store.players) {
+				if(id === playerId) {
+					this.sockets[id].emit('player',this.store.players[playerId]);
+				}
+			}
+		}
 	}
 
 	startRound() {

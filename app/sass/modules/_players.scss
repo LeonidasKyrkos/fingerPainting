@@ -23,7 +23,19 @@ $module:			'players';
 		position: relative;
 
 		&.active {
-			color: $color5;
+			&:before {
+				$fontSize: 10;
+				@include font-size($fontSize);
+				content: "👑";
+				position: absolute;
+				left: em(-7,$fontSize);
+				color: $color5;
+				top: em(3,$fontSize);
+			}
+		}
+
+		&.player {
+			color: $color6;
 		}
 
 		&.correct {

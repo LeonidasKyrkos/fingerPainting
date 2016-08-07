@@ -55,6 +55,11 @@ var Actions = function () {
 		value: function updatePlayerStatus(playerStatus) {
 			return playerStatus;
 		}
+	}, {
+		key: 'updatePlayer',
+		value: function updatePlayer(player) {
+			return player;
+		}
 	}]);
 
 	return Actions;
@@ -367,6 +372,10 @@ var App = function (_Component) {
 
 			this.socket.on('debug', function (debug) {
 				console.log(debug);
+			});
+
+			this.socket.on('player', function (player) {
+				_Actions2.default.updatePlayer(player);
 			});
 
 			_Store2.default.listen(this.onChange.bind(this));
@@ -1839,14 +1848,21 @@ var players = function (_Component) {
 		value: function getClassName(player) {
 			var status = player.status;
 			var correct = player.correct;
+			var classname = '';
 
 			if (status === 'painter') {
-				return 'active';
+				classname += ' active';
+			}
+
+			if (player.name === this.state.player.name) {
+				classname += ' player';
 			}
 
 			if (correct) {
-				return 'correct';
+				classname += ' correct';
 			}
+
+			return classname;
 		}
 	}, {
 		key: 'closeplayers',
@@ -1885,7 +1901,7 @@ var players = function (_Component) {
 					return {
 						v: sortedPlayersArr.map(function (item, index) {
 							var player = sortedPlayers[item];
-							var classname = 'players__player ' + _this2.getClassName(player);
+							var classname = 'players__player' + _this2.getClassName(player);
 
 							return _react2.default.createElement(
 								'li',
@@ -2501,6 +2517,7 @@ var Store = function () {
 		this.error = '';
 		this.dictionarys = {};
 		this.playerStatus = false;
+		this.player = {};
 
 		this.bindListeners({
 			handleUpdateStore: _Actions2.default.UPDATE_STORE,
@@ -2509,7 +2526,8 @@ var Store = function () {
 			handleUpdatePuzzleArray: _Actions2.default.UPDATE_PUZZLE,
 			handleUpdateError: _Actions2.default.UPDATE_ERROR,
 			handleUpdateDictionarys: _Actions2.default.UPDATE_DICTIONARYS,
-			handleUpdatePlayerStatus: _Actions2.default.UPDATE_PLAYER_STATUS
+			handleUpdatePlayerStatus: _Actions2.default.UPDATE_PLAYER_STATUS,
+			handleUpdatePlayer: _Actions2.default.UPDATE_PLAYER
 		});
 	}
 
@@ -2547,6 +2565,11 @@ var Store = function () {
 		key: 'handleUpdatePlayerStatus',
 		value: function handleUpdatePlayerStatus(playerStatus) {
 			this.playerStatus = playerStatus;
+		}
+	}, {
+		key: 'handleUpdatePlayer',
+		value: function handleUpdatePlayer(player) {
+			this.player = player;
 		}
 	}]);
 
