@@ -10,6 +10,7 @@ class Store {
 		this.error = '';
 		this.dictionarys = {};
 		this.playerStatus = false;
+		this.player = {};
 
 		this.bindListeners({
 			handleUpdateStore: Actions.UPDATE_STORE,
@@ -18,7 +19,8 @@ class Store {
 			handleUpdatePuzzleArray: Actions.UPDATE_PUZZLE,
 			handleUpdateError: Actions.UPDATE_ERROR,
 			handleUpdateDictionarys: Actions.UPDATE_DICTIONARYS,
-			handleUpdatePlayerStatus: Actions.UPDATE_PLAYER_STATUS
+			handleUpdatePlayerStatus: Actions.UPDATE_PLAYER_STATUS,
+			handleUpdatePlayer: Actions.UPDATE_PLAYER
 		})
 	}
 
@@ -48,6 +50,10 @@ class Store {
 
 	handleUpdatePlayerStatus(playerStatus) {
 		this.playerStatus = playerStatus;
+	}
+
+	handleUpdatePlayer(player) {
+		this.player = player;
 	}
 }
 

@@ -34,6 +34,10 @@ export default class App extends Component {
 			console.log(debug);
 		});
 
+		this.socket.on('player',(player)=>{
+			Actions.updatePlayer(player);
+		});
+
 		Store.listen(this.onChange.bind(this));
 	}
 
