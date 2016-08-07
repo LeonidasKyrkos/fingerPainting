@@ -47,7 +47,11 @@ class Game {
 		socket.on('start round',this.startRound.bind(this));
 		socket.on('pause round',this.pauseRound.bind(this));
 		socket.on('unpause round',this.unpauseRound.bind(this));
-		socket.on('message',this.parseMessage.bind(this));
+		socket.on('message',(message)=>{
+			if(!this.blockUpdates) {
+				this.parseMessage(message);
+			}			
+		});
 		socket.on('disconnect',this.handleDisconnect.bind(this,player.id));
 	}
 
@@ -279,13 +283,34 @@ class Game {
 
 		if(this.roundCount >= playersArr.length * 2) {
 			this.endGame();
+			return;
+		}
+
+		if(playersArr.length <= 1) {
+			this.resetRoom();		
+			return;		
+		}
+
+		if(this.store.status === 'playing') {
+			this.roundDelay();
 		} else {
-			if(playersArr.length <= 1) {
-				this.resetRoom();				
-			} else {
+			this.newPainter();
+		}		
+	}
+
+	roundDelay() {
+		this.timer = 5;
+		this.blockUpdates = true;
+
+		this.delay = setInterval(()=>{
+			this.data.updateTimer(this.timer);
+			if(this.timer <= 0) {
+				clearInterval(this.delay);
+				this.blockUpdates = false;
 				this.newRound();
 			}
-		}		
+			this.timer--;
+		},1000);
 	}
 
 	newRound() {
