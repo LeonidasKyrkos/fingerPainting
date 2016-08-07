@@ -58,6 +58,7 @@
     "gulp-uglify": "^1.4.2",
     "gulp-util": "^3.0.7",
     "socket.io": "^1.4.8",
+    "socket.io-cookie-parser": "^1.0.0",
     "utf-8-validate": "^1.2.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
