@@ -493,7 +493,11 @@ var Canvas = function (_Component) {
 	}, {
 		key: 'shouldComponentUpdate',
 		value: function shouldComponentUpdate(nextProps, nextState) {
-			return this.runUpdateTests(nextProps, nextState);
+			if (!this.state.playerStatus) {
+				return this.runUpdateTests(nextProps, nextState);
+			} else {
+				return false;
+			}
 		}
 	}, {
 		key: 'runUpdateTests',
@@ -535,6 +539,7 @@ var Canvas = function (_Component) {
 			this.current = this.points.length || 0;
 			this.clearArrays();
 			this.addToArray(this.getX(e), this.getY(e), false);
+			this.pushPaths();
 		}
 
 		// drag
@@ -543,7 +548,8 @@ var Canvas = function (_Component) {
 		key: 'dragBrush',
 		value: function dragBrush(e) {
 			if (this.painting) {
-				if (this.points.length > 30) {
+				if (this.points.length > 15) {
+					this.pushPaths();
 					var prevArr = this.points;
 					this.current++;
 					this.clearArrays();
@@ -566,6 +572,7 @@ var Canvas = function (_Component) {
 	}, {
 		key: 'stopDrawing',
 		value: function stopDrawing() {
+			this.pushPaths();
 			this.painting = false;
 		}
 
@@ -601,8 +608,6 @@ var Canvas = function (_Component) {
 				size: this.ctx.lineWidth,
 				dragging: dragStatus
 			});
-
-			this.pushPaths();
 			this.redraw();
 		}
 	}, {

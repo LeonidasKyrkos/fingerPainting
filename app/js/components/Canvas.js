@@ -30,7 +30,11 @@ export default class Canvas extends Component {
 	}
 
 	shouldComponentUpdate(nextProps,nextState) {
-		return this.runUpdateTests(nextProps,nextState);
+		if(!this.state.playerStatus) {
+			return this.runUpdateTests(nextProps,nextState);
+		} else {
+			return false;
+		}		
 	}
 
 	runUpdateTests(nextProps,nextState) {
@@ -66,12 +70,14 @@ export default class Canvas extends Component {
 		this.current = this.points.length || 0;
 		this.clearArrays();
 		this.addToArray(this.getX(e),this.getY(e),false);
+		this.pushPaths();
 	}
 
 	// drag
 	dragBrush(e) {
 		if(this.painting) {
-			if(this.points.length > 30) {
+			if(this.points.length > 15) {
+				this.pushPaths();
 				let prevArr = this.points;
 				this.current++;
 				this.clearArrays();
@@ -91,6 +97,7 @@ export default class Canvas extends Component {
 
 	// finish
 	stopDrawing() {
+		this.pushPaths();
 		this.painting = false;
 	}
 
@@ -117,8 +124,6 @@ export default class Canvas extends Component {
 			size: this.ctx.lineWidth,
 			dragging: dragStatus
 		})
-
-		this.pushPaths();
 		this.redraw();
 	}
 
