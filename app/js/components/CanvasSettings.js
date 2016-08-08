@@ -106,9 +106,7 @@ export default class CanvasSettings extends React.Component {
 	}
 
 	handleColorChange(colour) {
-		this.setState({
-			lineColour: colour.hex
-		});
+		document.querySelector('[data-js="colour-opener"]').setAttribute('style','background-color: ' + colour.hex);
 
 		this.props.ctx.strokeStyle = colour.hex;
 		this.props.ctx.shadowColor = colour.hex;		
@@ -159,7 +157,7 @@ export default class CanvasSettings extends React.Component {
 					<div onMouseOver={this.clearTimer.bind(this)} onMouseLeave={this.closeColourPicker.bind(this)} className="canvas__colour-picker" data-js="colour-picker">
 						<ChromePicker onChangeComplete={ this.handleColorChange.bind(this) } />
 					</div>
-					<span style={ { backgroundColor: this.state.lineColour } } onClick={this.openColourPicker.bind(this)} className="canvas__colour-opener"></span>			
+					<span style={ { backgroundColor: 'white' } } data-js="colour-opener" onClick={this.openColourPicker.bind(this)} className="canvas__colour-opener"></span>			
 				</li>
 			</ul>
 		)
