@@ -7,7 +7,7 @@ export default class App extends Component {
 	constructor(props) {
 		super(props);
 		this.socket = io.connect('http://52.209.86.125:443/');
-
+	}
 
 	componentDidMount() {
 		this.socket.on('connected',(user)=>{
