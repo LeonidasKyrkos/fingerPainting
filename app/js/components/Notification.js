@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Store from '../stores/Store';
 
-export default class Notifications extends Component {
+export default class Notification extends Component {
 	constructor() {
 		super();
 
@@ -21,7 +21,7 @@ export default class Notifications extends Component {
 		let newMsg = nextState.notification.text;
 		let oldMsg = this.state.notification.text;
 
-		if(newMsg.length && newMsg !== oldMsg) {
+		if(newMsg !== oldMsg) {
 			return true;
 		} else {
 			return false;
@@ -35,6 +35,7 @@ export default class Notifications extends Component {
 	render() {
 		let notification = this.state.notification;
 		let classes = 'notification ' + notification.type;
+		if(!notification.text.length) {	classes += ' hide' };
 
 		return (
 			<div className={classes}>

@@ -16,13 +16,7 @@ export default class Canvas extends Component {
 
 	componentDidMount() {
 		Store.listen(this.onChange);
-		this.setupCanvas();
-
-		if(this.state.socket) {
-			this.state.socket.on('new round',()=>{
-				this.clearContext(this.ctx);
-			});
-		}		
+		this.setupCanvas();		
 	}
 
 	componentWillUnmount() {
@@ -30,11 +24,7 @@ export default class Canvas extends Component {
 	}
 
 	shouldComponentUpdate(nextProps,nextState) {
-		if(!this.state.playerStatus) {
-			return this.runUpdateTests(nextProps,nextState);
-		} else {
-			return false;
-		}		
+		return this.runUpdateTests(nextProps,nextState);
 	}
 
 	runUpdateTests(nextProps,nextState) {
@@ -46,7 +36,7 @@ export default class Canvas extends Component {
 			return true;
 		}
 		
-		if(nextState.playerStatus !==  this.state.playerStatus) {
+		if(nextState.player.status !==  this.state.player.status) {
 			return true;
 		}
 
@@ -135,7 +125,7 @@ export default class Canvas extends Component {
 	redraw() {
 		let path = [];
 
-		if(this.state.playerStatus) {
+		if(this.state.player.status) {
 			path = this.points;
 		} else if (this.state.store.paths) {
 			path = this.state.store.paths.path;
@@ -234,12 +224,12 @@ export default class Canvas extends Component {
 			this.canvasX = this.canvas.offsetLeft;
 			this.canvasY = this.canvas.offsetTop;
 
-			if(!this.state.playerStatus) {
+			if(!this.state.player.status) {
 				this.redraw();
 			}
 		}
 
-		if(this.state.playerStatus) {
+		if(this.state.player.status === 'painter') {
 			canvas = (
 				<canvas width="100" height="750px" className="canvas" id="canvas" 
 						onMouseDown={this.startDrawing.bind(this)} 
@@ -255,7 +245,6 @@ export default class Canvas extends Component {
 						scope={this} 
 						fullClear={this.fullClear} 
 						ctx={this.ctx}
-						playerStatus={this.state.playerStatus}
 					/>
 				)
 			}

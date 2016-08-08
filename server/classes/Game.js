@@ -44,6 +44,7 @@ class Game {
 		// join room and add to db
 		room.handler(this.id,player);
 
+		socket.emit('join room','/rooms/' + this.id);
 		socket.emit('player',player);
 
 		socket.on('path update',(path)=>{
@@ -138,7 +139,6 @@ class Game {
 
 	updateStore(store) {
 		this.store = store;
-		this.store.currentRoom = '/rooms/' + this.id;
 		this.emitToAllSockets('store update', this.store);
 		this.updateClientPlayerObject();
 	}
@@ -325,6 +325,7 @@ class Game {
 		this.delay = setInterval(()=>{
 			this.emitToAllSockets('notification',{ text: 'Next round starting in ' + timer, type: 'default' });
 			if(timer <= 0) {
+				this.emitToAllSockets('notification',{ text: '', type: 'default' });
 				this.newRound();
 				clearInterval(this.delay);
 				this.blockUpdates = false;
@@ -337,8 +338,10 @@ class Game {
 		this.roundCount++;
 		this.resetGame();
 		this.newPainter();
-		this.startRound();
-		this.emitToAllSockets('new round');
+
+		if(this.store.players && Object.keys(this.store.players).length > 1) {
+			this.startRound();
+		}		
 	}
 
 	newPainter() {

@@ -326,15 +326,11 @@ var _Actions = require('../actions/Actions');
 
 var _Actions2 = _interopRequireDefault(_Actions);
 
-var _Store = require('../stores/Store');
-
-var _Store2 = _interopRequireDefault(_Store);
-
 var _general = require('../utilities/general.js');
 
-var _Notifications = require('./Notifications');
+var _Notification = require('./Notification');
 
-var _Notifications2 = _interopRequireDefault(_Notifications);
+var _Notification2 = _interopRequireDefault(_Notification);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -353,7 +349,6 @@ var App = function (_Component) {
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(App).call(this, props));
 
 		_this.socket = io.connect('http://localhost:3000');
-		_this.state = _Store2.default.getState();
 		return _this;
 	}
 
@@ -368,7 +363,6 @@ var App = function (_Component) {
 
 			this.socket.on('store update', function (store) {
 				_Actions2.default.updateStore(store);
-				(0, _general.painterTest)(store.players, _this2.state.socket.id) ? _Actions2.default.updatePlayerStatus(true) : _Actions2.default.updatePlayerStatus(false);
 			});
 
 			this.socket.on('puzzle', function (puzzleArray) {
@@ -388,19 +382,12 @@ var App = function (_Component) {
 			});
 
 			this.socket.on('notification', function (notification) {
-				console.log(notification);
 				_Actions2.default.updateNotification(notification);
 			});
 
-			_Store2.default.listen(this.onChange.bind(this));
-		}
-	}, {
-		key: 'onChange',
-		value: function onChange(state) {
-			if (state.store.currentRoom !== this.state.store.currentRoom) {
-				this.setState(state);
-				this.joinRoom(state.store.currentRoom);
-			}
+			this.socket.on('join room', function (room) {
+				_this2.joinRoom(room);
+			});
 		}
 	}, {
 		key: 'joinRoom',
@@ -419,14 +406,12 @@ var App = function (_Component) {
 	}, {
 		key: 'render',
 		value: function render() {
-			var children = this.renderChildren();
-			var notification = this.state.notification.text.length ? _react2.default.createElement(_Notifications2.default, null) : null;
 
 			return _react2.default.createElement(
 				'div',
 				null,
-				children,
-				notification
+				this.renderChildren(),
+				_react2.default.createElement(_Notification2.default, null)
 			);
 		}
 	}]);
@@ -441,7 +426,7 @@ App.contextTypes = {
 	router: _react2.default.PropTypes.object.isRequired
 };
 
-},{"../actions/Actions":1,"../stores/Store":22,"../utilities/general.js":23,"./Notifications":15,"react":"react"}],6:[function(require,module,exports){
+},{"../actions/Actions":1,"../utilities/general.js":23,"./Notification":15,"react":"react"}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -490,16 +475,8 @@ var Canvas = function (_Component) {
 	_createClass(Canvas, [{
 		key: 'componentDidMount',
 		value: function componentDidMount() {
-			var _this2 = this;
-
 			_Store2.default.listen(this.onChange);
 			this.setupCanvas();
-
-			if (this.state.socket) {
-				this.state.socket.on('new round', function () {
-					_this2.clearContext(_this2.ctx);
-				});
-			}
 		}
 	}, {
 		key: 'componentWillUnmount',
@@ -509,11 +486,7 @@ var Canvas = function (_Component) {
 	}, {
 		key: 'shouldComponentUpdate',
 		value: function shouldComponentUpdate(nextProps, nextState) {
-			if (!this.state.playerStatus) {
-				return this.runUpdateTests(nextProps, nextState);
-			} else {
-				return false;
-			}
+			return this.runUpdateTests(nextProps, nextState);
 		}
 	}, {
 		key: 'runUpdateTests',
@@ -526,7 +499,7 @@ var Canvas = function (_Component) {
 				return true;
 			}
 
-			if (nextState.playerStatus !== this.state.playerStatus) {
+			if (nextState.player.status !== this.state.player.status) {
 				return true;
 			}
 
@@ -639,7 +612,7 @@ var Canvas = function (_Component) {
 		value: function redraw() {
 			var path = [];
 
-			if (this.state.playerStatus) {
+			if (this.state.player.status) {
 				path = this.points;
 			} else if (this.state.store.paths) {
 				path = this.state.store.paths.path;
@@ -751,12 +724,12 @@ var Canvas = function (_Component) {
 				this.canvasX = this.canvas.offsetLeft;
 				this.canvasY = this.canvas.offsetTop;
 
-				if (!this.state.playerStatus) {
+				if (!this.state.player.status) {
 					this.redraw();
 				}
 			}
 
-			if (this.state.playerStatus) {
+			if (this.state.player.status === 'painter') {
 				canvas = _react2.default.createElement('canvas', { width: '100', height: '750px', className: 'canvas', id: 'canvas',
 					onMouseDown: this.startDrawing.bind(this),
 					onMouseUp: this.stopDrawing.bind(this),
@@ -767,8 +740,7 @@ var Canvas = function (_Component) {
 					canvasSettings = _react2.default.createElement(_CanvasSettings2.default, {
 						scope: this,
 						fullClear: this.fullClear,
-						ctx: this.ctx,
-						playerStatus: this.state.playerStatus
+						ctx: this.ctx
 					});
 				}
 			}
@@ -875,6 +847,10 @@ var CanvasSettings = function (_React$Component) {
 			}
 
 			if (nextState.store.status !== this.state.store.status) {
+				return true;
+			}
+
+			if (nextState.player.status !== this.state.player.status) {
 				return true;
 			}
 
@@ -1827,20 +1803,20 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Notifications = function (_Component) {
-	_inherits(Notifications, _Component);
+var Notification = function (_Component) {
+	_inherits(Notification, _Component);
 
-	function Notifications() {
-		_classCallCheck(this, Notifications);
+	function Notification() {
+		_classCallCheck(this, Notification);
 
-		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Notifications).call(this));
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Notification).call(this));
 
 		_this.state = _Store2.default.getState();
 		_this.onChange = _this.onChange.bind(_this);
 		return _this;
 	}
 
-	_createClass(Notifications, [{
+	_createClass(Notification, [{
 		key: 'componentDidMount',
 		value: function componentDidMount() {
 			_Store2.default.listen(this.onChange);
@@ -1856,7 +1832,7 @@ var Notifications = function (_Component) {
 			var newMsg = nextState.notification.text;
 			var oldMsg = this.state.notification.text;
 
-			if (newMsg.length && newMsg !== oldMsg) {
+			if (newMsg !== oldMsg) {
 				return true;
 			} else {
 				return false;
@@ -1872,6 +1848,9 @@ var Notifications = function (_Component) {
 		value: function render() {
 			var notification = this.state.notification;
 			var classes = 'notification ' + notification.type;
+			if (!notification.text.length) {
+				classes += ' hide';
+			};
 
 			return _react2.default.createElement(
 				'div',
@@ -1885,10 +1864,10 @@ var Notifications = function (_Component) {
 		}
 	}]);
 
-	return Notifications;
+	return Notification;
 }(_react.Component);
 
-exports.default = Notifications;
+exports.default = Notification;
 
 },{"../stores/Store":22,"react":"react"}],16:[function(require,module,exports){
 'use strict';

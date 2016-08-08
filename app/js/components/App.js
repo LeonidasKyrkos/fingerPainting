@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import Actions from '../actions/Actions';
-import Store from '../stores/Store';
 import { painterTest } from '../utilities/general.js';
-import Notifications from './Notifications';
+import Notification from './Notification';
 
 export default class App extends Component {
 	constructor(props) {
 		super(props);
 		this.socket = io.connect('http://localhost:3000');
-		this.state = Store.getState();
 	}
 
 	componentDidMount() {
@@ -17,10 +15,7 @@ export default class App extends Component {
 		});
 
 		this.socket.on('store update',(store)=>{
-			Actions.updateStore(store)
-			painterTest(store.players,this.state.socket.id) ? 
-					Actions.updatePlayerStatus(true) : 
-					Actions.updatePlayerStatus(false);
+			Actions.updateStore(store);
 		});
 
 		this.socket.on('puzzle',(puzzleArray)=>{
@@ -40,18 +35,12 @@ export default class App extends Component {
 		});
 
 		this.socket.on('notification',(notification)=>{
-			console.log(notification);
 			Actions.updateNotification(notification);
 		});
 
-		Store.listen(this.onChange.bind(this));
-	}
-
-	onChange(state) {
-		if(state.store.currentRoom !== this.state.store.currentRoom) {
-			this.setState(state);
-			this.joinRoom(state.store.currentRoom);
-		}
+		this.socket.on('join room',(room)=>{
+			this.joinRoom(room);
+		});
 	}
 
 	joinRoom(room) {
@@ -67,13 +56,11 @@ export default class App extends Component {
 	}
 
 	render() {
-		const children = this.renderChildren();
-		let notification = this.state.notification.text.length ? <Notifications /> : null;
 
 		return (
 			<div>
-				{children}
-				{notification}
+				{this.renderChildren()}
+				<Notification />
 			</div>
 		);
 	}

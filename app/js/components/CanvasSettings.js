@@ -53,6 +53,10 @@ export default class CanvasSettings extends React.Component {
 			return true;
 		}
 
+		if(nextState.player.status !== this.state.player.status) {
+			return true;
+		}
+
 		return false;
 
 
