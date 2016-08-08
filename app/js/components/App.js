@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Actions from '../actions/Actions';
 import Store from '../stores/Store';
 import { painterTest } from '../utilities/general.js';
+import Notifications from './Notifications';
 
 export default class App extends Component {
 	constructor(props) {
@@ -38,6 +39,11 @@ export default class App extends Component {
 			Actions.updatePlayer(player);
 		});
 
+		this.socket.on('notification',(notification)=>{
+			console.log(notification);
+			Actions.updateNotifications(notification);
+		});
+
 		Store.listen(this.onChange.bind(this));
 	}
 
@@ -62,10 +68,12 @@ export default class App extends Component {
 
 	render() {
 		const children = this.renderChildren();
+		let notification = this.state.notification.text.length ? <Notifications /> : null;
 
 		return (
 			<div>
 				{children}
+				{notification}
 			</div>
 		);
 	}

@@ -17,10 +17,17 @@ class Game {
 		this.store = {};
 		this.sockets = {};
 		this.inactivePlayers= {};
+		this.garbageQueue = [];
 		this.roundCount = 1;		
 		this.attachDataListener();
 		this.newPlayer(player, socket);
 		this.resetGame();
+
+		this.garbageTimer = setInterval(()=>{
+			if(!this.blockUpdates) {
+				this.garbageCollection();	
+			}			
+		},1000);
 	}
 
 	newPlayer(player,socket) {
@@ -90,13 +97,28 @@ class Game {
 	handleDisconnect(playerId) {
 		let player = this.store.players[playerId];
 		
-		if(player.status === 'painter') {
+		if(player.status === 'painter' && this.store.status === 'playing') {
+			this.addToGarbageQueue(player);
 			this.endRound();
-			this.removePlayerFromGame(player);			
-		} else {
-			this.removePlayerFromGame(player);
-		}
+			return;
+		} 
 
+		if(player.status === 'painter') {
+			this.newPainter();
+		}
+		
+		this.removePlayerFromGame(player);
+	}
+
+	addToGarbageQueue(player) {
+		this.garbageQueue.push(player);
+	}
+
+	garbageCollection() {
+		this.garbageQueue.forEach((player,index)=>{
+			this.removePlayerFromGame(player);
+			this.garbageQueue.splice(index, 1);
+		});	
 	}
 
 	removePlayerFromGame(player) {
@@ -261,10 +283,7 @@ class Game {
 		if(this.timer < 1) {
 			clearInterval(this.interval);
 			this.emitToAllSockets('puzzle', this.puzzleArray)
-
-			setTimeout(()=>{
-				this.endRound();
-			},5000);
+			this.endRound();
 		} else {
 			this.timer--;
 			this.data.updateTimer(this.timer);
@@ -280,13 +299,14 @@ class Game {
 
 		let players = this.store.players || {};
 		let playersArr = Object.keys(players) || [];
+		let remaining = playersArr.length - this.garbageQueue.length;
 
-		if(this.roundCount >= playersArr.length * 2) {
+		if(this.roundCount >= remaining * 2) {
 			this.endGame();
 			return;
 		}
 
-		if(playersArr.length <= 1) {
+		if(remaining <= 1) {
 			this.resetRoom();		
 			return;		
 		}
@@ -295,21 +315,21 @@ class Game {
 			this.roundDelay();
 		} else {
 			this.newPainter();
-		}		
+		}
 	}
 
 	roundDelay() {
-		this.timer = 5;
+		let timer = 5;
 		this.blockUpdates = true;
 
 		this.delay = setInterval(()=>{
-			this.data.updateTimer(this.timer);
-			if(this.timer <= 0) {
+			this.emitToAllSockets('notification',{ text: 'Next round starting in ' + timer, type: 'default' });
+			if(timer <= 0) {
+				this.newRound();
 				clearInterval(this.delay);
 				this.blockUpdates = false;
-				this.newRound();
 			}
-			this.timer--;
+			timer--;
 		},1000);
 	}
 
@@ -322,7 +342,7 @@ class Game {
 	}
 
 	newPainter() {
-		let players = this.store.players;
+		let players = this.store.players || {};
 		let playersArr = Object.keys(players) || [];
 
 		for(var index = 0; index <= playersArr.length - 1; index++) {
