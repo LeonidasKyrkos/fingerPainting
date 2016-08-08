@@ -2119,11 +2119,24 @@ var Puzzle = function (_Component) {
 	}, {
 		key: 'renderPuzzle',
 		value: function renderPuzzle() {
+			var _this2 = this;
+
 			return this.state.puzzleArray.map(function (item, index) {
 				return _react2.default.createElement(
 					'span',
 					{ className: 'game__puzzle-word', key: index },
-					item
+					_this2.renderLetters(item)
+				);
+			});
+		}
+	}, {
+		key: 'renderLetters',
+		value: function renderLetters(word) {
+			return word.map(function (letter, index) {
+				return _react2.default.createElement(
+					'span',
+					null,
+					letter
 				);
 			});
 		}
