@@ -23,6 +23,10 @@ export default class Canvas extends Component {
 		Store.unlisten(this.onChange);
 	}
 
+	onChange(state) {
+		this.setState(state);
+	}
+
 	shouldComponentUpdate(nextProps,nextState) {
 		return this.runUpdateTests(nextProps,nextState);
 	}
@@ -41,11 +45,7 @@ export default class Canvas extends Component {
 		}
 
 		return false;
-	}
-
-	onChange(state) {
-		this.setState(state);
-	}
+	}	
 
 	setupCanvas() {
 		this.canvas = document.querySelector('#canvas');
@@ -125,7 +125,7 @@ export default class Canvas extends Component {
 	redraw() {
 		let path = [];
 
-		if(this.state.player.status) {
+		if(this.state.player.status === 'painter') {
 			path = this.points;
 		} else if (this.state.store.paths) {
 			path = this.state.store.paths.path;
@@ -224,7 +224,7 @@ export default class Canvas extends Component {
 			this.canvasX = this.canvas.offsetLeft;
 			this.canvasY = this.canvas.offsetTop;
 
-			if(!this.state.player.status) {
+			if(this.state.player.status !== 'painter') {
 				this.redraw();
 			}
 		}
