@@ -39,8 +39,6 @@ $module:			'players';
 		}
 
 		&.correct {
-			color: $color6;
-
 			&:after {
 				content: "✓";
 				position: absolute;
