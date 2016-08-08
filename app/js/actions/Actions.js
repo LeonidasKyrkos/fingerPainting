@@ -28,6 +28,14 @@ class Actions {
 	updatePlayerStatus(playerStatus) {
 		return playerStatus;
 	}
+
+	updatePlayer(player) {
+		return player;
+	}
+
+	updateNotification(notification) {
+		return notification;
+	}
 }
 
 export default alt.createActions(Actions);

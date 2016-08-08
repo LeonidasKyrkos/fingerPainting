@@ -9,11 +9,13 @@ $module: 		'canvas';
 	&__wrap {
 		width: $layout-width-canvas;
 		max-width: 100%;
+		@include user-select(none);
 	}
 
 	&__settings {
 		@include display(flex);
 		@include align-items(baseline);
+		@include user-select(none);
 	}
 
 	&__settings-btn {
@@ -58,5 +60,26 @@ $module: 		'canvas';
 		margin: 0 auto;
 		@include transform(translateY(-50%));
 		pointer-events: none;
+	}
+
+	&__colour-picker {
+		position: absolute;
+
+		> div {
+			display: none;
+		}
+
+		&.active {
+			> div {
+				display: block;
+			}
+		}
+	}
+
+	&__colour-opener {
+		display: block;
+		width: em(25);
+		height: em(25);
+		background-color: white;
 	}
 }

@@ -58,14 +58,14 @@ function testIn(args) {
 	return { status: true };	
 }
 
-function testInSecondLevel(args) {
-	for(var prop in args[0]) {
-		if(args[1] === args[0][prop].id) {
-			return { status: false,  reason: args[2] };
-		}
-	}
+function testInArray(thingWeLookFor,array) {
+	return array.some((thingWeLookFor, index, array)=>{
+		return thingWeLookFor === array[index];
+	})
+}
 
-	return { status: true };	
+function inactivePlayer(cookie,game) {
+	return game.inactivePlayers[cookie] ? true : false;
 }
 
 /////// end of tests ////////
@@ -76,5 +76,5 @@ module.exports = {
 	testExists: testExists,
 	testCompare: testCompare,
 	testIn: testIn,
-	testInSecondLevel: testInSecondLevel
+	inactivePlayer: inactivePlayer
 }

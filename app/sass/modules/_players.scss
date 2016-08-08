@@ -5,11 +5,16 @@ $module:			'players';
 	max-width: 100%;
 	position: fixed;
 	top: 0;
-	left: 0;
+	right: 0;
 	bottom: 0;
 	background-color: rgba(black,0.85);
 	padding: em(20);
 	z-index: 10;
+
+	@media(max-width: 1410px) {
+		position: static;
+		width: auto;
+	}
 
 	&__player {
 		@include display(flex);
@@ -18,12 +23,22 @@ $module:			'players';
 		position: relative;
 
 		&.active {
-			color: $color5;
+			&:before {
+				$fontSize: 10;
+				@include font-size($fontSize);
+				content: "👑";
+				position: absolute;
+				left: em(-7,$fontSize);
+				color: $color5;
+				top: em(3,$fontSize);
+			}
+		}
+
+		&.player {
+			color: $color6;
 		}
 
 		&.correct {
-			color: $color6;
-
 			&:after {
 				content: "✓";
 				position: absolute;

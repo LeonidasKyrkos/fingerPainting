@@ -7,6 +7,11 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io',{ rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling'] })(server);
 var basicAuth = require('basic-auth');
+var cookieParser = require('socket.io-cookie-parser');
+var expCookieParser = require('cookie-parser');
+
+io.use(cookieParser());
+app.use(expCookieParser());
 
 // configure server
 server.listen(port);
@@ -42,7 +47,18 @@ app.get('/admin', auth, function (req, res) {
 });
 
 app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/views/index.html');
+	let name = 'fingerpainting_refresh_token';
+	let cookie = req.cookies[name];
+
+	if (!cookie){
+		// no: set a new cookie
+		let timestamp = (new Date()).getTime();
+		let random = Math.random().toString();
+
+		res.cookie(name, timestamp, { maxAge: 900000, httpOnly: true });
+	} 
+
+	res.sendFile(__dirname + '/views/index.html');
 });
 
 module.exports = {

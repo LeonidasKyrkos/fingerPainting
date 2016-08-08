@@ -16,11 +16,18 @@ class Game {
 	init(player, socket) {
 		this.store = {};
 		this.sockets = {};
+		this.inactivePlayers= {};
+		this.garbageQueue = [];
 		this.roundCount = 1;		
 		this.attachDataListener();
-		this.getDictionary();
 		this.newPlayer(player, socket);
 		this.resetGame();
+
+		this.garbageTimer = setInterval(()=>{
+			if(!this.blockUpdates) {
+				this.garbageCollection();	
+			}			
+		},1000);
 	}
 
 	newPlayer(player,socket) {
@@ -30,8 +37,15 @@ class Game {
 			player.status = 'painter';
 		}
 
+		if(this.inactivePlayers[player.refreshToken]) {
+			this.reinstantiatePlayer(player);
+		}
+
 		// join room and add to db
 		room.handler(this.id,player);
+
+		socket.emit('join room','/rooms/' + this.id);
+		socket.emit('player',player);
 
 		socket.on('path update',(path)=>{
 			this.store.paths = path;
@@ -41,12 +55,27 @@ class Game {
 		socket.on('start round',this.startRound.bind(this));
 		socket.on('pause round',this.pauseRound.bind(this));
 		socket.on('unpause round',this.unpauseRound.bind(this));
-		socket.on('message',this.parseMessage.bind(this));
+		socket.on('message',(message)=>{
+			if(!this.blockUpdates) {
+				this.parseMessage(message);
+			}			
+		});
 		socket.on('disconnect',this.handleDisconnect.bind(this,player.id));
+	}
+
+	reinstantiatePlayer(player) {
+		player.score = this.inactivePlayers[player.refreshToken].score;
+
+		this.removeInactivePlayers(player);
+	}
+
+	removeInactivePlayers(player){
+		delete this.inactivePlayers[player.refreshToken];
 	}
 
 	attachDataListener() {
 		e.on('store',(store)=>{
+			if(!this.dictionary) { this.getDictionary(store.dictionary); };
 			this.prepStoreAndCallUpdate(store);
 		});
 
@@ -69,17 +98,38 @@ class Game {
 	handleDisconnect(playerId) {
 		let player = this.store.players[playerId];
 		
-		if(player.status === 'painter') {
-			this.removePlayerFromGame(player);
+		if(player.status === 'painter' && this.store.status === 'playing') {
+			this.addToGarbageQueue(player);
 			this.endRound();
-		} else {
+			return;
+		} 
+
+		if(player.status === 'painter') {
+			this.newPainter();
+		}
+		
+		this.removePlayerFromGame(player);
+	}
+
+	addToGarbageQueue(player) {
+		this.garbageQueue.push(player);
+	}
+
+	garbageCollection() {
+		this.garbageQueue.forEach((player,index)=>{
 			this.removePlayerFromGame(player);
-		}		
+			this.garbageQueue.splice(index, 1);
+		});	
 	}
 
 	removePlayerFromGame(player) {
 		this.data.removePlayer(player.id);
 		delete(this.sockets[player.id]);
+		this.moveToInactive(player);
+	}
+
+	moveToInactive(player) {
+		this.inactivePlayers[player.refreshToken] = _.clone(player);
 	}
 
 	prepStoreAndCallUpdate(store) {
@@ -89,8 +139,18 @@ class Game {
 
 	updateStore(store) {
 		this.store = store;
-		this.store.currentRoom = '/rooms/' + this.id;
 		this.emitToAllSockets('store update', this.store);
+		this.updateClientPlayerObject();
+	}
+
+	updateClientPlayerObject() {
+		for(let id in this.sockets) {
+			for(let playerId in this.store.players) {
+				if(id === playerId) {
+					this.sockets[id].emit('player',this.store.players[playerId]);
+				}
+			}
+		}
 	}
 
 	startRound() {
@@ -223,10 +283,7 @@ class Game {
 		if(this.timer < 1) {
 			clearInterval(this.interval);
 			this.emitToAllSockets('puzzle', this.puzzleArray)
-
-			setTimeout(()=>{
-				this.endRound();
-			},5000);
+			this.endRound();
 		} else {
 			this.timer--;
 			this.data.updateTimer(this.timer);
@@ -242,61 +299,86 @@ class Game {
 
 		let players = this.store.players || {};
 		let playersArr = Object.keys(players) || [];
+		let remaining = playersArr.length - this.garbageQueue.length;
 
-		if(this.roundCount >= playersArr.length * 2) {
+		if(this.roundCount >= remaining * 2) {
 			this.endGame();
+			return;
+		}
+
+		if(remaining <= 1) {
+			this.resetRoom();		
+			return;		
+		}
+
+		if(this.store.status === 'playing') {
+			this.roundDelay();
 		} else {
-			if(playersArr.length <= 1) {
-				this.resetRoom();				
-			} else {
+			this.newPainter();
+		}
+	}
+
+	roundDelay() {
+		let timer = 5;
+		this.blockUpdates = true;
+
+		this.delay = setInterval(()=>{
+			this.emitToAllSockets('notification',{ text: 'Next round starting in ' + timer, type: 'default' });
+			if(timer <= 0) {
+				this.emitToAllSockets('notification',{ text: '', type: 'default' });
 				this.newRound();
+				clearInterval(this.delay);
+				this.blockUpdates = false;
 			}
-		}		
+			timer--;
+		},1000);
 	}
 
 	newRound() {
 		this.roundCount++;
 		this.resetGame();
 		this.newPainter();
-		this.startRound();
-		this.emitToAllSockets('new round');
+
+		if(this.store.players && Object.keys(this.store.players).length > 1) {
+			this.startRound();
+		}		
 	}
 
 	newPainter() {
-		let players = this.store.players;
+		let players = this.store.players || {};
 		let playersArr = Object.keys(players) || [];
 
-		for(let i = 0; i < playersArr.length; i++) {
-			let username = playersArr[i];
-			let player = players[username];
+		for(var index = 0; index <= playersArr.length - 1; index++) {
+			let playerId = playersArr[index];
+			let player = players[playerId];	
 
 			if(player.status === 'painter') {
-				this.setGuesser(username);
+				this.setGuesser(playerId);
 
-				if(i === playersArr.length - 1) {
-					var nextUsername = playersArr[0];
+				if(index === playersArr.length - 1) {
+					var nextPlayerId = playersArr[0];
 				} else {
-					var nextUsername = playersArr[i+1];
+					var nextPlayerId = playersArr[index+1];
 				}
 
-				this.setPainter(nextUsername);	
+				this.setPainter(nextPlayerId);
 
 				break;
 			}
 		}
 	}
 
-	setGuesser(username) {
-		this.data.setPlayerStatus(username,'guesser');
+	setGuesser(playerId) {
+		this.data.setPlayerStatus(playerId,'guesser');
 	}
 
-	setPainter(username) {
-		this.data.setPlayerStatus(username,'painter');
+	setPainter(playerId) {
+		this.data.setPlayerStatus(playerId,'painter');
 	}
 
 	endGame() {
 		// update the status of the room to trigger the scoreboard and then wait 5s to reset for next round
-		if(this.store.users) {
+		if(this.store.players) {
 			this.data.setStatus('finished');
 
 			setTimeout(()=>{
@@ -307,15 +389,11 @@ class Game {
 		}
 	}
 
-	resetGame() {
-		this.data.setStatus('pending');
+	resetGame() {		
 		this.cleverGuessers = 0;
 		this.resetClock();
 		this.resetCorrectStatus();
 		this.emitToAllSockets('puzzle',[]);
-		if(this.store.players) {
-			this.setPainter(this.store.players[Object.keys(this.store.players)[0]].id);
-		}
 	}
 
 	resetCorrectStatus() {
@@ -336,10 +414,21 @@ class Game {
 	}
 
 	resetRoom() {
+		this.data.setStatus('pending');
 		this.resetGame();
 		this.resetPlayers();
+		this.inactivePlayers = {};
 		this.roundCount = 1;
 		this.resetChatlog();
+
+		if(this.store.players) {
+			if(Object.keys(this.store.players).length === 1) {
+				this.setPainter(this.store.players[Object.keys(this.store.players)[0]].id);
+			} else {
+				this.newPainter();
+			}
+		}
+		
 	}
 
 	resetPlayers() {
