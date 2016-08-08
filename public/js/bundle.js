@@ -484,6 +484,11 @@ var Canvas = function (_Component) {
 			_Store2.default.unlisten(this.onChange);
 		}
 	}, {
+		key: 'onChange',
+		value: function onChange(state) {
+			this.setState(state);
+		}
+	}, {
 		key: 'shouldComponentUpdate',
 		value: function shouldComponentUpdate(nextProps, nextState) {
 			return this.runUpdateTests(nextProps, nextState);
@@ -504,11 +509,6 @@ var Canvas = function (_Component) {
 			}
 
 			return false;
-		}
-	}, {
-		key: 'onChange',
-		value: function onChange(state) {
-			this.setState(state);
 		}
 	}, {
 		key: 'setupCanvas',
@@ -612,7 +612,7 @@ var Canvas = function (_Component) {
 		value: function redraw() {
 			var path = [];
 
-			if (this.state.player.status) {
+			if (this.state.player.status === 'painter') {
 				path = this.points;
 			} else if (this.state.store.paths) {
 				path = this.state.store.paths.path;
@@ -724,7 +724,7 @@ var Canvas = function (_Component) {
 				this.canvasX = this.canvas.offsetLeft;
 				this.canvasY = this.canvas.offsetTop;
 
-				if (!this.state.player.status) {
+				if (this.state.player.status !== 'painter') {
 					this.redraw();
 				}
 			}
