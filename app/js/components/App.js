@@ -41,7 +41,7 @@ export default class App extends Component {
 
 		this.socket.on('notification',(notification)=>{
 			console.log(notification);
-			Actions.updateNotifications(notification);
+			Actions.updateNotification(notification);
 		});
 
 		Store.listen(this.onChange.bind(this));

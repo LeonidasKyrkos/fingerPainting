@@ -389,7 +389,7 @@ var App = function (_Component) {
 
 			this.socket.on('notification', function (notification) {
 				console.log(notification);
-				_Actions2.default.updateNotifications(notification);
+				_Actions2.default.updateNotification(notification);
 			});
 
 			_Store2.default.listen(this.onChange.bind(this));
