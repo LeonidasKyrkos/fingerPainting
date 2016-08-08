@@ -28,11 +28,7 @@ export default class Canvas extends Component {
 	}
 
 	shouldComponentUpdate(nextProps,nextState) {
-		if(this.state.player.status === 'guesser') {
-			return this.runUpdateTests(nextProps,nextState);
-		} else {
-			return false;
-		}
+		return this.runUpdateTests(nextProps,nextState);
 	}
 
 	runUpdateTests(nextProps,nextState) {

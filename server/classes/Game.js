@@ -324,11 +324,11 @@ class Game {
 
 		this.delay = setInterval(()=>{
 			this.emitToAllSockets('notification',{ text: 'Next round starting in ' + timer, type: 'default' });
-			if(timer <= 0) {
+			if(timer <= 0) {				
+				this.blockUpdates = false;
 				this.emitToAllSockets('notification',{ text: '', type: 'default' });
 				this.newRound();
 				clearInterval(this.delay);
-				this.blockUpdates = false;
 			}
 			timer--;
 		},1000);

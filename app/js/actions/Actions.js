@@ -24,11 +24,7 @@ class Actions {
 	updateDictionarys(dictionarys) {
 		return dictionarys;
 	}
-
-	updatePlayerStatus(playerStatus) {
-		return playerStatus;
-	}
-
+	
 	updatePlayer(player) {
 		return player;
 	}
