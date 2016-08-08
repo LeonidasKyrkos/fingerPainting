@@ -28,7 +28,11 @@ export default class Canvas extends Component {
 	}
 
 	shouldComponentUpdate(nextProps,nextState) {
-		return this.runUpdateTests(nextProps,nextState);
+		if(this.state.player.status === 'guesser') {
+			return this.runUpdateTests(nextProps,nextState);
+		} else {
+			return false;
+		}
 	}
 
 	runUpdateTests(nextProps,nextState) {
@@ -66,7 +70,7 @@ export default class Canvas extends Component {
 	// drag
 	dragBrush(e) {
 		if(this.painting) {
-			if(this.points.length > 15) {
+			if(this.points.length > 20) {
 				this.pushPaths();
 				let prevArr = this.points;
 				this.current++;

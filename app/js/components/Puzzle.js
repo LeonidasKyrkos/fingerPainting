@@ -50,7 +50,7 @@ export default class Puzzle extends Component {
 
 	renderLetters(word) {
 		return word.map((letter,index)=>{
-			return <span>{letter}</span>
+			return <span key={index}>{letter}</span>
 		});
 	}
 

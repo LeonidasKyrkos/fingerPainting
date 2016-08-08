@@ -491,7 +491,11 @@ var Canvas = function (_Component) {
 	}, {
 		key: 'shouldComponentUpdate',
 		value: function shouldComponentUpdate(nextProps, nextState) {
-			return this.runUpdateTests(nextProps, nextState);
+			if (this.state.player.status === 'guesser') {
+				return this.runUpdateTests(nextProps, nextState);
+			} else {
+				return false;
+			}
 		}
 	}, {
 		key: 'runUpdateTests',
@@ -537,7 +541,7 @@ var Canvas = function (_Component) {
 		key: 'dragBrush',
 		value: function dragBrush(e) {
 			if (this.painting) {
-				if (this.points.length > 15) {
+				if (this.points.length > 20) {
 					this.pushPaths();
 					var prevArr = this.points;
 					this.current++;
@@ -2135,7 +2139,7 @@ var Puzzle = function (_Component) {
 			return word.map(function (letter, index) {
 				return _react2.default.createElement(
 					'span',
-					null,
+					{ key: index },
 					letter
 				);
 			});

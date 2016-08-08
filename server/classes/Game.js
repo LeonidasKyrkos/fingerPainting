@@ -26,7 +26,7 @@ class Game {
 		this.garbageTimer = setInterval(()=>{
 			if(!this.blockUpdates) {
 				this.garbageCollection();	
-			}			
+			}
 		},1000);
 	}
 
