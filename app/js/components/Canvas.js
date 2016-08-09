@@ -28,6 +28,7 @@ export default class Canvas extends Component {
 	}
 
 	shouldComponentUpdate(nextProps,nextState) {
+		console.log(nextState.player.status,this.state.player.status);
 		return this.runUpdateTests(nextProps,nextState);
 	}
 
@@ -127,7 +128,7 @@ export default class Canvas extends Component {
 
 		if(this.state.player.status === 'painter') {
 			path = this.points;
-		} else if (this.state.store.paths) {
+		} else if (this.state.store.paths && this.state.store.paths.path) {
 			path = this.state.store.paths.path;
 		}
 
