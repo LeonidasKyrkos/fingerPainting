@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import Store from '../stores/Store';
 
 export default class players extends Component {
-	constructor(props) {
-		super(props);
+	constructor() {
+		super();
 
 		this.onChange = this.onChange.bind(this);
 		this.state = Store.getState();
