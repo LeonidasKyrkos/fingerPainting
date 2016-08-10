@@ -7,7 +7,14 @@ import _ from 'lodash';
 export default class CanvasPlayer extends Component {
 	constructor() {
 		super();
-		this.paths = [];
+		
+		this.paths = {
+			x: [],
+			y: [],
+			drag: [],
+			colours: []
+		}
+
 		this.state = Store.getState();
 		this.onChange = this.onChange.bind(this);
 	}
@@ -32,13 +39,7 @@ export default class CanvasPlayer extends Component {
 
 	startInterval() {
 		this.interval = setInterval(()=>{
-			// if(this.paths.length) {
-			// 	this.pushPaths();
-			// 	this.paths = [];
-			// }
-			if(this.paths.length) {
-				redraw(this.paths,this.canvas,this.ctx);
-			}
+			this.pushPaths();
 		},33);
 	}
 
@@ -50,6 +51,7 @@ export default class CanvasPlayer extends Component {
 		this.canvas = document.querySelector('#canvas');
 		this.canvas.setAttribute('width',this.canvas.parentElement.offsetWidth);
 		this.ctx = this.canvas.getContext('2d');
+		this.ctx.strokeStyle = "#FFFFFF";
 		this.canvasX = this.canvas.offsetLeft;
 		this.canvasY = this.canvas.offsetTop;
 		this.forceUpdate();
@@ -58,13 +60,13 @@ export default class CanvasPlayer extends Component {
 	// start
 	startDrawing(e) {
 		this.painting = true;
-		this.addToArray(this.getX(e),this.getY(e),false);
+		this.addToArray(this.getX(e),this.getY(e), false);
 	}
 
 	// drag
 	dragBrush(e) {
-		if(this.painting) {
-			this.addToArray(this.getX(e),this.getY(e),true);
+		if(this.painting){
+			this.addToArray(this.getX(e),this.getY(e), true);
 		}
 	}
 
@@ -88,18 +90,12 @@ export default class CanvasPlayer extends Component {
 	}
 
 	// add to points array
-	addToArray(mx,my,dragStatus) {		
-		this.paths.push({
-			x: mx, 
-			y: my, 
-			color: this.ctx.strokeStyle, 
-			size: this.ctx.lineWidth,
-			dragging: dragStatus
-		})
-
-		if(this.paths.length) {
-			redraw(this.paths,this.canvas,this.ctx);
-		}		
+	addToArray(mx,my,dragStatus) {
+		this.paths.x.push(mx);
+		this.paths.y.push(my);
+		this.paths.drag.push(dragStatus);
+		this.paths.colours.push(this.ctx.strokeStyle)
+		redraw(this.paths,this.ctx);
 	}
 
 	pushPaths() {
@@ -108,14 +104,16 @@ export default class CanvasPlayer extends Component {
 
 	// empty points array
 	clearArrays() {
-		this.paths = [];
+		this.paths.x = [];
+		this.paths.y = [];
+		this.paths.drag = [];
+		this.paths.colours = [];
 	}
 
 	// empty contexts and points
 	fullClear() {
 		clearContext(this.ctx);
 		this.clearArrays();
-		this.pushPaths();
 	}
 
 	render() {

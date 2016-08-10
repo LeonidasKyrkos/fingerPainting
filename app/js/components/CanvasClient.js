@@ -1,16 +1,24 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import Store from '../stores/Store';
-import { isEqual as _isEqual } from 'lodash';
+import { redraw } from '../utilities/canvasFunctions';
 
-export default class CanvasPlayer extends Component {
+export default class CanvasClient extends Component {
 	constructor() {
 		super();
 
 		this.state = Store.getState();
+
+		this.state.socket.on('path update',(paths)=>{
+			redraw(paths,this.ctx);
+		});
+
 		this.onChange = this.onChange.bind(this);
 	}
 
 	componentDidMount() {
+		this.canvas = document.querySelector('#canvas');
+		this.canvas.setAttribute('width',this.canvas.parentElement.offsetWidth);
+		this.ctx = this.canvas.getContext('2d');
 		Store.listen(this.onChange);
 	}
 
@@ -23,14 +31,6 @@ export default class CanvasPlayer extends Component {
 	}
 
 	shouldComponentUpdate(nextProps,nextState) {
-		return this.runUpdateTests(nextProps,nextState);
-	}
-
-	runUpdateTests(nextProps,nextState) {
-		if(!_isEqual(nextState.store.paths,this.state.store.paths)) {
-			return true;
-		}
-
 		return false;
 	}
 

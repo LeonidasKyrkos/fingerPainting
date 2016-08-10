@@ -438,7 +438,7 @@ var _Store = require('../stores/Store');
 
 var _Store2 = _interopRequireDefault(_Store);
 
-var _lodash = require('lodash');
+var _canvasFunctions = require('../utilities/canvasFunctions');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -448,22 +448,30 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var CanvasPlayer = function (_Component) {
-	_inherits(CanvasPlayer, _Component);
+var CanvasClient = function (_Component) {
+	_inherits(CanvasClient, _Component);
 
-	function CanvasPlayer() {
-		_classCallCheck(this, CanvasPlayer);
+	function CanvasClient() {
+		_classCallCheck(this, CanvasClient);
 
-		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CanvasPlayer).call(this));
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CanvasClient).call(this));
 
 		_this.state = _Store2.default.getState();
+
+		_this.state.socket.on('path update', function (paths) {
+			(0, _canvasFunctions.redraw)(paths, _this.ctx);
+		});
+
 		_this.onChange = _this.onChange.bind(_this);
 		return _this;
 	}
 
-	_createClass(CanvasPlayer, [{
+	_createClass(CanvasClient, [{
 		key: 'componentDidMount',
 		value: function componentDidMount() {
+			this.canvas = document.querySelector('#canvas');
+			this.canvas.setAttribute('width', this.canvas.parentElement.offsetWidth);
+			this.ctx = this.canvas.getContext('2d');
 			_Store2.default.listen(this.onChange);
 		}
 	}, {
@@ -479,15 +487,6 @@ var CanvasPlayer = function (_Component) {
 	}, {
 		key: 'shouldComponentUpdate',
 		value: function shouldComponentUpdate(nextProps, nextState) {
-			return this.runUpdateTests(nextProps, nextState);
-		}
-	}, {
-		key: 'runUpdateTests',
-		value: function runUpdateTests(nextProps, nextState) {
-			if (!(0, _lodash.isEqual)(nextState.store.paths, this.state.store.paths)) {
-				return true;
-			}
-
 			return false;
 		}
 	}, {
@@ -506,12 +505,12 @@ var CanvasPlayer = function (_Component) {
 		}
 	}]);
 
-	return CanvasPlayer;
+	return CanvasClient;
 }(_react.Component);
 
-exports.default = CanvasPlayer;
+exports.default = CanvasClient;
 
-},{"../stores/Store":23,"lodash":31,"react":"react"}],7:[function(require,module,exports){
+},{"../stores/Store":23,"../utilities/canvasFunctions":24,"react":"react"}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -554,7 +553,13 @@ var CanvasPlayer = function (_Component) {
 
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CanvasPlayer).call(this));
 
-		_this.paths = [];
+		_this.paths = {
+			x: [],
+			y: [],
+			drag: [],
+			colours: []
+		};
+
 		_this.state = _Store2.default.getState();
 		_this.onChange = _this.onChange.bind(_this);
 		return _this;
@@ -588,13 +593,7 @@ var CanvasPlayer = function (_Component) {
 			var _this2 = this;
 
 			this.interval = setInterval(function () {
-				// if(this.paths.length) {
-				// 	this.pushPaths();
-				// 	this.paths = [];
-				// }
-				if (_this2.paths.length) {
-					(0, _canvasFunctions.redraw)(_this2.paths, _this2.canvas, _this2.ctx);
-				}
+				_this2.pushPaths();
 			}, 33);
 		}
 	}, {
@@ -608,6 +607,7 @@ var CanvasPlayer = function (_Component) {
 			this.canvas = document.querySelector('#canvas');
 			this.canvas.setAttribute('width', this.canvas.parentElement.offsetWidth);
 			this.ctx = this.canvas.getContext('2d');
+			this.ctx.strokeStyle = "#FFFFFF";
 			this.canvasX = this.canvas.offsetLeft;
 			this.canvasY = this.canvas.offsetTop;
 			this.forceUpdate();
@@ -665,17 +665,11 @@ var CanvasPlayer = function (_Component) {
 	}, {
 		key: 'addToArray',
 		value: function addToArray(mx, my, dragStatus) {
-			this.paths.push({
-				x: mx,
-				y: my,
-				color: this.ctx.strokeStyle,
-				size: this.ctx.lineWidth,
-				dragging: dragStatus
-			});
-
-			if (this.paths.length) {
-				(0, _canvasFunctions.redraw)(this.paths, this.canvas, this.ctx);
-			}
+			this.paths.x.push(mx);
+			this.paths.y.push(my);
+			this.paths.drag.push(dragStatus);
+			this.paths.colours.push(this.ctx.strokeStyle);
+			(0, _canvasFunctions.redraw)(this.paths, this.ctx);
 		}
 	}, {
 		key: 'pushPaths',
@@ -688,7 +682,10 @@ var CanvasPlayer = function (_Component) {
 	}, {
 		key: 'clearArrays',
 		value: function clearArrays() {
-			this.paths = [];
+			this.paths.x = [];
+			this.paths.y = [];
+			this.paths.drag = [];
+			this.paths.colours = [];
 		}
 
 		// empty contexts and points
@@ -698,7 +695,6 @@ var CanvasPlayer = function (_Component) {
 		value: function fullClear() {
 			(0, _canvasFunctions.clearContext)(this.ctx);
 			this.clearArrays();
-			this.pushPaths();
 		}
 	}, {
 		key: 'render',
@@ -763,7 +759,6 @@ var CanvasSettings = function (_React$Component) {
 		_this.onChange = _this.onChange.bind(_this);
 		_this.state = _Store2.default.getState();
 		_this.setupVariables();
-		_this.state.lineColour = 'white';
 		return _this;
 	}
 
@@ -778,20 +773,9 @@ var CanvasSettings = function (_React$Component) {
 			};
 		}
 	}, {
-		key: 'setupCtx',
-		value: function setupCtx() {
-			this.props.ctx.strokeStyle = "#FFFFFF";
-			this.props.ctx.shadowColor = "#FFFFFF";
-			this.props.ctx.shadowBlur = 1;
-			this.props.ctx.lineJoin = "round";
-			this.props.ctx.lineWidth = 5;
-			this.props.ctx.translate(0.5, 0.5);
-		}
-	}, {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
 			_Store2.default.listen(this.onChange);
-			this.setupCtx();
 		}
 	}, {
 		key: 'componentWillUnmount',
@@ -806,15 +790,7 @@ var CanvasSettings = function (_React$Component) {
 	}, {
 		key: 'runUpdateTests',
 		value: function runUpdateTests(nextProps, nextState) {
-			if (!(0, _lodash.isEqual)(nextProps, this.props)) {
-				return true;
-			}
-
 			if (nextState.store.status !== this.state.store.status) {
-				return true;
-			}
-
-			if (nextState.player.status !== this.state.player.status) {
 				return true;
 			}
 
@@ -2667,14 +2643,28 @@ exports.redraw = redraw;
 exports.renderPath = renderPath;
 exports.renderDot = renderDot;
 exports.clearContext = clearContext;
-function redraw(paths, canvas, ctx) {
-	paths.forEach(function (path, index) {
-		if (path.length < 4) {
-			renderDot(path, ctx);
+function redraw(paths, context) {
+	context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+
+	context.lineJoin = "round";
+	context.shadowBlur = 1;
+	context.lineWidth = 5;
+
+	for (var i = 0; i < paths.x.length; i++) {
+		context.beginPath();
+
+		if (paths.drag[i] && i) {
+			context.moveTo(paths.x[i - 1], paths.y[i - 1]);
 		} else {
-			renderPath(path, ctx);
+			context.moveTo(paths.x[i] - 1, paths.y[i]);
 		}
-	});
+
+		context.strokeStyle = paths.colours[i];
+		context.shadowColor = paths.colours[i];
+		context.lineTo(paths.x[i], paths.y[i]);
+		context.closePath();
+		context.stroke();
+	}
 }
 
 function renderPath(path, ctx) {

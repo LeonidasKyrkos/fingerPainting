@@ -1,11 +1,25 @@
-export function redraw(paths,canvas,ctx) {
-	paths.forEach((path,index)=>{
-		if(path.length < 4) {
-			renderDot(path,ctx);
-		} else {
-			renderPath(path,ctx);
+export function redraw(paths,context) {
+	context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+	
+	context.lineJoin = "round";
+	context.shadowBlur = 1;
+	context.lineWidth = 5;
+
+	for(var i=0; i < paths.x.length; i++) {		
+		context.beginPath();
+
+		if(paths.drag[i] && i){
+			context.moveTo(paths.x[i-1], paths.y[i-1]);
+		}else{
+			context.moveTo(paths.x[i]-1, paths.y[i]);
 		}
-	});	
+
+		context.strokeStyle = paths.colours[i];
+		context.shadowColor = paths.colours[i];
+		context.lineTo(paths.x[i], paths.y[i]);
+		context.closePath();
+		context.stroke();
+	}
 }
 
 

@@ -48,9 +48,8 @@ class Game {
 		socket.emit('join room','/rooms/' + this.id);
 		socket.emit('player',player);
 
-		socket.on('path update',(path)=>{
-			this.store.paths = path;
-			this.updateStore(this.store);
+		socket.on('path update',(paths)=>{
+			this.emitToAllSockets('path update',paths);
 		});
 
 		socket.on('start round',this.startRound.bind(this));
@@ -464,6 +463,14 @@ class Game {
 	emitToAllSockets(type,emission) {
 		for(let socket in this.sockets) {
 			this.sockets[socket].emit(type, emission);
+		};
+	}
+
+	emitToGuessers(type,emission) {
+		for(let socket in this.sockets) {
+			if(this.store.players[socket] && this.store.players[socket].status !== 'painter') {
+				this.sockets[socket].emit(type, emission);
+			}			
 		};
 	}
 }
