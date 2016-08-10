@@ -261,15 +261,7 @@ class Game {
 	}
 
 	handleChatLog(message) {
-		if(this.store.chatLog && Object.keys(this.store.chatLog).length > 50) {
-			Object.keys(this.store.chatLog).forEach((chat,index)=>{
-				if(index > 25) {
-					delete this.store.chatLot[chat];
-				}
-			});
-		}
-
-		this.data.setChatLog(this.store.chatLog);
+		this.data.pushMessage(message);
 	}
 
 	cleverGuesser(message) {
@@ -410,6 +402,7 @@ class Game {
 		this.resetClock();
 		this.resetCorrectStatus();
 		this.resetPath();
+		this.resetChatlog();
 		this.emitToAllSockets('puzzle',[]);
 	}
 
