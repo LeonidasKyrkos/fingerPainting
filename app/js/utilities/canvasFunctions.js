@@ -16,6 +16,7 @@ export function redraw(paths,context) {
 
 		context.strokeStyle = paths.colours[i];
 		context.shadowColor = paths.colours[i];
+		context.lineWidth = paths.widths[i];
 		context.lineTo(paths.x[i], paths.y[i]);
 		context.closePath();
 		context.stroke();
