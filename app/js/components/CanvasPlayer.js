@@ -106,10 +106,9 @@ export default class CanvasPlayer extends Component {
 
 	// empty points array
 	clearArrays() {
-		this.paths.x = [];
-		this.paths.y = [];
-		this.paths.drag = [];
-		this.paths.colours = [];
+		for(let prop in this.paths) {
+			this.paths[prop] = [];
+		}
 	}
 
 	// empty contexts and points

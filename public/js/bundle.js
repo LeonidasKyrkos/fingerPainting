@@ -684,10 +684,9 @@ var CanvasPlayer = function (_Component) {
 	}, {
 		key: 'clearArrays',
 		value: function clearArrays() {
-			this.paths.x = [];
-			this.paths.y = [];
-			this.paths.drag = [];
-			this.paths.colours = [];
+			for (var prop in this.paths) {
+				this.paths[prop] = [];
+			}
 		}
 
 		// empty contexts and points
