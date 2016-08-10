@@ -557,7 +557,8 @@ var CanvasPlayer = function (_Component) {
 			x: [],
 			y: [],
 			drag: [],
-			colours: []
+			colours: [],
+			width: []
 		};
 
 		_this.state = _Store2.default.getState();
@@ -669,6 +670,7 @@ var CanvasPlayer = function (_Component) {
 			this.paths.y.push(my);
 			this.paths.drag.push(dragStatus);
 			this.paths.colours.push(this.ctx.strokeStyle);
+			this.paths.widths.push(this.ctx.lineWidth);
 			(0, _canvasFunctions.redraw)(this.paths, this.ctx);
 		}
 	}, {
@@ -2661,6 +2663,7 @@ function redraw(paths, context) {
 
 		context.strokeStyle = paths.colours[i];
 		context.shadowColor = paths.colours[i];
+		context.lineWidth = paths.widths[i];
 		context.lineTo(paths.x[i], paths.y[i]);
 		context.closePath();
 		context.stroke();

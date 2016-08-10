@@ -12,7 +12,8 @@ export default class CanvasPlayer extends Component {
 			x: [],
 			y: [],
 			drag: [],
-			colours: []
+			colours: [],
+			width: []
 		}
 
 		this.state = Store.getState();
@@ -94,7 +95,8 @@ export default class CanvasPlayer extends Component {
 		this.paths.x.push(mx);
 		this.paths.y.push(my);
 		this.paths.drag.push(dragStatus);
-		this.paths.colours.push(this.ctx.strokeStyle)
+		this.paths.colours.push(this.ctx.strokeStyle);
+		this.paths.widths.push(this.ctx.lineWidth);
 		redraw(this.paths,this.ctx);
 	}
 
