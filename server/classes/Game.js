@@ -22,6 +22,7 @@ class Game {
 		this.attachDataListener();
 		this.newPlayer(player, socket);
 		this.resetGame();
+		this.data.setStore(this.store);
 
 		this.garbageTimer = setInterval(()=>{
 			if(!this.blockUpdates) {
@@ -47,9 +48,8 @@ class Game {
 		socket.emit('join room','/rooms/' + this.id);
 		socket.emit('player',player);
 
-		socket.on('path update',(path)=>{
-			this.store.paths = path;
-			this.updateStore(this.store);
+		socket.on('path update',(paths)=>{
+			this.emitToAllSockets('path update',paths);
 		});
 
 		socket.on('start round',this.startRound.bind(this));
@@ -80,7 +80,18 @@ class Game {
 		});
 
 		this.data.listenToData(this,e);		
-	}	
+	}
+
+	prepStoreAndCallUpdate(store) {
+		store.paths = _.clone(this.store.paths);
+		this.updateStore(store);
+	}
+
+	updateStore(store) {
+		this.store = store;
+		this.emitToAllSockets('store update', this.store);
+		this.updateClientPlayerObject();
+	}
 
 	getDictionary(dictionary='default') {
 		let promise = this.data.getDictionary(dictionary);
@@ -130,17 +141,6 @@ class Game {
 
 	moveToInactive(player) {
 		this.inactivePlayers[player.refreshToken] = _.clone(player);
-	}
-
-	prepStoreAndCallUpdate(store) {
-		store.paths = _.clone(this.store.paths);
-		this.updateStore(store);
-	}
-
-	updateStore(store) {
-		this.store = store;
-		this.emitToAllSockets('store update', this.store);
-		this.updateClientPlayerObject();
 	}
 
 	updateClientPlayerObject() {
@@ -256,8 +256,20 @@ class Game {
 				this.cleverGuesser(message);	
 			}					
 		} else {
-			this.data.pushMessage(message)
+			this.handleChatLog(message);
 		}
+	}
+
+	handleChatLog(message) {
+		if(this.store.chatLog && Object.keys(this.store.chatLog).length > 50) {
+			Object.keys(this.store.chatLog).forEach((chat,index)=>{
+				if(index > 25) {
+					delete this.store.chatLot[chat];
+				}
+			});
+		}
+
+		this.data.setChatLog(this.store.chatLog);
 	}
 
 	cleverGuesser(message) {
@@ -326,7 +338,7 @@ class Game {
 			this.emitToAllSockets('notification',{ text: 'Next round starting in ' + timer, type: 'default' });
 			if(timer <= 0) {				
 				this.blockUpdates = false;
-				this.emitToAllSockets('notification',{ text: '', type: 'default' });
+				this.clearNotification();
 				this.newRound();
 				clearInterval(this.delay);
 			}
@@ -337,6 +349,7 @@ class Game {
 	newRound() {
 		this.roundCount++;
 		this.resetGame();
+		this.data.setStore(this.store);
 		this.newPainter();
 
 		if(this.store.players && Object.keys(this.store.players).length > 1) {
@@ -376,6 +389,10 @@ class Game {
 		this.data.setPlayerStatus(playerId,'painter');
 	}
 
+	clearNotification() {
+		this.emitToAllSockets('notification',{ text: '', type: 'default' });
+	}
+
 	endGame() {
 		// update the status of the room to trigger the scoreboard and then wait 5s to reset for next round
 		if(this.store.players) {
@@ -390,36 +407,33 @@ class Game {
 	}
 
 	resetGame() {		
-		this.cleverGuessers = 0;
 		this.resetClock();
 		this.resetCorrectStatus();
+		this.resetPath();
 		this.emitToAllSockets('puzzle',[]);
 	}
 
 	resetCorrectStatus() {
-		if(this.store.players) {
-			let players = this.store.players;
-			let playersArr = Object.keys(players) || [];
+		this.cleverGuessers = 0;
 
-			for(let i = 0; i < playersArr.length; i++) {
-				let username = playersArr[i];
-				this.data.updatePlayer(username, { correct: false })
-			}
+		for(let player in this.store.players) {
+			this.store.players[player].correct = false;
 		}
 	}
 
 	resetClock() {
 		this.timer = this.gameLength;
-		this.data.updateTimer(this.timer);
+		this.store.clock = this.timer;
 	}
 
-	resetRoom() {
-		this.data.setStatus('pending');
+	resetRoom() {		
 		this.resetGame();
-		this.resetPlayers();
+		this.store.status = 'pending';
+		this.resetPlayerScores();
 		this.inactivePlayers = {};
 		this.roundCount = 1;
 		this.resetChatlog();
+		this.data.setStore(this.store);
 
 		if(this.store.players) {
 			if(Object.keys(this.store.players).length === 1) {
@@ -427,25 +441,36 @@ class Game {
 			} else {
 				this.newPainter();
 			}
-		}
-		
+		}		
 	}
 
-	resetPlayers() {
+	resetPlayerScores() {
 		let players = this.store.players;
 		
 		for(let player in players) {
-			this.data.updatePlayer(player, { correct: false, score: 0 })
+			this.store.players[player].score = 0;
 		}
 	}
 
 	resetChatlog() {
-		this.data.clearChat();
+		this.store.chatLog = {};
+	}
+
+	resetPath() {
+		this.store.paths = {};
 	}
 
 	emitToAllSockets(type,emission) {
 		for(let socket in this.sockets) {
 			this.sockets[socket].emit(type, emission);
+		};
+	}
+
+	emitToGuessers(type,emission) {
+		for(let socket in this.sockets) {
+			if(this.store.players[socket] && this.store.players[socket].status !== 'painter') {
+				this.sockets[socket].emit(type, emission);
+			}			
 		};
 	}
 }

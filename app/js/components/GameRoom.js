@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 
 import Store from '../stores/Store';
 import Players from './Players.js';
-import Canvas from './Canvas.js';
+import CanvasPlayer from './CanvasPlayer.js';
+import CanvasClient from './CanvasClient.js';
 import Chat from './Chat.js';
 import Puzzle from './Puzzle.js';
 import EndGame from './Endgame';
@@ -27,25 +28,36 @@ export default class Home extends Component {
 		this.setState(state);
 	}
 
-	renderItems() {
+	calcReturnItems() {
 		if(this.state.store.status === 'finished') {
 			return (
 				<div className="game__wrap">
 					<EndGame />
 				</div>
 			)
-		} else {
-			return (
-				<div>					
-					<div className="game__wrap">
-						<Puzzle />			
-						<Canvas />
-						<Chat />
-					</div>	
-					<Players userId={this.props.userId} />
-				</div>						
-			)
 		}
+
+		if(this.state.player.status === 'painter') {
+			var canvas = <CanvasPlayer />
+		} else {
+			var canvas = <CanvasClient />
+		}
+
+		return (
+			<div>					
+				<div className="game__wrap">
+					<Puzzle />			
+					{canvas}
+					<Chat />
+				</div>	
+				<Players />
+			</div>	
+		)
+	}
+
+	renderItems() {
+		let returnItems = this.calcReturnItems();
+		return returnItems;
 	}
 
 	render() {

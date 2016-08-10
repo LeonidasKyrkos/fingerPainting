@@ -10,7 +10,6 @@ export default class CanvasSettings extends React.Component {
 		this.onChange = this.onChange.bind(this);
 		this.state = Store.getState();
 		this.setupVariables();
-		this.state.lineColour = 'white';
 	}
 
 	setupVariables() {
@@ -22,19 +21,9 @@ export default class CanvasSettings extends React.Component {
 		}
 	}
 
-	setupCtx() {
-		this.props.ctx.strokeStyle = "#FFFFFF";
-		this.props.ctx.shadowColor = "#FFFFFF";
-		this.props.ctx.shadowBlur = 1;
-		this.props.ctx.lineJoin = "round";
-  		this.props.ctx.lineWidth = 5;
-  		this.props.ctx.translate(0.5, 0.5);
-	}
-
 	componentDidMount() {
 		Store.listen(this.onChange);
-		this.setupCtx();
-	}	
+	}
 
 	componentWillUnmount() {
 		Store.unlisten(this.onChange);
@@ -45,21 +34,11 @@ export default class CanvasSettings extends React.Component {
 	}
 
 	runUpdateTests(nextProps,nextState) {
-		if (!_isEqual(nextProps,this.props)) {
-			return true;
-		}
-
 		if(nextState.store.status !== this.state.store.status) {
 			return true;
 		}
 
-		if(nextState.player.status !== this.state.player.status) {
-			return true;
-		}
-
 		return false;
-
-
 	}
 
 	onChange(state) {

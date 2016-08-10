@@ -33,12 +33,24 @@ class DataConnection {
 		})
 	}
 
+	setStore(store) {
+		this.dbRef.set(store);
+	}
+
+	updatePlayers(players) {
+		this.dbRef.child('players').set(players);
+	}
+
 	updatePlayer(player, obj) {
 		this.dbRef.child('players').child(player).update(obj);
 	}
 
 	removePlayer(id) {
 		this.dbRef.child('players').child(id).remove();
+	}
+
+	setChatLog(chatLog) {
+		this.dbRef.child('/chatLog/').set(chatLog);
 	}
 
 	pushMessage(message) {
