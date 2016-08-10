@@ -558,7 +558,7 @@ var CanvasPlayer = function (_Component) {
 			y: [],
 			drag: [],
 			colours: [],
-			width: []
+			widths: []
 		};
 
 		_this.state = _Store2.default.getState();

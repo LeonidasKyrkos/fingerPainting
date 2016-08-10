@@ -13,7 +13,7 @@ export default class CanvasPlayer extends Component {
 			y: [],
 			drag: [],
 			colours: [],
-			width: []
+			widths: []
 		}
 
 		this.state = Store.getState();
