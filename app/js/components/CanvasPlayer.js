@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import CanvasSettings from './CanvasSettings';
+import Store from '../stores/Store';
 import { redraw, renderPath, renderDot, clearContext } from '../utilities/canvasFunctions';
 import _ from 'lodash';
 
@@ -7,6 +8,8 @@ export default class CanvasPlayer extends Component {
 	constructor() {
 		super();
 		this.paths = [];
+		this.state = Store.getState();
+		this.onChange = this.onChange.bind(this);
 	}
 
 	componentDidMount() {
@@ -15,7 +18,12 @@ export default class CanvasPlayer extends Component {
 	}
 
 	componentWillUnmount() {
+		Store.unlisten(this.onChange);
 		this.stopInterval();
+	}
+
+	onChange(state) {
+		this.setState(state);
 	}
 
 	shouldComponentUpdate(nextProps,nextState) {
@@ -24,11 +32,18 @@ export default class CanvasPlayer extends Component {
 
 	startInterval() {
 		this.interval = setInterval(()=>{
+			// if(this.paths.length) {
+			// 	this.pushPaths();
+			// 	this.paths = [];
+			// }
 			if(this.paths.length) {
-				this.pushPaths();
-				this.paths = [];
+				redraw(this.paths,this.canvas,this.ctx);
 			}
 		},33);
+	}
+
+	stopInterval() {
+		clearInterval(this.interval);
 	}
 
 	setupCanvas() {
@@ -43,24 +58,12 @@ export default class CanvasPlayer extends Component {
 	// start
 	startDrawing(e) {
 		this.painting = true;
-		this.current = this.paths.length;
-		this.paths[this.current] = this.paths[this.current] || [];
 		this.addToArray(this.getX(e),this.getY(e),false);
 	}
 
 	// drag
 	dragBrush(e) {
 		if(this.painting) {
-			if(this.paths[this.current].length > 20) {
-				let prevArr = _.clone(this.paths[this.current]);
-				this.current++;
-				this.paths[this.current] = [];
-
-				for(let i = prevArr.length - 8; i < prevArr.length; i++) {
-					this.paths[this.current].push(prevArr[i]);
-				}
-			}
-
 			this.addToArray(this.getX(e),this.getY(e),true);
 		}
 	}
@@ -86,7 +89,7 @@ export default class CanvasPlayer extends Component {
 
 	// add to points array
 	addToArray(mx,my,dragStatus) {		
-		this.paths[this.current].push({
+		this.paths.push({
 			x: mx, 
 			y: my, 
 			color: this.ctx.strokeStyle, 
@@ -94,11 +97,13 @@ export default class CanvasPlayer extends Component {
 			dragging: dragStatus
 		})
 
-		redraw(this.paths,this.canvas,this.ctx);
+		if(this.paths.length) {
+			redraw(this.paths,this.canvas,this.ctx);
+		}		
 	}
 
 	pushPaths() {
-		this.state.socket.emit('path update',{ this.paths });
+		this.state.socket.emit('path update',this.paths);
 	}
 
 	// empty points array

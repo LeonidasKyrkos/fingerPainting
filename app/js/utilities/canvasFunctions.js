@@ -1,17 +1,11 @@
 export function redraw(paths,canvas,ctx) {
-	if(!paths.length) {
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		return;
-	} else {
-		ctx.beginPath();
-		paths.forEach((path,index)=>{
-			if(path.length < 4) {
-				renderDot(path,ctx);
-			} else {
-				renderPath(path,ctx);
-			}
-		});
-	}	
+	paths.forEach((path,index)=>{
+		if(path.length < 4) {
+			renderDot(path,ctx);
+		} else {
+			renderPath(path,ctx);
+		}
+	});	
 }
 
 
@@ -19,7 +13,8 @@ export function renderPath(path,ctx) {
 	let first = path[0];
 	let length = path.length;
 
-	ctx.moveTo(first.x,first.y);	
+	ctx.moveTo(first.x,first.y);
+	ctx.beginPath();
 
 	path.forEach((item,index)=>{
 		if(index > 0 && index < length - 2) {
@@ -40,6 +35,8 @@ export function renderPath(path,ctx) {
 		ctx.shadowColor = first.color;
 		ctx.stroke();
 	});
+
+	ctx.closePath();
 }
 
 export function renderDot(path,ctx) {

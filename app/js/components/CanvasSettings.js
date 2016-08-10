@@ -34,7 +34,7 @@ export default class CanvasSettings extends React.Component {
 	componentDidMount() {
 		Store.listen(this.onChange);
 		this.setupCtx();
-	}	
+	}
 
 	componentWillUnmount() {
 		Store.unlisten(this.onChange);
