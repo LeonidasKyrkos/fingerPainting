@@ -1,67 +1,43 @@
 export function redraw(paths,context) {
-	context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-	
-	context.lineJoin = "round";
-	context.shadowBlur = 1;
-	context.lineWidth = 5;
+	if(!paths.x.length) {
+		context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
 
-	for(var i=0; i < paths.x.length; i++) {		
-		context.beginPath();
+	} else {	
+		context.lineJoin = "round";
+		context.shadowBlur = 1;
+		context.lineWidth = 3;
 
-		if(paths.drag[i] && i){
-			context.moveTo(paths.x[i-1], paths.y[i-1]);
-		}else{
-			context.moveTo(paths.x[i]-1, paths.y[i]);
+		for(var i=0; i < paths.x.length; i++) {		
+			context.beginPath();
+
+			if(paths.drag[i] && i){
+				renderPath(paths.x[i],paths.x[i+1],paths.y[i],paths.y[i+1],context)
+			}else{
+				renderDot(paths.x[i]-2, paths.x[i], paths.y[i], context)
+			}
+
+			context.strokeStyle = paths.colours[i];
+			context.shadowColor = paths.colours[i];
+			context.lineWidth = paths.widths[i];			
+			context.closePath();
+			context.stroke();
 		}
-
-		context.strokeStyle = paths.colours[i];
-		context.shadowColor = paths.colours[i];
-		context.lineWidth = paths.widths[i];
-		context.lineTo(paths.x[i], paths.y[i]);
-		context.closePath();
-		context.stroke();
 	}
 }
 
 
-export function renderPath(path,ctx) {
-	let first = path[0];
-	let length = path.length;
+export function renderPath(x1,x2,y1,y2,context) {
+	context.moveTo(x1,y1);
 
-	ctx.moveTo(first.x,first.y);
-	ctx.beginPath();
+	var x = (x1 + x2) / 2;
+	var y = (y1 + y2) / 2;
 
-	path.forEach((item,index)=>{
-		if(index > 0 && index < length - 2) {
-			if(item.joined) {
-				var x = (item.x + path[index + 1].x) / 2;
-				var y = (item.y + path[index + 1].y) / 2;
-			} else {
-				var x = (item.x + path[index + 1].x) / 2;
-				var y = (item.y + path[index + 1].y) / 2;
-			}
-
-			ctx.quadraticCurveTo(item.x, item.y, x, y);
-		}
-
-		ctx.lineWidth = first.size;
-		ctx.strokeStyle = first.color;
-		ctx.shadowBlur = 1;
-		ctx.shadowColor = first.color;
-		ctx.stroke();
-	});
-
-	ctx.closePath();
+	context.quadraticCurveTo(x, y, x2, y2);
 }
 
-export function renderDot(path,ctx) {
-	let obj = path[0];
-
-	ctx.beginPath();
-	ctx.arc(obj.x, obj.y, obj.size / 2, 0, 2 * Math.PI, false);
-	ctx.fillStyle = obj.color;
-	ctx.fill();
-	ctx.closePath();
+export function renderDot(x1,x2,y,context) {
+	context.moveTo(x1, y);
+	context.lineTo(x2, y);
 }
 
 // clear the supplied context
