@@ -603,6 +603,34 @@ var CanvasPlayer = function (_Component) {
 				widths: []
 			};
 		}
+	}, {
+		key: 'refreshPathsObject',
+		value: function refreshPathsObject() {
+			this.newPaths = {
+				x: [],
+				y: [],
+				drag: [],
+				colours: [],
+				widths: []
+			};
+
+			this.newPaths.x = this.getLastOfArray(this.paths.x);
+			this.newPaths.y = this.getLastOfArray(this.paths.y);
+			this.newPaths.drag = this.getLastOfArray(this.paths.drag);
+			this.newPaths.colours = this.getLastOfArray(this.paths.colours);
+			this.newPaths.widths = this.getLastOfArray(this.paths.widths);
+
+			this.paths = this.newPaths;
+		}
+	}, {
+		key: 'getLastOfArray',
+		value: function getLastOfArray(arr) {
+			if (arr.length > 10) {
+				return arr.slice(arr.length - 10, arr.length);
+			} else {
+				return [];
+			}
+		}
 
 		// start
 
@@ -668,8 +696,12 @@ var CanvasPlayer = function (_Component) {
 
 			window.requestAnimationFrame(function () {
 				_this2.pushPaths();
+				(0, _canvasFunctions.redraw)(_this2.paths, _this2.ctx);
+
+				if (_this2.paths && _this2.paths.x.length > 30) {
+					_this2.refreshPathsObject();
+				}
 			});
-			(0, _canvasFunctions.redraw)(this.paths, this.ctx);
 		}
 	}, {
 		key: 'pushPaths',
@@ -2641,7 +2673,14 @@ exports.redraw = redraw;
 exports.renderPath = renderPath;
 exports.renderDot = renderDot;
 exports.clearContext = clearContext;
-function redraw(paths, context) {
+function redraw() {
+	var paths = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	var context = arguments[1];
+
+	if (!paths.x) {
+		return;
+	}
+
 	if (!paths.x.length) {
 		context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
 	} else {
@@ -2652,7 +2691,7 @@ function redraw(paths, context) {
 		for (var i = 0; i < paths.x.length; i++) {
 			context.beginPath();
 
-			if (paths.drag[i] && i) {
+			if (paths.drag[i]) {
 				renderPath(paths.x[i], paths.x[i + 1], paths.y[i], paths.y[i + 1], context);
 			} else {
 				renderDot(paths.x[i] - 2, paths.x[i], paths.y[i], context);
