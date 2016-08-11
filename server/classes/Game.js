@@ -50,7 +50,7 @@ class Game {
 		socket.emit('player',player);
 
 		socket.on('path update',(paths)=>{
-			debounce(this.emitToAllSockets('path update',paths),33);
+			this.emitToGuessers('path update',paths);
 		});
 
 		socket.on('start round',this.startRound.bind(this));

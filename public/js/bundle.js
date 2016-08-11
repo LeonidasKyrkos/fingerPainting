@@ -343,7 +343,7 @@ var App = function (_Component) {
 
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(App).call(this, props));
 
-		_this.socket = io.connect('http://localhost:3000');
+		_this.socket = io.connect('http://52.209.86.125:443/');
 		return _this;
 	}
 
@@ -554,6 +554,7 @@ var CanvasPlayer = function (_Component) {
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CanvasPlayer).call(this));
 
 		_this.oldPaths = {};
+		_this.last = _this.now();
 
 		_this.state = _Store2.default.getState();
 		_this.onChange = _this.onChange.bind(_this);
@@ -686,22 +687,24 @@ var CanvasPlayer = function (_Component) {
 	}, {
 		key: 'addToArray',
 		value: function addToArray(mx, my, dragStatus) {
-			var _this2 = this;
-
 			this.paths.x.push(mx);
 			this.paths.y.push(my);
 			this.paths.drag.push(dragStatus);
 			this.paths.colours.push(this.ctx.strokeStyle);
 			this.paths.widths.push(this.ctx.lineWidth);
 
-			window.requestAnimationFrame(function () {
-				_this2.pushPaths();
-				(0, _canvasFunctions.redraw)(_this2.paths, _this2.ctx);
+			(0, _canvasFunctions.redraw)(this.paths, this.ctx);
 
-				if (_this2.paths && _this2.paths.x.length > 30) {
-					_this2.refreshPathsObject();
-				}
-			});
+			if (this.now() - this.last > 33) {
+				this.last = this.now();
+				this.pushPaths();
+				this.refreshPathsObject();
+			}
+		}
+	}, {
+		key: 'now',
+		value: function now() {
+			return new Date().getTime();
 		}
 	}, {
 		key: 'pushPaths',

@@ -9,6 +9,7 @@ export default class CanvasPlayer extends Component {
 		super();
 
 		this.oldPaths = {};
+		this.last = this.now();
 
 		this.state = Store.getState();
 		this.onChange = this.onChange.bind(this);
@@ -120,16 +121,17 @@ export default class CanvasPlayer extends Component {
 		this.paths.colours.push(this.ctx.strokeStyle);
 		this.paths.widths.push(this.ctx.lineWidth);
 
-		window.requestAnimationFrame(()=>{ 
+		redraw(this.paths,this.ctx);
+
+		if(this.now() - this.last > 33) {
+			this.last = this.now();
 			this.pushPaths();
-			redraw(this.paths,this.ctx);
+			this.refreshPathsObject()
+		}				
+	}
 
-			if(this.paths && this.paths.x.length > 30) {
-				this.refreshPathsObject();
-			}
-		});
-
-			
+	now() {
+		return (new Date).getTime();
 	}
 
 	pushPaths() {
