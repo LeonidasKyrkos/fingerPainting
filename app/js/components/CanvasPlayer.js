@@ -7,21 +7,14 @@ import _ from 'lodash';
 export default class CanvasPlayer extends Component {
 	constructor() {
 		super();
-		
-		this.paths = {
-			x: [],
-			y: [],
-			drag: [],
-			colours: [],
-			widths: []
-		}
+
+		this.oldPaths = {};
 
 		this.state = Store.getState();
 		this.onChange = this.onChange.bind(this);
 	}
 
 	componentDidMount() {
-		this.startInterval();
 		this.setupCanvas();		
 	}
 
@@ -38,16 +31,6 @@ export default class CanvasPlayer extends Component {
 		return false;
 	}
 
-	startInterval() {
-		this.interval = setInterval(()=>{
-			this.pushPaths();
-		},33);
-	}
-
-	stopInterval() {
-		clearInterval(this.interval);
-	}
-
 	setupCanvas() {
 		this.canvas = document.querySelector('#canvas');
 		this.canvas.setAttribute('width',this.canvas.parentElement.offsetWidth);
@@ -58,8 +41,19 @@ export default class CanvasPlayer extends Component {
 		this.forceUpdate();
 	}
 
+	initialisePathsObject() {
+		this.paths = {
+			x: [],
+			y: [],
+			drag: [],
+			colours: [],
+			widths: []
+		}
+	}
+
 	// start
 	startDrawing(e) {
+		this.initialisePathsObject();
 		this.painting = true;
 		this.addToArray(this.getX(e),this.getY(e), false);
 	}
@@ -73,6 +67,7 @@ export default class CanvasPlayer extends Component {
 
 	// finish
 	stopDrawing() {
+		delete this.paths;
 		this.painting = false;
 	}
 
@@ -97,6 +92,8 @@ export default class CanvasPlayer extends Component {
 		this.paths.drag.push(dragStatus);
 		this.paths.colours.push(this.ctx.strokeStyle);
 		this.paths.widths.push(this.ctx.lineWidth);
+
+		window.requestAnimationFrame(()=>{ this.pushPaths() });
 		redraw(this.paths,this.ctx);
 	}
 
@@ -106,9 +103,8 @@ export default class CanvasPlayer extends Component {
 
 	// empty points array
 	clearArrays() {
-		for(let prop in this.paths) {
-			this.paths[prop] = [];
-		}
+		this.initialisePathsObject();
+		this.pushPaths();
 	}
 
 	// empty contexts and points
