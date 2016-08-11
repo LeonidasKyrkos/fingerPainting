@@ -4,6 +4,7 @@ let _ = require('lodash');
 let Eev = require  ('eev'); 
 let e = new Eev(); // event emitter
 let DataConnection = require ('./DataConnection'); 
+let debounce = require('debounce');
 
 class Game {
 	constructor(player,socket) {
@@ -49,7 +50,7 @@ class Game {
 		socket.emit('player',player);
 
 		socket.on('path update',(paths)=>{
-			this.emitToAllSockets('path update',paths);
+			debounce(this.emitToAllSockets('path update',paths),33);
 		});
 
 		socket.on('start round',this.startRound.bind(this));
