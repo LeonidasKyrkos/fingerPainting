@@ -1,4 +1,8 @@
-export function redraw(paths,context) {
+export function redraw(paths={},context) {
+	if(!paths.x) {
+		return;
+	}
+
 	if(!paths.x.length) {
 		context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
 
@@ -7,10 +11,10 @@ export function redraw(paths,context) {
 		context.shadowBlur = 1;
 		context.lineWidth = 3;
 
-		for(var i=0; i < paths.x.length; i++) {		
+		for(var i=0; i < paths.x.length; i++) {	
 			context.beginPath();
 
-			if(paths.drag[i] && i){
+			if(paths.drag[i]){
 				renderPath(paths.x[i],paths.x[i+1],paths.y[i],paths.y[i+1],context)
 			}else{
 				renderDot(paths.x[i]-2, paths.x[i], paths.y[i], context)

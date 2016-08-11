@@ -51,6 +51,33 @@ export default class CanvasPlayer extends Component {
 		}
 	}
 
+	refreshPathsObject() {
+		this.newPaths = {
+			x: [],
+			y: [],
+			drag: [],
+			colours: [],
+			widths: []
+		};
+
+		this.newPaths.x = this.getLastOfArray(this.paths.x);
+		this.newPaths.y = this.getLastOfArray(this.paths.y);
+		this.newPaths.drag = this.getLastOfArray(this.paths.drag);
+		this.newPaths.colours = this.getLastOfArray(this.paths.colours);
+		this.newPaths.widths = this.getLastOfArray(this.paths.widths);
+
+		this.paths = this.newPaths;
+
+	}
+
+	getLastOfArray(arr) {
+		if(arr.length > 10) {
+			return arr.slice(arr.length - 10, arr.length);
+		} else {
+			return [];
+		}
+	}
+
 	// start
 	startDrawing(e) {
 		this.initialisePathsObject();
@@ -93,8 +120,16 @@ export default class CanvasPlayer extends Component {
 		this.paths.colours.push(this.ctx.strokeStyle);
 		this.paths.widths.push(this.ctx.lineWidth);
 
-		window.requestAnimationFrame(()=>{ this.pushPaths() });
-		redraw(this.paths,this.ctx);
+		window.requestAnimationFrame(()=>{ 
+			this.pushPaths();
+			redraw(this.paths,this.ctx);
+
+			if(this.paths && this.paths.x.length > 30) {
+				this.refreshPathsObject();
+			}
+		});
+
+			
 	}
 
 	pushPaths() {
