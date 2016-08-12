@@ -343,7 +343,7 @@ var App = function (_Component) {
 
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(App).call(this, props));
 
-		_this.socket = io.connect('http://localhost:3000');
+		_this.socket = io.connect('http://52.209.86.125:443/');
 		return _this;
 	}
 
