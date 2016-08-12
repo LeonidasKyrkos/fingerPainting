@@ -126,7 +126,10 @@ export default class CanvasPlayer extends Component {
 		if(this.now() - this.last > 33) {
 			this.last = this.now();
 			this.pushPaths();
-			this.refreshPathsObject()
+
+			if(this.paths && this.paths.x.length > 50) {
+				this.refreshPathsObject();
+			}
 		}				
 	}
 
