@@ -343,7 +343,7 @@ var App = function (_Component) {
 
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(App).call(this, props));
 
-		_this.socket = io.connect('http://52.209.86.125:443/');
+		_this.socket = io.connect('http://localhost:3000');
 		return _this;
 	}
 
@@ -698,7 +698,10 @@ var CanvasPlayer = function (_Component) {
 			if (this.now() - this.last > 33) {
 				this.last = this.now();
 				this.pushPaths();
-				this.refreshPathsObject();
+
+				if (this.paths && this.paths.x.length > 50) {
+					this.refreshPathsObject();
+				}
 			}
 		}
 	}, {
