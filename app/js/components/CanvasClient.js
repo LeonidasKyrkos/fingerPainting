@@ -20,6 +20,9 @@ export default class CanvasClient extends Component {
 		this.canvas.setAttribute('width',this.canvas.parentElement.offsetWidth);
 		this.ctx = this.canvas.getContext('2d');
 		Store.listen(this.onChange);
+		this.state.socket.on('reset',()=>{
+			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		});
 	}
 
 	componentWillUnmount() {

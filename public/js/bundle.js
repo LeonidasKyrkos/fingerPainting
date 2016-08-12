@@ -469,10 +469,15 @@ var CanvasClient = function (_Component) {
 	_createClass(CanvasClient, [{
 		key: 'componentDidMount',
 		value: function componentDidMount() {
+			var _this2 = this;
+
 			this.canvas = document.querySelector('#canvas');
 			this.canvas.setAttribute('width', this.canvas.parentElement.offsetWidth);
 			this.ctx = this.canvas.getContext('2d');
 			_Store2.default.listen(this.onChange);
+			this.state.socket.on('reset', function () {
+				_this2.ctx.clearRect(0, 0, _this2.canvas.width, _this2.canvas.height);
+			});
 		}
 	}, {
 		key: 'componentWillUnmount',

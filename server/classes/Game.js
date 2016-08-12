@@ -403,6 +403,7 @@ class Game {
 		this.resetClock();
 		this.resetCorrectStatus();
 		this.resetPath();
+		this.emitToAllSockets('reset');
 		this.resetChatlog();
 		this.emitToAllSockets('puzzle',[]);
 	}
