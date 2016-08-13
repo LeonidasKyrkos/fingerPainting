@@ -907,10 +907,14 @@ var CanvasSettings = function (_React$Component) {
 	}, {
 		key: 'handleColorChange',
 		value: function handleColorChange(colour) {
-			document.querySelector('[data-js="colour-opener"]').setAttribute('style', 'background-color: ' + colour.hex);
+			var r = colour.rgb.r;
+			var g = colour.rgb.g;
+			var b = colour.rgb.b;
+			var a = colour.rgb.a;
+			var rgba = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+			document.querySelector('[data-js="colour-opener"]').setAttribute('style', 'background-color: ' + rgba);
 
-			this.props.ctx.strokeStyle = colour.hex;
-			this.props.ctx.shadowColor = colour.hex;
+			this.props.ctx.strokeStyle = rgba;
 		}
 	}, {
 		key: 'renderColorPicker',
@@ -1318,6 +1322,17 @@ var Dictionarys = function (_Component) {
 					'div',
 					{ id: id, 'data-js': 'dictionary.table', className: 'hide', key: index },
 					_react2.default.createElement(_AddWord2.default, { socket: _this2.props.socket, table: title }),
+					_react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(
+							'span',
+							null,
+							'Number of entries: ',
+							Object.keys(dictionarys[title]).length
+						)
+					),
+					_react2.default.createElement('br', null),
 					_react2.default.createElement(
 						'table',
 						{ className: 'table' },
