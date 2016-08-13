@@ -26,7 +26,7 @@ export function redraw(paths={},context) {
 			context.closePath();
 			context.stroke();
 		}
-	}
+	}	
 }
 
 

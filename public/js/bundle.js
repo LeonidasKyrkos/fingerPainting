@@ -1319,6 +1319,17 @@ var Dictionarys = function (_Component) {
 					{ id: id, 'data-js': 'dictionary.table', className: 'hide', key: index },
 					_react2.default.createElement(_AddWord2.default, { socket: _this2.props.socket, table: title }),
 					_react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(
+							'span',
+							null,
+							'Number of entries: ',
+							Object.keys(dictionarys[title]).length
+						)
+					),
+					_react2.default.createElement('br', null),
+					_react2.default.createElement(
 						'table',
 						{ className: 'table' },
 						_react2.default.createElement(
