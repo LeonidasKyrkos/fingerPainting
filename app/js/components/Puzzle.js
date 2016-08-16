@@ -44,7 +44,13 @@ export default class Puzzle extends Component {
 
 	renderPuzzle() {
 		return this.state.puzzleArray.map((item, index)=>{
-			return <span className="game__puzzle-word" key={index}>{item}</span>
+			return <span className="game__puzzle-word" key={index}>{this.renderLetters(item)}</span>
+		});
+	}
+
+	renderLetters(word) {
+		return word.map((letter,index)=>{
+			return <span key={index}>{letter}</span>
 		});
 	}
 

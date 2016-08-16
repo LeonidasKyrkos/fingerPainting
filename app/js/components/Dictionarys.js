@@ -15,6 +15,10 @@ export default class Dictionarys extends Component {
 			return (
 				<div id={id} data-js="dictionary.table" className="hide" key={index}>
 					<AddWord socket={this.props.socket} table={title} />
+					<div>
+						<span>Number of entries: {Object.keys(dictionarys[title]).length}</span>
+					</div>
+					<br/>
 					<table className="table">
 						<thead>
 							<tr>
