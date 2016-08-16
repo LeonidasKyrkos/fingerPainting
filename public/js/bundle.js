@@ -575,7 +575,6 @@ var CanvasPlayer = function (_Component) {
 		key: 'componentWillUnmount',
 		value: function componentWillUnmount() {
 			_Store2.default.unlisten(this.onChange);
-			this.stopInterval();
 		}
 	}, {
 		key: 'onChange',
@@ -594,6 +593,9 @@ var CanvasPlayer = function (_Component) {
 			this.canvas.setAttribute('width', this.canvas.parentElement.offsetWidth);
 			this.ctx = this.canvas.getContext('2d');
 			this.ctx.strokeStyle = "#FFFFFF";
+			this.ctx.lineWidth = 3;
+			this.ctx.shadowBlur = 1;
+			this.ctx.lineJoin = "round";
 			this.canvasX = this.canvas.offsetLeft;
 			this.canvasY = this.canvas.offsetTop;
 			this.forceUpdate();
@@ -934,13 +936,14 @@ var CanvasSettings = function (_React$Component) {
 
 			var sizes = this.sizes || {};
 			return Object.keys(sizes).map(function (item, index) {
+				var classes = index === 0 ? 'canvas__brush-size-wrap active' : 'canvas__brush-size-wrap';
 				var size = sizes[item];
 				return _react2.default.createElement(
 					'li',
 					{ key: index, className: 'ib' },
 					_react2.default.createElement(
 						'span',
-						{ className: 'canvas__brush-size-wrap', 'data-size': size, onClick: _this3.changeBrushSize.bind(_this3) },
+						{ className: classes, 'data-size': size, onClick: _this3.changeBrushSize.bind(_this3) },
 						_react2.default.createElement('span', { className: 'canvas__brush-size', style: { width: size + 'px', height: size + 'px' } })
 					)
 				);
@@ -949,7 +952,13 @@ var CanvasSettings = function (_React$Component) {
 	}, {
 		key: 'changeBrushSize',
 		value: function changeBrushSize(e) {
+			var sizes = document.querySelectorAll('[data-size]');
+			sizes.forEach(function (el, index) {
+				el.className = 'canvas__brush-size-wrap';
+			});
+
 			var newSize = e.target.getAttribute('data-size');
+			e.target.className = 'canvas__brush-size-wrap active';
 			this.props.ctx.lineWidth = newSize;
 		}
 	}, {
@@ -2699,6 +2708,8 @@ function redraw() {
 	var paths = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	var context = arguments[1];
 
+	var dots = [];
+
 	if (!paths.x) {
 		return;
 	}
@@ -2706,17 +2717,13 @@ function redraw() {
 	if (!paths.x.length) {
 		context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
 	} else {
-		context.lineJoin = "round";
-		context.shadowBlur = 1;
-		context.lineWidth = 3;
-
 		for (var i = 0; i < paths.x.length; i++) {
 			context.beginPath();
 
 			if (paths.drag[i]) {
 				renderPath(paths.x[i], paths.x[i + 1], paths.y[i], paths.y[i + 1], context);
 			} else {
-				renderDot(paths.x[i] - 2, paths.x[i], paths.y[i], context);
+				dots.push(i);
 			}
 
 			context.strokeStyle = paths.colours[i];
@@ -2725,6 +2732,8 @@ function redraw() {
 			context.closePath();
 			context.stroke();
 		}
+
+		renderDots(dots, paths, context);
 	}
 }
 
@@ -2737,9 +2746,16 @@ function renderPath(x1, x2, y1, y2, context) {
 	context.quadraticCurveTo(x, y, x2, y2);
 }
 
-function renderDot(x1, x2, y, context) {
-	context.moveTo(x1, y);
-	context.lineTo(x2, y);
+function renderDots(dots, paths, context) {
+	dots.forEach(function (pathIndex, index) {
+		renderDot(paths.x[pathIndex], paths.y[pathIndex], paths.colours[pathIndex], context);
+	});
+}
+
+function renderDot(x, y, colour, context) {
+	context.arc(x, y, context.lineWidth / 2, 0, 2 * Math.PI);
+	context.fillStyle = colour;
+	context.fill();
 }
 
 // clear the supplied context

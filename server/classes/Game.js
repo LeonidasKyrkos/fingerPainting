@@ -4,7 +4,6 @@ let _ = require('lodash');
 let Eev = require  ('eev'); 
 let e = new Eev(); // event emitter
 let DataConnection = require ('./DataConnection'); 
-let debounce = require('debounce');
 
 class Game {
 	constructor(player,socket) {
@@ -306,7 +305,7 @@ class Game {
 		let playersArr = Object.keys(players) || [];
 		let remaining = playersArr.length - this.garbageQueue.length;
 
-		if(this.roundCount >= remaining * 2) {
+		if(this.playerTurns()) {
 			this.endGame();
 			return;
 		}
@@ -321,6 +320,20 @@ class Game {
 		} else {
 			this.newPainter();
 		}
+	}
+
+	// check number of turns of each active player
+	playerTurns() {
+		let count = 0;
+		let players = this.store.players;
+
+		for(let player in players) {
+			if(players[player].turns < 2) {
+				count++;
+			}
+		}
+
+		if(count <= 1) { return true } else { return false };
 	}
 
 	roundDelay() {
@@ -351,27 +364,46 @@ class Game {
 	}
 
 	newPainter() {
+		let set = false;
 		let players = this.store.players || {};
-		let playersArr = Object.keys(players) || [];
+		let playersArr = [];
 
-		for(var index = 0; index <= playersArr.length - 1; index++) {
-			let playerId = playersArr[index];
-			let player = players[playerId];	
+		for(let player in players) {
+			playersArr.push(players[player]);
+		}
+
+		let remainingPlayers = _.filter(playersArr,(player)=>{ return player.turns < 2 });
+
+		for(var index = 0; index <= remainingPlayers.length - 1; index++) {
+			let playerId = remainingPlayers[index].id;
+			let player = players[playerId];
 
 			if(player.status === 'painter') {
 				this.setGuesser(playerId);
+				this.incrementPlayerTurns(playerId);
 
-				if(index === playersArr.length - 1) {
-					var nextPlayerId = playersArr[0];
+
+				if(index === remainingPlayers.length - 1) {
+					var nextPlayerId = remainingPlayers[0].id;
 				} else {
-					var nextPlayerId = playersArr[index+1];
+					var nextPlayerId = remainingPlayers[index+1].id;
 				}
 
 				this.setPainter(nextPlayerId);
+				set = true;
 
 				break;
 			}
 		}
+
+		if(!set) {
+			this.setPainter(playersArr[0].id);
+		}
+	}
+
+	incrementPlayerTurns(playerId) {
+		let turns = this.store.players[playerId].turns + 1;
+		this.data.updatePlayerTurns(playerId,turns);
 	}
 
 	setGuesser(playerId) {

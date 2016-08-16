@@ -3,7 +3,7 @@ $module: 		'canvas';
 
 .#{$module} {
 	background-color: $color4;
-	cursor: pointer;
+	cursor: url('../media/img/finger.ico') 15 0,pointer;
 	display: block;
 
 	&__wrap {
@@ -60,6 +60,10 @@ $module: 		'canvas';
 		margin: 0 auto;
 		@include transform(translateY(-50%));
 		pointer-events: none;
+
+		.#{$module}__brush-size-wrap.active > & {
+			background-color: $color5;
+		}
 	}
 
 	&__colour-picker {

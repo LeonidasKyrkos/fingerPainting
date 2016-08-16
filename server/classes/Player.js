@@ -7,6 +7,7 @@ class Player {
 		this.status = 'guesser',
 		this.score = 0,
 		this.refreshToken = cookie;
+		this.turns = 0;
 	}
 }
 

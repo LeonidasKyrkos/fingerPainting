@@ -33,6 +33,10 @@ class DataConnection {
 		})
 	}
 
+	updatePlayerTurns(player,turns) {
+		this.dbRef.child('players').child(player).child('turns').set(turns);
+	}
+
 	setStore(store) {
 		this.dbRef.set(store);
 	}

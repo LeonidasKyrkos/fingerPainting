@@ -21,7 +21,6 @@ export default class CanvasPlayer extends Component {
 
 	componentWillUnmount() {
 		Store.unlisten(this.onChange);
-		this.stopInterval();
 	}
 
 	onChange(state) {
@@ -37,6 +36,9 @@ export default class CanvasPlayer extends Component {
 		this.canvas.setAttribute('width',this.canvas.parentElement.offsetWidth);
 		this.ctx = this.canvas.getContext('2d');
 		this.ctx.strokeStyle = "#FFFFFF";
+		this.ctx.lineWidth = 3;
+		this.ctx.shadowBlur = 1;
+		this.ctx.lineJoin = "round";
 		this.canvasX = this.canvas.offsetLeft;
 		this.canvasY = this.canvas.offsetTop;
 		this.forceUpdate();
