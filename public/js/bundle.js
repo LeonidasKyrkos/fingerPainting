@@ -575,7 +575,6 @@ var CanvasPlayer = function (_Component) {
 		key: 'componentWillUnmount',
 		value: function componentWillUnmount() {
 			_Store2.default.unlisten(this.onChange);
-			this.stopInterval();
 		}
 	}, {
 		key: 'onChange',

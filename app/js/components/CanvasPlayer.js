@@ -21,7 +21,6 @@ export default class CanvasPlayer extends Component {
 
 	componentWillUnmount() {
 		Store.unlisten(this.onChange);
-		this.stopInterval();
 	}
 
 	onChange(state) {
