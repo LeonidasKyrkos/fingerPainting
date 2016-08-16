@@ -448,7 +448,7 @@ h1, h2, h3, h4, h5 {
 
 .canvas {
   background-color: #4E4E4E;
-  cursor: pointer;
+  cursor: url("../media/img/finger.ico") 15 0, pointer;
   display: block; }
   .canvas__wrap {
     width: calc(80% - 20px);
@@ -540,6 +540,8 @@ h1, h2, h3, h4, h5 {
     -o-transform: translateY(-50%);
     transform: translateY(-50%);
     pointer-events: none; }
+    .canvas__brush-size-wrap.active > .canvas__brush-size {
+      background-color: gold; }
   .canvas__colour-picker {
     position: absolute; }
     .canvas__colour-picker > div {

@@ -1,4 +1,6 @@
 export function redraw(paths={},context) {
+	let dots = [];
+
 	if(!paths.x) {
 		return;
 	}
@@ -6,18 +8,14 @@ export function redraw(paths={},context) {
 	if(!paths.x.length) {
 		context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
 
-	} else {	
-		context.lineJoin = "round";
-		context.shadowBlur = 1;
-		context.lineWidth = 3;
-
+	} else {
 		for(var i=0; i < paths.x.length; i++) {	
 			context.beginPath();
 
-			if(paths.drag[i]){
+			if(paths.drag[i]) {
 				renderPath(paths.x[i],paths.x[i+1],paths.y[i],paths.y[i+1],context)
-			}else{
-				renderDot(paths.x[i]-2, paths.x[i], paths.y[i], context)
+			} else {
+				dots.push(i);
 			}
 
 			context.strokeStyle = paths.colours[i];
@@ -26,6 +24,8 @@ export function redraw(paths={},context) {
 			context.closePath();
 			context.stroke();
 		}
+
+		renderDots(dots,paths,context);
 	}	
 }
 
@@ -39,9 +39,16 @@ export function renderPath(x1,x2,y1,y2,context) {
 	context.quadraticCurveTo(x, y, x2, y2);
 }
 
-export function renderDot(x1,x2,y,context) {
-	context.moveTo(x1, y);
-	context.lineTo(x2, y);
+function renderDots(dots,paths,context) {
+	dots.forEach((pathIndex, index)=>{
+		renderDot(paths.x[pathIndex],paths.y[pathIndex], paths.colours[pathIndex], context);
+	});
+}
+
+export function renderDot(x,y,colour,context) {
+	context.arc(x,y,context.lineWidth/2, 0, 2*Math.PI);
+	context.fillStyle = colour;
+	context.fill();
 }
 
 // clear the supplied context

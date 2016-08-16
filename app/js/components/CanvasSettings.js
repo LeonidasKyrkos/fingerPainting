@@ -106,10 +106,11 @@ export default class CanvasSettings extends React.Component {
 	renderSizePicker() {
 		let sizes = this.sizes || {};
 		return Object.keys(sizes).map((item, index)=>{
+			let classes = index === 0 ? 'canvas__brush-size-wrap active' : 'canvas__brush-size-wrap';
 			let size = sizes[item];
 			return (
 				<li key={index} className="ib">
-					<span className="canvas__brush-size-wrap" data-size={size} onClick={this.changeBrushSize.bind(this)}>
+					<span className={classes} data-size={size} onClick={this.changeBrushSize.bind(this)}>
 						<span className="canvas__brush-size" style={{width: size + 'px', height: size + 'px'}}></span>
 					</span>
 				</li>
@@ -118,7 +119,13 @@ export default class CanvasSettings extends React.Component {
 	}
 
 	changeBrushSize(e) {
+		let sizes = document.querySelectorAll('[data-size]');
+		sizes.forEach((el,index)=>{
+			el.className = 'canvas__brush-size-wrap';
+		});
+
 		let newSize = e.target.getAttribute('data-size');
+		e.target.className = 'canvas__brush-size-wrap active';
 		this.props.ctx.lineWidth = newSize;
 	}
 
