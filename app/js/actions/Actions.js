@@ -32,6 +32,10 @@ class Actions {
 	updateNotification(notification) {
 		return notification;
 	}
+
+	updateRooms(rooms) {
+		return rooms;
+	}
 }
 
 export default alt.createActions(Actions);

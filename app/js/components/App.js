@@ -40,6 +40,11 @@ export default class App extends Component {
 
 		this.socket.on('join room',(room)=>{
 			this.joinRoom(room);
+			this.socket.emit('joined room');
+		});
+
+		this.socket.on('rooms',(rooms)=>{
+			Actions.updateRooms(rooms);
 		});
 	}
 

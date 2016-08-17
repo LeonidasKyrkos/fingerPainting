@@ -11,6 +11,7 @@ class Store {
 		this.dictionarys = {};
 		this.player = {};
 		this.notification = { text: '', type: '' };
+		this.rooms = {};
 
 		this.bindListeners({
 			handleUpdateStore: Actions.UPDATE_STORE,
@@ -20,7 +21,8 @@ class Store {
 			handleUpdateError: Actions.UPDATE_ERROR,
 			handleUpdateDictionarys: Actions.UPDATE_DICTIONARYS,
 			handleUpdatePlayer: Actions.UPDATE_PLAYER,
-			handleUpdateNotification: Actions.UPDATE_NOTIFICATION
+			handleUpdateNotification: Actions.UPDATE_NOTIFICATION,
+			handleUpdateRooms: Actions.UPDATE_ROOMS
 		})
 	}
 
@@ -54,6 +56,10 @@ class Store {
 
 	handleUpdateNotification(notification) {
 		this.notification = notification;
+	}
+
+	handleUpdateRooms(rooms) {
+		this.rooms = rooms;
 	}
 
 }
