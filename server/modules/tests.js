@@ -5,7 +5,7 @@ var firebase = require('./firebaseConfig');
 function roomTests(request,socket) {
 	var room = firebase.rooms[request.id];
 
-	if(!room) { return { status: false, reason: 'Room not found or password incorrect' } }
+	if(!room) { return { status: false, reason: 'Room not found' } }
 
 	var tests = {
 		name: {
@@ -15,9 +15,9 @@ function roomTests(request,socket) {
 	}
 
 	if(room.password) {
-		tests[password] = {
+		tests['password'] = {
 			func: testCompare,
-			args: [room.password, request.password, 'Room number not found or password incorrect']
+			args: [room.password, request.password, 'Invalid password']
 		}
 	}
 

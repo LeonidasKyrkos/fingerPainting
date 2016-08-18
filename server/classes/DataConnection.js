@@ -13,6 +13,10 @@ class DataConnection {
 		});
 	}
 
+	unwatchRooms() {
+		firebase.db.ref(firebase.roomsPath).off();
+	}
+
 	getDictionary(dictionary) {
 		return new Promise((resolve, reject)=>{
 			firebase.db.ref('/dictionarys/' + dictionary).once('value',(snapshot)=>{

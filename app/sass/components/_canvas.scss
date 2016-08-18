@@ -6,6 +6,11 @@ $module: 		'canvas';
 	cursor: url('../media/img/finger.ico') 15 0,pointer;
 	display: block;
 
+	&--client {
+		@extend .#{$module};
+		cursor: default;
+	}
+
 	&__wrap {
 		width: $layout-width-canvas;
 		max-width: 100%;

@@ -10,6 +10,7 @@ let Eev = require  ('eev');
 let e = new Eev(); // event emitter
 let data = new DataConnection(0,e);
 let roomPickers = {};
+let roomStore;
 
 e.on('rooms',updateRoomStore);
 data.watchRooms();
@@ -19,6 +20,7 @@ io.on('connection', (socket)=>{
 	socket.userId = socket.client.conn.id;
 	socket.emit('connected',{ id: socket.userId });
 	roomPickers[socket.userId] = socket;
+	socket.emit('rooms',roomStore);
 
 	socket.on('join request',(request)=>{
 		utils.joinHandler(request,socket);
@@ -26,6 +28,10 @@ io.on('connection', (socket)=>{
 
 	socket.on('joined room',()=>{
 		delete roomPickers[socket.userId];
+
+		if(!Object.keys(roomPickers).length) {
+			data.unwatchRooms();
+		}
 	});
 });
 
@@ -35,10 +41,14 @@ adminSocket.on('connection',(socket)=>{
 
 
 function updateRoomStore(store) {
-	let roomStore = store;
+	roomStore = store;
 
 	for(let room in roomStore) {
-		delete roomStore[room].password;
+		if(roomStore[room].password) {
+			roomStore[room].password = '🔒';
+		} else {
+			roomStore[room].password = '';
+		}		
 	}
 
 	emitToAllSockets('rooms',roomStore);

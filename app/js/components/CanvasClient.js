@@ -44,7 +44,7 @@ export default class CanvasClient extends Component {
 	render() {
 		return (
 			<div className="canvas__wrap" onDragStart={this.noDragging}>
-				<canvas width="916" height="750px" className="canvas" id="canvas"></canvas>
+				<canvas width="916" height="750px" className="canvas--client" id="canvas"></canvas>
 			</div>
 		)
 	}

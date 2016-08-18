@@ -175,6 +175,15 @@ body {
   max-height: 0;
   overflow: hidden; }
 
+.tac {
+  text-align: center; }
+
+.tar {
+  text-align: right; }
+
+.tal {
+  text-align: left; }
+
 h1, h2, h3, h4, h5 {
   line-height: normal;
   font-weight: normal; }
@@ -272,6 +281,34 @@ h1, h2, h3, h4, h5 {
     clear: both;
     content: "";
     display: table; }
+  .form--popup {
+    position: fixed;
+    padding-top: 1em;
+    top: 50%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+    width: 25em;
+    max-width: 100%;
+    background-color: #f2f2f2;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+    padding: 1em;
+    color: black; }
+  .form__close {
+    position: absolute;
+    top: 0;
+    right: 0.25em;
+    cursor: pointer;
+    color: #B22222;
+    font-family: 'Helvetica';
+    padding: 0.5em; }
+    .form__close:hover {
+      color: #871a1a; }
   .form--chat {
     display: -webkit-box;
     display: -moz-box;
@@ -446,10 +483,12 @@ h1, h2, h3, h4, h5 {
       -o-transform: translateY(-50%);
       transform: translateY(-50%); }
 
-.canvas {
+.canvas, .canvas--client {
   background-color: #4E4E4E;
   cursor: url("../media/img/finger.ico") 15 0, pointer;
   display: block; }
+  .canvas--client {
+    cursor: default; }
   .canvas__wrap {
     width: calc(80% - 20px);
     max-width: 100%;
@@ -557,23 +596,35 @@ h1, h2, h3, h4, h5 {
 .table {
   background-color: #424242;
   min-width: 17.5em; }
-  .table thead {
-    color: gold; }
-  .table tbody {
-    font-size: 16px;
-    font-size: 1.6rem;
-    padding-bottom: 0.625em; }
-    .table tbody tr {
-      border-bottom: 0.05em solid #4E4E4E;
-      background-color: #3a3a3a; }
-      .table tbody tr:nth-child(even) {
-        background-color: #424242; }
-    .table tbody td {
-      padding: 0.25em; }
-  .table td {
-    line-height: 1.2;
-    padding: 0.5em;
-    position: relative; }
+  .table--rooms {
+    background-color: #424242;
+    width: 100%; }
+    .table--rooms tbody {
+      font-size: 0.9em; }
+    .table--rooms tbody td {
+      padding: 0.5em 0.75em; }
+    .table--rooms thead td {
+      padding: 0.6em 0.75em 0.5em; }
+
+thead {
+  color: gold; }
+
+tbody {
+  font-size: 16px;
+  font-size: 1.6rem;
+  padding-bottom: 0.625em; }
+  tbody tr {
+    border-bottom: 0.05em solid #4E4E4E;
+    background-color: #3a3a3a; }
+    tbody tr:nth-child(even) {
+      background-color: #424242; }
+  tbody td {
+    padding: 0.25em; }
+
+td {
+  line-height: 1.2;
+  padding: 0.5em;
+  position: relative; }
 
 .game__wrap {
   display: -webkit-box;
