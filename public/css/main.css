@@ -134,6 +134,10 @@ textarea {
 .ib {
   display: inline-block !important; }
 
+.ib--m {
+  display: inline-block !important;
+  vertical-align: middle; }
+
 .hide {
   display: none !important; }
 
@@ -210,7 +214,7 @@ h1, h2, h3, h4, h5 {
 .beta, .game__title {
   margin-bottom: 0.75em; }
 
-.gamma {
+.gamma, .gameroom__title {
   font-size: 32px;
   font-size: 3.2rem;
   font-family: Farsan, Tahoma, sans-serif;
@@ -218,7 +222,7 @@ h1, h2, h3, h4, h5 {
   line-height: 0.875;
   width: 100%; }
 
-.gamma {
+.gamma, .gameroom__title {
   margin-bottom: 0.75em; }
 
 .delta {
@@ -235,7 +239,7 @@ h1, h2, h3, h4, h5 {
 .alpha {
   text-align: center; }
 
-.btn, .btn--primary, .form__button--inline, .canvas__settings-btn, .btn--secondary, .btn--submit {
+.btn, .btn--primary, .form__button--inline, .canvas__start-btn, .canvas__settings-btn, .btn--secondary, .btn--submit {
   background-color: transparent;
   display: inline-block;
   margin-bottom: 0;
@@ -252,12 +256,12 @@ h1, h2, h3, h4, h5 {
   user-select: none;
   text-decoration: none !important;
   outline: 0; }
-  .btn--primary, .form__button--inline, .canvas__settings-btn {
+  .btn--primary, .form__button--inline, .canvas__start-btn, .canvas__settings-btn {
     font-size: 0.9em;
     background-color: #B22222;
     color: white;
     padding: 0.55556em; }
-    .btn--primary:hover, .form__button--inline:hover, .canvas__settings-btn:hover {
+    .btn--primary:hover, .form__button--inline:hover, .canvas__start-btn:hover, .canvas__settings-btn:hover {
       background-color: #871a1a; }
   .btn--secondary, .btn--submit {
     background-color: #4E4E4E;
@@ -495,7 +499,18 @@ h1, h2, h3, h4, h5 {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    user-select: none; }
+    user-select: none;
+    position: relative; }
+  .canvas__start-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    transform: translateX(-50%);
+    font-size: 1.1em; }
   .canvas__settings {
     display: -webkit-box;
     display: -moz-box;
@@ -592,13 +607,18 @@ h1, h2, h3, h4, h5 {
     width: 1.25em;
     height: 1.25em;
     background-color: white; }
+  .canvas__settings-label {
+    padding-right: 0.75em;
+    position: relative;
+    top: 0.25em; }
 
 .table {
   background-color: #424242;
   min-width: 17.5em; }
   .table--rooms {
     background-color: #424242;
-    width: 100%; }
+    width: 100%;
+    table-layout: fixed; }
     .table--rooms tbody {
       font-size: 0.9em; }
     .table--rooms tbody td {
@@ -667,9 +687,9 @@ td {
   width: 100%; }
 
 .game__timer {
-  font-size: 5em;
+  font-size: 3.5em;
   margin-left: auto;
-  min-width: 0.9em;
+  min-width: 1.28571em;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -896,3 +916,6 @@ td {
   .notification__text {
     font-size: 1.5em;
     color: white; }
+
+.gameroom__title {
+  margin-bottom: 0; }

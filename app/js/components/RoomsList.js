@@ -34,14 +34,21 @@ export default class RoomsList extends Component {
 		return rowsArr.map((row,index)=>{
 			let obj = rows[row];
 
+			if(obj.players) {
+				var players = <td>{Object.keys(obj.players).length}</td>
+			} else {
+				var players = <td></td>
+			}
+
 			return (
 				<tr key={row} className="tar">
 					<td className="tal">{row}</td>
-					<td className="tac">{rows[row].password}</td>
-					<td>{rows[row].dictionary}</td>
-					<td>{rows[row].clock}</td>
-					<td>{rows[row].status}</td>
-					<td><button className="btn--primary" data-room={row} data-password={rows[row].password} onClick={this.openForm.bind(this)}>Join room</button></td>
+					<td className="tac">{obj.password}</td>
+					<td>{obj.dictionary}</td>
+					{players}
+					<td>{obj.clock}</td>
+					<td>{obj.status}</td>
+					<td><button className="btn--primary" data-room={row} data-password={obj.password} onClick={this.openForm.bind(this)}>Join room</button></td>
 				</tr>
 			)
 		});
@@ -63,13 +70,14 @@ export default class RoomsList extends Component {
 			<section>
 				<table className="table--rooms">
 					<thead>
-						<tr>
-							<td>Room name</td>
-							<td className="tac">🔒</td>
-							<td className="tar">Dictionary</td>
-							<td className="tar">Round length</td>
-							<td className="tar">Status</td>
-							<td className="tar"></td>
+						<tr className="tar">
+							<td className="tal">Room name</td>
+							<td className="tac">Password</td>
+							<td>Dictionary</td>
+							<td>Players</td>
+							<td>Round time</td>
+							<td>Status</td>
+							<td></td>
 						</tr>
 					</thead>
 					<tbody>

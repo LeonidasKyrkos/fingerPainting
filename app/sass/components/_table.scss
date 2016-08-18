@@ -7,6 +7,7 @@ $module: 		'table';
 	&--rooms {
 		background-color: lighten($color3,10%);
 		width: 100%;
+		table-layout: fixed;
 
 		tbody {
 			font-size: em(18);

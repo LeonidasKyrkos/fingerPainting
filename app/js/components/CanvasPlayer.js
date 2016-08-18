@@ -105,13 +105,13 @@ export default class CanvasPlayer extends Component {
 
 	// get x coordinate
 	getX(e) {
-		this.canvasX = this.canvas.offsetLeft;
+		this.canvasX = this.canvas.offsetParent.offsetLeft;
 		return e.pageX - this.canvasX;
 	}
 
 	// get y coordinate
 	getY(e) {
-		this.canvasY = this.canvas.offsetTop;
+		this.canvasY = this.canvas.offsetParent.offsetTop + 42;
 		return e.pageY - this.canvasY;
 	}
 
@@ -155,18 +155,26 @@ export default class CanvasPlayer extends Component {
 		this.clearArrays();
 	}
 
+	startGame() {
+		this.state.socket.emit('start round');
+		this.refs.startGame.className = 'hide';
+	}
+
 	render() {
 		let settings = !this.ctx ? '' : <CanvasSettings scope={this} fullClear={this.fullClear} ctx={this.ctx} />
+		let startButton = this.state.store.status === 'pending' ? <button ref="startGame" className="canvas__start-btn" onClick={this.startGame.bind(this)}>Start game</button> : '';
 
 		return (
 			<div className="canvas__wrap" onDragStart={this.noDragging}>
 				{settings}
-				<canvas width="916" height="750px" className="canvas" id="canvas" 
+				<canvas width="916" height="700" className="canvas" id="canvas" 
 						onMouseDown={this.startDrawing.bind(this)} 
 						onMouseUp={this.stopDrawing.bind(this)} 
 						onMouseLeave={this.stopDrawing.bind(this)} 
-						onMouseMove={this.dragBrush.bind(this)}>
-				</canvas>				
+						onMouseMove={this.dragBrush.bind(this)}
+				>
+				</canvas>
+				{startButton}
 			</div>
 		)
 	}

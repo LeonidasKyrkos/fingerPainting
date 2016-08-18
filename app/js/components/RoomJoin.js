@@ -12,7 +12,6 @@ export default class RoomJoin extends Component {
 
 	componentDidMount() {
 		Store.listen(this.onChange);
-		window.addEventListener('keydown',this.handleKeyUp.bind(this));
 	}
 
 	componentDidUpdate() {
@@ -21,7 +20,6 @@ export default class RoomJoin extends Component {
 
 	componentWillUnmount() {
 		Store.unlisten(this.onChange);
-		window.removeEventListener('keyup',this.handleKeyUp.bind(this));
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -87,7 +85,7 @@ export default class RoomJoin extends Component {
 		let roomName = this.props.roomName ? this.props.roomName : (new Date()).getTime();
 
 		return (
-			<form data-js="room.join" className="form--popup" onSubmit={this.authenticate.bind(this)}>
+			<form onKeyDown={this.handleKeyUp.bind(this)} data-js="room.join" className="form--popup" onSubmit={this.authenticate.bind(this)}>
 				<span className="form__close" onClick={this.closeForm.bind(this)}>x</span>
 				<h3 className="gamma">{roomName}</h3>
 				<ErrorMessage socket={this.state.socket} />

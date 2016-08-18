@@ -15,6 +15,16 @@ $module: 		'canvas';
 		width: $layout-width-canvas;
 		max-width: 100%;
 		@include user-select(none);
+		position: relative;
+	}
+
+	&__start-btn {
+		@extend .btn--primary;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		@include transform(translateX(-50%));
+		font-size: em(22);
 	}
 
 	&__settings {
@@ -90,5 +100,11 @@ $module: 		'canvas';
 		width: em(25);
 		height: em(25);
 		background-color: white;
+	}
+
+	&__settings-label {
+		padding-right: em(15);
+		position: relative;
+		top: em(5);
 	}
 }

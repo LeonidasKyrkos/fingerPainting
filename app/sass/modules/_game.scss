@@ -21,7 +21,7 @@ $module: 			'game';
 	}
 
 	&__timer {
-		$fontSize: 100;
+		$fontSize: 70;
 		font-size: em($fontSize);
 		margin-left: auto;
 		min-width: em(90,$fontSize);

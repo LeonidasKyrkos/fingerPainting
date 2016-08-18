@@ -515,7 +515,7 @@ var CanvasClient = function (_Component) {
 			return _react2.default.createElement(
 				'div',
 				{ className: 'canvas__wrap', onDragStart: this.noDragging },
-				_react2.default.createElement('canvas', { width: '916', height: '750px', className: 'canvas--client', id: 'canvas' })
+				_react2.default.createElement('canvas', { width: '916', height: '700px', className: 'canvas--client', id: 'canvas' })
 			);
 		}
 	}]);
@@ -686,7 +686,7 @@ var CanvasPlayer = function (_Component) {
 	}, {
 		key: 'getX',
 		value: function getX(e) {
-			this.canvasX = this.canvas.offsetLeft;
+			this.canvasX = this.canvas.offsetParent.offsetLeft;
 			return e.pageX - this.canvasX;
 		}
 
@@ -695,7 +695,7 @@ var CanvasPlayer = function (_Component) {
 	}, {
 		key: 'getY',
 		value: function getY(e) {
-			this.canvasY = this.canvas.offsetTop;
+			this.canvasY = this.canvas.offsetParent.offsetTop + 42;
 			return e.pageY - this.canvasY;
 		}
 
@@ -750,19 +750,32 @@ var CanvasPlayer = function (_Component) {
 			this.clearArrays();
 		}
 	}, {
+		key: 'startGame',
+		value: function startGame() {
+			this.state.socket.emit('start round');
+			this.refs.startGame.className = 'hide';
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			var settings = !this.ctx ? '' : _react2.default.createElement(_CanvasSettings2.default, { scope: this, fullClear: this.fullClear, ctx: this.ctx });
+			var startButton = this.state.store.status === 'pending' ? _react2.default.createElement(
+				'button',
+				{ ref: 'startGame', className: 'canvas__start-btn', onClick: this.startGame.bind(this) },
+				'Start game'
+			) : '';
 
 			return _react2.default.createElement(
 				'div',
 				{ className: 'canvas__wrap', onDragStart: this.noDragging },
 				settings,
-				_react2.default.createElement('canvas', { width: '916', height: '750px', className: 'canvas', id: 'canvas',
+				_react2.default.createElement('canvas', { width: '916', height: '700', className: 'canvas', id: 'canvas',
 					onMouseDown: this.startDrawing.bind(this),
 					onMouseUp: this.stopDrawing.bind(this),
 					onMouseLeave: this.stopDrawing.bind(this),
-					onMouseMove: this.dragBrush.bind(this) })
+					onMouseMove: this.dragBrush.bind(this)
+				}),
+				startButton
 			);
 		}
 	}]);
@@ -855,50 +868,6 @@ var CanvasSettings = function (_React$Component) {
 			this.setState(state);
 		}
 	}, {
-		key: 'startGame',
-		value: function startGame() {
-			this.state.socket.emit('start round');
-		}
-	}, {
-		key: 'pause',
-		value: function pause() {
-			this.state.socket.emit('pause round');
-		}
-	}, {
-		key: 'unpause',
-		value: function unpause() {
-			this.state.socket.emit('unpause round');
-		}
-	}, {
-		key: 'getButton',
-		value: function getButton() {
-			if (this.state.store.status === 'pending') {
-				return _react2.default.createElement(
-					'button',
-					{ className: 'canvas__settings-btn', onClick: this.startGame.bind(this) },
-					'Start game'
-				);
-			}
-
-			if (this.state.store.status === 'playing') {
-				return _react2.default.createElement(
-					'button',
-					{ className: 'canvas__settings-btn', onClick: this.pause.bind(this) },
-					'Pause game'
-				);
-			}
-
-			if (this.state.store.status === 'paused') {
-				return _react2.default.createElement(
-					'button',
-					{ className: 'canvas__settings-btn', onClick: this.unpause.bind(this) },
-					'Unpause'
-				);
-			}
-
-			return '';
-		}
-	}, {
 		key: 'openColourPicker',
 		value: function openColourPicker(e) {
 			document.querySelector('[data-js="colour-picker"]').className = 'canvas__colour-picker active';
@@ -934,7 +903,7 @@ var CanvasSettings = function (_React$Component) {
 				var color = colors[item];
 				return _react2.default.createElement(
 					'li',
-					{ key: index, className: 'ib' },
+					{ key: index, className: 'ib--m' },
 					_react2.default.createElement('span', { 'data-js': 'colorPicker', 'data-color': color, style: { backgroundColor: color }, className: 'canvas__colour', onClick: _this2.handleColorChange.bind(_this2) })
 				);
 			});
@@ -950,7 +919,7 @@ var CanvasSettings = function (_React$Component) {
 				var size = sizes[item];
 				return _react2.default.createElement(
 					'li',
-					{ key: index, className: 'ib' },
+					{ key: index, className: 'ib--m' },
 					_react2.default.createElement(
 						'span',
 						{ className: classes, 'data-size': size, onClick: _this3.changeBrushSize.bind(_this3) },
@@ -980,11 +949,6 @@ var CanvasSettings = function (_React$Component) {
 				_react2.default.createElement(
 					'li',
 					null,
-					this.getButton()
-				),
-				_react2.default.createElement(
-					'li',
-					null,
 					_react2.default.createElement(
 						'button',
 						{ className: 'canvas__settings-btn', onClick: this.props.fullClear.bind(this.props.scope) },
@@ -1003,6 +967,11 @@ var CanvasSettings = function (_React$Component) {
 				_react2.default.createElement(
 					'li',
 					{ className: 'canvas__colours' },
+					_react2.default.createElement(
+						'span',
+						{ className: 'canvas__settings-label' },
+						'Colour picker ⇾'
+					),
 					_react2.default.createElement(
 						'div',
 						{ onMouseOver: this.clearTimer.bind(this), onMouseLeave: this.closeColourPicker.bind(this), className: 'canvas__colour-picker', 'data-js': 'colour-picker' },
@@ -1710,7 +1679,7 @@ var Home = function (_Component) {
 				{ className: 'wrapper' },
 				_react2.default.createElement(
 					'h1',
-					{ className: 'gamma' },
+					{ className: 'gameroom__title' },
 					'finger painting'
 				),
 				this.renderItems()
@@ -2238,7 +2207,6 @@ var RoomJoin = function (_Component) {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
 			_Store2.default.listen(this.onChange);
-			window.addEventListener('keydown', this.handleKeyUp.bind(this));
 		}
 	}, {
 		key: 'componentDidUpdate',
@@ -2249,7 +2217,6 @@ var RoomJoin = function (_Component) {
 		key: 'componentWillUnmount',
 		value: function componentWillUnmount() {
 			_Store2.default.unlisten(this.onChange);
-			window.removeEventListener('keyup', this.handleKeyUp.bind(this));
 		}
 	}, {
 		key: 'shouldComponentUpdate',
@@ -2331,7 +2298,7 @@ var RoomJoin = function (_Component) {
 
 			return _react2.default.createElement(
 				'form',
-				{ 'data-js': 'room.join', className: 'form--popup', onSubmit: this.authenticate.bind(this) },
+				{ onKeyDown: this.handleKeyUp.bind(this), 'data-js': 'room.join', className: 'form--popup', onSubmit: this.authenticate.bind(this) },
 				_react2.default.createElement(
 					'span',
 					{ className: 'form__close', onClick: this.closeForm.bind(this) },
@@ -2656,6 +2623,16 @@ var RoomsList = function (_Component) {
 			return rowsArr.map(function (row, index) {
 				var obj = rows[row];
 
+				if (obj.players) {
+					var players = _react2.default.createElement(
+						'td',
+						null,
+						Object.keys(obj.players).length
+					);
+				} else {
+					var players = _react2.default.createElement('td', null);
+				}
+
 				return _react2.default.createElement(
 					'tr',
 					{ key: row, className: 'tar' },
@@ -2667,29 +2644,30 @@ var RoomsList = function (_Component) {
 					_react2.default.createElement(
 						'td',
 						{ className: 'tac' },
-						rows[row].password
+						obj.password
 					),
 					_react2.default.createElement(
 						'td',
 						null,
-						rows[row].dictionary
+						obj.dictionary
+					),
+					players,
+					_react2.default.createElement(
+						'td',
+						null,
+						obj.clock
 					),
 					_react2.default.createElement(
 						'td',
 						null,
-						rows[row].clock
-					),
-					_react2.default.createElement(
-						'td',
-						null,
-						rows[row].status
+						obj.status
 					),
 					_react2.default.createElement(
 						'td',
 						null,
 						_react2.default.createElement(
 							'button',
-							{ className: 'btn--primary', 'data-room': row, 'data-password': rows[row].password, onClick: _this2.openForm.bind(_this2) },
+							{ className: 'btn--primary', 'data-room': row, 'data-password': obj.password, onClick: _this2.openForm.bind(_this2) },
 							'Join room'
 						)
 					)
@@ -2722,33 +2700,38 @@ var RoomsList = function (_Component) {
 						null,
 						_react2.default.createElement(
 							'tr',
-							null,
+							{ className: 'tar' },
 							_react2.default.createElement(
 								'td',
-								null,
+								{ className: 'tal' },
 								'Room name'
 							),
 							_react2.default.createElement(
 								'td',
 								{ className: 'tac' },
-								'🔒'
+								'Password'
 							),
 							_react2.default.createElement(
 								'td',
-								{ className: 'tar' },
+								null,
 								'Dictionary'
 							),
 							_react2.default.createElement(
 								'td',
-								{ className: 'tar' },
-								'Round length'
+								null,
+								'Players'
 							),
 							_react2.default.createElement(
 								'td',
-								{ className: 'tar' },
+								null,
+								'Round time'
+							),
+							_react2.default.createElement(
+								'td',
+								null,
 								'Status'
 							),
-							_react2.default.createElement('td', { className: 'tar' })
+							_react2.default.createElement('td', null)
 						)
 					),
 					_react2.default.createElement(
