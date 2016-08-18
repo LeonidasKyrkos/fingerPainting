@@ -37,7 +37,7 @@ export default class RoomsList extends Component {
 			if(obj.players) {
 				var players = <td>{Object.keys(obj.players).length}</td>
 			} else {
-				var players = <td></td>
+				var players = <td>0</td>
 			}
 
 			return (

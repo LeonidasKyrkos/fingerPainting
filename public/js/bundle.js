@@ -2630,7 +2630,11 @@ var RoomsList = function (_Component) {
 						Object.keys(obj.players).length
 					);
 				} else {
-					var players = _react2.default.createElement('td', null);
+					var players = _react2.default.createElement(
+						'td',
+						null,
+						'0'
+					);
 				}
 
 				return _react2.default.createElement(
