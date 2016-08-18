@@ -44,35 +44,7 @@ export default class CanvasSettings extends React.Component {
 	onChange(state) {
 		this.setState(state);
 	}
-
-	startGame() {
-		this.state.socket.emit('start round');
-	}
-
-	pause() {
-		this.state.socket.emit('pause round');
-	}
-
-	unpause() {
-		this.state.socket.emit('unpause round');
-	}
-
-	getButton() {
-		if(this.state.store.status === 'pending') {
-			return <button className="canvas__settings-btn" onClick={this.startGame.bind(this)}>Start game</button>
-		}
-
-		if(this.state.store.status === 'playing') {
-			return <button className="canvas__settings-btn" onClick={this.pause.bind(this)}>Pause game</button>
-		}
-
-		if(this.state.store.status === 'paused') {
-			return <button className="canvas__settings-btn" onClick={this.unpause.bind(this)}>Unpause</button>
-		}
-
-		return '';
-	}
-
+	
 	openColourPicker(e) {
 		document.querySelector('[data-js="colour-picker"]').className = 'canvas__colour-picker active';
 	}
@@ -99,7 +71,7 @@ export default class CanvasSettings extends React.Component {
 		let colors = this.colors || {};
 		return Object.keys(colors).map((item, index)=>{
 			let color = colors[item];
-			return <li key={index} className="ib"><span data-js="colorPicker" data-color={color} style={{backgroundColor:  color}} className="canvas__colour" onClick={this.handleColorChange.bind(this)}></span></li>
+			return <li key={index} className="ib--m"><span data-js="colorPicker" data-color={color} style={{backgroundColor:  color}} className="canvas__colour" onClick={this.handleColorChange.bind(this)}></span></li>
 		});
 	}
 
@@ -109,7 +81,7 @@ export default class CanvasSettings extends React.Component {
 			let classes = index === 0 ? 'canvas__brush-size-wrap active' : 'canvas__brush-size-wrap';
 			let size = sizes[item];
 			return (
-				<li key={index} className="ib">
+				<li key={index} className="ib--m">
 					<span className={classes} data-size={size} onClick={this.changeBrushSize.bind(this)}>
 						<span className="canvas__brush-size" style={{width: size + 'px', height: size + 'px'}}></span>
 					</span>
@@ -133,9 +105,6 @@ export default class CanvasSettings extends React.Component {
 		return (
 			<ul className="canvas__settings">
 				<li>
-					{this.getButton()}
-				</li>
-				<li>
 					<button className="canvas__settings-btn" onClick={this.props.fullClear.bind(this.props.scope)} >Reset</button>
 				</li>
 				<li className="canvas__brush-sizes">
@@ -144,6 +113,7 @@ export default class CanvasSettings extends React.Component {
 					</ul>
 				</li>
 				<li className="canvas__colours">
+					<span className="canvas__settings-label">Colour picker ⇾</span>
 					<div onMouseOver={this.clearTimer.bind(this)} onMouseLeave={this.closeColourPicker.bind(this)} className="canvas__colour-picker" data-js="colour-picker">
 						<ChromePicker onChangeComplete={ this.handleColorChange.bind(this) } />
 					</div>

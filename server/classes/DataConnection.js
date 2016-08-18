@@ -1,10 +1,20 @@
 let firebase = require('../modules/firebaseConfig');
 
 class DataConnection {
-	constructor(roomId,eventDispatcher) {
+	constructor(roomId=0,eventDispatcher={}) {
 		this.id = roomId;
 		this.dbRef = firebase.db.ref(firebase.roomsPath + roomId);
 		this.events = eventDispatcher;
+	}
+
+	watchRooms() {
+		firebase.db.ref(firebase.roomsPath).on('value',(snapshot)=>{
+			this.events.emit('rooms',snapshot.val());
+		});
+	}
+
+	unwatchRooms() {
+		firebase.db.ref(firebase.roomsPath).off();
 	}
 
 	getDictionary(dictionary) {

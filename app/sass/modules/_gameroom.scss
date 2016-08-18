@@ -1,0 +1,8 @@
+$module: 			'gameroom';
+
+.#{$module} {
+	&__title {
+		@extend .gamma;
+		margin-bottom: 0;
+	}
+}

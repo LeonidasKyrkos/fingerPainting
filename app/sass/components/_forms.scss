@@ -6,6 +6,36 @@ $module: 		'form';
 	max-width: 100%;
 	@include clearfix;
 
+	&--popup {
+		position: fixed;
+		padding-top: em(20);
+		top: 50%;
+		left: 0;
+		right: 0;
+		margin: 0 auto;
+		@include transform(translateY(-50%));
+		width: em(500);
+		max-width: 100%;
+		background-color: darken(white,5%);
+		box-shadow: 0 2px 15px rgba(black,0.5);
+		padding: em(20);
+		color: black;
+	}
+
+	&__close {
+		position: absolute;
+		top: 0;
+		right: em(5);
+		cursor: pointer;
+		color: $color1;
+		font-family: 'Helvetica';
+		padding: em(10);
+
+		&:hover {
+			color: darken($color1,10%);
+		}
+	}
+
 	&--chat {
 		@include display(flex);
 	}

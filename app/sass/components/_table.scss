@@ -2,34 +2,52 @@ $module: 		'table';
 
 .#{$module} {
 	background-color: lighten($color3,10%);
-	min-width: em(350);
+	min-width: em(350);	
 
-	thead {
-		color: $color5;
-	}
+	&--rooms {
+		background-color: lighten($color3,10%);
+		width: 100%;
+		table-layout: fixed;
 
-	tbody {
-		$fontSize: 16;
-		@include font-size($fontSize);
-		padding-bottom: em(10,$fontSize);
-
-		tr {
-			border-bottom: em(1) solid $color4;
-			background-color: lighten($color3,7%);
-
-			&:nth-child(even) {
-				background-color: lighten($color3,10%);				
-			}
+		tbody {
+			font-size: em(18);
 		}
 
-		td {
-			padding: em(5);
+		tbody td {
+			padding: em(10) em(15);
+		}
+
+		thead td {
+			padding: em(12) em(15) em(10);
+		}
+	}
+}
+
+thead {
+	color: $color5;
+}
+
+tbody {
+	$fontSize: 16;
+	@include font-size($fontSize);
+	padding-bottom: em(10,$fontSize);
+
+	tr {
+		border-bottom: em(1) solid $color4;
+		background-color: lighten($color3,7%);
+
+		&:nth-child(even) {
+			background-color: lighten($color3,10%);				
 		}
 	}
 
 	td {
-		line-height: 1.2;
-		padding: em(10);
-		position: relative;
+		padding: em(5);
 	}
+}
+
+td {
+	line-height: 1.2;
+	padding: em(10);
+	position: relative;
 }
