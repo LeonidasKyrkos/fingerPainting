@@ -8,6 +8,7 @@ $module: 		'table';
 		background-color: lighten($color3,10%);
 		width: 100%;
 		table-layout: fixed;
+		margin-bottom: em(30);
 
 		tbody {
 			font-size: em(18);
@@ -43,6 +44,7 @@ tbody {
 
 	td {
 		padding: em(5);
+		vertical-align: middle;
 	}
 }
 

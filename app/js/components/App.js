@@ -44,6 +44,7 @@ export default class App extends Component {
 		});
 
 		this.socket.on('rooms',(rooms)=>{
+			console.log(rooms);
 			Actions.updateRooms(rooms);
 		});
 	}

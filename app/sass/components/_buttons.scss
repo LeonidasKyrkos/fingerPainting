@@ -26,6 +26,12 @@ $module: 		'btn';
 		&:hover {
 			background-color: darken($color1,10%);
 		}
+
+		.table--rooms & {
+			display: block;
+			margin: 0 auto;
+			min-width: em(100);
+		}
 	}
 
 	&--secondary {
@@ -40,6 +46,15 @@ $module: 		'btn';
 
 		&:hover {
 			background-color: darken($color4,10%);
+		}
+	}
+
+	&--tertiary {
+		@extend .btn--primary;
+		background-color: $color8;
+
+		&:hover {
+			background-color: darken($color8,10%);
 		}
 	}
 

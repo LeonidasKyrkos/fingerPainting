@@ -37,12 +37,12 @@ export default class RoomsList extends Component {
 			if(obj.players) {
 				var players = <td>{Object.keys(obj.players).length}</td>
 			} else {
-				var players = <td></td>
+				var players = <td>0</td>
 			}
 
 			return (
 				<tr key={row} className="tar">
-					<td className="tal">{row}</td>
+					<td className="tal">{obj.title}</td>
 					<td className="tac">{obj.password}</td>
 					<td>{obj.dictionary}</td>
 					{players}
