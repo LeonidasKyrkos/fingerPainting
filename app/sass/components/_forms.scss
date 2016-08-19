@@ -80,6 +80,10 @@ $module: 		'form';
 			@include display(flex);
 			@include align-items(center);
 		}
+
+		.table--rooms & {
+			margin-bottom: 0;
+		}
 	}
 
 	&__error {
@@ -181,7 +185,12 @@ $module: 		'form';
 
 		.#{$module}--chat & {
 			width: calc(100% - 30px);	
-		}		
+		}
+
+		.table--rooms & {
+			$fontSize: 15;
+			font-size: em($fontSize);
+		}
 	}
 
 	&__delete {

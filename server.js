@@ -1,15 +1,15 @@
 // custom modules
-var utils = require('./server/modules/utilities');
-var firebase = require('./server/modules/firebaseConfig');
-var io = require('./configureServer').io;
-var AdminPanel = require('./server/classes/AdminPanel');
-var adminPanel = new AdminPanel();
-var adminSocket = io.of('/admin');
-var DataConnection = require('./server/classes/DataConnection');
-let Eev = require  ('eev'); 
-let e = new Eev(); // event emitter
-let data = new DataConnection(0,e);
-let roomPickers = {};
+const utils = require('./server/modules/utilities');
+const firebase = require('./server/modules/firebaseConfig');
+const io = require('./configureServer').io;
+const AdminPanel = require('./server/classes/AdminPanel');
+const adminPanel = new AdminPanel();
+const adminSocket = io.of('/admin');
+const DataConnection = require('./server/classes/DataConnection');
+const Eev = require  ('eev'); 
+const e = new Eev(); // event emitter
+const data = new DataConnection(0,e);
+const roomPickers = {};
 let roomStore;
 
 e.on('rooms',updateRoomStore);

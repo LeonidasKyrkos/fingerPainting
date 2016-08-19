@@ -138,6 +138,15 @@ textarea {
   display: inline-block !important;
   vertical-align: middle; }
 
+.tac {
+  text-align: center; }
+
+.tar {
+  text-align: right; }
+
+.tal {
+  text-align: left; }
+
 .hide {
   display: none !important; }
 
@@ -178,15 +187,6 @@ body {
   visibility: hidden;
   max-height: 0;
   overflow: hidden; }
-
-.tac {
-  text-align: center; }
-
-.tar {
-  text-align: right; }
-
-.tal {
-  text-align: left; }
 
 h1, h2, h3, h4, h5 {
   line-height: normal;
@@ -239,7 +239,7 @@ h1, h2, h3, h4, h5 {
 .alpha {
   text-align: center; }
 
-.btn, .btn--primary, .form__button--inline, .canvas__start-btn, .canvas__settings-btn, .btn--secondary, .btn--submit {
+.btn, .btn--primary, .btn--tertiary, .form__button--inline, .canvas__start-btn, .canvas__settings-btn, .btn--secondary, .btn--submit {
   background-color: transparent;
   display: inline-block;
   margin-bottom: 0;
@@ -256,13 +256,17 @@ h1, h2, h3, h4, h5 {
   user-select: none;
   text-decoration: none !important;
   outline: 0; }
-  .btn--primary, .form__button--inline, .canvas__start-btn, .canvas__settings-btn {
+  .btn--primary, .btn--tertiary, .form__button--inline, .canvas__start-btn, .canvas__settings-btn {
     font-size: 0.9em;
     background-color: #B22222;
     color: white;
     padding: 0.55556em; }
-    .btn--primary:hover, .form__button--inline:hover, .canvas__start-btn:hover, .canvas__settings-btn:hover {
+    .btn--primary:hover, .btn--tertiary:hover, .form__button--inline:hover, .canvas__start-btn:hover, .canvas__settings-btn:hover {
       background-color: #871a1a; }
+    .table--rooms .btn--primary, .table--rooms .btn--tertiary, .table--rooms .form__button--inline, .table--rooms .canvas__start-btn, .table--rooms .canvas__settings-btn {
+      display: block;
+      margin: 0 auto;
+      min-width: 5em; }
   .btn--secondary, .btn--submit {
     background-color: #4E4E4E;
     font-size: 0.6em;
@@ -272,6 +276,10 @@ h1, h2, h3, h4, h5 {
     border-radius: 0.5em; }
     .btn--secondary:hover, .btn--submit:hover {
       background-color: #353535; }
+  .btn--tertiary {
+    background-color: #228B22; }
+    .btn--tertiary:hover {
+      background-color: #186218; }
   .btn--submit {
     width: 2.5em;
     padding: 0.25em;
@@ -383,6 +391,8 @@ h1, h2, h3, h4, h5 {
       -o-align-items: center;
       align-items: center;
       -ms-flex-align: center; }
+    .table--rooms .form__control, .table--rooms .form__control--select {
+      margin-bottom: 0; }
   .form__error, .form__success {
     display: block;
     color: red;
@@ -458,6 +468,8 @@ h1, h2, h3, h4, h5 {
     background-color: #cecece; }
     .form--chat .form__input {
       width: calc(100% - 30px); }
+    .table--rooms .form__input {
+      font-size: 0.75em; }
   .form__delete {
     font-size: 14px;
     font-size: 1.4rem;
@@ -618,7 +630,8 @@ h1, h2, h3, h4, h5 {
   .table--rooms {
     background-color: #424242;
     width: 100%;
-    table-layout: fixed; }
+    table-layout: fixed;
+    margin-bottom: 1.5em; }
     .table--rooms tbody {
       font-size: 0.9em; }
     .table--rooms tbody td {
@@ -639,7 +652,8 @@ tbody {
     tbody tr:nth-child(even) {
       background-color: #424242; }
   tbody td {
-    padding: 0.25em; }
+    padding: 0.25em;
+    vertical-align: middle; }
 
 td {
   line-height: 1.2;

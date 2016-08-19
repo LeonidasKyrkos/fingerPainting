@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import Store from '../stores/Store';
+import Store from '../../stores/Store';
 import Dictionarys from './Dictionarys';
 
 export default class DictionarySelect extends Component {
@@ -34,7 +34,7 @@ export default class DictionarySelect extends Component {
 		return(
 			<form className="form">
 				<label className="form__control">
-					<span className="form__label">Dictionarys</span>
+					<h3 className="gamma">Dictionarys</h3>
 					<span className="form__select-wrap">
 						<select id="dictionarysList" className="form__select">
 							<option value="null">Select a dictionary</option>

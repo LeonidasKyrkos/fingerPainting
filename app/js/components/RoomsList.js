@@ -42,7 +42,7 @@ export default class RoomsList extends Component {
 
 			return (
 				<tr key={row} className="tar">
-					<td className="tal">{row}</td>
+					<td className="tal">{obj.title}</td>
 					<td className="tac">{obj.password}</td>
 					<td>{obj.dictionary}</td>
 					{players}
