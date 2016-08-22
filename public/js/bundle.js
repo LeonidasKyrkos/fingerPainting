@@ -1021,7 +1021,7 @@ var CanvasClient = function (_Component) {
 exports.default = CanvasClient;
 
 },{"../../stores/Store":30,"../../utilities/canvasFunctions":31,"./WaitingMsgClient":11,"react":"react"}],11:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -1029,9 +1029,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _Store = require('../../stores/Store');
+
+var _Store2 = _interopRequireDefault(_Store);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1044,20 +1048,54 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var WaitingMsgClient = function (_Component) {
 	_inherits(WaitingMsgClient, _Component);
 
-	function WaitingMsgClient(props) {
+	function WaitingMsgClient() {
 		_classCallCheck(this, WaitingMsgClient);
 
-		return _possibleConstructorReturn(this, Object.getPrototypeOf(WaitingMsgClient).call(this, props));
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(WaitingMsgClient).call(this));
+
+		_this.state = _Store2.default.getState();
+		_this.onChange = _this.onChange.bind(_this);
+		return _this;
 	}
 
 	_createClass(WaitingMsgClient, [{
-		key: "render",
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			_Store2.default.listen(this.onChange);
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			_Store2.default.unlisten(this.onChange);
+		}
+	}, {
+		key: 'onChange',
+		value: function onChange(state) {
+			this.setState(state);
+		}
+	}, {
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate(nextProps, nextState) {
+			if (this.state.store.status && nextState.store.status !== this.state.store.status) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}, {
+		key: 'render',
 		value: function render() {
-			return _react2.default.createElement(
-				"span",
-				{ className: "game__message" },
-				"Waiting for Artist to start the game"
-			);
+			if (this.state.store.status && this.state.store.status !== 'pending') {
+				var content = _react2.default.createElement('span', { className: 'hide' });
+			} else {
+				var content = _react2.default.createElement(
+					'span',
+					{ className: 'game__message' },
+					'Waiting for Artist to start the game'
+				);
+			}
+
+			return content;
 		}
 	}]);
 
@@ -1066,7 +1104,7 @@ var WaitingMsgClient = function (_Component) {
 
 exports.default = WaitingMsgClient;
 
-},{"react":"react"}],12:[function(require,module,exports){
+},{"../../stores/Store":30,"react":"react"}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1148,7 +1186,6 @@ var App = function (_Component) {
 			});
 
 			this.socket.on('rooms', function (rooms) {
-				console.log(rooms);
 				_Actions2.default.updateRooms(rooms);
 			});
 		}
