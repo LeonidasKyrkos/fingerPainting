@@ -2283,7 +2283,8 @@ var RoomJoin = function (_Component) {
 	}, {
 		key: 'render',
 		value: function render() {
-			var roomName = this.props.roomName ? this.props.roomName : new Date().getTime();
+			var id = this.props.id || '';
+			var room = this.state.rooms[id] || {};
 
 			return _react2.default.createElement(
 				'form',
@@ -2296,7 +2297,7 @@ var RoomJoin = function (_Component) {
 				_react2.default.createElement(
 					'h3',
 					{ className: 'gamma' },
-					roomName
+					room.title
 				),
 				_react2.default.createElement(_ErrorMessage2.default, { socket: this.state.socket }),
 				_react2.default.createElement(
@@ -2323,7 +2324,7 @@ var RoomJoin = function (_Component) {
 					_react2.default.createElement(
 						'li',
 						{ className: 'hide' },
-						_react2.default.createElement('input', { required: true, 'data-js': 'room.id', autoComplete: 'off', type: 'text', className: 'form__input', value: roomName, onChange: this.changeHandler.bind(this) })
+						_react2.default.createElement('input', { required: true, 'data-js': 'room.id', autoComplete: 'off', type: 'text', className: 'form__input', value: id, onChange: this.changeHandler.bind(this) })
 					),
 					this.renderPasswordField(),
 					_react2.default.createElement(
@@ -2671,10 +2672,10 @@ var RoomsList = function (_Component) {
 		key: 'openForm',
 		value: function openForm(e) {
 			var form = document.querySelector('[data-js="form-popup"]');
-			var roomName = e.target.getAttribute('data-room');
+			var roomId = e.target.getAttribute('data-room');
 			var password = e.target.getAttribute('data-password');
 			this.setState({
-				roomName: roomName,
+				roomId: roomId,
 				password: password.length
 			});
 			form.className = '';
@@ -2736,7 +2737,7 @@ var RoomsList = function (_Component) {
 				_react2.default.createElement(
 					'div',
 					{ className: 'hide', 'data-js': 'form-popup' },
-					_react2.default.createElement(_RoomJoin2.default, { roomName: this.state.roomName, password: this.state.password })
+					_react2.default.createElement(_RoomJoin2.default, { id: this.state.roomId, password: this.state.password })
 				)
 			);
 		}

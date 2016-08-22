@@ -15,7 +15,7 @@ firebase.roomsRef.on('value',(snapshot)=>{
 	}
 });
 
-// UTILITIES
+// GAMES ACTIONS
 
 function joinHandler(request,socket){
 	// run some room tests (room existence / user.name / password)

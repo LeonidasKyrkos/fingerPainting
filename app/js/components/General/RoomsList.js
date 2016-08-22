@@ -56,10 +56,10 @@ export default class RoomsList extends Component {
 
 	openForm(e) {
 		let form = document.querySelector('[data-js="form-popup"]');
-		let roomName = e.target.getAttribute('data-room');
+		let roomId = e.target.getAttribute('data-room');
 		let password = e.target.getAttribute('data-password');
 		this.setState({
-			roomName: roomName,
+			roomId: roomId,
 			password: password.length
 		})
 		form.className = '';
@@ -85,7 +85,7 @@ export default class RoomsList extends Component {
 					</tbody>
 				</table>
 				<div className="hide" data-js="form-popup">
-					<RoomJoin roomName={this.state.roomName} password={this.state.password} />	
+					<RoomJoin id={this.state.roomId} password={this.state.password} />	
 				</div>				
 			</section>
 		)

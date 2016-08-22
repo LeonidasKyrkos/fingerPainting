@@ -1,5 +1,5 @@
 // custom modules
-const utils = require('./server/modules/utilities');
+const utils = require('./server/modules/gamesActions');
 const firebase = require('./server/modules/firebaseConfig');
 const io = require('./configureServer').io;
 const AdminPanel = require('./server/classes/AdminPanel');
