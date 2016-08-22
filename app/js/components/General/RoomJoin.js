@@ -82,12 +82,13 @@ export default class RoomJoin extends Component {
 	}
 
 	render() {
-		let roomName = this.props.roomName ? this.props.roomName : (new Date()).getTime();
+		let id = this.props.id || '';
+		let room = this.state.rooms[id] || {};
 
 		return (
 			<form onKeyDown={this.handleKeyUp.bind(this)} data-js="room.join" className="form--popup" onSubmit={this.authenticate.bind(this)}>
 				<span className="form__close" onClick={this.closeForm.bind(this)}>x</span>
-				<h3 className="gamma">{roomName}</h3>
+				<h3 className="gamma">{room.title}</h3>
 				<ErrorMessage socket={this.state.socket} />
 				<ul>
 					<li>
@@ -99,7 +100,7 @@ export default class RoomJoin extends Component {
 						</label>
 					</li>
 					<li className="hide">
-						<input required data-js="room.id" autoComplete="off" type="text" className="form__input" value={roomName} onChange={this.changeHandler.bind(this)} />
+						<input required data-js="room.id" autoComplete="off" type="text" className="form__input" value={id} onChange={this.changeHandler.bind(this)} />
 					</li>
 					{this.renderPasswordField()}
 					<li className="align-right">

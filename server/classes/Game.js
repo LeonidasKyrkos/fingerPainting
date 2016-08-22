@@ -10,6 +10,7 @@ class Game {
 		this.data = new DataConnection(id,e); // data connection class that handles db requests
 		this.id = id;
 		this.gameLength = 90;
+		this.rounds = 3;
 		this.init(player, socket);
 	}	
 
@@ -80,13 +81,12 @@ class Game {
 		e.on('store',(store)=>{
 			if(!this.dictionary) { this.getDictionary(store.dictionary); };
 			this.prepStoreAndCallUpdate(store);
-			this.emitToAllSockets('debug',store);
 		});
 
 		this.data.listenToData(this,e);
 	}
 
-	prepStoreAndCallUpdate(store) {
+	prepStoreAndCallUpdate(store={}) {
 		store.paths = _.clone(this.store.paths);
 		this.updateStore(store);
 	}
@@ -338,7 +338,7 @@ class Game {
 		let players = this.store.players;
 
 		for(let player in players) {
-			if(players[player].turns < 2) {
+			if(players[player].turns < this.rounds) {
 				count++;
 			}
 		}
