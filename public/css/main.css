@@ -724,6 +724,17 @@ td {
   .game__puzzle-word span {
     padding-right: 0.10417em; }
 
+.game__message {
+  position: absolute;
+  background-color: #B22222;
+  padding: 1em;
+  top: 50%;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  text-align: center;
+  max-width: 15em; }
+
 .chat {
   width: 20%;
   padding-top: 3.125em;

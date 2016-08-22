@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import CanvasSettings from './CanvasSettings';
-import Store from '../stores/Store';
-import { redraw, renderPath, renderDot, clearContext } from '../utilities/canvasFunctions';
+import Store from '../../stores/Store';
+import { redraw, renderPath, renderDot, clearContext } from '../../utilities/canvasFunctions';
 import _ from 'lodash';
 
 export default class CanvasPlayer extends Component {

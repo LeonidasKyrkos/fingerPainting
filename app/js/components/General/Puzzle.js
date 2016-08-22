@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Store from '../stores/Store';
+import Store from '../../stores/Store';
 import { isEqual as _isEqual } from 'lodash';
 
 export default class Puzzle extends Component {

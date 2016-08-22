@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import Store from '../stores/Store';
-import { redraw } from '../utilities/canvasFunctions';
+import Store from '../../stores/Store';
+import { redraw } from '../../utilities/canvasFunctions';
+import WaitingMsgClient from './WaitingMsgClient';
 
 export default class CanvasClient extends Component {
 	constructor() {
@@ -44,6 +45,7 @@ export default class CanvasClient extends Component {
 	render() {
 		return (
 			<div className="canvas__wrap" onDragStart={this.noDragging}>
+				<WaitingMsgClient />
 				<canvas width="916" height="700px" className="canvas--client" id="canvas"></canvas>
 			</div>
 		)

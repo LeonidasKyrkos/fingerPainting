@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
-import Store from '../stores/Store';
+import Store from '../../stores/Store';
 import Players from './Players.js';
-import CanvasPlayer from './CanvasPlayer.js';
-import CanvasClient from './CanvasClient.js';
+import CanvasPlayer from '../Player/CanvasPlayer.js';
+import CanvasClient from '../Client/CanvasClient.js';
 import Chat from './Chat.js';
 import Puzzle from './Puzzle.js';
 import EndGame from './Endgame';
