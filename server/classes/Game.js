@@ -272,6 +272,14 @@ class Game {
 
 		this.emitToAllSockets('correct');
 
+		console.log(this.cleverGuessers);
+
+		if(this.cleverGuessers === 1) {
+			let artist = _.find(this.store.players,{status: 'painter'});
+			newScore = this.calculatePoints(artist.id);
+			this.data.updatePlayer(artist.id, { score: newScore });
+		}
+
 		if(this.cleverGuessers >= Object.keys(this.store.players).length - 1) {
 			this.endRound();
 		}
