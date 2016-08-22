@@ -2,7 +2,8 @@ $module: 		'table';
 
 .#{$module} {
 	background-color: lighten($color3,10%);
-	min-width: em(350);	
+	min-width: em(350);
+	border-radius: em(10);
 
 	&--rooms {
 		background-color: lighten($color3,10%);

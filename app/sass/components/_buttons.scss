@@ -17,11 +17,11 @@ $module: 		'btn';
 
 	&--primary {
 		@extend .btn;
-		$fontSize: 18;
+		$fontSize: 16;
 		font-size: em($fontSize);
 		background-color: $color1;
 		color: white;
-		padding: em(10,$fontSize);
+		padding: em(5,$fontSize) em(8,$fontSize) em(7,$fontSize);
 
 		&:hover {
 			background-color: darken($color1,10%);

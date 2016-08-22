@@ -161,6 +161,7 @@ body {
   font-size: 2rem;
   font-family: "Open Sans Condensed", Helvetica, sans-serif;
   background-color: #282828;
+  background-image: url("/media/img/bg.png");
   color: white;
   line-height: 1.1;
   padding-right: 8em; }
@@ -257,10 +258,10 @@ h1, h2, h3, h4, h5 {
   text-decoration: none !important;
   outline: 0; }
   .btn--primary, .btn--tertiary, .form__button--inline, .canvas__start-btn, .canvas__settings-btn {
-    font-size: 0.9em;
+    font-size: 0.8em;
     background-color: #B22222;
     color: white;
-    padding: 0.55556em; }
+    padding: 0.3125em 0.5em 0.4375em; }
     .btn--primary:hover, .btn--tertiary:hover, .form__button--inline:hover, .canvas__start-btn:hover, .canvas__settings-btn:hover {
       background-color: #871a1a; }
     .table--rooms .btn--primary, .table--rooms .btn--tertiary, .table--rooms .form__button--inline, .table--rooms .canvas__start-btn, .table--rooms .canvas__settings-btn {
@@ -502,7 +503,10 @@ h1, h2, h3, h4, h5 {
 .canvas, .canvas--client {
   background-color: #4E4E4E;
   cursor: url("../media/img/finger.ico") 15 0, pointer;
-  display: block; }
+  display: block;
+  border-bottom-left-radius: 0.25em;
+  border-top-right-radius: 0.25em;
+  border-bottom-right-radius: 0.25em; }
   .canvas--client {
     cursor: default; }
   .canvas__wrap {
@@ -522,7 +526,9 @@ h1, h2, h3, h4, h5 {
     -ms-transform: translateX(-50%);
     -o-transform: translateX(-50%);
     transform: translateX(-50%);
-    font-size: 1.1em; }
+    font-size: 0.9em;
+    border-radius: 0.2em;
+    box-shadow: -1px 2px 6px rgba(0, 0, 0, 0.4); }
   .canvas__settings {
     display: -webkit-box;
     display: -moz-box;
@@ -626,7 +632,8 @@ h1, h2, h3, h4, h5 {
 
 .table {
   background-color: #424242;
-  min-width: 17.5em; }
+  min-width: 17.5em;
+  border-radius: 0.5em; }
   .table--rooms {
     background-color: #424242;
     width: 100%;
@@ -829,7 +836,7 @@ td {
       font-size: 1rem;
       content: "👑";
       position: absolute;
-      left: -0.7em;
+      left: -1.5em;
       color: gold;
       top: 0.3em; }
     .players__player.player {
