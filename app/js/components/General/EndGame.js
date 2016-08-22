@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Store from '../stores/Store';
+import Store from '../../stores/Store';
 import Scoreboard from './Scoreboard';
 
 export default class EndGame extends Component {

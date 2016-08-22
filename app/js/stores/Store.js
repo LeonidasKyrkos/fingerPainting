@@ -1,6 +1,6 @@
 import alt from '../alt';
 import Actions from '../actions/Actions';
-import App from '../components/App';
+import App from '../components/General/App';
 
 class Store {
 	constructor() {

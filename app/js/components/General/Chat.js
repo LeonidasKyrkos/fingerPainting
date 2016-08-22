@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import Store from '../stores/Store';
+import Store from '../../stores/Store';
 import Message from './Message';
 import { isEqual as _isEqual } from 'lodash';
 

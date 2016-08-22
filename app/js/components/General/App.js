@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Actions from '../actions/Actions';
-import { painterTest } from '../utilities/general.js';
+import Actions from '../../actions/Actions';
+import { painterTest } from '../../utilities/general.js';
 import Notification from './Notification';
 
 export default class App extends Component {
@@ -44,7 +44,6 @@ export default class App extends Component {
 		});
 
 		this.socket.on('rooms',(rooms)=>{
-			console.log(rooms);
 			Actions.updateRooms(rooms);
 		});
 	}
