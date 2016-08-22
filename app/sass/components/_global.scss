@@ -12,6 +12,7 @@ body {
 	@include font-size($font-size-base);
 	font-family: $font-family-base;
 	background-color: $color3;
+	background-image: url('/media/img/bg.png');
 	color: white;
 	line-height: ($font-lineheight-base/$font-size-base);
 	padding-right: em(160);

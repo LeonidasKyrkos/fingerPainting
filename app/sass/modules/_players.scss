@@ -28,7 +28,7 @@ $module:			'players';
 				@include font-size($fontSize);
 				content: "👑";
 				position: absolute;
-				left: em(-7,$fontSize);
+				left: em(-15,$fontSize);
 				color: $color5;
 				top: em(3,$fontSize);
 			}

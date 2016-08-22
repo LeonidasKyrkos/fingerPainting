@@ -5,6 +5,9 @@ $module: 		'canvas';
 	background-color: $color4;
 	cursor: url('../media/img/finger.ico') 15 0,pointer;
 	display: block;
+	border-bottom-left-radius: em(5);
+	border-top-right-radius: em(5);
+	border-bottom-right-radius: em(5);
 
 	&--client {
 		@extend .#{$module};
@@ -24,7 +27,9 @@ $module: 		'canvas';
 		top: 50%;
 		left: 50%;
 		@include transform(translateX(-50%));
-		font-size: em(22);
+		font-size: em(18);
+		border-radius: em(4);
+		box-shadow: -1px 2px 6px rgba(0,0,0,0.4);
 	}
 
 	&__settings {
