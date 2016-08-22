@@ -1,9 +1,7 @@
-var firebase = require('./firebaseConfig');
-
 // room joining tests
 
-function roomTests(request,socket) {
-	var room = firebase.rooms[request.id];
+function roomTests(request,socket,rooms) {
+	var room = rooms[request.id];
 
 	if(!room) { return { status: false, reason: 'Room not found' } }
 

@@ -6,9 +6,9 @@ let e = new Eev(); // event emitter
 let DataConnection = require ('./DataConnection'); 
 
 class Game {
-	constructor(player,socket) {
-		this.data = new DataConnection(player.gameroom,e); // data connection class that handles db requests
-		this.id = player.gameroom;
+	constructor(id,player,socket) {
+		this.data = new DataConnection(id,e); // data connection class that handles db requests
+		this.id = id;
 		this.gameLength = 90;
 		this.init(player, socket);
 	}	
@@ -18,11 +18,14 @@ class Game {
 		this.sockets = {};
 		this.inactivePlayers= {};
 		this.garbageQueue = [];
-		this.roundCount = 1;		
+		this.roundCount = 1;	
 		this.attachDataListener();
-		this.newPlayer(player, socket);
-		this.resetGame();
-		this.data.setStore(this.store);
+
+		if(player) {
+			this.newPlayer(player, socket);	
+		}
+		
+		this.resetRoom();
 
 		this.garbageTimer = setInterval(()=>{
 			if(!this.blockUpdates) {
@@ -77,9 +80,10 @@ class Game {
 		e.on('store',(store)=>{
 			if(!this.dictionary) { this.getDictionary(store.dictionary); };
 			this.prepStoreAndCallUpdate(store);
+			this.emitToAllSockets('debug',store);
 		});
 
-		this.data.listenToData(this,e);		
+		this.data.listenToData(this,e);
 	}
 
 	prepStoreAndCallUpdate(store) {
@@ -448,8 +452,9 @@ class Game {
 
 	resetCorrectStatus() {
 		this.cleverGuessers = 0;
+		let players = this.store.players || {};
 
-		for(let player in this.store.players) {
+		for(let player in players) {
 			this.store.players[player].correct = false;
 		}
 	}
@@ -494,7 +499,9 @@ class Game {
 	}
 
 	emitToAllSockets(type,emission) {
-		for(let socket in this.sockets) {
+		let sockets = this.sockets || {};
+
+		for(let socket in sockets) {
 			this.sockets[socket].emit(type, emission);
 		};
 	}
