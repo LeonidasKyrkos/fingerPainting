@@ -358,7 +358,7 @@ var AdminPanel = function (_Component) {
 
 		_this.state = _Store2.default.getState();
 		_this.onChange = _this.onChange.bind(_this);
-		_this.socket = io.connect('http://52.209.86.125:443/admin');
+		_this.socket = io.connect('http://52.209.86.125/admin');
 		_this.attachListeners();
 		return _this;
 	}
@@ -960,7 +960,7 @@ var App = function (_Component) {
 
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(App).call(this, props));
 
-		_this.socket = io.connect('http://52.209.86.125:443/');
+		_this.socket = io.connect('http://52.209.86.125/');
 		return _this;
 	}
 
