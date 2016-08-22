@@ -266,13 +266,11 @@ class Game {
 
 	cleverGuesser(message) {
 		let newScore = this.calculatePoints(message.id);
-		this.data.updatePlayer(message.id, { correct: true, score: newScore })
+		this.data.updatePlayer(message.id, { correct: true, score: newScore });
 		this.sockets[message.id].emit('puzzle',this.puzzleArray);
 		this.cleverGuessers++;
 
 		this.emitToAllSockets('correct');
-
-		console.log(this.cleverGuessers);
 
 		if(this.cleverGuessers === 1) {
 			let artist = _.find(this.store.players,{status: 'painter'});

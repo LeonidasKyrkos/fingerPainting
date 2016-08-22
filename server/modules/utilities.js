@@ -1,11 +1,11 @@
-var tests = require('./tests');
-var firebase = require('./firebaseConfig');
-var Game = require('../classes/Game');
-var Player = require('../classes/Player');
-var activeGames = [];
+const tests = require('./tests');
+const firebase = require('./firebaseConfig');
+const Game = require('../classes/Game');
+const Player = require('../classes/Player');
+let activeGames = [];
 
 firebase.roomsRef.on('value',(snapshot)=>{
-	firebase.rooms = snapshot.val();
+	var rooms = snapshot.val();
 });
 
 // UTILITIES
@@ -30,7 +30,7 @@ function joinHandler(request,socket){
 			if(gameInstance.id === player.gameroom) {
 				found = true;
 
-				if(firebase.rooms[request.id].status === 'pending' || tests.inactivePlayer(cookie,gameInstance)) {
+				if(rooms[request.id].status === 'pending' || tests.inactivePlayer(cookie,gameInstance)) {
 					gameInstance.newPlayer(player,socket);
 
 				} else {
