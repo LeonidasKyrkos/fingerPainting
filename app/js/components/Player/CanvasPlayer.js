@@ -111,7 +111,7 @@ export default class CanvasPlayer extends Component {
 
 	// get y coordinate
 	getY(e) {
-		this.canvasY = this.canvas.offsetParent.offsetTop + 42;
+		this.canvasY = this.canvas.offsetParent.offsetTop + 33;
 		return e.pageY - this.canvasY;
 	}
 

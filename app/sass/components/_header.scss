@@ -1,0 +1,22 @@
+$module: 		'header';
+
+
+.#{$module} {
+	text-align: center;
+	margin-bottom: em(30);
+
+	&__title {
+		@extend .alpha;
+		display: inline-block;
+		vertical-align: middle;
+		margin-right: em(30,51);
+		width: auto;
+		line-height: 1;
+		margin-bottom: 0;
+	}
+
+	&__logo {
+		display: inline-block;
+		vertical-align: middle;
+	}
+}
