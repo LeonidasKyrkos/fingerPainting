@@ -87,8 +87,10 @@ class Game {
 	}
 
 	prepStoreAndCallUpdate(store={}) {
-		store.paths = _.clone(this.store.paths);
-		this.updateStore(store);
+		if(store) {
+			store.paths = _.clone(this.store.paths);
+			this.updateStore(store);
+		}
 	}
 
 	updateStore(store) {

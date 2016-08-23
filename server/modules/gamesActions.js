@@ -2,6 +2,7 @@ const tests = require('./tests');
 const firebase = require('./firebaseConfig');
 const Game = require('../classes/Game');
 const Player = require('../classes/Player');
+const _ = require('lodash');
 let activeGames = {};
 let rooms = {};
 let instantiated = false;
@@ -12,8 +13,34 @@ firebase.roomsRef.on('value',(snapshot)=>{
 	if(!instantiated) {
 		instantiated = true;
 		instantiateRooms(rooms);
+		return;
+	}
+
+	let roomsArr = Object.keys(rooms);
+	let activeGamesArr = Object.keys(activeGames);
+
+	if(roomsArr.length < activeGamesArr.length) {
+		deleteGames(roomsArr,activeGamesArr)
+	}
+
+	if(roomsArr.length > activeGamesArr.length) {
+		addNewGames(roomsArr,activeGamesArr);
 	}
 });
+
+function deleteGames(roomsArr,activeGamesArr) {
+	_.difference(activeGamesArr,roomsArr).forEach((item,index)=>{
+		delete activeGames[item];
+	});
+}
+
+function addNewGames(roomsArr,activeGamesArr) {
+	_.difference(roomsArr,activeGamesArr).forEach((item,index)=>{
+		let obj = {};
+		obj[item] = item;
+		instantiateRooms(obj);
+	});
+}
 
 // GAMES ACTIONS
 
