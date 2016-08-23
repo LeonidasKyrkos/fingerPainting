@@ -45,7 +45,9 @@ class DataConnection {
 	}
 
 	addWord(dictionary,word) {
-		firebase.db.ref('/dictionarys').child(dictionary).update({word: word});	
+		let obj = {};
+		obj[word] = word;
+		firebase.db.ref('/dictionarys').child(dictionary).update(obj);
 	}
 
 	deleteWord(dictionary,word) {
