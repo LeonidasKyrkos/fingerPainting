@@ -2421,7 +2421,7 @@ var RoomPicker = function (_Component) {
 						{ className: 'header__title' },
 						'finger painting'
 					),
-					_react2.default.createElement('img', { src: '/media/img/hand-small.png', alt: '', className: 'header__logo' })
+					_react2.default.createElement('span', { className: 'header__steve' })
 				),
 				_react2.default.createElement(
 					'h2',

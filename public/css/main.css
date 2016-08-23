@@ -685,6 +685,15 @@ td {
   .header__logo {
     display: inline-block;
     vertical-align: middle; }
+  .header__steve {
+    display: inline-block;
+    vertical-align: middle;
+    width: 4.95em;
+    height: 6.15em;
+    background: url("/media/img/hand-small.png"), url("/media/img/steve.jpg");
+    background-position: 47px 56px, center;
+    background-repeat: no-repeat;
+    background-size: 30px, cover; }
 
 .game__wrap {
   display: -webkit-box;
