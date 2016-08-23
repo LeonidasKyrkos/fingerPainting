@@ -3041,7 +3041,7 @@ var CanvasPlayer = function (_Component) {
 	}, {
 		key: 'getY',
 		value: function getY(e) {
-			this.canvasY = this.canvas.offsetParent.offsetTop + 33;
+			this.canvasY = this.canvas.offsetParent.offsetTop + 49;
 			return e.pageY - this.canvasY;
 		}
 
