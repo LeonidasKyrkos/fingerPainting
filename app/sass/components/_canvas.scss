@@ -2,16 +2,17 @@ $module: 		'canvas';
 
 
 .#{$module} {
-	background-color: $color4;
+	background-color: #292929;
 	cursor: url('../media/img/finger.ico') 15 0,pointer;
 	display: block;
 	border-bottom-left-radius: em(5);
-	border-top-right-radius: em(5);
 	border-bottom-right-radius: em(5);
+	box-shadow: 0 0 em(8) rgba(8, 8, 8, 0.4);
 
 	&--client {
 		@extend .#{$module};
 		cursor: default;
+		border-radius: em(5);
 	}
 
 	&__wrap {
@@ -36,11 +37,19 @@ $module: 		'canvas';
 		@include display(flex);
 		@include align-items(baseline);
 		@include user-select(none);
+		background-color: $color10;
+		padding: em(10) em(15);
+		border-top-left-radius: em(5);
+		border-top-right-radius: em(5);
+		box-shadow: 0 em(-2) em(8) rgba(8, 8, 8, 0.4);
+		z-index: 2;
+		position: relative;
 	}
 
 	&__settings-btn {
 		@extend .btn--primary;
 		margin-right: em(5);
+		border-radius: em(5);
 	}
 
 	&__colours {

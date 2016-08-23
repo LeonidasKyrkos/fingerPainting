@@ -1,22 +1,21 @@
 $module: 		'table';
 
 .#{$module} {
-	background-color: lighten($color3,10%);
 	min-width: em(350);
-	border-radius: em(10);
+	border: em(1) solid $color4;
 
 	&--rooms {
-		background-color: lighten($color3,10%);
 		width: 100%;
 		table-layout: fixed;
 		margin-bottom: em(30);
+		border: em(1) solid $color4;
 
 		tbody {
-			font-size: em(18);
+			font-size: em(16);
 		}
 
 		tbody td {
-			padding: em(10) em(15);
+			padding: em(10,16) em(15,16);
 		}
 
 		thead td {
@@ -25,28 +24,24 @@ $module: 		'table';
 	}
 }
 
-thead {
-	color: $color5;
-}
 
 tbody {
 	$fontSize: 16;
 	@include font-size($fontSize);
 	padding-bottom: em(10,$fontSize);
 
-	tr {
-		border-bottom: em(1) solid $color4;
-		background-color: lighten($color3,7%);
-
-		&:nth-child(even) {
-			background-color: lighten($color3,10%);				
-		}
+	tr:last-child {
+		border: 0;
 	}
 
 	td {
 		padding: em(5);
 		vertical-align: middle;
 	}
+}
+
+tr {
+	border-bottom: em(1) solid $color4;
 }
 
 td {
