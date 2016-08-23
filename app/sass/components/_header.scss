@@ -19,4 +19,15 @@ $module: 		'header';
 		display: inline-block;
 		vertical-align: middle;
 	}
+
+	&__steve {
+		display: inline-block;
+		vertical-align: middle;
+		width: em(99);
+		height: em(123);
+		background: url('/media/img/hand-small.png'), url('/media/img/steve.jpg');
+		background-position: 47px 56px, center;
+		background-repeat: no-repeat;
+		background-size: 30px, cover;
+	}
 }
