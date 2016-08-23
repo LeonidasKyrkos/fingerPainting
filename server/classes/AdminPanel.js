@@ -35,7 +35,7 @@ class AdminPanel {
 			let word = Object.keys(data[dictionary])[0];
 
 			if(Object.keys(this.dictionarys[dictionary]).indexOf(word) === -1) {
-				this.data.addWord(dictionary);
+				this.data.addWord(dictionary,word);
 				socket.emit('success message',"'" + word + "'" + ' added to dictionary');
 			} else {
 				socket.emit('error message','Sorry - that word already exists in this dictionary');

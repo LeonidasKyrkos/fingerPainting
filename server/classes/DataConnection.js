@@ -44,8 +44,8 @@ class DataConnection {
 		});		
 	}
 
-	addWord(dictionary) {
-		firebase.db.ref('/dictionarys').child(dictionary).update(data[dictionary]);	
+	addWord(dictionary,word) {
+		firebase.db.ref('/dictionarys').child(dictionary).update({word: word});	
 	}
 
 	deleteWord(dictionary,word) {
