@@ -26,7 +26,10 @@ export default class RoomPicker extends Component {
 	render() {
 		return (
 			<article className="wrapper">
-				<header><h1 className="header__title">finger painting</h1><img src="/media/img/hand-small.png" alt="" className="header__logo"/></header>
+				<header className="header">
+					<h1 className="header__title">finger painting</h1>
+					<img src="/media/img/hand-small.png" alt="" className="header__logo"/>
+				</header>
 				<h2 className="beta">Join a room</h2>
 				<RoomsLists />
 			</article>

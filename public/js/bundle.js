@@ -2415,7 +2415,7 @@ var RoomPicker = function (_Component) {
 				{ className: 'wrapper' },
 				_react2.default.createElement(
 					'header',
-					null,
+					{ className: 'header' },
 					_react2.default.createElement(
 						'h1',
 						{ className: 'header__title' },
