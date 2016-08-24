@@ -22,6 +22,7 @@ $module: 		'btn';
 		background-color: $color1;
 		color: white;
 		padding: em(5,$fontSize) em(8,$fontSize) em(7,$fontSize);
+		border-radius: em(5,$fontSize);
 
 		&:hover {
 			background-color: darken($color1,10%);

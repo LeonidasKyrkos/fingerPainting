@@ -14,15 +14,19 @@ export default class RenderOptions extends Component {
 		});
 	}
 
+	onChange() {
+		// avoid unnecessary console logging
+	}
+
 	render() {
 		let scope = this.props.scope || this;
-		let onChange = this.props.onChange ? this.props.onChange.bind(scope) : console.log(`no onchange func bound to RenderOptions`);
+		let onChange = this.props.onChange ? this.props.onChange.bind(scope) : this.onChange();
 		let content = this.renderOptions();
 
 		return (
 			<label className="form__control">
 				<span className="form__select-wrap">
-					<select className="form__select" onChange={onChange} name={this.props.name} defaultValue={this.props.defaultValue}>
+					<select className="form__select" id={this.props.name} onChange={onChange} name={this.props.name} defaultValue={this.props.defaultVal}>
 						{content}
 					</select>
 				</span>				

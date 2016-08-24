@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Store from '../../stores/Store';
+import _ from 'lodash';
 
 export default class WaitingMsgClient extends Component {
 	constructor() {
@@ -28,12 +29,22 @@ export default class WaitingMsgClient extends Component {
 		}
 	}
 
-	render() {
+	renderContent() {
 		if(this.state.store.status && this.state.store.status !== 'pending') { 
-			var content = <span className="hide"></span>
+			return <span className="hide"></span>
 		} else {
-			var content = <span className="game__message">Waiting for Artist to start the game</span>
+			if(this.state.store.players && _.find(this.state.store.players,{ status: 'painter' })) {
+				var name = _.find(this.state.store.players,{ status: 'painter' }).name;
+			} else {
+				var name = 'the artist';
+			}
+
+			return <span className="game__message">Waiting for {name} to start the game</span>
 		}
+	}
+
+	render() {
+		let content = this.renderContent();
 
 		return content;
 	}

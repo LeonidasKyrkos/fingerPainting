@@ -19,7 +19,7 @@ $module: 		'table';
 		}
 
 		thead td {
-			padding: em(12) em(15) em(10);
+			padding: em(12) em(15) em(12);
 		}
 	}
 }
@@ -32,6 +32,10 @@ tbody {
 
 	tr:last-child {
 		border: 0;
+	}
+
+	tr:nth-child(odd) {
+		background-color: rgba(255,255,255,0.05);
 	}
 
 	td {

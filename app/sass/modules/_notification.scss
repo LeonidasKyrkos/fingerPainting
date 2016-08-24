@@ -6,20 +6,21 @@ $module: 			'notification';
 	@include transform(translateY(-50%));
 	left: 0;
 	right: 0;
-	max-width: em(400);
-	border-radius: em(15);
-	background-color: $color3;
-	border: em(3) solid $color6;
+	max-width: em(500);
+	border-radius: em(5);
+	background-color: rgba(white,0.9);
 	padding: em(20);
-	min-height: em(150);
 	margin: 0 auto;
 	@include display(flex);
 	@include align-items(center);
 	@include justify-content(center);
 
 	&__text {
-		$fontSize: 30;
+		font-family: $font-family-secondary;
+		$fontSize: 22;
+		line-height: 1.2;
 		font-size: em($fontSize);
-		color: white;
+		color: #444141;
+		text-transform: lowercase;
 	}
 }

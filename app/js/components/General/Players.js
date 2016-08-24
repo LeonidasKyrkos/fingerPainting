@@ -92,7 +92,7 @@ export default class players extends Component {
 	render() {
 		return (
 			<div data-js="players" className="players">
-				<h3 className="delta">Current scores</h3>
+				<h3 className="delta tac">Scores</h3>
 				<ul className="players__list">
 					{this.renderPlayers()}
 				</ul>

@@ -10,7 +10,7 @@ export default class AddRoom extends Component {
 		let data = {
 			title: this.refs.title.value,
 			password: this.refs.password.value,
-			dictionary: this.refs.dictionary.value,
+			dictionary: document.querySelector('#dictionary').value,
 			clock: 90,
 			status: 'pending'
 		}
@@ -31,7 +31,7 @@ export default class AddRoom extends Component {
 				<td><input className="form__input" type="text" ref="title" /></td>
 				<td><input className="form__input" ref="password" type="text" /></td>
 				<td>
-					<RenderOptions defaultValue="test" ref="dictionary" obj={this.props.dictionarys} />
+					<RenderOptions defaultVal="default" name="dictionary" obj={this.props.dictionarys} />
 				</td>
 				<td><button onClick={this.addRoom.bind(this)} className="btn--tertiary">Add room</button></td>
 			</tr>
