@@ -34,7 +34,7 @@ export default class DictionarySelect extends Component {
 		return(
 			<form className="form">
 				<label className="form__control">
-					<h3 className="gamma">Dictionarys</h3>
+					<h3 className="delta">Dictionarys</h3>
 					<span className="form__select-wrap">
 						<select id="dictionarysList" className="form__select">
 							<option value="null">Select a dictionary</option>

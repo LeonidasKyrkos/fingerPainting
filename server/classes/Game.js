@@ -35,6 +35,15 @@ class Game {
 		},1000);
 	}
 
+	attachDataListener() {
+		e.on('store',(store)=>{
+			if(!this.dictionary || store && this.store.dictionary !== store.dictionary) { this.getDictionary(store.dictionary); };
+			this.prepStoreAndCallUpdate(store);
+		});
+
+		this.data.listenToData();
+	}
+
 	newPlayer(player,socket) {
 		this.sockets[player.id] = socket;
 
@@ -75,15 +84,6 @@ class Game {
 
 	removeInactivePlayers(player){
 		delete this.inactivePlayers[player.refreshToken];
-	}
-
-	attachDataListener() {
-		e.on('store',(store)=>{
-			if(!this.dictionary) { this.getDictionary(store.dictionary); };
-			this.prepStoreAndCallUpdate(store);
-		});
-
-		this.data.listenToData(this,e);
 	}
 
 	prepStoreAndCallUpdate(store={}) {

@@ -16,13 +16,27 @@ body {
 	color: white;
 	line-height: ($font-lineheight-base/$font-size-base);
 	padding-right: em(160);
+
+	@media (max-width: 1410px) {
+		padding-right: 0;
+	}
 }
 
 .wrapper {
 	padding: em(30) em(15);
-	width: em(1200);
+	max-width: em(1200);
 	margin: 0 auto;
 	@include clearfix;
+
+	&--noscores {
+		@extend .wrapper;
+		position: relative;
+		right: em(-80);
+
+		@media (max-width: 1410px) {
+			right: auto;
+		}
+	}
 }
 
 .innerwrapper {

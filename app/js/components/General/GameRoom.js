@@ -63,7 +63,7 @@ export default class Home extends Component {
 	render() {
 		return (
 			<div className="wrapper">
-				<h1 className="gameroom__title">finger painting</h1>
+				<h1 className="gamma">{this.state.store.title}</h1>
 				{this.renderItems()}
 			</div>
 		);

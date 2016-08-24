@@ -72,7 +72,7 @@ export default class AdminRoomEdit extends Component {
 	render() {
 		return (
 			<div className="admin__rooms">
-				<h3 className="gamma">Room edit</h3>
+				<h3 className="delta">Room edit</h3>
 				<table className="table--rooms">
 					<thead>
 						<tr>

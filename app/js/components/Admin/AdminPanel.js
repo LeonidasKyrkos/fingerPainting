@@ -39,8 +39,8 @@ export default class AdminPanel extends Component {
 
 	render() {
 		return (
-			<div className="wrapper">
-				<h1 className="alpha">Admin panel</h1>
+			<div className="wrapper--noscores">
+				<h1 className="beta">Admin panel</h1>
 				<AdminRoomEdit rooms={this.state.rooms} dictionarys={this.state.dictionarys} socket={this.socket} />
 				<DictionarySelect dictionarys={this.state.dictionarys} />
 				<Dictionarys dictionarys={this.state.dictionarys} socket={this.socket} />
