@@ -384,7 +384,7 @@ class Game {
 			playersArr.push(players[player]);
 		}
 
-		let remainingPlayers = _.filter(playersArr,(player)=>{ return player.turns < 2 });
+		let remainingPlayers = _.filter(playersArr,(player)=>{ return player.turns < this.rounds });
 
 		for(var index = 0; index <= remainingPlayers.length - 1; index++) {
 			let playerId = remainingPlayers[index].id;
