@@ -1,14 +1,17 @@
 // server
-var path = require('path');
-var logger = require('morgan');
-var port = 3000;
-var express = require('express');
-var app = express();
-var server = require('http').Server(app);
-var io = require('socket.io',{ rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling'] })(server);
-var basicAuth = require('basic-auth');
-var cookieParser = require('socket.io-cookie-parser');
-var expCookieParser = require('cookie-parser');
+const path = require('path');
+const logger = require('morgan');
+const port = 3000;
+const express = require('express');
+const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io',{ rememberTransport: false, transports: ['WebSocket', 'Flash Socket', 'AJAX long-polling'] })(server);
+const basicAuth = require('basic-auth');
+const cookieParser = require('socket.io-cookie-parser');
+const expCookieParser = require('cookie-parser');
+const tests = require('./server/modules/tests');
+const gameEntry = require('./server/modules/gameEntry');
+const reconToken = 'fingerpainting_refresh_token';
 
 io.use(cookieParser());
 app.use(expCookieParser());
@@ -39,27 +42,43 @@ app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/rooms/*',function(req, res){
-	res.redirect('/');
+	let cookie = getCookie(req,reconToken);
+	let gameId = req.params[0];
+
+	if(!cookie) {
+		res.redirect('/');
+	} else {
+		res.redirect('/rejoin/'+gameId)
+	}	
 })
+
+app.get('/rejoin*', function (req, res) {
+  res.sendFile(__dirname + '/views/index.html');
+});
 
 app.get('/admin', auth, function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
 app.get('/', function (req, res) {
-	let name = 'fingerpainting_refresh_token';
-	let cookie = req.cookies[name];
+	let cookie = getCookie(req,reconToken)
 
 	if (!cookie){
 		// no: set a new cookie
 		let timestamp = (new Date()).getTime();
 		let random = Math.random().toString();
 
-		res.cookie(name, timestamp, { maxAge: 900000, httpOnly: true });
+		res.cookie(reconToken, timestamp, { maxAge: 900000, httpOnly: true });
 	} 
 
 	res.sendFile(__dirname + '/views/index.html');
 });
+
+function getCookie(req,name) {
+	let cookie = req.cookies[name];
+
+	return cookie;
+}
 
 module.exports = {
 	io: io
