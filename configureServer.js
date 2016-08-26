@@ -1,7 +1,7 @@
 // server
 const path = require('path');
 const logger = require('morgan');
-const port = 3000;
+const port = 80;
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);

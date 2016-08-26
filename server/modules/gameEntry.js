@@ -70,8 +70,8 @@ function joinHandler(request,socket){
 	}
 }
 
-function rejoinHandler(socket) {
-	socket.emit('debug',socket);
+function rejoinHandler() {
+	//socket.emit('debug',socket);
 	//game.reconnect(socket);
 }
 

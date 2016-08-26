@@ -11,7 +11,7 @@ export default class AdminPanel extends Component {
 
 		this.state = Store.getState();
 		this.onChange = this.onChange.bind(this);
-		this.socket = io.connect('http://localhost:3000/admin');
+		this.socket = io.connect('http://52.209.86.125/admin');
 		this.attachListeners();
 	}
 

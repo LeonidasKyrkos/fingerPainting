@@ -50,7 +50,7 @@ io.on('connection', (socket)=>{
 });
 
 rejoinSocket.on('connection',(socket)=>{
-	utils.rejoinHandler(socket);
+	//utils.rejoinHandler(socket);
 });
 
 adminSocket.on('connection',(socket)=>{
