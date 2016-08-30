@@ -6,6 +6,15 @@ $module: 		'footer';
 	position: absolute;
 	bottom: 0;
 	left: 0;
+	right: 0;
 	color: white;
 	padding: em(10,$fontSize);
+
+	&__left {
+		float: left;
+	}
+
+	&__right {
+		float: right;
+	}
 }

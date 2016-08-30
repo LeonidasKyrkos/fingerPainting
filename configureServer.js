@@ -10,6 +10,7 @@ const basicAuth = require('basic-auth');
 const cookieParser = require('socket.io-cookie-parser');
 const expCookieParser = require('cookie-parser');
 const reconToken = 'fingerpainting_refresh_token';
+const url = require('url');
 
 io.use(cookieParser());
 app.use(expCookieParser());
@@ -39,23 +40,19 @@ var auth = function (req, res, next) {
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/rooms/*',function(req, res){
-	let cookie = getCookie(req,reconToken);
-	let gameId = req.params[0];
-
-	if(!cookie) {
-		res.redirect('/');
-	} else {
-		res.redirect('/rejoin/'+gameId)
-	}	
+app.get('/rooms/*',(req, res)=>{
+	let pathString = url.parse(req.url).path;
+	let index = pathString.indexOf('rooms');
+	let roomId = pathString.substring(index + 6, pathString.length);
+	res.redirect('/joining?room=' + roomId);
 })
 
-app.get('/rejoin*', function (req, res) {
-  res.sendFile(__dirname + '/views/index.html');
+app.get('/joining*',(req, res)=>{
+	res.sendFile(__dirname + '/views/index.html');
 });
 
 app.get('/admin', auth, function (req, res) {
-  res.sendFile(__dirname + '/views/index.html');
+	res.sendFile(__dirname + '/views/index.html');
 });
 
 app.get('/', function (req, res) {

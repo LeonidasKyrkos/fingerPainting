@@ -13,9 +13,11 @@ export default class players extends Component {
 		Store.listen(this.onChange);
 		let audio = new Audio('/media/sound/335908__littlerainyseasons__correct.mp3');
 
-		this.state.socket.on('correct',()=>{
-			audio.play();
-		});
+		if(typeof this.state.socket.on === 'function') {
+			this.state.socket.on('correct',()=>{
+				audio.play();
+			});
+		}		
 	}
 
 	componentWillUnmount() {

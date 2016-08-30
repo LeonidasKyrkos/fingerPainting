@@ -47,6 +47,10 @@ export default class App extends Component {
 		this.socket.on('rooms',(rooms)=>{
 			Actions.updateRooms(rooms);
 		});
+
+		this.socket.on('redirect',(url)=>{
+			window.location.pathname = url;
+		});
 	}
 
 	joinRoom(room) {

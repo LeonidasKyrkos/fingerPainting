@@ -967,10 +967,6 @@ var CanvasClient = function (_Component) {
 
 		_this.state = _Store2.default.getState();
 
-		_this.state.socket.on('path update', function (paths) {
-			(0, _canvasFunctions.redraw)(paths, _this.ctx);
-		});
-
 		_this.onChange = _this.onChange.bind(_this);
 		return _this;
 	}
@@ -983,10 +979,18 @@ var CanvasClient = function (_Component) {
 			this.canvas = document.querySelector('#canvas');
 			this.canvas.setAttribute('width', this.canvas.parentElement.offsetWidth);
 			this.ctx = this.canvas.getContext('2d');
+
+			if (typeof this.state.socket.on === 'function') {
+				this.state.socket.on('reset', function () {
+					_this2.ctx.clearRect(0, 0, _this2.canvas.width, _this2.canvas.height);
+				});
+
+				this.state.socket.on('path update', function (paths) {
+					(0, _canvasFunctions.redraw)(paths, _this2.ctx);
+				});
+			}
+
 			_Store2.default.listen(this.onChange);
-			this.state.socket.on('reset', function () {
-				_this2.ctx.clearRect(0, 0, _this2.canvas.width, _this2.canvas.height);
-			});
 		}
 	}, {
 		key: 'componentWillUnmount',
@@ -1213,6 +1217,10 @@ var App = function (_Component) {
 
 			this.socket.on('rooms', function (rooms) {
 				_Actions2.default.updateRooms(rooms);
+			});
+
+			this.socket.on('redirect', function (url) {
+				window.location.pathname = url;
 			});
 		}
 	}, {
@@ -1491,7 +1499,7 @@ var EndGame = function (_Component) {
 
 exports.default = EndGame;
 
-},{"../../stores/Store":33,"./Scoreboard":27,"react":"react"}],15:[function(require,module,exports){
+},{"../../stores/Store":33,"./Scoreboard":28,"react":"react"}],15:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1610,11 +1618,25 @@ var Footer = function (_Component) {
 			return _react2.default.createElement(
 				"footer",
 				{ className: "footer" },
-				"For bug reports and requests please email ",
 				_react2.default.createElement(
-					"a",
-					{ className: "email-link", href: "mailto:fingerpainting.io@gmail.com" },
-					"fingerpainting.io@gmail.com"
+					"div",
+					{ className: "footer__left" },
+					"For bug reports and requests please email ",
+					_react2.default.createElement(
+						"a",
+						{ className: "email-link", href: "mailto:fingerpainting.io@gmail.com" },
+						"fingerpainting.io@gmail.com"
+					)
+				),
+				_react2.default.createElement(
+					"div",
+					{ className: "footer__right" },
+					"Hosted by ",
+					_react2.default.createElement(
+						"a",
+						{ href: "http://redsnapper.net", className: "email-link" },
+						"Redsnapper Ltd."
+					)
 				)
 			);
 		}
@@ -1749,6 +1771,11 @@ var Home = function (_Component) {
 					{ className: 'gamma' },
 					this.state.store.title
 				),
+				_react2.default.createElement(
+					'a',
+					{ href: '/', className: 'header__home-link' },
+					'Back to lobby'
+				),
 				this.renderItems()
 			);
 		}
@@ -1759,7 +1786,7 @@ var Home = function (_Component) {
 
 exports.default = Home;
 
-},{"../../stores/Store":33,"../Client/CanvasClient.js":10,"../Player/CanvasPlayer.js":28,"./Chat.js":13,"./Endgame":14,"./Players.js":21,"./Puzzle.js":22,"react":"react"}],18:[function(require,module,exports){
+},{"../../stores/Store":33,"../Client/CanvasClient.js":10,"../Player/CanvasPlayer.js":29,"./Chat.js":13,"./Endgame":14,"./Players.js":21,"./Puzzle.js":22,"react":"react"}],18:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1799,8 +1826,7 @@ var Header = function (_Component) {
 					"h1",
 					{ className: "header__title" },
 					"finger painting"
-				),
-				_react2.default.createElement("span", { className: "header__steve" })
+				)
 			);
 		}
 	}]);
@@ -2029,9 +2055,11 @@ var players = function (_Component) {
 			_Store2.default.listen(this.onChange);
 			var audio = new Audio('/media/sound/335908__littlerainyseasons__correct.mp3');
 
-			this.state.socket.on('correct', function () {
-				audio.play();
-			});
+			if (typeof this.state.socket.on === 'function') {
+				this.state.socket.on('correct', function () {
+					audio.play();
+				});
+			}
 		}
 	}, {
 		key: 'componentWillUnmount',
@@ -2562,7 +2590,7 @@ var RoomPicker = function (_Component) {
 
 exports.default = RoomPicker;
 
-},{"../../stores/Store":33,"./RoomSpawn":25,"./RoomsList":26,"./header":18,"react":"react"}],25:[function(require,module,exports){
+},{"../../stores/Store":33,"./RoomSpawn":25,"./RoomsList":27,"./header":18,"react":"react"}],25:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2666,6 +2694,83 @@ var RoomSpawn = function (_Component) {
 exports.default = RoomSpawn;
 
 },{"react":"react"}],26:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Store = require('../../stores/Store');
+
+var _Store2 = _interopRequireDefault(_Store);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Rooms = function (_Component) {
+	_inherits(Rooms, _Component);
+
+	function Rooms() {
+		_classCallCheck(this, Rooms);
+
+		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Rooms).call(this));
+
+		_this.onChange = _this.onChange.bind(_this);
+		_this.state = _Store2.default.getState();
+		return _this;
+	}
+
+	_createClass(Rooms, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			_Store2.default.listen(this.onChange);
+		}
+	}, {
+		key: 'componentWillUnmount',
+		value: function componentWillUnmount() {
+			_Store2.default.unlisten(this.onChange);
+		}
+	}, {
+		key: 'onChange',
+		value: function onChange(state) {
+			this.setState(state);
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			if (this.state.socket.emit) {
+				this.state.socket.emit('rooms request');
+			}
+
+			return _react2.default.createElement(
+				'div',
+				{ className: 'wrapper' },
+				_react2.default.createElement(
+					'span',
+					{ className: 'alpha' },
+					'Loading...'
+				)
+			);
+		}
+	}]);
+
+	return Rooms;
+}(_react.Component);
+
+exports.default = Rooms;
+
+},{"../../stores/Store":33,"react":"react"}],27:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2877,7 +2982,7 @@ var RoomsList = function (_Component) {
 
 exports.default = RoomsList;
 
-},{"../../stores/Store":33,"./ErrorMessage":15,"./RoomJoin":23,"react":"react"}],27:[function(require,module,exports){
+},{"../../stores/Store":33,"./ErrorMessage":15,"./RoomJoin":23,"react":"react"}],28:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2995,7 +3100,7 @@ var Scoreboard = function (_Component) {
 
 exports.default = Scoreboard;
 
-},{"../../stores/Store":33,"react":"react"}],28:[function(require,module,exports){
+},{"../../stores/Store":33,"react":"react"}],29:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3255,7 +3360,7 @@ var CanvasPlayer = function (_Component) {
 
 exports.default = CanvasPlayer;
 
-},{"../../stores/Store":33,"../../utilities/canvasFunctions":34,"./CanvasSettings":29,"lodash":41,"react":"react"}],29:[function(require,module,exports){
+},{"../../stores/Store":33,"../../utilities/canvasFunctions":34,"./CanvasSettings":30,"lodash":41,"react":"react"}],30:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3464,56 +3569,7 @@ CanvasSettings.propTypes = {
 	scope: _react.PropTypes.object.isRequired
 };
 
-},{"../../stores/Store":33,"lodash":41,"react":"react","react-color":75}],30:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Rejoin = function (_Component) {
-	_inherits(Rejoin, _Component);
-
-	function Rejoin() {
-		_classCallCheck(this, Rejoin);
-
-		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Rejoin).call(this));
-
-		_this.socket = io.connect('http://localhost:3000/rejoin');
-		return _this;
-	}
-
-	_createClass(Rejoin, [{
-		key: 'render',
-		value: function render() {
-			return _react2.default.createElement(
-				'span',
-				null,
-				'attempting to reconnect'
-			);
-		}
-	}]);
-
-	return Rejoin;
-}(_react.Component);
-
-exports.default = Rejoin;
-
-},{"react":"react"}],31:[function(require,module,exports){
+},{"../../stores/Store":33,"lodash":41,"react":"react","react-color":75}],31:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -3559,17 +3615,17 @@ var _RoomPicker = require('./components/General/RoomPicker');
 
 var _RoomPicker2 = _interopRequireDefault(_RoomPicker);
 
-var _GameRoom = require('./components/General/GameRoom');
-
-var _GameRoom2 = _interopRequireDefault(_GameRoom);
-
 var _AdminPanel = require('./components/Admin/AdminPanel');
 
 var _AdminPanel2 = _interopRequireDefault(_AdminPanel);
 
-var _Rejoin = require('./components/Rejoin/Rejoin');
+var _Rooms = require('./components/General/Rooms');
 
-var _Rejoin2 = _interopRequireDefault(_Rejoin);
+var _Rooms2 = _interopRequireDefault(_Rooms);
+
+var _GameRoom = require('./components/General/GameRoom');
+
+var _GameRoom2 = _interopRequireDefault(_GameRoom);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3580,13 +3636,13 @@ exports.default = _react2.default.createElement(
 		_reactRouter.Route,
 		{ component: _App2.default },
 		_react2.default.createElement(_reactRouter.Route, { path: '/', component: _RoomPicker2.default }),
-		_react2.default.createElement(_reactRouter.Route, { path: '/rooms/:roomId', component: _GameRoom2.default })
+		_react2.default.createElement(_reactRouter.Route, { path: '/joining*', component: _Rooms2.default }),
+		_react2.default.createElement(_reactRouter.Route, { path: '/rooms/:gameId', component: _GameRoom2.default })
 	),
-	_react2.default.createElement(_reactRouter.Route, { path: '/admin', component: _AdminPanel2.default }),
-	_react2.default.createElement(_reactRouter.Route, { path: '/rejoin*', component: _Rejoin2.default })
+	_react2.default.createElement(_reactRouter.Route, { path: '/admin', component: _AdminPanel2.default })
 );
 
-},{"./components/Admin/AdminPanel":5,"./components/General/App":12,"./components/General/GameRoom":17,"./components/General/RoomPicker":24,"./components/Rejoin/Rejoin":30,"react":"react","react-router":"react-router"}],33:[function(require,module,exports){
+},{"./components/Admin/AdminPanel":5,"./components/General/App":12,"./components/General/GameRoom":17,"./components/General/RoomPicker":24,"./components/General/Rooms":26,"react":"react","react-router":"react-router"}],33:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

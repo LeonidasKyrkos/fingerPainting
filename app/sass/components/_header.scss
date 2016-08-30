@@ -9,7 +9,6 @@ $module: 		'header';
 		@extend .beta;
 		display: inline-block;
 		vertical-align: middle;
-		margin-right: em(30,40);
 		width: auto;
 		line-height: 1;
 		margin-bottom: 0;
@@ -30,5 +29,12 @@ $module: 		'header';
 		background-position: 0 center;
 		background-repeat: no-repeat;
 		background-size: cover;
+	}
+
+	&__home-link {
+		@extend .btn--primary; // components/buttons
+		position: absolute;
+		top: em(10,16);
+		right: em(190,16);
 	}
 }

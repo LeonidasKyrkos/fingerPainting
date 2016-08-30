@@ -11,9 +11,6 @@ const AdminPanel = require('./server/classes/AdminPanel');
 const adminPanel = new AdminPanel();
 const adminSocket = io.of('/admin');
 
-// room rejoining
-const rejoinSocket = io.of('/rejoin');
-
 // event handling
 const Eev = require  ('eev'); 
 const e = new Eev(); // event emitter
@@ -40,6 +37,10 @@ io.on('connection', (socket)=>{
 		utils.joinHandler(request,socket);
 	});
 
+	socket.on('rooms request',()=>{
+		utils.roomsHandler(socket);
+	});
+
 	socket.on('joined room',()=>{
 		delete roomPickers[socket.userId];
 
@@ -47,10 +48,6 @@ io.on('connection', (socket)=>{
 			data.unwatchRooms();
 		}
 	});
-});
-
-rejoinSocket.on('connection',(socket)=>{
-	utils.rejoinHandler(socket);
 });
 
 adminSocket.on('connection',(socket)=>{
