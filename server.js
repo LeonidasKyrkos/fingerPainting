@@ -41,7 +41,7 @@ io.on('connection', (socket)=>{
 		utils.roomsHandler(socket);
 	});
 
-	socket.on('joined room',()=>{
+	socket.on('disconnect',()=>{
 		delete roomPickers[socket.userId];
 
 		if(!Object.keys(roomPickers).length) {
