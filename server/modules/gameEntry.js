@@ -80,16 +80,6 @@ function roomsHandler(socket) {
 	let roomId = query.room;
 	let game = activeGames[roomId];
 
-	console.log(socket.request);
-
-	debugging.trueFalse({
-		game: game,
-		cookie: cookie,
-		roomId: roomId
-	});
-
-	console.log(tests.inactivePlayer(cookie,game));
-
 	if(game && cookie && roomId && tests.inactivePlayer(cookie,game)) {
 		let name = game.inactivePlayers[cookie].name;
 		let player = new Player({ name: name, id: roomId }, socket, cookie);
