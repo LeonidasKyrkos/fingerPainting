@@ -16,6 +16,9 @@ body {
 	color: white;
 	line-height: ($font-lineheight-base/$font-size-base);
 	padding-right: em(160);
+	padding-bottom: em(37);
+	position: relative;
+	min-height: 100vh;
 
 	@media (max-width: 1410px) {
 		padding-right: 0;
@@ -47,4 +50,14 @@ body {
 	visibility: hidden;
 	max-height: 0;
 	overflow: hidden;
+}
+
+.email-link {
+	padding: 0 em(5);
+	letter-spacing: 1px;
+	text-decoration: underline;
+
+	&:hover {
+		color: $color1;
+	}
 }

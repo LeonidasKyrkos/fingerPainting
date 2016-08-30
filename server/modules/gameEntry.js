@@ -70,6 +70,11 @@ function joinHandler(request,socket){
 	}
 }
 
+function rejoinHandler() {
+	//socket.emit('debug',socket);
+	//game.reconnect(socket);
+}
+
 function instantiateRooms(rooms) {
 	for(let id in rooms) {
 		let game = new Game(id);
@@ -90,5 +95,6 @@ function deleteActiveGame(id) {
 
 module.exports = {
 	joinHandler: joinHandler,
-	deleteActiveGame: deleteActiveGame
+	deleteActiveGame: deleteActiveGame,
+	rejoinHandler: rejoinHandler
 }

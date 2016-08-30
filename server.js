@@ -1,19 +1,33 @@
-// custom modules
-const utils = require('./server/modules/gamesActions');
+// server stuff
 const firebase = require('./server/modules/firebaseConfig');
 const io = require('./configureServer').io;
+
+// custom modules & classes
+const utils = require('./server/modules/gameEntry');
+const DataConnection = require('./server/classes/DataConnection');
+
+// admin stuff
 const AdminPanel = require('./server/classes/AdminPanel');
 const adminPanel = new AdminPanel();
 const adminSocket = io.of('/admin');
-const DataConnection = require('./server/classes/DataConnection');
+
+// room rejoining
+const rejoinSocket = io.of('/rejoin');
+
+// event handling
 const Eev = require  ('eev'); 
 const e = new Eev(); // event emitter
+
+// variable instantiation
 const data = new DataConnection(0,e);
 const roomPickers = {};
 let roomStore;
 
+
+// watch rooms and create store
 e.on('rooms',updateRoomStore);
 data.watchRooms();
+
 
 // socket events
 io.on('connection', (socket)=>{
@@ -33,6 +47,10 @@ io.on('connection', (socket)=>{
 			data.unwatchRooms();
 		}
 	});
+});
+
+rejoinSocket.on('connection',(socket)=>{
+	//utils.rejoinHandler(socket);
 });
 
 adminSocket.on('connection',(socket)=>{

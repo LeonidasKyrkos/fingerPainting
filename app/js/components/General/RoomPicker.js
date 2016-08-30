@@ -26,11 +26,11 @@ export default class RoomPicker extends Component {
 
 	render() {
 		return (
-			<article className="wrapper--noscores">
+			<main className="wrapper--noscores">
 				<Header />
 				<h2 className="gamma">Join a room</h2>
 				<RoomsLists />
-			</article>
+			</main>
 		);
 	}
 }

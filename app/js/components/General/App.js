@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Actions from '../../actions/Actions';
 import { painterTest } from '../../utilities/general.js';
 import Notification from './Notification';
+import Footer from './Footer';
 
 export default class App extends Component {
 	constructor(props) {
@@ -63,9 +64,10 @@ export default class App extends Component {
 	render() {
 
 		return (
-			<div>
+			<div className="outerwrap">
 				{this.renderChildren()}
 				<Notification />
+				<Footer />
 			</div>
 		);
 	}

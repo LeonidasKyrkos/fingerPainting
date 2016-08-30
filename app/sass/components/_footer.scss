@@ -1,0 +1,11 @@
+$module: 		'footer';
+
+.#{$module} {
+	$fontSize: 16;
+	font-size: em($fontSize);	
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	color: white;
+	padding: em(10,$fontSize);
+}
