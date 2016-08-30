@@ -87,6 +87,8 @@ function roomsHandler(socket) {
 		socket.emit('user update',player);
 
 		game.newPlayer(player,socket);
+	} else {
+		socket.emit('redirect','/');
 	}
 }
 

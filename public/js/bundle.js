@@ -2749,7 +2749,8 @@ var Rooms = function (_Component) {
 	}, {
 		key: 'render',
 		value: function render() {
-			if (this.state.socket.emit) {
+			if (this.state.socket.emit && !this.requested) {
+				this.requested = true;
 				this.state.socket.emit('rooms request');
 			}
 

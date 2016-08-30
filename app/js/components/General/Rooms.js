@@ -23,7 +23,8 @@ export default class Rooms extends Component {
 	}
 
 	render() {
-		if(this.state.socket.emit) {
+		if(this.state.socket.emit && !this.requested) {
+			this.requested = true;
 			this.state.socket.emit('rooms request');	
 		}
 
