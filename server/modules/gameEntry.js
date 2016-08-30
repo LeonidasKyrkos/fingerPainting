@@ -71,7 +71,7 @@ function joinHandler(request,socket){
 }
 
 function rejoinHandler() {
-	//socket.emit('debug',socket);
+	console.log('rejoin handler');
 	//game.reconnect(socket);
 }
 

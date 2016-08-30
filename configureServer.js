@@ -9,8 +9,6 @@ const io = require('socket.io',{ rememberTransport: false, transports: ['WebSock
 const basicAuth = require('basic-auth');
 const cookieParser = require('socket.io-cookie-parser');
 const expCookieParser = require('cookie-parser');
-const tests = require('./server/modules/tests');
-const gameEntry = require('./server/modules/gameEntry');
 const reconToken = 'fingerpainting_refresh_token';
 
 io.use(cookieParser());
