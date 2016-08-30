@@ -76,6 +76,10 @@ class DataConnection {
 		this.dbRef.child('players').child(player).child('turns').set(turns);
 	}
 
+	resetPlayers() {
+		this.dbRef.child('players').remove();
+	}
+
 	setStore(store) {
 		this.dbRef.set(store);
 	}

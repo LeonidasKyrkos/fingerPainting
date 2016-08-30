@@ -9,21 +9,25 @@ export default class CanvasClient extends Component {
 
 		this.state = Store.getState();
 
-		this.state.socket.on('path update',(paths)=>{
-			redraw(paths,this.ctx);
-		});
-
 		this.onChange = this.onChange.bind(this);
 	}
 
 	componentDidMount() {
 		this.canvas = document.querySelector('#canvas');
 		this.canvas.setAttribute('width',this.canvas.parentElement.offsetWidth);
-		this.ctx = this.canvas.getContext('2d');
+		this.ctx = this.canvas.getContext('2d');				
+
+		if(typeof this.state.socket.on === 'function') {
+			this.state.socket.on('reset',()=>{
+				this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			});
+			
+			this.state.socket.on('path update',(paths)=>{
+				redraw(paths,this.ctx);
+			});
+		}
+
 		Store.listen(this.onChange);
-		this.state.socket.on('reset',()=>{
-			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-		});
 	}
 
 	componentWillUnmount() {

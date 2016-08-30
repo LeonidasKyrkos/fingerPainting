@@ -9,7 +9,6 @@ export default class Header extends Component {
 		return (
 			<header className="header">
 				<h1 className="header__title">finger painting</h1>
-				<span className="header__steve"></span>
 			</header>
 		)
 	}

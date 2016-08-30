@@ -17,7 +17,8 @@ class Game {
 	init(player, socket) {
 		this.store = {};
 		this.sockets = {};
-		this.inactivePlayers= {};
+		this.data.resetPlayers();
+		this.inactivePlayers = {};
 		this.garbageQueue = [];
 		this.roundCount = 1;	
 		this.attachDataListener();
@@ -56,7 +57,7 @@ class Game {
 		}
 
 		// join room and add to db
-		room.handler(this.id,player);
+		room.handler(player.gameroom,player);
 
 		socket.emit('join room','/rooms/' + this.id);
 		socket.emit('player',player);

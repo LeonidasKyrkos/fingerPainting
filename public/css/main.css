@@ -387,7 +387,7 @@ h1, h2, h3, h4, h5 {
 .alpha {
   text-align: center; }
 
-.btn, .btn--primary, .btn--tertiary, .form__button--inline, .canvas__start-btn, .canvas__settings-btn, .btn--secondary, .btn--submit {
+.btn, .btn--primary, .btn--tertiary, .form__button--inline, .canvas__start-btn, .canvas__settings-btn, .header__home-link, .btn--secondary, .btn--submit {
   background-color: transparent;
   display: inline-block;
   margin-bottom: 0;
@@ -404,15 +404,15 @@ h1, h2, h3, h4, h5 {
   user-select: none;
   text-decoration: none !important;
   outline: 0; }
-  .btn--primary, .btn--tertiary, .form__button--inline, .canvas__start-btn, .canvas__settings-btn {
+  .btn--primary, .btn--tertiary, .form__button--inline, .canvas__start-btn, .canvas__settings-btn, .header__home-link {
     font-size: 0.8em;
     background-color: #B22222;
     color: white;
     padding: 0.3125em 0.5em 0.4375em;
     border-radius: 0.3125em; }
-    .btn--primary:hover, .btn--tertiary:hover, .form__button--inline:hover, .canvas__start-btn:hover, .canvas__settings-btn:hover {
+    .btn--primary:hover, .btn--tertiary:hover, .form__button--inline:hover, .canvas__start-btn:hover, .canvas__settings-btn:hover, .header__home-link:hover {
       background-color: #871a1a; }
-    .table--rooms .btn--primary, .table--rooms .btn--tertiary, .table--rooms .form__button--inline, .table--rooms .canvas__start-btn, .table--rooms .canvas__settings-btn {
+    .table--rooms .btn--primary, .table--rooms .btn--tertiary, .table--rooms .form__button--inline, .table--rooms .canvas__start-btn, .table--rooms .canvas__settings-btn, .table--rooms .header__home-link {
       display: block;
       margin: 0 auto;
       min-width: 5em; }
@@ -828,7 +828,6 @@ td {
   .header__title {
     display: inline-block;
     vertical-align: middle;
-    margin-right: 0.75em;
     width: auto;
     line-height: 1;
     margin-bottom: 0; }
@@ -845,14 +844,23 @@ td {
     background-position: 0 center;
     background-repeat: no-repeat;
     background-size: cover; }
+  .header__home-link {
+    position: absolute;
+    top: 0.625em;
+    right: 11.875em; }
 
 .footer {
   font-size: 0.8em;
   position: absolute;
   bottom: 0;
   left: 0;
+  right: 0;
   color: white;
   padding: 0.625em; }
+  .footer__left {
+    float: left; }
+  .footer__right {
+    float: right; }
 
 .game__wrap {
   display: -webkit-box;

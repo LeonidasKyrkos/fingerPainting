@@ -3,6 +3,8 @@ const firebase = require('./firebaseConfig');
 const Game = require('../classes/Game');
 const Player = require('../classes/Player');
 const _ = require('lodash');
+const url = require('url');
+const querystring = require('querystring');
 let activeGames = {};
 let rooms = {};
 let instantiated = false;
@@ -70,9 +72,22 @@ function joinHandler(request,socket){
 	}
 }
 
-function rejoinHandler() {
-	console.log('rejoin handler');
-	//game.reconnect(socket);
+function roomsHandler(socket) {
+	let cookie = socket.request.cookies['fingerpainting_refresh_token'] || '';
+	let urlObject = url.parse(socket.handshake.headers.referer);
+	let query = querystring.parse(urlObject.query);
+	let roomId = query.room;
+	let game = activeGames[roomId];
+
+	if(game && cookie && roomId && tests.inactivePlayer(cookie,game)) {
+		let name = game.inactivePlayers[cookie].name;
+		let player = new Player({ name: name, id: roomId }, socket, cookie);
+
+		// hand client their user credentials.
+		socket.emit('user update',player);
+
+		game.newPlayer(player,socket);
+	}
 }
 
 function instantiateRooms(rooms) {
@@ -96,5 +111,5 @@ function deleteActiveGame(id) {
 module.exports = {
 	joinHandler: joinHandler,
 	deleteActiveGame: deleteActiveGame,
-	rejoinHandler: rejoinHandler
+	roomsHandler: roomsHandler
 }
