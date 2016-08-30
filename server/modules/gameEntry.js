@@ -80,7 +80,7 @@ function roomsHandler(socket) {
 	let roomId = query.room;
 	let game = activeGames[roomId];
 
-	console.log(socket.request.cookies);
+	console.log(socket.request);
 
 	debugging.trueFalse({
 		game: game,
