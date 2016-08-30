@@ -48,8 +48,6 @@ app.get('/rooms/*',(req, res)=>{
 })
 
 app.get('/joining*',(req, res)=>{
-	let cookie = getCookie(req,reconToken);
-	console.log(cookie);
 	res.sendFile(__dirname + '/views/index.html');
 });
 
