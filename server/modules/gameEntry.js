@@ -5,6 +5,7 @@ const Player = require('../classes/Player');
 const _ = require('lodash');
 const url = require('url');
 const querystring = require('querystring');
+const debugging = require('./debugging');
 let activeGames = {};
 let rooms = {};
 let instantiated = false;
@@ -78,6 +79,14 @@ function roomsHandler(socket) {
 	let query = querystring.parse(urlObject.query);
 	let roomId = query.room;
 	let game = activeGames[roomId];
+
+	debugging.trueFalse({
+		game: game,
+		cookie: cookie,
+		roomId: roomId
+	});
+
+	console.log(tests.inactivePlayer(cookie,game));
 
 	if(game && cookie && roomId && tests.inactivePlayer(cookie,game)) {
 		let name = game.inactivePlayers[cookie].name;
