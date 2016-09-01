@@ -966,7 +966,6 @@ var CanvasClient = function (_Component) {
 		var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CanvasClient).call(this));
 
 		_this.state = _Store2.default.getState();
-
 		_this.onChange = _this.onChange.bind(_this);
 		return _this;
 	}
@@ -1089,11 +1088,24 @@ var WaitingMsgClient = function (_Component) {
 	}, {
 		key: 'shouldComponentUpdate',
 		value: function shouldComponentUpdate(nextProps, nextState) {
+
+			// test for status change
 			if (this.state.store.status && nextState.store.status !== this.state.store.status) {
 				return true;
-			} else {
-				return false;
 			}
+
+			// test for captain change
+			var currentCaptain = _lodash2.default.find(this.state.store.players, { status: "painter" });
+			var newCaptain = _lodash2.default.find(nextState.store.players, { status: "painter" });
+
+			var currentId = currentCaptain ? currentCaptain.id : 0;
+			var newId = newCaptain ? newCaptain.id : 0;
+
+			if (currentId !== newId) {
+				return true;
+			}
+
+			return false;
 		}
 	}, {
 		key: 'renderContent',
@@ -3346,14 +3358,31 @@ var CanvasPlayer = function (_Component) {
 			this.refs.startGame.className = 'hide';
 		}
 	}, {
+		key: 'renderStartButton',
+		value: function renderStartButton() {
+			if (this.state.store.status === 'pending') {
+				if (Object.keys(this.state.store.players).length > 2) {
+					return _react2.default.createElement(
+						'button',
+						{ ref: 'startGame', className: 'canvas__start-btn', onClick: this.startGame.bind(this) },
+						'Start game'
+					);
+				} else {
+					return _react2.default.createElement(
+						'span',
+						{ className: 'game__message' },
+						'Waiting for players'
+					);
+				}
+			} else {
+				return '';
+			}
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			var settings = !this.ctx ? '' : _react2.default.createElement(_CanvasSettings2.default, { scope: this, fullClear: this.fullClear, ctx: this.ctx });
-			var startButton = this.state.store.status === 'pending' && Object.keys(this.state.store.players).length > 2 ? _react2.default.createElement(
-				'button',
-				{ ref: 'startGame', className: 'canvas__start-btn', onClick: this.startGame.bind(this) },
-				'Start game'
-			) : '';
+			var startButton = this.renderStartButton();
 
 			return _react2.default.createElement(
 				'div',
