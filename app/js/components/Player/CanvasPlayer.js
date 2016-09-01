@@ -16,6 +16,7 @@ export default class CanvasPlayer extends Component {
 	}
 
 	componentDidMount() {
+		Store.listen(this.onChange);
 		this.setupCanvas();		
 	}
 
@@ -28,6 +29,10 @@ export default class CanvasPlayer extends Component {
 	}
 
 	shouldComponentUpdate(nextProps,nextState) {
+		if(Object.keys(this.state.store.players).length !== Object.keys(nextState.store.players).length) {
+			return true;
+		}
+
 		return false;
 	}
 
@@ -162,7 +167,7 @@ export default class CanvasPlayer extends Component {
 
 	render() {
 		let settings = !this.ctx ? '' : <CanvasSettings scope={this} fullClear={this.fullClear} ctx={this.ctx} />
-		let startButton = this.state.store.status === 'pending' ? <button ref="startGame" className="canvas__start-btn" onClick={this.startGame.bind(this)}>Start game</button> : '';
+		let startButton = this.state.store.status === 'pending' && Object.keys(this.state.store.players).length > 2 ? <button ref="startGame" className="canvas__start-btn" onClick={this.startGame.bind(this)}>Start game</button> : '';
 
 		return (
 			<div className="canvas__wrap" onDragStart={this.noDragging}>

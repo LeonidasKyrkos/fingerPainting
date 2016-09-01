@@ -2067,6 +2067,15 @@ var players = function (_Component) {
 			_Store2.default.unlisten(this.onChange);
 		}
 	}, {
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate(nextProps, nextState) {
+			if (Object.keys(this.state.store.players).length !== Object.keys(nextState.store.players).length) {
+				return true;
+			}
+
+			return false;
+		}
+	}, {
 		key: 'onChange',
 		value: function onChange(state) {
 			this.setState(state);
@@ -2441,7 +2450,7 @@ var RoomJoin = function (_Component) {
 		key: 'render',
 		value: function render() {
 			var id = this.props.id || '';
-			var room = this.state.rooms[id] || {};
+			var room = this.state.rooms ? this.state.rooms[id] || {} : {};
 
 			return _react2.default.createElement(
 				'form',
@@ -3155,6 +3164,7 @@ var CanvasPlayer = function (_Component) {
 	_createClass(CanvasPlayer, [{
 		key: 'componentDidMount',
 		value: function componentDidMount() {
+			_Store2.default.listen(this.onChange);
 			this.setupCanvas();
 		}
 	}, {
@@ -3170,6 +3180,10 @@ var CanvasPlayer = function (_Component) {
 	}, {
 		key: 'shouldComponentUpdate',
 		value: function shouldComponentUpdate(nextProps, nextState) {
+			if (Object.keys(this.state.store.players).length !== Object.keys(nextState.store.players).length) {
+				return true;
+			}
+
 			return false;
 		}
 	}, {
@@ -3335,7 +3349,7 @@ var CanvasPlayer = function (_Component) {
 		key: 'render',
 		value: function render() {
 			var settings = !this.ctx ? '' : _react2.default.createElement(_CanvasSettings2.default, { scope: this, fullClear: this.fullClear, ctx: this.ctx });
-			var startButton = this.state.store.status === 'pending' ? _react2.default.createElement(
+			var startButton = this.state.store.status === 'pending' && Object.keys(this.state.store.players).length > 2 ? _react2.default.createElement(
 				'button',
 				{ ref: 'startGame', className: 'canvas__start-btn', onClick: this.startGame.bind(this) },
 				'Start game'
