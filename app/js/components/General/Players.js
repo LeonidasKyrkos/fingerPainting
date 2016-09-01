@@ -24,6 +24,14 @@ export default class players extends Component {
 		Store.unlisten(this.onChange);
 	}
 
+	shouldComponentUpdate(nextProps, nextState) {
+		if(Object.keys(this.state.store.players).length !== Object.keys(nextState.store.players).length) {
+			return true;
+		}
+
+		return false;		
+	}
+
 	onChange(state) {
 		this.setState(state);
 	}

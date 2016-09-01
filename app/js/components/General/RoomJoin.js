@@ -83,7 +83,7 @@ export default class RoomJoin extends Component {
 
 	render() {
 		let id = this.props.id || '';
-		let room = this.state.rooms[id] || {};
+		let room = this.state.rooms ? this.state.rooms[id] || {} : {};
 
 		return (
 			<form onKeyDown={this.handleKeyUp.bind(this)} data-js="room.join" className="form--popup" onSubmit={this.authenticate.bind(this)}>

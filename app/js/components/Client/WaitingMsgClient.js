@@ -22,11 +22,24 @@ export default class WaitingMsgClient extends Component {
 	}
 
 	shouldComponentUpdate(nextProps,nextState) {
-		if(this.state.store.status && nextState.store.status !== this.state.store.status) {
-			return true;
-		} else {
-			return false;
-		}
+
+		// test for status change
+			if(this.state.store.status && nextState.store.status !== this.state.store.status) {
+				return true;
+			}
+
+		// test for captain change
+			let currentCaptain = _.find(this.state.store.players,{ status: "painter" });
+			let newCaptain = _.find(nextState.store.players,{ status: "painter" });
+
+			let currentId = currentCaptain ? currentCaptain.id : 0;
+			let newId = newCaptain ? newCaptain.id : 0;
+
+			if(currentId !== newId) {
+				return true;
+			}
+
+		return false;
 	}
 
 	renderContent() {

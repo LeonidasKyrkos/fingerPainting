@@ -8,7 +8,6 @@ export default class CanvasClient extends Component {
 		super();
 
 		this.state = Store.getState();
-
 		this.onChange = this.onChange.bind(this);
 	}
 
