@@ -12,9 +12,17 @@ $module: 		'footer';
 
 	&__left {
 		float: left;
+		padding-bottom: em(10);
+
+		@include bp(mob-xl) {
+			float: none;
+		}
 	}
 
 	&__right {
 		float: right;
+		@include bp(mob-xl) {
+			float: none;
+		}
 	}
 }

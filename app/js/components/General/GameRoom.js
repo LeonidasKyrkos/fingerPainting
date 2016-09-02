@@ -45,7 +45,7 @@ export default class Home extends Component {
 		let canvas = this.state.player.status === 'painter' ? <CanvasPlayer /> : <CanvasClient />
 
 		return (
-			<div>					
+			<div className="game__outerwrap">					
 				<div className="game__wrap">
 					<Puzzle />			
 					{canvas}
