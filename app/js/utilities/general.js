@@ -53,15 +53,18 @@ export function havePropsUpdated(currentProps, nextProps) {
 	return !_.isEqual(currentProps, nextProps);
 }
 
+
 // PLAYER STATUS
 export function hasPlayerStatusUpdated(currentState, nextState) {
 	return currentState.player.status !== nextState.player.status;
 }
 
+
 // PUZZLE
 export function hasPuzzleUpdated(currentState, nextState) {
 	return !_.isEqual(nextState.puzzleArray,currentState.puzzleArray);
 }
+
 
 // CLOCK
 export function hasClockUpdated(currentState, nextState) {

@@ -1279,8 +1279,6 @@ var _Message = require('./Message');
 
 var _Message2 = _interopRequireDefault(_Message);
 
-var _lodash = require('lodash');
-
 var _general = require('../../utilities/general');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -1411,7 +1409,7 @@ var Chat = function (_Component) {
 
 exports.default = Chat;
 
-},{"../../stores/Store":33,"../../utilities/general":35,"./Message":19,"lodash":41,"react":"react"}],14:[function(require,module,exports){
+},{"../../stores/Store":33,"../../utilities/general":35,"./Message":19,"react":"react"}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3909,7 +3907,7 @@ function hasPuzzleUpdated(currentState, nextState) {
 
 // CLOCK
 function hasClockUpdated(currentState, nextState) {
-	return nextState.store.clock !== this.state.store.clock;
+	return nextState.store.clock !== currentState.store.clock;
 }
 
 },{"lodash":41}],36:[function(require,module,exports){
