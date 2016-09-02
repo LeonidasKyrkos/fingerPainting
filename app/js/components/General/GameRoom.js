@@ -7,6 +7,7 @@ import CanvasClient from '../Client/CanvasClient.js';
 import Chat from './Chat.js';
 import Puzzle from './Puzzle.js';
 import EndGame from './Endgame';
+import { roomStatusChangeTest, hasPlayerStatusUpdated } from '../../utilities/general';
 
 export default class Home extends Component {
 	constructor(props) {
@@ -24,6 +25,10 @@ export default class Home extends Component {
 		Store.unlisten(this.onChange);
 	}
 
+	shouldComponentUpdate(nextProps, nextState) {
+		return roomStatusChangeTest(this.state,nextState) || hasPlayerStatusUpdated(this.state,nextState);
+	}
+
 	onChange(state) {
 		this.setState(state);
 	}
@@ -37,11 +42,7 @@ export default class Home extends Component {
 			)
 		}
 
-		if(this.state.player.status === 'painter') {
-			var canvas = <CanvasPlayer />
-		} else {
-			var canvas = <CanvasClient />
-		}
+		let canvas = this.state.player.status === 'painter' ? <CanvasPlayer /> : <CanvasClient />
 
 		return (
 			<div>					
@@ -56,8 +57,7 @@ export default class Home extends Component {
 	}
 
 	renderItems() {
-		let returnItems = this.calcReturnItems();
-		return returnItems;
+		return this.calcReturnItems();
 	}
 
 	render() {

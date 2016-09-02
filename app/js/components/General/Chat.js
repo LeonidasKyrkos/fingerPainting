@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Store from '../../stores/Store';
 import Message from './Message';
 import { isEqual as _isEqual } from 'lodash';
+import { hasChatUpdated, havePropsUpdated } from '../../utilities/general';
 
 export default class Chat extends Component {
 	constructor() {
@@ -22,19 +23,7 @@ export default class Chat extends Component {
 	}
 
 	shouldComponentUpdate(nextProps,nextState) {
-		return this.runUpdateTests(nextProps,nextState);
-	}
-
-	runUpdateTests(nextProps,nextState) {
-		if (!_isEqual(nextProps,this.props)) {
-			return true;
-		}
-
-		if(!_isEqual(nextState.store.chatLog,this.state.store.chatLog)) {
-			return true;
-		}
-
-		return false;
+		return havePropsUpdated(this.props, nextProps) || hasChatUpdated(this.state,nextState);
 	}
 
 	onChange(state) {
@@ -46,18 +35,21 @@ export default class Chat extends Component {
 		let form = e.target;
 		let input = form.querySelector('#chat-input');
 		let msg = input.value;
-		let chatHistory = document.querySelector('#chat-history');
 		input.value = "";
 
 		if(msg.length) {			
-			let timestamp = (new Date()).getTime();
-			let data = {};
-			data.id = this.state.socket.id;
-			data.name = this.state.store.players[data.id].name;
-			data.message = msg;
-			data.timestamp = timestamp;
-			this.state.socket.emit('message',data)
+			this.sendMessage(msg);
 		}
+	}
+
+	sendMessage(msg) {
+		let timestamp = (new Date()).getTime();
+		let data = {};
+		data.id = this.state.socket.id;
+		data.name = this.state.store.players[data.id].name;
+		data.message = msg;
+		data.timestamp = timestamp;
+		this.state.socket.emit('message',data)
 	}
 
 	renderChats(chatLog) {

@@ -66,11 +66,5 @@ function updateRoomStore(store) {
 		}		
 	}
 
-	emitToAllSockets('rooms',roomStore);
-}
-
-function emitToAllSockets(type,emission) {
-	for(let socket in roomPickers) {
-		roomPickers[socket].emit(type, emission);
-	};
+	io.emit('rooms',roomStore);
 }

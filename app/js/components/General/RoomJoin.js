@@ -22,10 +22,6 @@ export default class RoomJoin extends Component {
 		Store.unlisten(this.onChange);
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
-		return true;
-	}
-
 	onChange(state) {
 		this.setState(state);
 	}
@@ -68,7 +64,7 @@ export default class RoomJoin extends Component {
 	}
 
 	changeHandler(e) {
-		
+		// having this avoids react errors. Maybe delete it some time and work out why they occur as you're probably doing something wrong.
 	}
 
 	handleKeyUp(e) {

@@ -5,6 +5,10 @@ export default class Header extends Component {
 		super();
 	}
 
+	shouldComponentUpdate(nextProps, nextState) {
+		return false;
+	}
+
 	render() {
 		return (
 			<header className="header">

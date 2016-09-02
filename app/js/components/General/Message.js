@@ -17,6 +17,10 @@ export default class Message extends Component {
 		Store.unlisten(this.onChange);
 	}
 
+	shouldComponentUpdate(nextProps, nextState) {
+		return false;
+	}
+
 	onChange(state) {
 		this.setState(state);
 	}

@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import CanvasSettings from './CanvasSettings';
 import Store from '../../stores/Store';
 import { redraw, renderPath, renderDot, clearContext } from '../../utilities/canvasFunctions';
+import { playerCountChangedTest } from '../../utilities/general';
 import _ from 'lodash';
 
 export default class CanvasPlayer extends Component {
@@ -29,11 +30,7 @@ export default class CanvasPlayer extends Component {
 	}
 
 	shouldComponentUpdate(nextProps,nextState) {
-		if(Object.keys(this.state.store.players).length !== Object.keys(nextState.store.players).length) {
-			return true;
-		}
-
-		return false;
+		return playerCountChangedTest(this.state,nextState);
 	}
 
 	setupCanvas() {

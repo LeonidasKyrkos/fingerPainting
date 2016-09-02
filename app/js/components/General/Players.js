@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Store from '../../stores/Store';
+import { playerCountChangedTest } from '../../utilities/general';
 
 export default class players extends Component {
 	constructor() {
@@ -25,11 +26,7 @@ export default class players extends Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
-		if(Object.keys(this.state.store.players).length !== Object.keys(nextState.store.players).length) {
-			return true;
-		}
-
-		return false;		
+		return playerCountChangedTest(this.state,nextState);
 	}
 
 	onChange(state) {

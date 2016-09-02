@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Store from '../../stores/Store';
-import RoomsLists from './RoomsList';
+import RoomsList from './RoomsList';
 import RoomSpawn from './RoomSpawn';
 import Header from './header';
 
@@ -20,6 +20,10 @@ export default class RoomPicker extends Component {
 		Store.unlisten(this.onChange);
 	}
 
+	shouldComponentUpdate() {
+		return false;
+	}
+
 	onChange(state) {
 		this.setState(state);
 	}
@@ -29,7 +33,7 @@ export default class RoomPicker extends Component {
 			<main className="wrapper--noscores">
 				<Header />
 				<h2 className="gamma">Join a room</h2>
-				<RoomsLists />
+				<RoomsList />
 			</main>
 		);
 	}

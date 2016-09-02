@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Store from '../../stores/Store';
-import { isEqual as _isEqual } from 'lodash';
+import { havePropsUpdated, hasPuzzleUpdated, hasClockUpdated } from '../../utilities/general';
+
 
 export default class Puzzle extends Component {
 	constructor() {
@@ -23,23 +24,7 @@ export default class Puzzle extends Component {
 	}
 
 	shouldComponentUpdate(nextProps,nextState) {
-		return this.runUpdateTests(nextProps,nextState);
-	}
-
-	runUpdateTests(nextProps,nextState) {
-		if (!_isEqual(nextProps,this.props)) {
-			return true;
-		}
-
-		if(!_isEqual(nextState.puzzleArray,this.state.puzzleArray)) {
-			return true;
-		}
-
-		if(nextState.store.clock !== this.state.store.clock) {
-			return true;
-		}
-
-		return false;
+		return havePropsUpdated(this.props,nextProps) || hasPuzzleUpdated(this.state,nextState) || hasClockUpdated(this.state,nextState);
 	}
 
 	renderPuzzle() {
