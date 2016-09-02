@@ -20,12 +20,8 @@ export default class Notification extends Component {
 	shouldComponentUpdate(nextProps,nextState) {
 		let newMsg = nextState.notification.text;
 		let oldMsg = this.state.notification.text;
-
-		if(newMsg !== oldMsg) {
-			return true;
-		} else {
-			return false;
-		}
+		
+		return newMsg !== oldMsg;
 	}
 
 	onChange(state) {

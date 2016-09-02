@@ -22,17 +22,8 @@ export default class ErrorMessage extends Component {
 	}
 
 	shouldComponentUpdate(nextProps,nextState) {
-		return this.runUpdateTests(nextProps,nextState);
+		return nextState.error !== this.state.error;
 	}
-
-	runUpdateTests(nextProps,nextState) {
-		if (nextState.error !== this.state.error) {
-			return true;
-		}
-
-		return false;
-	}
-
 
 	render() {
 		return(

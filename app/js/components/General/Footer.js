@@ -6,6 +6,10 @@ export default class Footer extends Component {
 		super();
 	}
 
+	shouldComponentUpdate() {
+		return false;
+	}
+
 	render() {
 		return (
 			<footer className="footer">

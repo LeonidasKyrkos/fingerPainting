@@ -1045,6 +1045,8 @@ var _Store = require('../../stores/Store');
 
 var _Store2 = _interopRequireDefault(_Store);
 
+var _general = require('../../utilities/general');
+
 var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
@@ -1088,45 +1090,28 @@ var WaitingMsgClient = function (_Component) {
 	}, {
 		key: 'shouldComponentUpdate',
 		value: function shouldComponentUpdate(nextProps, nextState) {
-
-			// test for status change
-			if (this.state.store.status && nextState.store.status !== this.state.store.status) {
-				return true;
-			}
-
-			// test for captain change
-			var currentCaptain = _lodash2.default.find(this.state.store.players, { status: "painter" });
-			var newCaptain = _lodash2.default.find(nextState.store.players, { status: "painter" });
-
-			var currentId = currentCaptain ? currentCaptain.id : 0;
-			var newId = newCaptain ? newCaptain.id : 0;
-
-			if (currentId !== newId) {
-				return true;
-			}
-
-			return false;
+			return (0, _general.roomStatusChangeTest)(this.state, nextState) || (0, _general.painterChangedTest)(this.state, nextState);
 		}
 	}, {
 		key: 'renderContent',
 		value: function renderContent() {
-			if (this.state.store.status && this.state.store.status !== 'pending') {
-				return _react2.default.createElement('span', { className: 'hide' });
-			} else {
-				if (this.state.store.players && _lodash2.default.find(this.state.store.players, { status: 'painter' })) {
-					var name = _lodash2.default.find(this.state.store.players, { status: 'painter' }).name;
-				} else {
-					var name = 'the artist';
-				}
+			var status = this.state.store.status || '';
+			var players = this.state.store.players || {};
+			var painter = _lodash2.default.find(players, { status: 'painter' });
 
-				return _react2.default.createElement(
-					'span',
-					{ className: 'game__message' },
-					'Waiting for ',
-					name,
-					' to start the game'
-				);
+			if (status !== 'pending') {
+				return _react2.default.createElement('span', { className: 'hide' });
 			}
+
+			var name = painter ? painter.name : 'the artist';
+
+			return _react2.default.createElement(
+				'span',
+				{ className: 'game__message' },
+				'Waiting for ',
+				name,
+				' to start the game'
+			);
 		}
 	}, {
 		key: 'render',
@@ -1142,7 +1127,7 @@ var WaitingMsgClient = function (_Component) {
 
 exports.default = WaitingMsgClient;
 
-},{"../../stores/Store":33,"lodash":41,"react":"react"}],12:[function(require,module,exports){
+},{"../../stores/Store":33,"../../utilities/general":35,"lodash":41,"react":"react"}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1296,6 +1281,8 @@ var _Message2 = _interopRequireDefault(_Message);
 
 var _lodash = require('lodash');
 
+var _general = require('../../utilities/general');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1331,20 +1318,7 @@ var Chat = function (_Component) {
 	}, {
 		key: 'shouldComponentUpdate',
 		value: function shouldComponentUpdate(nextProps, nextState) {
-			return this.runUpdateTests(nextProps, nextState);
-		}
-	}, {
-		key: 'runUpdateTests',
-		value: function runUpdateTests(nextProps, nextState) {
-			if (!(0, _lodash.isEqual)(nextProps, this.props)) {
-				return true;
-			}
-
-			if (!(0, _lodash.isEqual)(nextState.store.chatLog, this.state.store.chatLog)) {
-				return true;
-			}
-
-			return false;
+			return (0, _general.havePropsUpdated)(this.props, nextProps) || (0, _general.hasChatUpdated)(this.state, nextState);
 		}
 	}, {
 		key: 'onChange',
@@ -1358,18 +1332,22 @@ var Chat = function (_Component) {
 			var form = e.target;
 			var input = form.querySelector('#chat-input');
 			var msg = input.value;
-			var chatHistory = document.querySelector('#chat-history');
 			input.value = "";
 
 			if (msg.length) {
-				var timestamp = new Date().getTime();
-				var data = {};
-				data.id = this.state.socket.id;
-				data.name = this.state.store.players[data.id].name;
-				data.message = msg;
-				data.timestamp = timestamp;
-				this.state.socket.emit('message', data);
+				this.sendMessage(msg);
 			}
+		}
+	}, {
+		key: 'sendMessage',
+		value: function sendMessage(msg) {
+			var timestamp = new Date().getTime();
+			var data = {};
+			data.id = this.state.socket.id;
+			data.name = this.state.store.players[data.id].name;
+			data.message = msg;
+			data.timestamp = timestamp;
+			this.state.socket.emit('message', data);
 		}
 	}, {
 		key: 'renderChats',
@@ -1433,7 +1411,7 @@ var Chat = function (_Component) {
 
 exports.default = Chat;
 
-},{"../../stores/Store":33,"./Message":19,"lodash":41,"react":"react"}],14:[function(require,module,exports){
+},{"../../stores/Store":33,"../../utilities/general":35,"./Message":19,"lodash":41,"react":"react"}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1484,6 +1462,11 @@ var EndGame = function (_Component) {
 		key: 'componentWillUnmount',
 		value: function componentWillUnmount() {
 			_Store2.default.unlisten(this.onChange);
+		}
+	}, {
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate(nextProps, nextState) {
+			return false;
 		}
 	}, {
 		key: 'onChange',
@@ -1567,16 +1550,7 @@ var ErrorMessage = function (_Component) {
 	}, {
 		key: 'shouldComponentUpdate',
 		value: function shouldComponentUpdate(nextProps, nextState) {
-			return this.runUpdateTests(nextProps, nextState);
-		}
-	}, {
-		key: 'runUpdateTests',
-		value: function runUpdateTests(nextProps, nextState) {
-			if (nextState.error !== this.state.error) {
-				return true;
-			}
-
-			return false;
+			return nextState.error !== this.state.error;
 		}
 	}, {
 		key: 'render',
@@ -1625,6 +1599,11 @@ var Footer = function (_Component) {
 	}
 
 	_createClass(Footer, [{
+		key: "shouldComponentUpdate",
+		value: function shouldComponentUpdate() {
+			return false;
+		}
+	}, {
 		key: "render",
 		value: function render() {
 			return _react2.default.createElement(
@@ -1700,6 +1679,8 @@ var _Endgame = require('./Endgame');
 
 var _Endgame2 = _interopRequireDefault(_Endgame);
 
+var _general = require('../../utilities/general');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1732,6 +1713,11 @@ var Home = function (_Component) {
 			_Store2.default.unlisten(this.onChange);
 		}
 	}, {
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate(nextProps, nextState) {
+			return (0, _general.roomStatusChangeTest)(this.state, nextState) || (0, _general.hasPlayerStatusUpdated)(this.state, nextState);
+		}
+	}, {
 		key: 'onChange',
 		value: function onChange(state) {
 			this.setState(state);
@@ -1747,11 +1733,7 @@ var Home = function (_Component) {
 				);
 			}
 
-			if (this.state.player.status === 'painter') {
-				var canvas = _react2.default.createElement(_CanvasPlayer2.default, null);
-			} else {
-				var canvas = _react2.default.createElement(_CanvasClient2.default, null);
-			}
+			var canvas = this.state.player.status === 'painter' ? _react2.default.createElement(_CanvasPlayer2.default, null) : _react2.default.createElement(_CanvasClient2.default, null);
 
 			return _react2.default.createElement(
 				'div',
@@ -1769,8 +1751,7 @@ var Home = function (_Component) {
 	}, {
 		key: 'renderItems',
 		value: function renderItems() {
-			var returnItems = this.calcReturnItems();
-			return returnItems;
+			return this.calcReturnItems();
 		}
 	}, {
 		key: 'render',
@@ -1798,7 +1779,7 @@ var Home = function (_Component) {
 
 exports.default = Home;
 
-},{"../../stores/Store":33,"../Client/CanvasClient.js":10,"../Player/CanvasPlayer.js":29,"./Chat.js":13,"./Endgame":14,"./Players.js":21,"./Puzzle.js":22,"react":"react"}],18:[function(require,module,exports){
+},{"../../stores/Store":33,"../../utilities/general":35,"../Client/CanvasClient.js":10,"../Player/CanvasPlayer.js":29,"./Chat.js":13,"./Endgame":14,"./Players.js":21,"./Puzzle.js":22,"react":"react"}],18:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1829,6 +1810,11 @@ var Header = function (_Component) {
 	}
 
 	_createClass(Header, [{
+		key: "shouldComponentUpdate",
+		value: function shouldComponentUpdate(nextProps, nextState) {
+			return false;
+		}
+	}, {
 		key: "render",
 		value: function render() {
 			return _react2.default.createElement(
@@ -1895,6 +1881,11 @@ var Message = function (_Component) {
 		key: 'componentWillUnmount',
 		value: function componentWillUnmount() {
 			_Store2.default.unlisten(this.onChange);
+		}
+	}, {
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate(nextProps, nextState) {
+			return false;
 		}
 	}, {
 		key: 'onChange',
@@ -1984,11 +1975,7 @@ var Notification = function (_Component) {
 			var newMsg = nextState.notification.text;
 			var oldMsg = this.state.notification.text;
 
-			if (newMsg !== oldMsg) {
-				return true;
-			} else {
-				return false;
-			}
+			return newMsg !== oldMsg;
 		}
 	}, {
 		key: 'onChange',
@@ -2040,6 +2027,8 @@ var _Store = require('../../stores/Store');
 
 var _Store2 = _interopRequireDefault(_Store);
 
+var _general = require('../../utilities/general');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2081,11 +2070,7 @@ var players = function (_Component) {
 	}, {
 		key: 'shouldComponentUpdate',
 		value: function shouldComponentUpdate(nextProps, nextState) {
-			if (Object.keys(this.state.store.players).length !== Object.keys(nextState.store.players).length) {
-				return true;
-			}
-
-			return false;
+			return (0, _general.playerCountChangedTest)(this.state, nextState);
 		}
 	}, {
 		key: 'onChange',
@@ -2202,7 +2187,7 @@ var players = function (_Component) {
 
 exports.default = players;
 
-},{"../../stores/Store":33,"react":"react"}],22:[function(require,module,exports){
+},{"../../stores/Store":33,"../../utilities/general":35,"react":"react"}],22:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2219,7 +2204,7 @@ var _Store = require('../../stores/Store');
 
 var _Store2 = _interopRequireDefault(_Store);
 
-var _lodash = require('lodash');
+var _general = require('../../utilities/general');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2260,24 +2245,7 @@ var Puzzle = function (_Component) {
 	}, {
 		key: 'shouldComponentUpdate',
 		value: function shouldComponentUpdate(nextProps, nextState) {
-			return this.runUpdateTests(nextProps, nextState);
-		}
-	}, {
-		key: 'runUpdateTests',
-		value: function runUpdateTests(nextProps, nextState) {
-			if (!(0, _lodash.isEqual)(nextProps, this.props)) {
-				return true;
-			}
-
-			if (!(0, _lodash.isEqual)(nextState.puzzleArray, this.state.puzzleArray)) {
-				return true;
-			}
-
-			if (nextState.store.clock !== this.state.store.clock) {
-				return true;
-			}
-
-			return false;
+			return (0, _general.havePropsUpdated)(this.props, nextProps) || (0, _general.hasPuzzleUpdated)(this.state, nextState) || (0, _general.hasClockUpdated)(this.state, nextState);
 		}
 	}, {
 		key: 'renderPuzzle',
@@ -2328,7 +2296,7 @@ var Puzzle = function (_Component) {
 
 exports.default = Puzzle;
 
-},{"../../stores/Store":33,"lodash":41,"react":"react"}],23:[function(require,module,exports){
+},{"../../stores/Store":33,"../../utilities/general":35,"react":"react"}],23:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2386,11 +2354,6 @@ var RoomJoin = function (_Component) {
 			_Store2.default.unlisten(this.onChange);
 		}
 	}, {
-		key: 'shouldComponentUpdate',
-		value: function shouldComponentUpdate(nextProps, nextState) {
-			return true;
-		}
-	}, {
 		key: 'onChange',
 		value: function onChange(state) {
 			this.setState(state);
@@ -2445,7 +2408,9 @@ var RoomJoin = function (_Component) {
 		}
 	}, {
 		key: 'changeHandler',
-		value: function changeHandler(e) {}
+		value: function changeHandler(e) {
+			// having this avoids react errors. Maybe delete it some time and work out why they occur as you're probably doing something wrong.
+		}
 	}, {
 		key: 'handleKeyUp',
 		value: function handleKeyUp(e) {
@@ -2583,6 +2548,11 @@ var RoomPicker = function (_Component) {
 		key: 'componentWillUnmount',
 		value: function componentWillUnmount() {
 			_Store2.default.unlisten(this.onChange);
+		}
+	}, {
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate() {
+			return false;
 		}
 	}, {
 		key: 'onChange',
@@ -3145,6 +3115,8 @@ var _Store2 = _interopRequireDefault(_Store);
 
 var _canvasFunctions = require('../../utilities/canvasFunctions');
 
+var _general = require('../../utilities/general');
+
 var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
@@ -3192,11 +3164,7 @@ var CanvasPlayer = function (_Component) {
 	}, {
 		key: 'shouldComponentUpdate',
 		value: function shouldComponentUpdate(nextProps, nextState) {
-			if (Object.keys(this.state.store.players).length !== Object.keys(nextState.store.players).length) {
-				return true;
-			}
-
-			return false;
+			return (0, _general.playerCountChangedTest)(this.state, nextState);
 		}
 	}, {
 		key: 'setupCanvas',
@@ -3404,7 +3372,7 @@ var CanvasPlayer = function (_Component) {
 
 exports.default = CanvasPlayer;
 
-},{"../../stores/Store":33,"../../utilities/canvasFunctions":34,"./CanvasSettings":30,"lodash":41,"react":"react"}],30:[function(require,module,exports){
+},{"../../stores/Store":33,"../../utilities/canvasFunctions":34,"../../utilities/general":35,"./CanvasSettings":30,"lodash":41,"react":"react"}],30:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3865,6 +3833,22 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 exports.painterTest = painterTest;
+exports.playerCountChangedTest = playerCountChangedTest;
+exports.roomStatusChangeTest = roomStatusChangeTest;
+exports.painterChangedTest = painterChangedTest;
+exports.hasChatUpdated = hasChatUpdated;
+exports.havePropsUpdated = havePropsUpdated;
+exports.hasPlayerStatusUpdated = hasPlayerStatusUpdated;
+exports.hasPuzzleUpdated = hasPuzzleUpdated;
+exports.hasClockUpdated = hasClockUpdated;
+
+var _lodash = require('lodash');
+
+var _ = _interopRequireWildcard(_lodash);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+// is the provided ID the painter? Oh golly let's find out
 function painterTest(players, id) {
 	for (var player in players) {
 		if (player === id && players[player].status === 'painter') {
@@ -3875,7 +3859,60 @@ function painterTest(players, id) {
 	return false;
 }
 
-},{}],36:[function(require,module,exports){
+// update tests
+
+// NUMBER OF PLAYERS
+function playerCountChangedTest(currentState, nextState) {
+	var playerCount = Object.keys(currentState.store.players).length;
+	var newPlayerCount = Object.keys(nextState.store.players).length;
+
+	return playerCount !== newPlayerCount;
+}
+
+// ROOM STATUS
+function roomStatusChangeTest(currentState, nextState) {
+	var currentStatus = currentState.store.status || '';
+	var nextStatus = nextState.store.status;
+
+	return currentStatus !== nextStatus;
+}
+
+// PAINTER
+function painterChangedTest(currentState, nextState) {
+	var currentPainter = _.find(currentState.store.players, { status: "painter" });
+	var currentPainterId = currentPainter ? currentPainter.id : 0;
+	var nextPainter = _.find(nextState.store.players, { status: "painter" });
+	var nextPainterId = nextPainter ? nextPainter.id : 0;
+
+	return currentPainterId !== nextPainterId;
+}
+
+// CHAT LOG
+function hasChatUpdated(currentState, nextState) {
+	return !_.isEqual(nextState.store.chatLog, currentState.store.chatLog);
+}
+
+// PROPS
+function havePropsUpdated(currentProps, nextProps) {
+	return !_.isEqual(currentProps, nextProps);
+}
+
+// PLAYER STATUS
+function hasPlayerStatusUpdated(currentState, nextState) {
+	return currentState.player.status !== nextState.player.status;
+}
+
+// PUZZLE
+function hasPuzzleUpdated(currentState, nextState) {
+	return !_.isEqual(nextState.puzzleArray, currentState.puzzleArray);
+}
+
+// CLOCK
+function hasClockUpdated(currentState, nextState) {
+	return nextState.store.clock !== this.state.store.clock;
+}
+
+},{"lodash":41}],36:[function(require,module,exports){
 /*!
   Copyright (c) 2016 Jed Watson.
   Licensed under the MIT License (MIT), see
