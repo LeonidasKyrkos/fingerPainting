@@ -65,5 +65,5 @@ export function hasPuzzleUpdated(currentState, nextState) {
 
 // CLOCK
 export function hasClockUpdated(currentState, nextState) {
-	return nextState.store.clock !== this.state.store.clock;
+	return nextState.store.clock !== currentState.store.clock;
 }

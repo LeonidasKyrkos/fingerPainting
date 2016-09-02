@@ -3909,7 +3909,7 @@ function hasPuzzleUpdated(currentState, nextState) {
 
 // CLOCK
 function hasClockUpdated(currentState, nextState) {
-	return nextState.store.clock !== this.state.store.clock;
+	return nextState.store.clock !== currentState.store.clock;
 }
 
 },{"lodash":41}],36:[function(require,module,exports){
