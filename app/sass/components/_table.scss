@@ -21,6 +21,20 @@ $module: 		'table';
 		thead td {
 			padding: em(12) em(15) em(12);
 		}
+
+		@include bp(tab-m) {
+			table-layout: auto;
+
+			td:nth-child(5), td:nth-child(3) {
+				display: none;
+			}
+		}
+
+		@include bp(mob-l-a) {
+			td:nth-child(2), td:nth-child(4) {
+				display: none;
+			}
+		}
 	}
 }
 

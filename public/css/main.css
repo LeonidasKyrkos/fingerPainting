@@ -455,7 +455,7 @@ h1, h2, h3, h4, h5 {
     -o-transform: translateY(-50%);
     transform: translateY(-50%);
     width: 25em;
-    max-width: 100%;
+    max-width: 95%;
     background-color: #f2f2f2;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
     padding: 1em;
@@ -801,6 +801,14 @@ h1, h2, h3, h4, h5 {
       padding: 0.625em 0.9375em; }
     .table--rooms thead td {
       padding: 0.6em 0.75em 0.6em; }
+    @media (max-width: 53.125em) {
+      .table--rooms {
+        table-layout: auto; }
+        .table--rooms td:nth-child(5), .table--rooms td:nth-child(3) {
+          display: none; } }
+    @media (max-width: 28.125em) {
+      .table--rooms td:nth-child(2), .table--rooms td:nth-child(4) {
+        display: none; } }
 
 tbody {
   font-size: 16px;
@@ -848,6 +856,9 @@ td {
     position: absolute;
     top: 0.625em;
     right: 11.875em; }
+    @media (max-width: 88.125em) {
+      .header__home-link {
+        right: 0.625em; } }
 
 .footer {
   font-size: 0.8em;
@@ -858,9 +869,38 @@ td {
   color: white;
   padding: 0.625em; }
   .footer__left {
-    float: left; }
+    float: left;
+    padding-bottom: 0.5em; }
+    @media (max-width: 37.5em) {
+      .footer__left {
+        float: none; } }
   .footer__right {
     float: right; }
+    @media (max-width: 37.5em) {
+      .footer__right {
+        float: none; } }
+
+@media (max-width: 75em) {
+  .game__outerwrap .game__wrap, .game__outerwrap .players {
+    display: none; }
+  .game__outerwrap:after {
+    content: "Sorry, your browser dimensions are too small to accommodate fingerpainting. The game is currently aimed at laptop and desktop owners with screen widths in excess of 1200px";
+    position: fixed;
+    top: 50%;
+    text-align: center;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 15.625em;
+    max-width: 90%;
+    color: #B22222;
+    font-size: 1.6em;
+    font-weight: 700; } }
 
 .game__wrap {
   display: -webkit-box;

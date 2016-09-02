@@ -3,7 +3,7 @@ import CanvasSettings from './CanvasSettings';
 import Store from '../../stores/Store';
 import { redraw, renderPath, renderDot, clearContext } from '../../utilities/canvasFunctions';
 import { playerCountChangedTest } from '../../utilities/general';
-import _ from 'lodash';
+import { default as debounce } from 'debounce';
 
 export default class CanvasPlayer extends Component {
 	constructor() {
@@ -18,7 +18,8 @@ export default class CanvasPlayer extends Component {
 
 	componentDidMount() {
 		Store.listen(this.onChange);
-		this.setupCanvas();		
+		this.setupCanvas();
+		window.addEventListener('resize',debounce(this.setCanvasWidth.bind(this),100));
 	}
 
 	componentWillUnmount() {
@@ -35,7 +36,7 @@ export default class CanvasPlayer extends Component {
 
 	setupCanvas() {
 		this.canvas = document.querySelector('#canvas');
-		this.canvas.setAttribute('width',this.canvas.parentElement.offsetWidth);
+		this.setCanvasWidth();
 		this.ctx = this.canvas.getContext('2d');
 		this.ctx.strokeStyle = "#FFFFFF";
 		this.ctx.lineWidth = 3;
@@ -44,6 +45,10 @@ export default class CanvasPlayer extends Component {
 		this.canvasX = this.canvas.offsetLeft;
 		this.canvasY = this.canvas.offsetTop;
 		this.forceUpdate();
+	}
+
+	setCanvasWidth() {
+		this.canvas.setAttribute('width',this.canvas.parentElement.offsetWidth);
 	}
 
 	initialisePathsObject() {

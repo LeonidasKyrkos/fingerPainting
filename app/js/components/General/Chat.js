@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import Store from '../../stores/Store';
 import Message from './Message';
-import { isEqual as _isEqual } from 'lodash';
 import { hasChatUpdated, havePropsUpdated } from '../../utilities/general';
 
 export default class Chat extends Component {

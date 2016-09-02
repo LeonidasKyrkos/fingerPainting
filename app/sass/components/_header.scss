@@ -36,5 +36,9 @@ $module: 		'header';
 		position: absolute;
 		top: em(10,16);
 		right: em(190,16);
+
+		@include bp(scoreboard-below){
+			right: em(10,16);
+		}
 	}
 }

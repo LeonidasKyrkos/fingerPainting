@@ -2,6 +2,31 @@ $module: 			'game';
 
 
 .#{$module} {
+	&__outerwrap {
+		@include bp(tab-xl) {
+			.#{$module}__wrap, .players {
+				display: none;
+			}
+
+			&:after {
+				$fontSize: 32;
+				content: "Sorry, your browser dimensions are too small to accommodate fingerpainting. The game is currently aimed at laptop and desktop owners with screen widths in excess of 1200px";
+				position: fixed;
+				top: 50%;
+				text-align: center;
+				@include transform(translateY(-50%));
+				left: 0;
+				right: 0;
+				margin: 0 auto;
+				width: em(500,$fontSize);
+				max-width: 90%;
+				color: $color1;
+				font-size: em($fontSize);
+				font-weight: 700;
+			}
+		}
+	}
+
 	&__wrap {
 		@include display(flex);
 		@include flex-wrap(wrap);
