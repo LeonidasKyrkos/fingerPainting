@@ -62,15 +62,16 @@ export default class Chat extends Component {
 
 	scrollChat() {
 		this.chatHistory = document.querySelector('#chat-history');
-		if(this.chatHistory) { 
-			this.chatHistory.scrollTop = this.chatHistory.scrollHeight; 
+		
+		if(this.chatHistory) {
+			this.chatHistory.scrollTop = this.chatHistory.scrollHeight;
 		};
 	}
 
 	renderForm() {
 		return (
 			<form className="form--chat" onSubmit={this.parseChatForm.bind(this)}>
-				<input autoComplete="off" id="chat-input" type="text" className="form__input"/>
+				<input autoComplete="off" id="chat-input" type="text" className="form__input" placeholder="type to guess or chat..."/>
 				<button className="btn--submit flex-right">»</button>
 			</form>
 		)

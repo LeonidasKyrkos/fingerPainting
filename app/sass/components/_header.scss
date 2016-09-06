@@ -5,15 +5,6 @@ $module: 		'header';
 	text-align: center;
 	margin-bottom: em(30);
 
-	&__title {
-		@extend .beta;
-		display: inline-block;
-		vertical-align: middle;
-		width: auto;
-		line-height: 1;
-		margin-bottom: 0;
-	}
-
 	&__logo {
 		display: inline-block;
 		vertical-align: middle;

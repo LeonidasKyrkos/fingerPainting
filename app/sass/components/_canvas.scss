@@ -2,12 +2,11 @@ $module: 		'canvas';
 
 
 .#{$module} {
-	background-color: #292929;
+	background-color: lighten(#afafaf,10%);
 	cursor: url('../media/img/finger.ico') 15 0,pointer;
 	display: block;
-	border-bottom-left-radius: em(5);
-	border-bottom-right-radius: em(5);
-	box-shadow: 0 0 em(8) rgba(8, 8, 8, 0.4);
+	box-shadow: 0 0 em(1) em(1) rgba(0, 0, 0, 0.4);
+	position: relative;
 
 	&--client {
 		@extend .#{$module};
@@ -37,11 +36,8 @@ $module: 		'canvas';
 		@include display(flex);
 		@include align-items(baseline);
 		@include user-select(none);
-		background-color: $color10;
 		padding: em(10) em(15);
-		border-top-left-radius: em(5);
-		border-top-right-radius: em(5);
-		box-shadow: 0 em(-2) em(8) rgba(8, 8, 8, 0.4);
+		box-shadow: 0 0 em(1) em(1) rgba(0, 0, 0, 0.2);
 		z-index: 2;
 		position: relative;
 	}
@@ -49,7 +45,7 @@ $module: 		'canvas';
 	&__settings-btn {
 		@extend .btn--primary;
 		margin-right: em(5);
-		border-radius: em(5);
+		background-color: white;
 	}
 
 	&__colours {
@@ -89,6 +85,7 @@ $module: 		'canvas';
 		margin: 0 auto;
 		@include transform(translateY(-50%));
 		pointer-events: none;
+		box-shadow: 0 0 1px rgba(black,0.6);
 
 		.#{$module}__brush-size-wrap.active > & {
 			background-color: $color5;
@@ -97,6 +94,7 @@ $module: 		'canvas';
 
 	&__colour-picker {
 		position: absolute;
+		z-index: 3;
 
 		> div {
 			display: none;
@@ -114,11 +112,13 @@ $module: 		'canvas';
 		width: em(25);
 		height: em(25);
 		background-color: white;
+		box-shadow: 0 0 1px rgba(black,0.6);
+		border-radius: em(2);
 	}
 
 	&__settings-label {
 		padding-right: em(15);
 		position: relative;
-		top: em(5);
+		top: e(2);
 	}
 }

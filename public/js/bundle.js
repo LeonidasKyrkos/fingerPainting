@@ -168,7 +168,7 @@ var AddRoom = function (_Component) {
 					null,
 					_react2.default.createElement(
 						'button',
-						{ onClick: this.addRoom.bind(this), className: 'btn--tertiary' },
+						{ onClick: this.addRoom.bind(this), className: 'btn--primary' },
 						'Add room'
 					)
 				)
@@ -1359,6 +1359,7 @@ var Chat = function (_Component) {
 		key: 'scrollChat',
 		value: function scrollChat() {
 			this.chatHistory = document.querySelector('#chat-history');
+
 			if (this.chatHistory) {
 				this.chatHistory.scrollTop = this.chatHistory.scrollHeight;
 			};
@@ -1369,7 +1370,7 @@ var Chat = function (_Component) {
 			return _react2.default.createElement(
 				'form',
 				{ className: 'form--chat', onSubmit: this.parseChatForm.bind(this) },
-				_react2.default.createElement('input', { autoComplete: 'off', id: 'chat-input', type: 'text', className: 'form__input' }),
+				_react2.default.createElement('input', { autoComplete: 'off', id: 'chat-input', type: 'text', className: 'form__input', placeholder: 'type to guess or chat...' }),
 				_react2.default.createElement(
 					'button',
 					{ className: 'btn--submit flex-right' },
@@ -1765,7 +1766,7 @@ var Home = function (_Component) {
 				_react2.default.createElement(
 					'a',
 					{ href: '/', className: 'header__home-link' },
-					'Back to lobby'
+					'← Back to lobby'
 				),
 				this.renderItems()
 			);
@@ -1820,7 +1821,7 @@ var Header = function (_Component) {
 				{ className: "header" },
 				_react2.default.createElement(
 					"h1",
-					{ className: "header__title" },
+					{ className: "alpha" },
 					"finger painting"
 				)
 			);

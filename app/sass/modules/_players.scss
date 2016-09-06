@@ -7,16 +7,19 @@ $module:			'players';
 	top: 0;
 	right: 0;
 	bottom: 0;
-	background-color: rgba(black,0.85);
 	padding: em(20);
+	background-color: rgba(black,0.6);
 	z-index: 10;
+	color: white;
 
-	@media(max-width: 1410px) {
+	@include bp(scoreboard-below) {
+		box-shadow: 0 0 1px rgba(black,0.4);
 		position: static;
 		width: auto;
 		max-width: em(400);
-		border-radius: em(5);
 		padding: em(30);
+		background-color: transparent;
+		color: inherit;
 	}
 
 	&__player {
@@ -32,7 +35,7 @@ $module:			'players';
 				content: "👑";
 				position: absolute;
 				left: em(-15,$fontSize);
-				color: $color5;
+				color: $color6;
 				top: em(3,$fontSize);
 			}
 		}
@@ -48,7 +51,21 @@ $module:			'players';
 				right: em(-15);
 				top: 50%;
 				@include transform(translateY(-50%));
-				color: $color5;
+				color: $color6;
+			}
+		}
+
+		@include bp(scoreboard-below) {
+			&.active:before {
+				color: $color8;
+			}
+
+			&.player {
+				color: $color8;
+			}
+
+			&.correct:after {
+				color: $color8;
 			}
 		}
 	}

@@ -64,7 +64,7 @@ export default class Home extends Component {
 		return (
 			<div className="wrapper">
 				<h1 className="gamma">{this.state.store.title}</h1>
-				<a href="/" className="header__home-link">Back to lobby</a>
+				<a href="/" className="header__home-link">← Back to lobby</a>
 				{this.renderItems()}
 			</div>
 		);

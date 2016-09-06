@@ -17,15 +17,14 @@ $module: 		'btn';
 
 	&--primary {
 		@extend .btn;
-		$fontSize: 16;
+		$fontSize: 18;
 		font-size: em($fontSize);
-		background-color: $color1;
-		color: white;
+		background-color: rgba(white,0.4);
 		padding: em(5,$fontSize) em(8,$fontSize) em(7,$fontSize);
-		border-radius: em(5,$fontSize);
+		box-shadow: 0 0 1px rgba(black,0.4);
 
 		&:hover {
-			background-color: darken($color1,10%);
+			background-color: white;
 		}
 
 		.table--rooms & {
@@ -43,19 +42,9 @@ $module: 		'btn';
 		width: em(70,$fontSize);
 		padding: em(8,$fontSize) em(10);
 		color: white;
-		border-radius: em(10);
 
 		&:hover {
 			background-color: darken($color4,10%);
-		}
-	}
-
-	&--tertiary {
-		@extend .btn--primary;
-		background-color: $color8;
-
-		&:hover {
-			background-color: darken($color8,10%);
 		}
 	}
 
@@ -64,6 +53,5 @@ $module: 		'btn';
 		$fontSize: 12;
 		width: em(30,$fontSize);
 		padding: em(5);
-		border-radius: 0;
 	}
 }
