@@ -75,7 +75,8 @@ $module: 			'game';
 
 	&__message {
 		position: absolute;
-		background-color: $color1;
+		background-color: white;
+		box-shadow: 0 0 1px rgba(black,0.6);
 		padding: em(20);
 		top: 50%;
 		left: 0;
@@ -83,5 +84,6 @@ $module: 			'game';
 		margin: 0 auto;
 		text-align: center;
 		max-width: em(300);
+		z-index: 3;
 	}
 }

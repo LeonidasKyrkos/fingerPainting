@@ -33,7 +33,7 @@ export default class AddRoom extends Component {
 				<td>
 					<RenderOptions defaultVal="default" name="dictionary" obj={this.props.dictionarys} />
 				</td>
-				<td><button onClick={this.addRoom.bind(this)} className="btn--tertiary">Add room</button></td>
+				<td><button onClick={this.addRoom.bind(this)} className="btn--primary">Add room</button></td>
 			</tr>
 		)
 	}

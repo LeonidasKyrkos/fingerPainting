@@ -33,7 +33,7 @@ $module: 		'chat';
 		color: salmon;
 
 		.#{$module}__msg-wrap.active & {
-			color: $color6;
+			color: $color8;
 		}
 	}
 
@@ -45,9 +45,5 @@ $module: 		'chat';
 		margin: 0;
 		word-break: break-word;
 		display: block;
-
-		.#{$module}__msg-wrap.active & {
-			color: $color6;
-		}
 	}
 }
