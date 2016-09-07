@@ -1228,7 +1228,7 @@ td {
     background-color: #5cb85c;
     color: white;
     padding: 0.5em;
-    z-index: 10;
+    z-index: 15;
     -webkit-transform: translateY(-100%);
     -moz-transform: translateY(-100%);
     -ms-transform: translateY(-100%);
