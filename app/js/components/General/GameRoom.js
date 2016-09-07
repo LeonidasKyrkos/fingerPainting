@@ -8,6 +8,7 @@ import Chat from './Chat.js';
 import Puzzle from './Puzzle.js';
 import EndGame from './Endgame';
 import { roomStatusChangeTest, hasPlayerStatusUpdated } from '../../utilities/general';
+import NotificationTop from './NotificationTop';
 
 export default class Home extends Component {
 	constructor(props) {
@@ -45,7 +46,7 @@ export default class Home extends Component {
 		let canvas = this.state.player.status === 'painter' ? <CanvasPlayer /> : <CanvasClient />
 
 		return (
-			<div className="game__outerwrap">					
+			<div className="game__outerwrap">
 				<div className="game__wrap">
 					<Puzzle />			
 					{canvas}
@@ -60,9 +61,19 @@ export default class Home extends Component {
 		return this.calcReturnItems();
 	}
 
+	discordNotification() {
+		let url = "https://discord.gg/" + this.state.store.discord;
+
+		return (
+			<span>Hop into our <a className="notification--top__link" target="_blank" href={url}>Discord channel</a> to chat with the other players!</span>
+		)		
+	}
+
 	render() {
+		let discordNotification = this.state.store.discord ? <NotificationTop notification={this.discordNotification()} /> : '';
 		return (
 			<div className="wrapper">
+				{discordNotification}
 				<h1 className="gamma">{this.state.store.title}</h1>
 				<a href="/" className="header__home-link">← Back to lobby</a>
 				{this.renderItems()}

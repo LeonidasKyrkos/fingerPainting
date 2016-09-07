@@ -27,6 +27,9 @@ export default class AdminRoomEdit extends Component {
 							</span>							
 						</label>
 					</td>
+					<td>
+						<input onChange={this.updateObject.bind(this)} className="form__input" name="discord" type="text" defaultValue={room.discord || ''}/>
+					</td>
 					<td className="tac">
 						<button onClick={this.deleteRoom.bind(this)} className="btn--primary">Destroy</button>
 					</td>
@@ -79,6 +82,7 @@ export default class AdminRoomEdit extends Component {
 							<td className="tal">Name</td>
 							<td>Password</td>
 							<td>Dictionary</td>
+							<td>Discord code</td>
 							<td className="tac">Actions</td>
 						</tr>
 					</thead>
