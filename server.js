@@ -17,7 +17,6 @@ const e = new Eev(); // event emitter
 
 // variable instantiation
 const data = new DataConnection(0,e);
-const roomPickers = {};
 let roomStore;
 
 
@@ -30,7 +29,6 @@ data.watchRooms();
 io.on('connection', (socket)=>{
 	socket.userId = socket.client.conn.id;
 	socket.emit('connected',{ id: socket.userId });
-	roomPickers[socket.userId] = socket;
 	socket.emit('rooms',roomStore);
 
 	socket.on('join request',(request)=>{
@@ -39,14 +37,6 @@ io.on('connection', (socket)=>{
 
 	socket.on('rooms request',()=>{
 		utils.roomsHandler(socket);
-	});
-
-	socket.on('disconnect',()=>{
-		delete roomPickers[socket.userId];
-
-		if(!Object.keys(roomPickers).length) {
-			data.unwatchRooms();
-		}
 	});
 });
 
