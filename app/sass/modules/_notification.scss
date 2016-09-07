@@ -23,4 +23,69 @@ $module: 			'notification';
 		color: #444141;
 		text-transform: lowercase;
 	}
+
+	&--top {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		text-align: center;
+		background-color: $color6;
+		color: white;
+		padding: em(10);
+		z-index: 10;
+		@include transform(translateY(-100%));
+		@include transition-property(transform);
+		@include transition-duration(0.25s);
+		@include transition-timing-function(linear);
+		@include transition-delay(0.5s);
+
+		&.active {
+			@include transform(translateY(0));
+		}
+	}
+
+	&--top__link {
+		color: white;
+		font-weight: 700;
+		padding: 0 em(7);
+		display: inline-block;
+		@include animation(pulsing 2s ease-out infinite);
+
+		&:hover {
+			color: $color11;
+		}
+	}
+
+	&--top__close {
+		position: absolute;
+		right: em(10);
+		top: 50%;
+		@include transform(translateY(-50%));
+		height: em(20);
+		width: em(20);
+		cursor: pointer;
+
+		&:before {
+			content: "";
+			position: absolute;
+			height: 100%;
+			width: em(2);
+			left: 50%;
+			margin-left: em(-1);
+			@include transform(rotate3d(0,0,1,45deg));
+			background-color: white;
+		}
+
+		&:after {
+			content: "";
+			position: absolute;
+			height: 100%;
+			width: em(2);
+			left: 50%;
+			margin-left: em(-1);
+			@include transform(rotate3d(0,0,1,-45deg));
+			background-color: white;
+		}
+	}
 }

@@ -278,6 +278,42 @@ a {
   a:hover {
     text-decoration: none; }
 
+@-webkit-keyframes pulsing {
+  0% {
+    -webkit-transform: scale(0.95); }
+  50% {
+    -webkit-transform: scale(1); }
+  100% {
+    -webkit-transform: scale(0.95); } }
+
+@-moz-keyframes pulsing {
+  0% {
+    -moz-transform: scale(0.95); }
+  50% {
+    -moz-transform: scale(1); }
+  100% {
+    -moz-transform: scale(0.95); } }
+
+@keyframes pulsing {
+  0% {
+    -webkit-transform: scale(0.95);
+    -moz-transform: scale(0.95);
+    -ms-transform: scale(0.95);
+    -o-transform: scale(0.95);
+    transform: scale(0.95); }
+  50% {
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+    transform: scale(1); }
+  100% {
+    -webkit-transform: scale(0.95);
+    -moz-transform: scale(0.95);
+    -ms-transform: scale(0.95);
+    -o-transform: scale(0.95);
+    transform: scale(0.95); } }
+
 * {
   box-sizing: border-box; }
 
@@ -546,7 +582,7 @@ h1, h2, h3, h4, h5 {
     .form--inline .form__error, .form--inline .form__success {
       width: 100%; }
   .form__success {
-    color: LAWNGREEN; }
+    color: #5cb85c; }
   .form__label {
     font-size: 0.8em;
     display: block;
@@ -1064,10 +1100,10 @@ td {
       content: "👑";
       position: absolute;
       left: -1.5em;
-      color: LAWNGREEN;
+      color: #5cb85c;
       top: 0.3em; }
     .players__player.player {
-      color: LAWNGREEN; }
+      color: #5cb85c; }
     .players__player.correct:after {
       content: "✓";
       position: absolute;
@@ -1078,7 +1114,7 @@ td {
       -ms-transform: translateY(-50%);
       -o-transform: translateY(-50%);
       transform: translateY(-50%);
-      color: LAWNGREEN; }
+      color: #5cb85c; }
     @media (max-width: 88.125em) {
       .players__player.active:before {
         color: #228B22; }
@@ -1183,6 +1219,87 @@ td {
     font-size: 1.1em;
     color: #444141;
     text-transform: lowercase; }
+  .notification--top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background-color: #5cb85c;
+    color: white;
+    padding: 0.5em;
+    z-index: 10;
+    -webkit-transform: translateY(-100%);
+    -moz-transform: translateY(-100%);
+    -ms-transform: translateY(-100%);
+    -o-transform: translateY(-100%);
+    transform: translateY(-100%);
+    -webkit-transition-property: -webkit-transform;
+    -moz-transition-property: -moz-transform;
+    transition-property: transform;
+    -webkit-transition-duration: 0.25s;
+    -moz-transition-duration: 0.25s;
+    transition-duration: 0.25s;
+    -webkit-transition-timing-function: linear;
+    -moz-transition-timing-function: linear;
+    transition-timing-function: linear;
+    -webkit-transition-delay: 0.5s;
+    -moz-transition-delay: 0.5s;
+    transition-delay: 0.5s; }
+    .notification--top.active {
+      -webkit-transform: translateY(0);
+      -moz-transform: translateY(0);
+      -ms-transform: translateY(0);
+      -o-transform: translateY(0);
+      transform: translateY(0); }
+  .notification--top__link {
+    color: white;
+    font-weight: 700;
+    padding: 0 0.35em;
+    display: inline-block;
+    -webkit-animation: pulsing 2s ease-out infinite;
+    -moz-animation: pulsing 2s ease-out infinite;
+    animation: pulsing 2s ease-out infinite; }
+    .notification--top__link:hover {
+      color: #337ab7; }
+  .notification--top__close {
+    position: absolute;
+    right: 0.5em;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+    height: 1em;
+    width: 1em;
+    cursor: pointer; }
+    .notification--top__close:before {
+      content: "";
+      position: absolute;
+      height: 100%;
+      width: 0.1em;
+      left: 50%;
+      margin-left: -0.05em;
+      -webkit-transform: rotate3d(0, 0, 1, 45deg);
+      -moz-transform: rotate3d(0, 0, 1, 45deg);
+      -ms-transform: rotate3d(0, 0, 1, 45deg);
+      -o-transform: rotate3d(0, 0, 1, 45deg);
+      transform: rotate3d(0, 0, 1, 45deg);
+      background-color: white; }
+    .notification--top__close:after {
+      content: "";
+      position: absolute;
+      height: 100%;
+      width: 0.1em;
+      left: 50%;
+      margin-left: -0.05em;
+      -webkit-transform: rotate3d(0, 0, 1, -45deg);
+      -moz-transform: rotate3d(0, 0, 1, -45deg);
+      -ms-transform: rotate3d(0, 0, 1, -45deg);
+      -o-transform: rotate3d(0, 0, 1, -45deg);
+      transform: rotate3d(0, 0, 1, -45deg);
+      background-color: white; }
 
 .gameroom__title {
   margin-bottom: 0; }
