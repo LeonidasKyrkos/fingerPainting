@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Store from '../../stores/Store';
-import { redraw } from '../../utilities/canvasFunctions';
+import { redraw, setupCanvas, setCanvasWidth } from '../../utilities/canvasFunctions';
 import WaitingMsgClient from './WaitingMsgClient';
+import debounce from 'debounce';
 
 export default class CanvasClient extends Component {
 	constructor() {
@@ -12,9 +13,11 @@ export default class CanvasClient extends Component {
 	}
 
 	componentDidMount() {
-		this.canvas = document.querySelector('#canvas');
-		this.canvas.setAttribute('width',this.canvas.parentElement.offsetWidth);
-		this.ctx = this.canvas.getContext('2d');				
+		this.setup();
+		
+		window.addEventListener('resize',debounce(()=>{
+			setCanvasWidth(this.canvas);
+		},100));
 
 		if(typeof this.state.socket.on === 'function') {
 			this.state.socket.on('reset',()=>{
@@ -27,6 +30,15 @@ export default class CanvasClient extends Component {
 		}
 
 		Store.listen(this.onChange);
+	}
+
+	setup() {
+		this.canvas = document.querySelector('#canvas');
+		this.ctx = this.canvas.getContext('2d');
+		setupCanvas(this.canvas,this.ctx);
+		this.canvasX = this.canvas.offsetLeft;
+		this.canvasY = this.canvas.offsetTop;
+		this.forceUpdate();
 	}
 
 	componentWillUnmount() {

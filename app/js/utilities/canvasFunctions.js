@@ -55,3 +55,17 @@ export function renderDot(x,y,colour,context) {
 export function clearContext(ctx) {
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
+
+
+// canvas settings
+export function setupCanvas(canvas,ctx) {
+	setCanvasWidth(canvas);
+	ctx.strokeStyle = "#FFFFFF";
+	ctx.lineWidth = 3;
+	ctx.shadowBlur = 1;
+	ctx.lineJoin = "round";
+}
+
+export function setCanvasWidth(canvas) {
+	canvas.setAttribute('width',canvas.parentElement.offsetWidth);
+}
