@@ -964,6 +964,10 @@ var _WaitingMsgClient = require('./WaitingMsgClient');
 
 var _WaitingMsgClient2 = _interopRequireDefault(_WaitingMsgClient);
 
+var _debounce = require('debounce');
+
+var _debounce2 = _interopRequireDefault(_debounce);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -990,9 +994,11 @@ var CanvasClient = function (_Component) {
 		value: function componentDidMount() {
 			var _this2 = this;
 
-			this.canvas = document.querySelector('#canvas');
-			this.canvas.setAttribute('width', this.canvas.parentElement.offsetWidth);
-			this.ctx = this.canvas.getContext('2d');
+			this.setup();
+
+			window.addEventListener('resize', (0, _debounce2.default)(function () {
+				(0, _canvasFunctions.setCanvasWidth)(_this2.canvas);
+			}, 100));
 
 			if (typeof this.state.socket.on === 'function') {
 				this.state.socket.on('reset', function () {
@@ -1005,6 +1011,16 @@ var CanvasClient = function (_Component) {
 			}
 
 			_Store2.default.listen(this.onChange);
+		}
+	}, {
+		key: 'setup',
+		value: function setup() {
+			this.canvas = document.querySelector('#canvas');
+			this.ctx = this.canvas.getContext('2d');
+			(0, _canvasFunctions.setupCanvas)(this.canvas, this.ctx);
+			this.canvasX = this.canvas.offsetLeft;
+			this.canvasY = this.canvas.offsetTop;
+			this.forceUpdate();
 		}
 	}, {
 		key: 'componentWillUnmount',
@@ -1043,7 +1059,7 @@ var CanvasClient = function (_Component) {
 
 exports.default = CanvasClient;
 
-},{"../../stores/Store":34,"../../utilities/canvasFunctions":35,"./WaitingMsgClient":11,"react":"react"}],11:[function(require,module,exports){
+},{"../../stores/Store":34,"../../utilities/canvasFunctions":35,"./WaitingMsgClient":11,"debounce":37,"react":"react"}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3250,9 +3266,13 @@ var CanvasPlayer = function (_Component) {
 	_createClass(CanvasPlayer, [{
 		key: 'componentDidMount',
 		value: function componentDidMount() {
+			var _this2 = this;
+
 			_Store2.default.listen(this.onChange);
-			this.setupCanvas();
-			window.addEventListener('resize', (0, _debounce2.default)(this.setCanvasWidth.bind(this), 100));
+			this.setup();
+			window.addEventListener('resize', (0, _debounce2.default)(function () {
+				(0, _canvasFunctions.setCanvasWidth)(_this2.canvas);
+			}, 100));
 		}
 	}, {
 		key: 'componentWillUnmount',
@@ -3270,23 +3290,14 @@ var CanvasPlayer = function (_Component) {
 			return (0, _general.playerCountChangedTest)(this.state, nextState);
 		}
 	}, {
-		key: 'setupCanvas',
-		value: function setupCanvas() {
+		key: 'setup',
+		value: function setup() {
 			this.canvas = document.querySelector('#canvas');
-			this.setCanvasWidth();
 			this.ctx = this.canvas.getContext('2d');
-			this.ctx.strokeStyle = "#FFFFFF";
-			this.ctx.lineWidth = 3;
-			this.ctx.shadowBlur = 1;
-			this.ctx.lineJoin = "round";
+			(0, _canvasFunctions.setupCanvas)(this.canvas, this.ctx);
 			this.canvasX = this.canvas.offsetLeft;
 			this.canvasY = this.canvas.offsetTop;
 			this.forceUpdate();
-		}
-	}, {
-		key: 'setCanvasWidth',
-		value: function setCanvasWidth() {
-			this.canvas.setAttribute('width', this.canvas.parentElement.offsetWidth);
 		}
 	}, {
 		key: 'initialisePathsObject',
@@ -3875,6 +3886,8 @@ exports.redraw = redraw;
 exports.renderPath = renderPath;
 exports.renderDot = renderDot;
 exports.clearContext = clearContext;
+exports.setupCanvas = setupCanvas;
+exports.setCanvasWidth = setCanvasWidth;
 function redraw() {
 	var paths = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	var context = arguments[1];
@@ -3932,6 +3945,19 @@ function renderDot(x, y, colour, context) {
 // clear the supplied context
 function clearContext(ctx) {
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+}
+
+// canvas settings
+function setupCanvas(canvas, ctx) {
+	setCanvasWidth(canvas);
+	ctx.strokeStyle = "#FFFFFF";
+	ctx.lineWidth = 3;
+	ctx.shadowBlur = 1;
+	ctx.lineJoin = "round";
+}
+
+function setCanvasWidth(canvas) {
+	canvas.setAttribute('width', canvas.parentElement.offsetWidth);
 }
 
 },{}],36:[function(require,module,exports){
