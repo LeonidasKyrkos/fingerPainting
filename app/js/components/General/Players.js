@@ -26,7 +26,8 @@ export default class players extends Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
-		return playerCountChangedTest(this.state,nextState);
+		return true;
+		//return playerCountChangedTest(this.state,nextState);
 	}
 
 	onChange(state) {

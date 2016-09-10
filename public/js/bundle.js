@@ -2188,7 +2188,8 @@ var players = function (_Component) {
 	}, {
 		key: 'shouldComponentUpdate',
 		value: function shouldComponentUpdate(nextProps, nextState) {
-			return (0, _general.playerCountChangedTest)(this.state, nextState);
+			return true;
+			//return playerCountChangedTest(this.state,nextState);
 		}
 	}, {
 		key: 'onChange',
