@@ -446,11 +446,20 @@ class Game {
 
 	resetGame() {		
 		this.resetClock();
+		this.resetTurns();
 		this.resetCorrectStatus();
 		this.resetPath();
 		this.emitToAllSockets('reset');
 		this.resetChatlog();
 		this.emitToAllSockets('puzzle',[]);
+	}
+
+	resetTurns() {
+		let players = this.store.players || {};
+
+		for(let player in players) {
+			this.store.players[player].turns = 0;
+		}
 	}
 
 	resetCorrectStatus() {
