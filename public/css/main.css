@@ -372,6 +372,11 @@ body {
   .email-link:hover {
     color: #B22222; }
 
+.small, .small--it {
+  font-size: 0.8em; }
+  .small--it {
+    font-style: italic; }
+
 h1, h2, h3, h4, h5 {
   line-height: normal;
   font-weight: normal; }

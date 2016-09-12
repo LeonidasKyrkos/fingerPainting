@@ -61,3 +61,12 @@ body {
 		color: $color1;
 	}
 }
+
+.small {
+	font-size: em($font-size-base * 0.8);
+
+	&--it {
+		@extend .small;
+		font-style: italic;
+	}
+}
