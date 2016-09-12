@@ -32,7 +32,7 @@ export default class RoomPicker extends Component {
 		return (
 			<main className="wrapper--noscores">
 				<Header />
-				<span className="small--it">Fingerpainting is currently only stable(ish) on Google Chrome. Bug reports will be rewarded with pleasant response emails.</span>
+				<span className="small--it">Fingerpainting is currently only stable(ish) on Google Chrome. <a href="/contact" className="link">Bug reports</a> will be rewarded with pleasant response emails.</span>
 				<br/>
 				<br/>
 				<br/>
