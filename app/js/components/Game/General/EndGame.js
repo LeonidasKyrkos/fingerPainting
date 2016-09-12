@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import Store from '../../stores/Store';
-import RoomsList from './RoomsList';
-import RoomSpawn from './RoomSpawn';
-import Header from './header';
+import Store from '../../../stores/Store';
+import Scoreboard from './Scoreboard';
 
-export default class RoomPicker extends Component {
+export default class EndGame extends Component {
 	constructor(props) {
 		super(props);
-		
+
 		this.onChange = this.onChange.bind(this);
 		this.state = Store.getState();
 	}
@@ -20,21 +18,20 @@ export default class RoomPicker extends Component {
 		Store.unlisten(this.onChange);
 	}
 
-	shouldComponentUpdate() {
+	shouldComponentUpdate(nextProps, nextState) {
 		return false;
 	}
 
 	onChange(state) {
 		this.setState(state);
 	}
-
+	
 	render() {
 		return (
-			<main className="wrapper--noscores">
-				<Header />
-				<h2 className="gamma">Join a room</h2>
-				<RoomsList />
-			</main>
+			<div className="game__over">
+				<h1 className="alpha">GAME OVER</h1>
+				<Scoreboard />
+			</div>
 		);
 	}
 }

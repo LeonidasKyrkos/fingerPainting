@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import Store from '../../stores/Store';
-import { havePropsUpdated, hasPuzzleUpdated, hasClockUpdated } from '../../utilities/general';
-
+import Store from '../../../stores/Store';
+import { havePropsUpdated, hasPuzzleUpdated, hasClockUpdated } from '../../../utilities/general';
 
 export default class Puzzle extends Component {
 	constructor() {

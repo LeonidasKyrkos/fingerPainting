@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Store from '../../stores/Store';
-import { roomStatusChangeTest, painterChangedTest } from '../../utilities/general';
+import Store from '../../../stores/Store';
+import { roomStatusChangeTest, painterChangedTest } from '../../../utilities/general';
 import _ from 'lodash';
 
 export default class WaitingMsgClient extends Component {

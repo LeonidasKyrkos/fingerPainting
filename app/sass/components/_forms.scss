@@ -6,6 +6,10 @@ $module: 		'form';
 	max-width: 100%;
 	@include clearfix;
 
+	&--contact {
+		@extend .#{$module};
+	}
+
 	&--popup {
 		position: fixed;
 		padding-top: em(20);
@@ -51,6 +55,10 @@ $module: 		'form';
 		.#{$module}--inline & {
 			@include align-items(center);
 			@include flex-wrap(wrap);
+		}
+
+		.#{$module}--contact & {
+			@include flex-direction(column);
 		}
 	}
 

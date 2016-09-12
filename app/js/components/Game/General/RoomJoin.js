@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Store from '../../stores/Store';
+import Store from '../../../stores/Store';
 import ErrorMessage from './ErrorMessage';
 
 export default class RoomJoin extends Component {
