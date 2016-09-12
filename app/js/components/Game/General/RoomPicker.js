@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Store from '../../stores/Store';
+import Store from '../../../stores/Store';
 import RoomsList from './RoomsList';
 import RoomSpawn from './RoomSpawn';
 import Header from '../../Generic/Header';

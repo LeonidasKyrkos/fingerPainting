@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import Actions from '../../actions/Actions';
-import { painterTest } from '../../utilities/general.js';
+import Actions from '../../../actions/Actions';
+import { painterTest } from '../../../utilities/general.js';
 import Notification from './Notification';
-import Footer from './Footer';
+import Footer from '../../Generic/Footer';
+
 
 export default class App extends Component {
 	constructor(props) {

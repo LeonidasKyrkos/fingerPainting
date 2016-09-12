@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import Store from '../../stores/Store';
+import Store from '../../../stores/Store';
 import Message from './Message';
-import { hasChatUpdated, havePropsUpdated } from '../../utilities/general';
+import { hasChatUpdated, havePropsUpdated } from '../../../utilities/general';
 
 export default class Chat extends Component {
 	constructor() {

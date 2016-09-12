@@ -10,7 +10,11 @@ const basicAuth = require('basic-auth');
 const cookieParser = require('socket.io-cookie-parser');
 const expCookieParser = require('cookie-parser');
 const reconToken = 'fingerpainting_refresh_token';
+const formidable = require('formidable');
+const util = require('util');
 const url = require('url');
+const Mailer = require('./server/classes/Mailer');
+let mailer = new Mailer();
 
 io.use(cookieParser());
 app.use(expCookieParser());
@@ -51,7 +55,19 @@ app.get('/joining*',(req, res)=>{
 	res.sendFile(__dirname + '/views/index.html');
 });
 
-app.get('/admin', auth, function (req, res) {
+app.get('/admin', auth, (req, res) => {
+	res.sendFile(__dirname + '/views/index.html');
+});
+
+app.get('/contact', (req, res) => {
+	res.sendFile(__dirname + '/views/index.html');
+});
+
+app.post('/contact', function (req, res) {
+	processFormFieldsIndividual(req, res);
+});
+
+app.get('/success', (req, res) => {
 	res.sendFile(__dirname + '/views/index.html');
 });
 
@@ -68,6 +84,43 @@ app.get('/', function (req, res) {
 
 	res.sendFile(__dirname + '/views/index.html');
 });
+
+function processAllFieldsOfTheForm(req, res) {
+    var form = new formidable.IncomingForm();
+
+    form.parse(req, function (err, fields, files) {
+        //Store the data from the fields in your data store.
+        //The data store could be a file or database or any other store based
+        //on your application.
+        res.writeHead(200, {
+            'content-type': 'text/plain'
+        });
+        res.write('received the data:\n\n');
+        res.end(util.inspect({
+            fields: fields,
+            files: files
+        }));
+    });
+}
+
+function processFormFieldsIndividual(req, res) {
+    //Store the data from the fields in your data store.
+    //The data store could be a file or database or any other store based
+    //on your application.
+    var fields = [];
+    var form = new formidable.IncomingForm();
+
+    form.on('field', function (field, value) {
+        fields[field] = value;
+    });
+
+    form.on('end', function () {
+        res.redirect('/success');
+        mailer.send(fields.email,fields.name,fields.message);
+    });
+
+    form.parse(req);
+}
 
 function getCookie(req,name) {
 	let cookie = req.cookies[name];

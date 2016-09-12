@@ -432,6 +432,11 @@ h1, h2, h3, h4, h5 {
 .alpha {
   text-align: center; }
 
+.link {
+  color: #B22222; }
+  .link:hover {
+    color: #871a1a; }
+
 .btn, .btn--primary, .form__button--inline, .canvas__start-btn, .canvas__settings-btn, .header__home-link, .btn--secondary, .btn--submit {
   background-color: transparent;
   display: inline-block;
@@ -472,11 +477,11 @@ h1, h2, h3, h4, h5 {
     width: 2.5em;
     padding: 0.25em; }
 
-.form, .form--inline {
+.form, .form--contact, .form--inline {
   margin-bottom: 1.5em;
   width: 25em;
   max-width: 100%; }
-  .form::after, .form--inline::after {
+  .form::after, .form--contact::after, .form--inline::after {
     clear: both;
     content: "";
     display: table; }
@@ -549,6 +554,17 @@ h1, h2, h3, h4, h5 {
       -moz-flex-wrap: wrap;
       -ms-flex-wrap: wrap;
       flex-wrap: wrap; }
+    .form--contact .form__items {
+      -webkit-box-orient: vertical;
+      -moz-box-orient: vertical;
+      box-orient: vertical;
+      -webkit-box-direction: normal;
+      -moz-box-direction: normal;
+      box-direction: normal;
+      -webkit-flex-direction: column;
+      -moz-flex-direction: column;
+      flex-direction: column;
+      -ms-flex-direction: column; }
   .form__item {
     margin-bottom: 0.5em; }
     .form__item.right {
@@ -894,7 +910,8 @@ td {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 0.625em; }
+  padding: 0.625em;
+  z-index: 15; }
   .footer__left {
     float: left;
     padding-bottom: 0.5em; }

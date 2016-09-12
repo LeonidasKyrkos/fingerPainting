@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Store from '../../stores/Store';
-import { redraw, setupCanvas, setCanvasWidth } from '../../utilities/canvasFunctions';
+import Store from '../../../stores/Store';
+import { redraw, setupCanvas, setCanvasWidth } from '../../../utilities/canvasFunctions';
 import WaitingMsgClient from './WaitingMsgClient';
 import debounce from 'debounce';
 

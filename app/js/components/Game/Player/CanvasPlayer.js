@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import CanvasSettings from './CanvasSettings';
-import Store from '../../stores/Store';
-import { redraw, renderPath, renderDot, clearContext, setupCanvas, setCanvasWidth } from '../../utilities/canvasFunctions';
-import { playerCountChangedTest } from '../../utilities/general';
+import Store from '../../../stores/Store';
+import { redraw, renderPath, renderDot, clearContext, setupCanvas, setCanvasWidth } from '../../../utilities/canvasFunctions';
+import { playerCountChangedTest } from '../../../utilities/general';
 import { default as debounce } from 'debounce';
 
 export default class CanvasPlayer extends Component {
