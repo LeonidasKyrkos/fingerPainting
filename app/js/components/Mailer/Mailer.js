@@ -16,8 +16,8 @@ export default class Mailer extends Component {
 				<form action="" method="post" encType="multipart/form-data" className="form--contact">
 					<div className="form__items">
 						<FormInput name="name" label="Name"  placeholder="John Cena"/>
-						<FormEmail name="email" label="Email address"  placeholder="John Cena"/>
-						<FormTextarea name="message" rows="10" label="Message"  placeholder="Type your bug report or message here..."/>
+						<FormEmail name="email" label="Email address"  placeholder="JohnCena@gmail.com"/>
+						<FormTextarea name="message" rows="10" label="Message"  placeholder="Your game doesn't work in the following ways..."/>
 						<button className="btn--primary">Submit</button>
 					</div>
 				</form>
