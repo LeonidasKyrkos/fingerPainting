@@ -15,6 +15,9 @@ class Game {
 		this.init(player, socket);
 	}	
 
+
+// setup
+
 	init(player, socket) {
 		this.store = {};
 		this.sockets = {};
@@ -53,6 +56,23 @@ class Game {
 		this.updateClientPlayerObject();
 	}
 
+	getDictionary(dictionary='default') {
+		let promise = this.data.getDictionary(dictionary);
+
+		promise.then((snapshot)=>{
+			this.dictionary = [];
+			this.dictionaryObj = snapshot;
+			for(let word in this.dictionaryObj) {
+				this.dictionary.push(word.toLowerCase());
+			}
+			this.dictionaryBackup = this.dictionary.slice(0);
+		});		
+	}
+
+
+
+
+// new player
 
 	newPlayer(player,socket) {
 		this.sockets[player.id] = socket;
@@ -75,13 +95,6 @@ class Game {
 	}
 
 
-	reinstantiatePlayer(player) {
-		player.score = this.inactivePlayers[player.refreshToken].score;
-
-		this.removeInactivePlayers(player);
-	}
-
-
 	playerEventHandlers(socket, player) {
 		socket.on('path update',(paths)=>{
 			this.emitToGuessers('path update',paths);
@@ -99,23 +112,9 @@ class Game {
 	}
 
 
-	removeInactivePlayers(player){
-		delete this.inactivePlayers[player.refreshToken];
-	}	
 
 
-	getDictionary(dictionary='default') {
-		let promise = this.data.getDictionary(dictionary);
-
-		promise.then((snapshot)=>{
-			this.dictionary = [];
-			this.dictionaryObj = snapshot;
-			for(let word in this.dictionaryObj) {
-				this.dictionary.push(word.toLowerCase());
-			}
-			this.dictionaryBackup = this.dictionary.slice(0);
-		});		
-	}
+// player leave
 
 	handleDisconnect(playerId) {
 		let player = this.store.players[playerId];
@@ -158,37 +157,14 @@ class Game {
 		this.inactivePlayers[player.refreshToken] = _.clone(player);
 	}
 
-	updateClientPlayerObject() {
-		for(let id in this.sockets) {
-			for(let playerId in this.store.players) {
-				if(id === playerId) {
-					this.sockets[id].emit('player',this.store.players[playerId]);
-				}
-			}
-		}
-	}
+	
 
-	startRound() {
-		if(this.dictionary) {
-			this.getPuzzle();
-			this.startInterval();
-			this.data.setStatus('playing');
-		}
-	}
 
-	startInterval() {
-		this.interval = setInterval(this.countdown.bind(this),1000);
-	}
 
-	pauseRound() {
-		clearInterval(this.interval);
-		this.data.setStatus('paused');
-	}
 
-	unpauseRound() {
-		this.startInterval();
-		this.data.setStatus('playing');
-	}
+
+
+// puzzle stuff
 
 	getPuzzle() {
 		if(!this.dictionary.length) {
@@ -248,15 +224,7 @@ class Game {
 		let random2 = Math.floor((Math.random() * this.puzzleArray[random].length));
 
 		this.clue[random][random2] = this.puzzleArray[random][random2];
-	}
-
-	replaceChar(string, index, char) {
-		 return string.substr(0, index) + char + string.substr(index+char.length);
-	}
-
-	checkIfPainter(id) {
-		return this.store.players && this.store.players[id] && this.store.players[id].status === 'painter';
-	}
+	}	
 
 	parseMessage(message) {
 		message.message = message.message.toString();
@@ -290,42 +258,12 @@ class Game {
 		}
 	}
 
-	calculatePoints(id) {
-		let currentScore = this.store.players[id].score || 0;
-		let newScore = currentScore + this.timer;
-		return newScore;
-	}
 
-	countdown() {
-		if(this.timer < 1) {
-			clearInterval(this.interval);
-			this.emitToAllSockets('puzzle', this.puzzleArray)
-			this.endRound();
-		} else {
-			this.timer--;
-			this.data.updateTimer(this.timer);
 
-			if(this.timer === 60 || this.timer === 30 || this.timer === 10) {
-				this.clueForTheGuessers();
-			}
-		}
-	}
 
-	// check number of turns of each active player
-	playerTurns() {
-		let count = 0;
-		let players = this.store.players;
 
-		for(let player in players) {
-			if(players[player].turns < this.rounds) {
-				count++;
-			}
-		}
 
-		return count <= 1;
-	}	
-
-	// server->player interactions
+// server->player interactions
 
 	findNewPainter() {
 		let set = false; // if we can't find a painter we'll make the 0 index play the painter
@@ -366,25 +304,12 @@ class Game {
 		this.setPainter(nextPlayerId);
 	}
 
-	setGuesser(playerId) {
-		this.data.setPlayerStatus(playerId,'guesser');
-	}
-
-	incrementPlayerTurns(playerId) {
-		let turns = this.store.players[playerId].turns + 1;
-		this.data.updatePlayerTurns(playerId,turns);
-	}	
-
-	setPainter(playerId) {
-		this.data.setPlayerStatus(playerId,'painter');
-	}	
-
-	clearNotification() {
-		this.emitToAllSockets('notification',{ text: '', type: 'default' });
-	}
 
 
-	// Game rounds
+	
+
+
+// Game rounds
 
 	newRound() {
 		this.roundCount++;
@@ -395,6 +320,43 @@ class Game {
 		if(this.store.players && Object.keys(this.store.players).length > 1) {
 			this.startRound();
 		}		
+	}
+
+	startRound() {
+		if(this.dictionary) {
+			this.getPuzzle();
+			this.startInterval();
+			this.data.setStatus('playing');
+		}
+	}
+
+	countdown() {
+		if(this.timer < 1) {
+			clearInterval(this.interval);
+			this.emitToAllSockets('puzzle', this.puzzleArray)
+			this.endRound();
+		} else {
+			this.timer--;
+			this.data.updateTimer(this.timer);
+
+			if(this.timer === 60 || this.timer === 30 || this.timer === 10) {
+				this.clueForTheGuessers();
+			}
+		}
+	}
+
+	startInterval() {
+		this.interval = setInterval(this.countdown.bind(this),1000);
+	}
+
+	pauseRound() {
+		clearInterval(this.interval);
+		this.data.setStatus('paused');
+	}
+
+	unpauseRound() {
+		this.startInterval();
+		this.data.setStatus('playing');
 	}
 
 	endRound() {
@@ -420,7 +382,6 @@ class Game {
 			this.findNewPainter();
 		}
 	}
-
 
 	roundDelay() {
 		let timer = 5;
@@ -453,7 +414,10 @@ class Game {
 	}
 
 
-	// RESETS
+
+
+
+// RESETS
 
 	resetRoom() {		
 		this.resetGame();
@@ -535,6 +499,79 @@ class Game {
 			}			
 		};
 	}
+
+
+
+
+
+
+// helpers
+
+	setGuesser(playerId) {
+		this.data.setPlayerStatus(playerId,'guesser');
+	}
+
+	incrementPlayerTurns(playerId) {
+		let turns = this.store.players[playerId].turns + 1;
+		this.data.updatePlayerTurns(playerId,turns);
+	}	
+
+	setPainter(playerId) {
+		this.data.setPlayerStatus(playerId,'painter');
+	}	
+
+	clearNotification() {
+		this.emitToAllSockets('notification',{ text: '', type: 'default' });
+	}
+
+	// check number of turns of each active player and return true if there's one or less turns remaining
+	playerTurns() {
+		let count = 0;
+		let players = this.store.players;
+
+		for(let player in players) {
+			if(players[player].turns < this.rounds) {
+				count++;
+			}
+		}
+
+		return count <= 1;
+	}
+
+	replaceChar(string, index, char) {
+		 return string.substr(0, index) + char + string.substr(index+char.length);
+	}
+
+	checkIfPainter(id) {
+		return this.store.players && this.store.players[id] && this.store.players[id].status === 'painter';
+	}
+
+	reinstantiatePlayer(player) {
+		player.score = this.inactivePlayers[player.refreshToken].score;
+
+		this.removeInactivePlayers(player);
+	}
+
+	removeInactivePlayers(player){
+		delete this.inactivePlayers[player.refreshToken];
+	}
+
+	updateClientPlayerObject() {
+		for(let id in this.sockets) {
+			for(let playerId in this.store.players) {
+				if(id === playerId) {
+					this.sockets[id].emit('player',this.store.players[playerId]);
+				}
+			}
+		}
+	}
+
+	calculatePoints(id) {
+		let currentScore = this.store.players[id].score || 0;
+		let newScore = currentScore + this.timer;
+		return newScore;
+	}
+
 }
 
 
