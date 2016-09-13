@@ -11,6 +11,7 @@ class Game {
 		this.id = id;
 		this.gameLength = 90;
 		this.rounds = 3;
+		this.minimumPlayers = 3;
 		this.init(player, socket);
 	}	
 
@@ -39,11 +40,19 @@ class Game {
 	attachDataListener() {
 		e.on('store',(store)=>{
 			if(!this.dictionary || store && this.store.dictionary !== store.dictionary) { this.getDictionary(store.dictionary); };
-			this.prepStoreAndCallUpdate(store);
+			this.updateStore(store);
 		});
 
 		this.data.listenToData();
 	}
+
+	updateStore(store={}) {
+		store.paths = _.clone(this.store.paths);
+		this.store = store;
+		this.emitToAllSockets('store update', this.store);
+		this.updateClientPlayerObject();
+	}
+
 
 	newPlayer(player,socket) {
 		this.sockets[player.id] = socket;
@@ -62,20 +71,9 @@ class Game {
 		socket.emit('join room','/rooms/' + this.id);
 		socket.emit('player',player);
 
-		socket.on('path update',(paths)=>{
-			this.emitToGuessers('path update',paths);
-		});
-
-		socket.on('start round',this.startRound.bind(this));
-		socket.on('pause round',this.pauseRound.bind(this));
-		socket.on('unpause round',this.unpauseRound.bind(this));
-		socket.on('message',(message)=>{
-			if(!this.blockUpdates) {
-				this.parseMessage(message);
-			}			
-		});
-		socket.on('disconnect',this.handleDisconnect.bind(this,player.id));
+		this.playerEventHandlers(socket, player);		
 	}
+
 
 	reinstantiatePlayer(player) {
 		player.score = this.inactivePlayers[player.refreshToken].score;
@@ -83,22 +81,28 @@ class Game {
 		this.removeInactivePlayers(player);
 	}
 
+
+	playerEventHandlers(socket, player) {
+		socket.on('path update',(paths)=>{
+			this.emitToGuessers('path update',paths);
+		});
+
+		socket.on('start round',this.startRound.bind(this));
+
+		socket.on('message',(message)=>{
+			if(!this.blockUpdates) {
+				this.parseMessage(message);
+			}			
+		});
+
+		socket.on('disconnect',this.handleDisconnect.bind(this,player.id));
+	}
+
+
 	removeInactivePlayers(player){
 		delete this.inactivePlayers[player.refreshToken];
-	}
+	}	
 
-	prepStoreAndCallUpdate(store={}) {
-		if(store) {
-			store.paths = _.clone(this.store.paths);
-			this.updateStore(store);
-		}
-	}
-
-	updateStore(store) {
-		this.store = store;
-		this.emitToAllSockets('store update', this.store);
-		this.updateClientPlayerObject();
-	}
 
 	getDictionary(dictionary='default') {
 		let promise = this.data.getDictionary(dictionary);
@@ -123,10 +127,14 @@ class Game {
 		} 
 
 		if(player.status === 'painter') {
-			this.newPainter();
+			this.findNewPainter();
 		}
 		
 		this.removePlayerFromGame(player);
+
+		if(this.store.players && Object.keys(this.store.players).length <= this.minimumPlayers) {
+			this.endRound();
+		}
 	}
 
 	addToGarbageQueue(player) {
@@ -137,7 +145,7 @@ class Game {
 		this.garbageQueue.forEach((player,index)=>{
 			this.removePlayerFromGame(player);
 			this.garbageQueue.splice(index, 1);
-		});	
+		});
 	}
 
 	removePlayerFromGame(player) {
@@ -206,7 +214,7 @@ class Game {
 			this.puzzleArray[index] = this.puzzleArray[index] || [];
 			this.clue[index] = this.clue[index] || [];
 
-			for(var i = 0; i < arrWord.length; i++) {
+			for(let i = 0; i < arrWord.length; i++) {
 				this.puzzleArray[index].push(arrWord.charAt(i));
 				this.clue[index].push('_');
 			}
@@ -247,11 +255,7 @@ class Game {
 	}
 
 	checkIfPainter(id) {
-		if(this.store.players && this.store.players[id] && this.store.players[id].status === 'painter') {
-			return true;
-		} else {
-			return false;
-		}
+		return this.store.players && this.store.players[id] && this.store.players[id].status === 'painter';
 	}
 
 	parseMessage(message) {
@@ -263,12 +267,8 @@ class Game {
 				this.cleverGuesser(message);	
 			}					
 		} else {
-			this.handleChatLog(message);
+			this.data.pushMessage(message);
 		}
-	}
-
-	handleChatLog(message) {
-		this.data.pushMessage(message);
 	}
 
 	cleverGuesser(message) {
@@ -311,6 +311,92 @@ class Game {
 		}
 	}
 
+	// check number of turns of each active player
+	playerTurns() {
+		let count = 0;
+		let players = this.store.players;
+
+		for(let player in players) {
+			if(players[player].turns < this.rounds) {
+				count++;
+			}
+		}
+
+		return count <= 1;
+	}	
+
+	// server->player interactions
+
+	findNewPainter() {
+		let set = false; // if we can't find a painter we'll make the 0 index play the painter
+		let players = this.store.players || {};
+		let playersArr = [];
+
+		for(let player in players) {
+			playersArr.push(players[player]);
+		}
+
+		let remainingPlayers = _.filter(playersArr,(player)=>{ return player.turns < this.rounds });
+
+		for(let index = 0; index <= remainingPlayers.length - 1; index++) {
+			let playerId = remainingPlayers[index].id;
+			let player = players[playerId];
+
+			if(players[playerId].status === 'painter') {
+				this.foundOldPainter(player, index, remainingPlayers);
+				
+				set = true;
+				break;
+			}
+		}
+
+		if(!set) { this.setPainter(playersArr[0].id) };
+	}
+
+	foundOldPainter(player, index, remainingPlayers) {
+		this.setGuesser(player.id);
+		this.incrementPlayerTurns(player.id);
+
+		if(index === remainingPlayers.length - 1) {
+			var nextPlayerId = remainingPlayers[0].id;
+		} else {
+			var nextPlayerId = remainingPlayers[index+1].id;
+		}
+
+		this.setPainter(nextPlayerId);
+	}
+
+	setGuesser(playerId) {
+		this.data.setPlayerStatus(playerId,'guesser');
+	}
+
+	incrementPlayerTurns(playerId) {
+		let turns = this.store.players[playerId].turns + 1;
+		this.data.updatePlayerTurns(playerId,turns);
+	}	
+
+	setPainter(playerId) {
+		this.data.setPlayerStatus(playerId,'painter');
+	}	
+
+	clearNotification() {
+		this.emitToAllSockets('notification',{ text: '', type: 'default' });
+	}
+
+
+	// Game rounds
+
+	newRound() {
+		this.roundCount++;
+		this.resetGame();
+		this.data.setStore(this.store);
+		this.findNewPainter();
+
+		if(this.store.players && Object.keys(this.store.players).length > 1) {
+			this.startRound();
+		}		
+	}
+
 	endRound() {
 		clearInterval(this.interval);
 
@@ -323,7 +409,7 @@ class Game {
 			return;
 		}
 
-		if(remaining <= 1) {
+		if(remaining < this.minimumPlayers) {
 			this.resetRoom();		
 			return;		
 		}
@@ -331,23 +417,10 @@ class Game {
 		if(this.store.status === 'playing') {
 			this.roundDelay();
 		} else {
-			this.newPainter();
+			this.findNewPainter();
 		}
 	}
 
-	// check number of turns of each active player
-	playerTurns() {
-		let count = 0;
-		let players = this.store.players;
-
-		for(let player in players) {
-			if(players[player].turns < this.rounds) {
-				count++;
-			}
-		}
-
-		if(count <= 1) { return true } else { return false };
-	}
 
 	roundDelay() {
 		let timer = 5;
@@ -365,71 +438,6 @@ class Game {
 		},1000);
 	}
 
-	newRound() {
-		this.roundCount++;
-		this.resetGame();
-		this.data.setStore(this.store);
-		this.newPainter();
-
-		if(this.store.players && Object.keys(this.store.players).length > 1) {
-			this.startRound();
-		}		
-	}
-
-	newPainter() {
-		let set = false;
-		let players = this.store.players || {};
-		let playersArr = [];
-
-		for(let player in players) {
-			playersArr.push(players[player]);
-		}
-
-		let remainingPlayers = _.filter(playersArr,(player)=>{ return player.turns < this.rounds });
-
-		for(var index = 0; index <= remainingPlayers.length - 1; index++) {
-			let playerId = remainingPlayers[index].id;
-			let player = players[playerId];
-
-			if(player.status === 'painter') {
-				this.setGuesser(playerId);
-				this.incrementPlayerTurns(playerId);
-
-
-				if(index === remainingPlayers.length - 1) {
-					var nextPlayerId = remainingPlayers[0].id;
-				} else {
-					var nextPlayerId = remainingPlayers[index+1].id;
-				}
-
-				this.setPainter(nextPlayerId);
-				set = true;
-
-				break;
-			}
-		}
-
-		if(!set) {
-			this.setPainter(playersArr[0].id);
-		}
-	}
-
-	incrementPlayerTurns(playerId) {
-		let turns = this.store.players[playerId].turns + 1;
-		this.data.updatePlayerTurns(playerId,turns);
-	}
-
-	setGuesser(playerId) {
-		this.data.setPlayerStatus(playerId,'guesser');
-	}
-
-	setPainter(playerId) {
-		this.data.setPlayerStatus(playerId,'painter');
-	}
-
-	clearNotification() {
-		this.emitToAllSockets('notification',{ text: '', type: 'default' });
-	}
 
 	endGame() {
 		// update the status of the room to trigger the scoreboard and then wait 5s to reset for next round
@@ -444,9 +452,29 @@ class Game {
 		}
 	}
 
+
+	// RESETS
+
+	resetRoom() {		
+		this.resetGame();
+		this.store.status = 'pending';
+		this.resetPlayerScores();
+		this.resetTurns();
+		this.inactivePlayers = {};
+		this.roundCount = 1;
+		this.data.setStore(this.store);
+
+		if(this.store.players) {
+			if(Object.keys(this.store.players).length === 1) {
+				this.setPainter(this.store.players[Object.keys(this.store.players)[0]].id);
+			} else {
+				this.findNewPainter();
+			}
+		}		
+	}
+
 	resetGame() {		
 		this.resetClock();
-		this.resetTurns();
 		this.resetCorrectStatus();
 		this.resetPath();
 		this.emitToAllSockets('reset');
@@ -474,24 +502,6 @@ class Game {
 	resetClock() {
 		this.timer = this.gameLength;
 		this.store.clock = this.timer;
-	}
-
-	resetRoom() {		
-		this.resetGame();
-		this.store.status = 'pending';
-		this.resetPlayerScores();
-		this.inactivePlayers = {};
-		this.roundCount = 1;
-		this.resetChatlog();
-		this.data.setStore(this.store);
-
-		if(this.store.players) {
-			if(Object.keys(this.store.players).length === 1) {
-				this.setPainter(this.store.players[Object.keys(this.store.players)[0]].id);
-			} else {
-				this.newPainter();
-			}
-		}		
 	}
 
 	resetPlayerScores() {
