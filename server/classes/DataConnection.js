@@ -88,6 +88,10 @@ class DataConnection {
 		this.dbRef.child('players').set(players);
 	}
 
+	setPlayer(player) {
+		this.dbRef.child('players').child(player.id).set(player);
+	}
+
 	updatePlayer(player, obj) {
 		this.dbRef.child('players').child(player).update(obj);
 	}
