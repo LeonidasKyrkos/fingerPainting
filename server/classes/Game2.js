@@ -5,58 +5,71 @@ const _ = require('lodash');
 const Eev = require('eev');
 const e = new Eev();
 
-// wrapper class for all Data manipulation methods
-const DataConnection = require('./DataConnection');
-
-const initialisation = require('../modules/game/initialisation');
-const clientCommunication = require('../modules/game/clientCommunication');
-
-const gameDefaults = {
-	store: {},
-	sockets: {},
-	inactivePlayers: {},
-	garbageQueue: [],
-	settings: {
-		roundCount: 1,
-		gameLength: 90,
-		rounds: 3,
-		minimumPlayers: 3
-	}	
-}
+// GAME MODULES
+//--------------
+const DataConnection = require('./DataConnection'); // for setting and getting remotely [DB] stored data
+const Initialisation = require('../modules/game/Initialisation');
+const ClientComms = require('../modules/game/ClientCommunication');
+const SetGetters = require('../modules/game/SetGetters'); // for setting and getting locally stored data
+const PlayerHandler = require('../modules/game/PlayerHandler');
+const Fingerpainting = require('../modules/game/Fingerpainting');
 
 // Fingerpainting game class
 class Game {
 	constructor(id){
-		this.data = new DataConnection(id,e);
 		this.id = id;
-		this.game = Object.assign({},gameDefaults);
+		this.events = e;
+		this.data = new DataConnection(id,e);
+		this.init = new Initialisation(this,e);
+		this.clientComms = new ClientComms(this);
+		this.setGetters = new SetGetters(this);
+		this.playerHandler = new PlayerHandler(this);
+		this.fingerPainting = new Fingerpainting(this);
 
-		initialisation.bind(this);
+		// set up our listeners
+		this.initEventHandlers();
 	}
 
-	// Update the game's store by cloning the current path onto the new store and then replacing the old one.
-	updateStore(store={}) {
-		store.paths = _.clone(this.store.paths);
-		this.store = store;
+	initEventHandlers() {
+		// When the store has updated we'll do the same for the players. We'll also update their player objects.
+		this.events.on('store updated',()=>{
+			this.clientComms.emitToAllSockets(this.game.store);
+			this.clientComms.updateClientPlayerObject();
+		});
 
-		// send the new store to all the clients and also update them of any changes to their state
-		this.emitToAllSockets('store update', this.store);
-		this.updateClientPlayerObject();
-	}
+		// When a new player joins emit their player information and the roomId
+		// passed data = { socket: socket, content: player }
+		this.events.on('new player',(data)=>{
+			this.clientComms.emitToSocket(data.socket,'join room','/rooms/' + this.id);
+			this.clientComms.emitToSocket(data.socket,'player',data.content);
+		});
 
-	getDictionary(dictionary='default') {
-		let promise = this.data.getDictionary(dictionary);
+		// When the painter sends a path update, send it through to all the other players
+		this.events.on('path update',(paths)=>{
+			this.clientComms.emitToGuessers('path update',paths);
+		});
 
-		promise.then((snapshot)=>{
-			this.game.dictionary = [];
-			this.game.dictionaryObj = snapshot;
+		// Start round
+		this.events.on('start round',()=>{
+			this.fingerPainting.startRound();
+		})
 
-			// make an array out of our dictionary object and lowercase everything.
-			for(let word in this.dictionaryObj) {
-				this.game.dictionary.push(word.toLowerCase());
+		// Message received from client. If we're not in a blocking state then pass the msg to the game handler
+		// to compare it against the current puzzle
+		this.events.on('message',(msg)=>{
+			if(!this.blockUpdates) {
+				Fingerpainting.guessTest(msg);
 			}
+		})
 
-			this.game.dictionaryBackup = this.game.dictionary.slice(0);
-		});	
+		// Our painter has left unexpectedly and we need to find a new painter
+		this.events.on('new painter required',()=>{
+			this.fingerPainting.findNewPainter();
+		});
+
+		// Something has caused the game to be unable to continue to inform the game handler
+		this.events.on('end round',()=>{
+			this.fingerPainting.endRound();
+		});
 	}
 }
