@@ -19,17 +19,17 @@ class PlayerHandler {
 			player.status = 'painter';
 		}
 
-		this.App.events.emit('new player',{socket: socket, player: player});
+		this.App.events.emit('new_player',{socket: socket, msg: player});
 		this.playerEventHandlers(socket, player);
 	}
 
 	// Add event handlers to new player's socket instance
 	playerEventHandlers(socket={}, player={}) {
-		socket.on('path update',(paths)=>{
+		socket.on('path_update',(paths)=>{
 			this.App.events.emit('path update',paths);
 		});
 
-		socket.on('start round',()=>{
+		socket.on('start_round',()=>{
 			this.App.events.emit('start round');
 		});
 

@@ -1,13 +1,15 @@
 let firebase = require('../modules/firebaseConfig');
 
 class DataConnection {
-	constructor(roomId=0,eventDispatcher={}) {
-		this.id = roomId;
+	constructor(App={}) {
+		this.App = App;
+		this.id = this.App.id;
 		this.dbRef = firebase.db.ref(firebase.roomsPath + this.id);
-		this.events = eventDispatcher;
+		this.events = this.App.events;
+		console.log(this);
 	}
 
-	watchRooms() {
+	watchRooms() {		
 		firebase.db.ref(firebase.roomsPath).on('value',(snapshot)=>{
 			this.events.emit('rooms',snapshot.val());
 		});
@@ -19,6 +21,10 @@ class DataConnection {
 
 	updateRoom(id,update) {
 		firebase.db.ref(firebase.roomsPath).child(id).update(update);
+	}
+
+	addPlayer(roomId,player) {
+		firebase.roomsRef.child(roomId).child('players').child(player.id).set(player);
 	}
 
 	spawnRoom(room) {

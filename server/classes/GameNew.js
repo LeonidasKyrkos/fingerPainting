@@ -3,7 +3,6 @@ const _ = require('lodash');
 
 // event library
 const Eev = require('eev');
-const e = new Eev();
 
 // GAME MODULES
 //--------------
@@ -19,40 +18,41 @@ const Tests = require('../modules/game/Fingerpainting');
 class Game {
 	constructor(id){
 		this.id = id;
-		this.events = e;
-		this.data = new DataConnection(id,e);
-		this.init = new Initialisation(this,e);
-		this.tests = new Tests(this);
-		this.clientComms = new ClientComms(this);
-		this.setGetters = new SetGetters(this);
-		this.playerHandler = new PlayerHandler(this);
-		this.fingerPainting = new Fingerpainting(this);
+		this.events = new Eev();
+		this.data = new DataConnection(this);
+		// this.init = new Initialisation(this);
+		// this.tests = new Tests(this);
+		// this.clientComms = new ClientComms(this);
+		// this.setGetters = new SetGetters(this);
+		// this.playerHandler = new PlayerHandler(this);
+		// this.fingerPainting = new Fingerpainting(this);
 
-		// set up our listeners
-		this.initEventHandlers();
+		// // set up our listeners
+		// this.initEventHandlers();
 	}
 
 	initEventHandlers() {
 		// When the store has updated we'll do the same for the players. We'll also update their player objects.
-		this.events.on('store updated',()=>{
+		this.events.on('store_updated',()=>{
 			this.clientComms.emitToAllSockets(this.game.store);
 			this.clientComms.updateClientPlayerObject();
 		});
 
 		// When a new player joins emit their player information and the roomId
-		// passed data = { socket: socket, content: player }
-		this.events.on('new player',(data)=>{
+		// passed data = { socket: socket, msg: player }
+		this.events.on('new_player',(data)=>{
+			this.data.addPlayer(this.id,data.msg);
 			this.clientComms.emitToSocket(data.socket,'join room','/rooms/' + this.id);
-			this.clientComms.emitToSocket(data.socket,'player',data.content);
+			this.clientComms.emitToSocket(data.socket,'player',data.msg);
 		});
 
 		// When the painter sends a path update, send it through to all the other players
-		this.events.on('path update',(paths)=>{
+		this.events.on('path_update',(paths)=>{
 			this.clientComms.emitToGuessers('path update',paths);
 		});
 
 		// Start round
-		this.events.on('start round',()=>{
+		this.events.on('start_round',()=>{
 			this.fingerPainting.startRound();
 		})
 
@@ -65,12 +65,12 @@ class Game {
 		})
 
 		// Our painter has left unexpectedly and we need to find a new painter
-		this.events.on('new painter required',()=>{
+		this.events.on('new_painter_required',()=>{
 			this.fingerPainting.findNewPainter();
 		});
 
 		// Something has caused the game to be unable to continue to inform the game handler
-		this.events.on('end round',()=>{
+		this.events.on('end_round',()=>{
 			this.fingerPainting.endRound();
 		});
 	}

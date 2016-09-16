@@ -2,11 +2,12 @@ const firebase = require('../modules/firebaseConfig');
 const io = require('../../configureServer').io;
 const DataConnection = require('./DataConnection');
 const Eev = require  ('eev'); 
-const e = new Eev(); // event emitter
 
 class AdminPanel {
 	constructor() {
-		this.data = new DataConnection(0,e);
+		this.id = 0;		
+		this.events = new Eev();
+		this.data = new DataConnection(this);
 		this.init();
 	}
 
@@ -14,12 +15,12 @@ class AdminPanel {
 		this.data.watchDictionarys();
 		this.data.watchRooms();
 
-		e.on('dictionarys',(dictionarys)=>{
+		this.events.on('dictionarys',(dictionarys)=>{
 			this.dictionarys = dictionarys;
 			this.emitToAdmins('dictionarys',dictionarys);
 		});
 
-		e.on('rooms',(rooms)=>{
+		this.events.on('rooms',(rooms)=>{
 			this.rooms = rooms;
 			this.emitToAdmins('rooms',rooms)
 		});

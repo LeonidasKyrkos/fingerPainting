@@ -15,10 +15,10 @@ const gameDefaults = {
 }
 
 class Initialisation {
-	constructor(App,events) {
+	constructor(App) {
 		this.App = App;
 		this.data = this.App.data;
-		this.events = events;
+		this.events = this.App.events;
 
 		this.init();
 	}
@@ -26,7 +26,7 @@ class Initialisation {
 	init() {
 		this.App.game = Object.assign({},gameDefaults);
 		this.data.resetPlayers();
-		this.attachDataListener.bind(this);
+		this.attachDataListener();
 	}
 
 	attachDataListener() {
