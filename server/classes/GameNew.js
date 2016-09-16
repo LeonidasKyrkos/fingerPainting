@@ -20,15 +20,15 @@ class Game {
 		this.id = id;
 		this.events = new Eev();
 		this.data = new DataConnection(this);
-		// this.init = new Initialisation(this);
-		// this.tests = new Tests(this);
-		// this.clientComms = new ClientComms(this);
-		// this.setGetters = new SetGetters(this);
-		// this.playerHandler = new PlayerHandler(this);
-		// this.fingerPainting = new Fingerpainting(this);
+		this.init = new Initialisation(this);
+		this.tests = new Tests(this);
+		this.clientComms = new ClientComms(this);
+		this.setGetters = new SetGetters(this);
+		this.playerHandler = new PlayerHandler(this);
+		this.fingerPainting = new Fingerpainting(this);
 
-		// // set up our listeners
-		// this.initEventHandlers();
+		// set up our listeners
+		this.initEventHandlers();
 	}
 
 	initEventHandlers() {

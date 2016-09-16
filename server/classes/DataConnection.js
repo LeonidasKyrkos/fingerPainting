@@ -6,10 +6,9 @@ class DataConnection {
 		this.id = this.App.id;
 		this.dbRef = firebase.db.ref(firebase.roomsPath + this.id);
 		this.events = this.App.events;
-		console.log(this);
 	}
 
-	watchRooms() {		
+	watchRooms() {
 		firebase.db.ref(firebase.roomsPath).on('value',(snapshot)=>{
 			this.events.emit('rooms',snapshot.val());
 		});
