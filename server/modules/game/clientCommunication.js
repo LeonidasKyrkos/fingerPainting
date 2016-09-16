@@ -3,18 +3,41 @@
 class ClientCommunication {
 	constructor(App) {
 		this.App = App;
+		this.game = this.App.game;
+		this.store = this.game.store;
 	}
 
 	emitToSocket(socket,type,data) {
 		socket.emit(type,data);
 	}
 
-	emitToAllSockets() {
+	// Emit information to all players that are current in an 'incorrect' state
+	emitToStupidPlayers(type,msg) {
+		for(let player in this.store.players) {
+			let playerObj = this.store.players[player];
+
+			if(playerObj.status !== 'painter' && !playerObj.correct) {
+				this.sockets[player].emit(type,clue);
+			}
+		}
+	}
+
+	emitToAllSockets(type,emission) {
 		let sockets = this.App.game.sockets || {};
 
 		for(let socket in sockets) {
 			sockets[socket].emit(type, emission);
 		};
+	}
+
+	emitToGuessers(type,emission) {
+		for(let player in this.store.players) {
+			let playerObj = this.store.players[player];
+
+			if(playerObj.status !== 'painter' && !playerObj.correct) {
+				this.game.sockets[player].emit(type,emission);
+			}
+		}
 	}
 
 	updateClientPlayerObject() {
@@ -25,6 +48,13 @@ class ClientCommunication {
 				}
 			}
 		}
+	}
+
+	clearNotification() {
+		this.App.clientComms.emitToAllSockets('notification',{
+			text: '', 
+			type: 'default'
+		});
 	}
 }
 

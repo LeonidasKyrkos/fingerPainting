@@ -9,7 +9,8 @@ const gameDefaults = {
 		roundCount: 1,
 		gameLength: 90,
 		rounds: 3,
-		minimumPlayers: 3
+		minimumPlayers: 3,
+		blockUpdates: false
 	}	
 }
 
@@ -19,13 +20,13 @@ class Initialisation {
 		this.data = this.App.data;
 		this.events = events;
 
-		init();
+		this.init();
 	}
 
 	init() {
 		this.App.game = Object.assign({},gameDefaults);
 		this.data.resetPlayers();
-		attachDataListener.bind(this);
+		this.attachDataListener.bind(this);
 	}
 
 	attachDataListener() {

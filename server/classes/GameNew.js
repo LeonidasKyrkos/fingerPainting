@@ -13,6 +13,7 @@ const ClientComms = require('../modules/game/ClientCommunication');
 const SetGetters = require('../modules/game/SetGetters'); // for setting and getting locally stored data
 const PlayerHandler = require('../modules/game/PlayerHandler');
 const Fingerpainting = require('../modules/game/Fingerpainting');
+const Tests = require('../modules/game/Fingerpainting');
 
 // Fingerpainting game class
 class Game {
@@ -21,6 +22,7 @@ class Game {
 		this.events = e;
 		this.data = new DataConnection(id,e);
 		this.init = new Initialisation(this,e);
+		this.tests = new Tests(this);
 		this.clientComms = new ClientComms(this);
 		this.setGetters = new SetGetters(this);
 		this.playerHandler = new PlayerHandler(this);
@@ -57,8 +59,8 @@ class Game {
 		// Message received from client. If we're not in a blocking state then pass the msg to the game handler
 		// to compare it against the current puzzle
 		this.events.on('message',(msg)=>{
-			if(!this.blockUpdates) {
-				Fingerpainting.guessTest(msg);
+			if(!this.game.settings.blockUpdates) {
+				this.fingerPainting.parseMsg(msg);
 			}
 		})
 
@@ -73,3 +75,5 @@ class Game {
 		});
 	}
 }
+
+module.exports = Game;

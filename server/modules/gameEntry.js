@@ -1,6 +1,6 @@
 const tests = require('./tests');
 const firebase = require('./firebaseConfig');
-const Game = require('../classes/Game');
+const Game = require('../classes/GameNew');
 const Player = require('../classes/Player');
 const _ = require('lodash');
 const url = require('url');
@@ -62,7 +62,7 @@ function joinHandler(request,socket){
 		socket.emit('user update',player);
 
 		if(room.status === 'pending' || tests.inactivePlayer(cookie,game)) {
-			game.newPlayer(player,socket);
+			game.playerHandler.newPlayer(player,socket);
 		} else {
 			socket.emit('request rejected','Sorry that room has a game underway');
 		}
@@ -81,13 +81,13 @@ function roomsHandler(socket) {
 	let game = activeGames[roomId];
 
 	if(game && cookie && roomId && tests.inactivePlayer(cookie,game)) {
-		let name = game.inactivePlayers[cookie].name;
+		let name = game.game.inactivePlayers[cookie].name;
 		let player = new Player({ name: name, id: roomId }, socket, cookie);
 
 		// hand client their user credentials.
 		socket.emit('user update',player);
 
-		game.newPlayer(player,socket);
+		game.playerHandler.newPlayer(player,socket);
 	} else {
 		socket.emit('redirect','/');
 	}

@@ -88,20 +88,24 @@ class DataConnection {
 		this.dbRef.child('players').set(players);
 	}
 
-	setPlayer(player) {
-		this.dbRef.child('players').child(player.id).set(player);
+	updatePlayer(playerId, obj) {
+		this.dbRef.child('players').child(playerId).update(obj);
 	}
 
-	updatePlayer(player, obj) {
-		this.dbRef.child('players').child(player).update(obj);
-	}
+	setPlayer(playerId) {
+		this.dbRef.child('players').child(playerId).set(player);
+	}	
 
-	removePlayer(id) {
-		this.dbRef.child('players').child(id).remove();
+	removePlayer(playerId) {
+		this.dbRef.child('players').child(playerId).remove();
 	}
 
 	setChatLog(chatLog) {
 		this.dbRef.child('/chatLog/').set(chatLog);
+	}
+
+	setChild(child,value) {
+		this.dbRef.child(child).set(value);
 	}
 
 	pushMessage(message) {
