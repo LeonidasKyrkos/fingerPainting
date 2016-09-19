@@ -3,12 +3,12 @@
 class Tests {
 	constructor(App) {
 		this.App = App;
-		this.game = this.App.game;
-		this.store = this.game.store;
+		this.App.game = this.App.game;
+		this.App.game.store = this.App.game.store;
 	}
 
 	testForPainter(id) {
-		return this.store.players && this.store.players[id] && this.store.players[id].status === 'painter';
+		return this.App.game.store.players && this.App.game.store.players[id] && this.App.game.store.players[id].status === 'painter';
 	}
 }
 

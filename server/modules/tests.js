@@ -65,8 +65,8 @@ function testInArray(thingWeLookFor,array) {
 	})
 }
 
-function inactivePlayer(cookie,game) {
-	return game.inactivePlayers[cookie] ? true : false;
+function inactivePlayer(cookie,Instance) {
+	return Instance.game.inactivePlayers[cookie] ? true : false;
 }
 
 /////// end of tests ////////

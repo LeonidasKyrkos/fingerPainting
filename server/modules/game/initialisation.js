@@ -1,19 +1,5 @@
 // initialisation class for Game.js
 
-const gameDefaults = {
-	store: {},
-	sockets: {},
-	inactivePlayers: {},
-	garbageQueue: [],
-	settings: {
-		roundCount: 1,
-		gameLength: 90,
-		rounds: 3,
-		minimumPlayers: 3,
-		blockUpdates: false
-	}	
-}
-
 class Initialisation {
 	constructor(App) {
 		this.App = App;
@@ -24,15 +10,15 @@ class Initialisation {
 	}
 
 	init() {
-		this.App.game = Object.assign({},gameDefaults);
 		this.data.resetPlayers();
+		this.data.resetStoreStatus();
 		this.attachDataListener();
 	}
 
 	attachDataListener() {
-		this.events.on('store',(store={})=>{
+		this.events.on('store_received',(store={})=>{
 			// if we haven't grabbed the dictionary yet, or if the dictionary selection for the room has changed then getDictionary.
-			if(!this.App.game.dictionary || this.App.game.store.dictionary !== store.dictionary) { 
+			if(!this.App.game.dictionary || this.App.game.store.dictionary !== store.dictionary) {
 				this.App.setGetters.getDictionary(store.dictionary); 
 			};
 

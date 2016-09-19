@@ -5,29 +5,29 @@ const _ = require('lodash');
 class Fingerpainting {
 	constructor(App) {
 		this.App = App;
-		this.game = this.App.game;
-		this.store = this.store;
+		this.App.game = this.App.game;
+		this.App.game.store = this.App.game.store;
 	}
 
 	// PRIMARY FUNCTIONS
 
 	newRound() {
 		// Increment the round count
-		this.App.setGetter.setGameProperty('roundCount',this.game.roundCount++);
+		this.App.setGetter.setGameProperty('roundCount',this.App.game.roundCount++);
 		this.resetGame();
 		this.findNewPainter();
 		this.startRound();
 	}
 
 	startRound() {
-		let players = this.store.players || {};
+		let players = this.App.game.store.players || {};
 		let playersLength = Object.keys(players).length;
 
 		// if there are players and a dictionary, start the round.
-		if(playersLength && this.dictionary) {
+		if(playersLength && this.App.game.dictionary.length) {
 			this.App.setGetters.setPuzzle(this.App.setGetters.getPuzzle());
-			this.App.clientComms.emitToPainter('puzzle',this.game.puzzleArray);
-			this.App.clientComms.emitToGuessers('puzzle',this.game.clue);
+			this.App.clientComms.emitToPainter('puzzle',this.App.game.puzzleArray);
+			this.App.clientComms.emitToGuessers('puzzle',this.App.game.clue);
 			this.App.setGetters.setGameStoreProperty('status','playing');
 			this.startInterval();			
 		}
@@ -39,17 +39,17 @@ class Fingerpainting {
 		let intRemainingPlayers = this.App.setGetters.getIntRemainingGuessers();
 		let boolRemainingTurns = this.App.setGetters.getBoolRemainingTurns();
 
-		if(!boolRemainingTurns) {
-			this.endGame();
-			return;
-		}
-
-		if(intRemainingPlayers < this.game.settings.minimumPlayers) {
+		if(intRemainingPlayers < this.App.game.settings.minimumPlayers) {
 			this.resetRoom();
 			return;
 		}
 
-		if(this.store.status === 'playing') {
+		if(!boolRemainingTurns) {
+			this.endGame();
+			return;
+		}		
+
+		if(this.App.game.store.status === 'playing') {
 			// trigger the delay that occurs before the next round starts
 			this.tweenRounds();
 		} else {
@@ -59,7 +59,7 @@ class Fingerpainting {
 	}
 
 	endGame() {
-		if(this.store.players) {
+		if(this.App.game.store.players) {
 			this.App.setGetters.setGameStoreProperty('status','finished');
 
 			// let them marvel at the scoreboard for 5 seconds and then reset the room
@@ -70,8 +70,8 @@ class Fingerpainting {
 	}
 
 	correctAnswer(playerId) {
-		let player = this.store.players[playerId];
-		this.App.clientComms.emitToSocket(this.game.sockets[playerId],'puzzle',this.game.puzzleArray);
+		let player = this.App.game.store.players[playerId];
+		this.App.clientComms.emitToSocket(this.App.game.sockets[playerId],'puzzle',this.App.game.puzzleArray);
 		this.App.clientComms.emitToAllSockets('correct');
 
 		this.App.playerHandler.rewardPlayers(player);
@@ -79,25 +79,25 @@ class Fingerpainting {
 
 	// Countdown from game.settings.gameLength and associated logic
 	countdown() {
-		if(this.game.timer < 1) {
+		if(this.timer < 1) {
 			this.endInterval();
-			this.App.clientComms.emitToAllSockets('puzzle', this.game.puzzleArray);
+			this.App.clientComms.emitToAllSockets('puzzle', this.App.game.puzzleArray);
 			this.endRound();
 		} else {
-			this.game.timer--;
-			this.App.data.updateTimer(this.game.timer);
+			this.timer--;
+			this.App.data.updateTimer(this.timer);
 			this.clueHandler();
 		}
 	}
 
 	clueHandler() {
 		// Current game time
-		let time = this.game.timer;
+		let time = this.App.game.timer;
 
 		// Timestamps based on length of game
-		let firstClueTime = Math.floor(this.game.settings.gameLength * 0.666);
-		let secondClueTime = Math.floor(this.game.settings.gameLength * 0.333);
-		let finalClueTime = Math.floor(this.game.settings.gameLength * 0.15);
+		let firstClueTime = Math.floor(this.App.game.settings.gameLength * 0.666);
+		let secondClueTime = Math.floor(this.App.game.settings.gameLength * 0.333);
+		let finalClueTime = Math.floor(this.App.game.settings.gameLength * 0.15);
 
 		// If the current time = any of our clue timestamps then emit a clue to the remaining guessers
 		if(time === firstClueTime || time === secondClueTime || time === finalClueTime) {
@@ -116,7 +116,7 @@ class Fingerpainting {
 	// Include a 5 second delay at the end of each round.
 	tweenRounds() {
 		let timer = 5;
-		this.game.settings.blockUpdates = true;
+		this.App.game.settings.blockUpdates = true;
 
 		let delay = setInterval(()=>{
 			this.App.clientComms.emitToAllSockets('notification',{
@@ -125,7 +125,7 @@ class Fingerpainting {
 			});
 
 			if(timer <= 0) {
-				this.game.settings.blockUpdates = false;
+				this.App.game.settings.blockUpdates = false;
 				this.clientComms.clearNotification();
 				this.newRound();
 				clearInterval(delay);
@@ -136,8 +136,12 @@ class Fingerpainting {
 	}
 
 	findNewPainter() {
-		// find remaining players with player.turns < this.game.settings.turns
+		// find remaining players with player.turns < this.App.game.settings.turns
 		let remainingPlayers = this.App.setGetters.getRemainingPlayers();
+		if(remainingPlayers && Object.keys(remainingPlayers).length <= 1) {
+			this.resetRoom();
+			return;
+		}
 
 		// find the index of the current painter in that set
 		let index = _.findIndex(remainingPlayers,(player)=>{
@@ -153,18 +157,22 @@ class Fingerpainting {
 
 		// if the index of the current painter is the last in the list then set the
 		// first player in the list to be the painter. Otherwise set the next index.
-		let nextPlayerId = index === remainingPlayers.length - 1 ? emainingPlayers[0].id : remainingPlayers[index+1].id;
+		let nextPlayerId = index === remainingPlayers.length - 1 ? remainingPlayers[0].id : remainingPlayers[index+1].id;
 		this.App.setGetters.setPlayerProperty(remainingPlayers[nextPlayerId],'status','painter');
 	}
 
 	// Start timer
 	startInterval() {
-		this.setGetters.setGameProperty('interval',setInterval(this.countdown.bind(this),1000));
+		this.timer = this.App.game.settings.gameLength;
+
+		this.interval = setInterval(()=>{
+			this.countdown()
+		},1000);
 	}
 
 	// Stop timer 
 	endInterval() {
-		clearInterval(this.game.interval);
+		clearInterval(this.interval);
 	}
 
 	// Msg received from client. Test to see if it's a correct guess
@@ -186,23 +194,27 @@ class Fingerpainting {
 
 	// Full reset of game room for a new game to begin
 	resetRoom() {
-		this.resetGame();
-		this.App.setGetters.setGameStoreProperty('status','pending');
-		this.App.setGetters.setPlayersProperty('turns',0);
+		this.App.setGetters.setGameStoreProperty('status','pending');		
 		this.App.setGetters.setGameProperty('inactivePlayers',{})
 		this.App.setGetters.setGameProperty('roundCount',1);
-		this.App.playerHandler.resetScores();
-		this.store.players ? this.findNewPainter() : false;
+		this.App.setGetters.setGameStoreProperty('clock',this.App.game.settings.gameLength);
+		
+		if(this.App.game.store.players) {
+			this.resetGame();
+		}
 	}
 
 	// Reset the game for a new round to begin
 	resetGame() {
-		this.App.setGetters.setGameProperty('timer',this.game.settings.gameLength);
+		this.App.setGetters.setGameProperty('timer',this.App.game.settings.gameLength);
+		this.App.setGetters.setPlayersProperty('turns',0);
 		this.App.setGetters.setPlayersProperty('correct',false);
+		this.App.playerHandler.resetPlayerScores();
 		this.App.setGetters.setGameStoreProperty('paths',{});
 		this.App.setGetters.setGameStoreProperty('chatLog',{});
 		this.App.clientComms.emitToAllSockets('reset');
 		this.App.clientComms.emitToAllSockets('puzzle',[]);
+		this.findNewPainter();
 	}
 }
 

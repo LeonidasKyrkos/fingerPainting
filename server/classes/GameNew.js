@@ -12,20 +12,39 @@ const ClientComms = require('../modules/game/ClientCommunication');
 const SetGetters = require('../modules/game/SetGetters'); // for setting and getting locally stored data
 const PlayerHandler = require('../modules/game/PlayerHandler');
 const Fingerpainting = require('../modules/game/Fingerpainting');
-const Tests = require('../modules/game/Fingerpainting');
+const Tests = require('../modules/game/Tests');
+
+// settings
+const gameDefaults = {
+	store: {
+		status: 'pending'
+	},
+	sockets: {},
+	inactivePlayers: {},
+	garbageQueue: [],
+	settings: {
+		roundCount: 1,
+		gameLength: 90,
+		rounds: 3,
+		minimumPlayers: 1, // testing value. 3 on live
+		blockUpdates: false,
+		timer: 90
+	}
+}
 
 // Fingerpainting game class
 class Game {
 	constructor(id){
 		this.id = id;
+		this.game = Object.assign({},gameDefaults);
 		this.events = new Eev();
 		this.data = new DataConnection(this);
-		this.init = new Initialisation(this);
+		this.setGetters = new SetGetters(this);
 		this.tests = new Tests(this);
 		this.clientComms = new ClientComms(this);
-		this.setGetters = new SetGetters(this);
 		this.playerHandler = new PlayerHandler(this);
 		this.fingerPainting = new Fingerpainting(this);
+		this.init = new Initialisation(this);		
 
 		// set up our listeners
 		this.initEventHandlers();
@@ -34,7 +53,7 @@ class Game {
 	initEventHandlers() {
 		// When the store has updated we'll do the same for the players. We'll also update their player objects.
 		this.events.on('store_updated',()=>{
-			this.clientComms.emitToAllSockets(this.game.store);
+			this.clientComms.emitToAllSockets('store update',this.game.store);
 			this.clientComms.updateClientPlayerObject();
 		});
 

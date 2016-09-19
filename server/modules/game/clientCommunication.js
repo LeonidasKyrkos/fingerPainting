@@ -1,23 +1,25 @@
+const _ = require('lodash');
+
 // client communication handler
 
 class ClientCommunication {
 	constructor(App) {
 		this.App = App;
-		this.game = this.App.game;
-		this.store = this.game.store;
+		this.App.game = this.App.game;
+		this.App.game.store = this.App.game.store;
 	}
 
 	emitToSocket(socket,type,data) {
 		socket.emit(type,data);
 	}
 
-	// Emit information to all players that are current in an 'incorrect' state
-	emitToStupidPlayers(type,msg) {
-		for(let player in this.store.players) {
-			let playerObj = this.store.players[player];
+	// Emit information to all players that are currently in an 'incorrect' state
+	emitToStupidPlayers(type,emission) {
+		for(let player in this.App.game.store.players) {
+			let playerObj = this.App.game.store.players[player];
 
 			if(playerObj.status !== 'painter' && !playerObj.correct) {
-				this.sockets[player].emit(type,clue);
+				this.sockets[player].emit(type,emission);
 			}
 		}
 	}
@@ -30,12 +32,20 @@ class ClientCommunication {
 		};
 	}
 
+	emitToPainter(type,emission) {
+		let painter = _.find(this.App.game.store.players,{ status: 'painter' });
+
+		if(painter) {
+			this.App.game.sockets[painter.id].emit(type,emission);
+		}
+	}
+
 	emitToGuessers(type,emission) {
-		for(let player in this.store.players) {
-			let playerObj = this.store.players[player];
+		for(let player in this.App.game.store.players) {
+			let playerObj = this.App.game.store.players[player];
 
 			if(playerObj.status !== 'painter' && !playerObj.correct) {
-				this.game.sockets[player].emit(type,emission);
+				this.App.game.sockets[player].emit(type,emission);
 			}
 		}
 	}

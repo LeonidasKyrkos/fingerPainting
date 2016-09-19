@@ -61,7 +61,7 @@ class DataConnection {
 
 	listenToData() {
 		this.dbRef.on('value',(snapshot)=>{
-			this.events.emit('store',snapshot.val());
+			this.events.emit('store_received',snapshot.val());
 		});
 	}
 
@@ -89,6 +89,13 @@ class DataConnection {
 		this.dbRef.set(store);
 	}
 
+	resetStoreStatus() {
+		this.dbRef.update({
+			status: 'pending',
+			clock: this.App.game.settings.gameLength
+		});
+	}
+
 	updatePlayers(players) {
 		this.dbRef.child('players').set(players);
 	}
@@ -97,7 +104,7 @@ class DataConnection {
 		this.dbRef.child('players').child(playerId).update(obj);
 	}
 
-	setPlayer(playerId) {
+	setPlayer(playerId,player) {
 		this.dbRef.child('players').child(playerId).set(player);
 	}	
 
