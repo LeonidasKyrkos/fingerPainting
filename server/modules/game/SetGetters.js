@@ -6,8 +6,6 @@ const _ = require('lodash');
 class SetGetters {
 	constructor(App) {
 		this.App = App;
-		this.App.game = this.App.game;
-		this.App.game.store = this.App.game.store;
 	}
 
 	setStore(store={}) {
@@ -29,18 +27,20 @@ class SetGetters {
 
 	// set a property on an individual player
 	setPlayerProperty(player,property,value) {
-		let playerObj = Object.assign({},player);
-		playerObj[property] = value;
-
-		this.App.data.setPlayer(player.id, player);
+		let data = {};
+		data[property] = value;
+		this.App.data.updatePlayer(player.id,data)
 	}
 
 	// Set a property for all currently active players
 	setPlayersProperty(property,value) {
 		let players = this.App.game.store.players || {};
 
+		let data = {};
+		data[property] = value;		
+
 		for(let player in players) {
-			players[player][property] = value;
+			this.App.data.updatePlayer(players[player].id,data)
 		}
 	}
 
@@ -130,9 +130,11 @@ class SetGetters {
 	}
 
 	getBoolRemainingTurns() {
-		return _.find(this.App.game.store.players, (player)=>{
-			return player.turns < this.App.game.settings.gameLength;
+		let players = _.filter(this.App.game.store.players, (player)=>{
+			return player.turns < this.App.game.settings.roundCount;
 		});
+
+		return players.length > 1 ? true : false;
 	}
 }
 

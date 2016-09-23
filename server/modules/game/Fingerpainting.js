@@ -13,7 +13,7 @@ class Fingerpainting {
 
 	newRound() {
 		// Increment the round count
-		this.App.setGetter.setGameProperty('roundCount',this.App.game.roundCount++);
+		this.App.setGetters.setGameProperty('roundCount',this.App.game.roundCount++);
 		this.resetGame();
 		this.findNewPainter();
 		this.startRound();
@@ -36,7 +36,7 @@ class Fingerpainting {
 	endRound() {
 		this.endInterval();
 
-		let intRemainingPlayers = this.App.setGetters.getIntRemainingGuessers();
+		let intRemainingPlayers = parseInt(this.App.setGetters.getIntRemainingGuessers());
 		let boolRemainingTurns = this.App.setGetters.getBoolRemainingTurns();
 
 		if(intRemainingPlayers < this.App.game.settings.minimumPlayers) {
@@ -71,10 +71,31 @@ class Fingerpainting {
 
 	correctAnswer(playerId) {
 		let player = this.App.game.store.players[playerId];
+		this.App.data.updatePlayer(playerId,{correct: true});
 		this.App.clientComms.emitToSocket(this.App.game.sockets[playerId],'puzzle',this.App.game.puzzleArray);
 		this.App.clientComms.emitToAllSockets('correct');
+		this.pointHandler(player);		
+	}
 
-		this.App.playerHandler.rewardPlayers(player);
+	pointHandler(player={}) {
+		this.App.playerHandler.rewardPlayer(player);
+
+		// make array of players that are correct
+		let correctPlayers = _.filter(this.App.game.store.players,(player)=>{
+			return player.correct;
+		});
+
+		// if this is the first correct answer then reward the painter based on
+		// the remaining time equal to that of the guesser
+		if(correctPlayers.length === 1) {			
+			let artist = _.find(this.App.game.store.players,{status: 'painter'});
+			this.App.playerHandler.rewardPlayer(artist);
+		}
+
+		// if there are as many correct players as there can be then end the round
+		if(correctPlayers.length >= Object.keys(this.App.game.store.players).length - 1) {
+			this.endRound();
+		}
 	}
 
 	// Countdown from game.settings.gameLength and associated logic
@@ -125,10 +146,10 @@ class Fingerpainting {
 			});
 
 			if(timer <= 0) {
-				this.App.game.settings.blockUpdates = false;
-				this.clientComms.clearNotification();
-				this.newRound();
 				clearInterval(delay);
+				this.App.game.settings.blockUpdates = false;
+				this.App.clientComms.clearNotification();
+				this.newRound();				
 			}
 
 			timer--;
@@ -138,6 +159,7 @@ class Fingerpainting {
 	findNewPainter() {
 		// find remaining players with player.turns < this.App.game.settings.turns
 		let remainingPlayers = this.App.setGetters.getRemainingPlayers();
+
 		if(remainingPlayers && Object.keys(remainingPlayers).length <= 1) {
 			this.resetRoom();
 			return;
@@ -145,20 +167,26 @@ class Fingerpainting {
 
 		// find the index of the current painter in that set
 		let index = _.findIndex(remainingPlayers,(player)=>{
-			return player.status = 'painter';
+			return player.status === 'painter';
 		});
+
 
 		// save the player object for the current painter from the remaining players list
 		let currentPainter = remainingPlayers[index];
 
 		// set current painter to guesser and increment their turns
 		this.App.setGetters.setPlayerProperty(currentPainter,'status','guesser');
-		this.App.setGetters.setPlayerProperty(currentPainter,'turns',currentPainter.turns + 1);
+		this.App.setGetters.setPlayerProperty(currentPainter,'turns',parseInt(currentPainter.turns) + 1);
 
 		// if the index of the current painter is the last in the list then set the
 		// first player in the list to be the painter. Otherwise set the next index.
-		let nextPlayerId = index === remainingPlayers.length - 1 ? remainingPlayers[0].id : remainingPlayers[index+1].id;
-		this.App.setGetters.setPlayerProperty(remainingPlayers[nextPlayerId],'status','painter');
+		if(index === remainingPlayers.length - 1) {
+			var nextPlayerId = remainingPlayers[0].id;
+		} else {
+			var nextPlayerId = remainingPlayers[index+1].id;
+		}
+
+		this.App.setGetters.setPlayerProperty(this.App.game.store.players[nextPlayerId],'status','painter');
 	}
 
 	// Start timer
@@ -176,18 +204,18 @@ class Fingerpainting {
 	}
 
 	// Msg received from client. Test to see if it's a correct guess
-	parseMsg(msg) {
+	parseMsg(msg={}) {
 		let text = msg.message.toString();
 		let boolPainter = this.App.tests.testForPainter(msg.id);
 
-		if(text.toLowerCase() === this.puzzle) {
+		if(text.toLowerCase() === this.App.game.puzzle) {
 			// If it's the painter don't show the msg
-			if(!painter) {
+			if(!boolPainter) {
 				this.correctAnswer(msg.id);
 			}
 		} else {
 			this.App.data.pushMessage(msg);
-		}		
+		}	
 	}
 
 	// RESETS: Game resets for end of rounds & games
@@ -198,6 +226,8 @@ class Fingerpainting {
 		this.App.setGetters.setGameProperty('inactivePlayers',{})
 		this.App.setGetters.setGameProperty('roundCount',1);
 		this.App.setGetters.setGameStoreProperty('clock',this.App.game.settings.gameLength);
+		this.App.playerHandler.resetPlayerScores();
+		this.App.setGetters.setPlayersProperty('turns',0);
 		
 		if(this.App.game.store.players) {
 			this.resetGame();
@@ -207,14 +237,11 @@ class Fingerpainting {
 	// Reset the game for a new round to begin
 	resetGame() {
 		this.App.setGetters.setGameProperty('timer',this.App.game.settings.gameLength);
-		this.App.setGetters.setPlayersProperty('turns',0);
-		this.App.setGetters.setPlayersProperty('correct',false);
-		this.App.playerHandler.resetPlayerScores();
+		this.App.setGetters.setPlayersProperty('correct',false);		
 		this.App.setGetters.setGameStoreProperty('paths',{});
 		this.App.setGetters.setGameStoreProperty('chatLog',{});
 		this.App.clientComms.emitToAllSockets('reset');
 		this.App.clientComms.emitToAllSockets('puzzle',[]);
-		this.findNewPainter();
 	}
 }
 

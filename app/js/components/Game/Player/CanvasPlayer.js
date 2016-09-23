@@ -163,7 +163,11 @@ export default class CanvasPlayer extends Component {
 
 	renderStartButton() {
 		if(this.state.store.status === 'pending') {
-			return <button ref="startGame" className="canvas__start-btn" onClick={this.startGame.bind(this)}>Start game</button>
+			if(Object.keys(this.state.store.players).length > 2) {
+				return <button ref="startGame" className="canvas__start-btn" onClick={this.startGame.bind(this)}>Start game</button>
+			} else {
+				return <span className="game__message">Waiting for players</span>
+			}
 		} else {
 			return '';
 		}

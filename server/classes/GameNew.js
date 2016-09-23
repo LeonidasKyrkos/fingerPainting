@@ -7,12 +7,12 @@ const Eev = require('eev');
 // GAME MODULES
 //--------------
 const DataConnection = require('./DataConnection'); // for setting and getting remotely [DB] stored data
-const Initialisation = require('../modules/game/Initialisation');
-const ClientComms = require('../modules/game/ClientCommunication');
+const Initialisation = require('../modules/game/Initialisation'); // Set up and initialise the game
+const ClientComms = require('../modules/game/ClientCommunication'); // handler for client communications
 const SetGetters = require('../modules/game/SetGetters'); // for setting and getting locally stored data
-const PlayerHandler = require('../modules/game/PlayerHandler');
-const Fingerpainting = require('../modules/game/Fingerpainting');
-const Tests = require('../modules/game/Tests');
+const PlayerHandler = require('../modules/game/PlayerHandler'); // handler for player methods
+const Fingerpainting = require('../modules/game/Fingerpainting'); // FP game class. Should be replaceable with other games in the future.
+const Tests = require('../modules/game/Tests'); // Got something to test? use this appropriately named class
 
 // settings
 const gameDefaults = {
@@ -26,7 +26,7 @@ const gameDefaults = {
 		roundCount: 1,
 		gameLength: 90,
 		rounds: 3,
-		minimumPlayers: 1, // testing value. 3 on live
+		minimumPlayers: 3, // testing value. 3 on live
 		blockUpdates: false,
 		timer: 90
 	}
@@ -44,7 +44,7 @@ class Game {
 		this.clientComms = new ClientComms(this);
 		this.playerHandler = new PlayerHandler(this);
 		this.fingerPainting = new Fingerpainting(this);
-		this.init = new Initialisation(this);		
+		this.init = new Initialisation(this);
 
 		// set up our listeners
 		this.initEventHandlers();

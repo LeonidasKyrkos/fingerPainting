@@ -5,8 +5,6 @@ const _ = require('lodash');
 class PlayerHandler {
 	constructor(App) {
 		this.App = App;
-		this.App.game = this.App.game;
-		this.App.game.store = this.App.game.store;
 	}
 
 	// New player request from client
@@ -92,28 +90,9 @@ class PlayerHandler {
 		this.App.game.inactivePlayers[player.refreshToken] = _.clone(player);
 	}
 
-	rewardPlayers(player) {
-		let score = player.score || 0;
-
-		// give the guesser points based on the current game time
-		this.App.data.updatePlayer(playerId,{ score: score + this.App.game.timer });
-
-		// make array of players that are correct
-		let correctPlayers = _.filter(this.App.game.store.players,(player)=>{
-			return player.correct;
-		});
-
-		// if this is the first correct answer then reward the painter based on
-		// the remaining time equal to that of the guesser
-		if(correctPlayers.length === 1) {
-			let artist = _.find(this.App.game.store.players,{status: 'painter'});
-			this.App.data.updatePlayer(artist.id,{ score: score + this.App.game.timer });
-		}
-
-		// if there are as many correct players as there can be then end the round
-		if(correctPlayers.length >= Object.keys(this.App.game.store.players).length - 1) {
-			this.endRound();
-		}
+	// give player points based on current timer state
+	rewardPlayer(player) {
+		this.App.data.updatePlayer(player.id,{ score: player.score + this.App.fingerPainting.timer });
 	}
 
 	resetPlayerScores() {
