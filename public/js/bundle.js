@@ -2563,7 +2563,19 @@ var RoomPicker = function (_Component) {
 				_react2.default.createElement(
 					'span',
 					{ className: 'small--it' },
-					'Fingerpainting is currently only stable(ish) on Google Chrome. ',
+					'Fingerpainting is currently only stable(ish) on ',
+					_react2.default.createElement(
+						'a',
+						{ className: 'link', href: 'https://www.google.com/chrome/browser/desktop/index.html' },
+						'Chrome'
+					),
+					' and ',
+					_react2.default.createElement(
+						'a',
+						{ className: 'link', href: 'https://www.mozilla.org/en-US/firefox/new/' },
+						'Firefox'
+					),
+					'. ',
 					_react2.default.createElement(
 						'a',
 						{ href: '/contact', className: 'link' },
@@ -3528,9 +3540,9 @@ var CanvasSettings = function (_React$Component) {
 		key: 'changeBrushSize',
 		value: function changeBrushSize(e) {
 			var sizes = document.querySelectorAll('[data-size]');
-			sizes.forEach(function (el, index) {
-				el.className = 'canvas__brush-size-wrap';
-			});
+			for (var i = 0; i < sizes.length; i++) {
+				sizes[i].className = 'canvas__brush-size-wrap';
+			}
 
 			var newSize = e.target.getAttribute('data-size');
 			e.target.className = 'canvas__brush-size-wrap active';

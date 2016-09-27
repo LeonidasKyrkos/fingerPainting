@@ -92,9 +92,9 @@ export default class CanvasSettings extends React.Component {
 
 	changeBrushSize(e) {
 		let sizes = document.querySelectorAll('[data-size]');
-		sizes.forEach((el,index)=>{
-			el.className = 'canvas__brush-size-wrap';
-		});
+		for(let i = 0; i < sizes.length; i++) {
+			sizes[i].className = 'canvas__brush-size-wrap';
+		}
 
 		let newSize = e.target.getAttribute('data-size');
 		e.target.className = 'canvas__brush-size-wrap active';

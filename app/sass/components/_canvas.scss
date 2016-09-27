@@ -5,7 +5,7 @@ $module: 		'canvas';
 	background-color: lighten(#afafaf,10%);
 	cursor: url('../media/img/finger.ico') 15 0,pointer;
 	display: block;
-	box-shadow: 0 0 em(1) em(1) rgba(0, 0, 0, 0.4);
+	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 4px 0 rgba(0, 0, 0, 0.048), 0 2px 3px -2px rgba(0, 0, 0, 0.12), 0 -1px 1px -2px rgba(0,0,0,0.12);
 	position: relative;
 
 	&--client {
@@ -37,7 +37,7 @@ $module: 		'canvas';
 		@include align-items(baseline);
 		@include user-select(none);
 		padding: em(10) em(15);
-		box-shadow: 0 0 em(1) em(1) rgba(0, 0, 0, 0.2);
+		box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.03), 0 1px 5px 0 rgba(0, 0, 0, 0.048), 0 2px 4px -2px rgba(0, 0, 0, 0.12), 0 -1px 2px -2px rgba(0,0,0,0.12);
 		z-index: 2;
 		position: relative;
 	}

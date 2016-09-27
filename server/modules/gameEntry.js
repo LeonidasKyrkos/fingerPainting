@@ -1,6 +1,6 @@
 const tests = require('./tests');
 const firebase = require('./firebaseConfig');
-const Game = require('../classes/GameNew');
+const Game = require('../classes/Game');
 const Player = require('../classes/Player');
 const _ = require('lodash');
 const url = require('url');

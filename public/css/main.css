@@ -324,8 +324,7 @@ body {
   font-size: 20px;
   font-size: 2rem;
   font-family: "Open Sans Condensed", Helvetica, sans-serif;
-  background-color: #282828;
-  background-image: url("/media/img/bg.png");
+  background-color: white;
   color: black;
   line-height: 1.1;
   padding-right: 8em;
@@ -458,7 +457,7 @@ h1, h2, h3, h4, h5 {
     font-size: 0.9em;
     background-color: rgba(255, 255, 255, 0.4);
     padding: 0.27778em 0.44444em 0.38889em;
-    box-shadow: 0 0 1px rgba(0, 0, 0, 0.4); }
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 4px 0 rgba(0, 0, 0, 0.048), 0 2px 3px -2px rgba(0, 0, 0, 0.12), 0 -1px 1px -2px rgba(0, 0, 0, 0.12); }
     .btn--primary:hover, .form__button--inline:hover, .canvas__start-btn:hover, .canvas__settings-btn:hover, .header__home-link:hover {
       background-color: white; }
     .table--rooms .btn--primary, .table--rooms .form__button--inline, .table--rooms .canvas__start-btn, .table--rooms .canvas__settings-btn, .table--rooms .header__home-link {
@@ -705,7 +704,7 @@ h1, h2, h3, h4, h5 {
   background-color: #c9c9c9;
   cursor: url("../media/img/finger.ico") 15 0, pointer;
   display: block;
-  box-shadow: 0 0 0.05em 0.05em rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 4px 0 rgba(0, 0, 0, 0.048), 0 2px 3px -2px rgba(0, 0, 0, 0.12), 0 -1px 1px -2px rgba(0, 0, 0, 0.12);
   position: relative; }
   .canvas--client {
     cursor: default;
@@ -752,7 +751,7 @@ h1, h2, h3, h4, h5 {
     -ms-user-select: none;
     user-select: none;
     padding: 0.5em 0.75em;
-    box-shadow: 0 0 0.05em 0.05em rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.03), 0 1px 5px 0 rgba(0, 0, 0, 0.048), 0 2px 4px -2px rgba(0, 0, 0, 0.12), 0 -1px 2px -2px rgba(0, 0, 0, 0.12);
     z-index: 2;
     position: relative; }
   .canvas__settings-btn {
@@ -842,16 +841,18 @@ h1, h2, h3, h4, h5 {
 
 .table, .table--rooms {
   min-width: 17.5em;
-  background-color: rgba(255, 255, 255, 0.4); }
+  background-color: white;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 4px 0 rgba(0, 0, 0, 0.048), 0 2px 3px -2px rgba(0, 0, 0, 0.12), 0 -1px 1px -2px rgba(0, 0, 0, 0.12); }
   .table--rooms {
     width: 100%;
     table-layout: fixed;
-    margin-bottom: 1.5em;
-    box-shadow: 0 0 1px rgba(0, 0, 0, 0.4); }
+    margin-bottom: 1.5em; }
     .table--rooms tbody {
       font-size: 0.8em; }
     .table--rooms tbody td {
       padding: 0.625em 0.9375em; }
+    .table--rooms tbody > tr:last-child > td {
+      padding-bottom: 1em; }
     .table--rooms thead td {
       padding: 0.6em 0.75em 0.6em; }
     @media (max-width: 53.125em) {
