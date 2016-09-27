@@ -16,7 +16,7 @@ const Eev = require  ('eev');
 const e = new Eev(); // event emitter
 
 // variable instantiation
-const data = new DataConnection(0,e);
+const data = new DataConnection({ id: 0, events: e });
 let roomStore;
 
 

@@ -1,10 +1,11 @@
 let firebase = require('../modules/firebaseConfig');
 
 class DataConnection {
-	constructor(roomId=0,eventDispatcher={}) {
-		this.id = roomId;
+	constructor(App={}) {
+		this.App = App;
+		this.id = this.App.id;
 		this.dbRef = firebase.db.ref(firebase.roomsPath + this.id);
-		this.events = eventDispatcher;
+		this.events = this.App.events;
 	}
 
 	watchRooms() {
@@ -19,6 +20,10 @@ class DataConnection {
 
 	updateRoom(id,update) {
 		firebase.db.ref(firebase.roomsPath).child(id).update(update);
+	}
+
+	addPlayer(roomId,player) {
+		firebase.roomsRef.child(roomId).child('players').child(player.id).set(player);
 	}
 
 	spawnRoom(room) {
@@ -56,7 +61,7 @@ class DataConnection {
 
 	listenToData() {
 		this.dbRef.on('value',(snapshot)=>{
-			this.events.emit('store',snapshot.val());
+			this.events.emit('store_received',snapshot.val());
 		});
 	}
 
@@ -84,20 +89,35 @@ class DataConnection {
 		this.dbRef.set(store);
 	}
 
+	resetStoreStatus() {
+		this.dbRef.update({
+			status: 'pending',
+			clock: this.App.game.settings.gameLength
+		});
+	}
+
 	updatePlayers(players) {
 		this.dbRef.child('players').set(players);
 	}
 
-	updatePlayer(player, obj) {
-		this.dbRef.child('players').child(player).update(obj);
+	updatePlayer(playerId, obj) {
+		this.dbRef.child('players').child(playerId).update(obj);
 	}
 
-	removePlayer(id) {
-		this.dbRef.child('players').child(id).remove();
+	setPlayer(playerId,player) {
+		this.dbRef.child('players').child(playerId).set(player);
+	}	
+
+	removePlayer(playerId) {
+		this.dbRef.child('players').child(playerId).remove();
 	}
 
 	setChatLog(chatLog) {
 		this.dbRef.child('/chatLog/').set(chatLog);
+	}
+
+	setChild(child,value) {
+		this.dbRef.child(child).set(value);
 	}
 
 	pushMessage(message) {
