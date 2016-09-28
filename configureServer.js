@@ -51,24 +51,8 @@ app.get('/rooms/*',(req, res)=>{
 	res.redirect('/joining?room=' + roomId);
 })
 
-app.get('/joining*',(req, res)=>{
-	res.sendFile(__dirname + '/views/index.html');
-});
-
-app.get('/admin', auth, (req, res) => {
-	res.sendFile(__dirname + '/views/index.html');
-});
-
-app.get('/contact', (req, res) => {
-	res.sendFile(__dirname + '/views/index.html');
-});
-
 app.post('/contact', function (req, res) {
 	processFormFieldsIndividual(req, res);
-});
-
-app.get('/success', (req, res) => {
-	res.sendFile(__dirname + '/views/index.html');
 });
 
 app.get('/', function (req, res) {
@@ -82,6 +66,10 @@ app.get('/', function (req, res) {
 		res.cookie(reconToken, timestamp, { maxAge: 900000, httpOnly: true });
 	} 
 
+	res.sendFile(__dirname + '/views/index.html');
+});
+
+app.get('*', (req, res) => {
 	res.sendFile(__dirname + '/views/index.html');
 });
 
