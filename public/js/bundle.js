@@ -1201,7 +1201,7 @@ var App = function (_Component) {
 
 		var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
-		_this.socket = io.connect('http://localhost:3000');
+		_this.socket = io.connect('http://fingerpainting.io');
 		return _this;
 	}
 
