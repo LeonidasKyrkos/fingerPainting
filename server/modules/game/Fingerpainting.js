@@ -5,8 +5,6 @@ const _ = require('lodash');
 class Fingerpainting {
 	constructor(App) {
 		this.App = App;
-		this.App.game = this.App.game;
-		this.App.game.store = this.App.game.store;
 	}
 
 	// PRIMARY FUNCTIONS
@@ -74,7 +72,7 @@ class Fingerpainting {
 		this.App.data.updatePlayer(playerId,{correct: true});
 		this.App.clientComms.emitToSocket(this.App.game.sockets[playerId],'puzzle',this.App.game.puzzleArray);
 		this.App.clientComms.emitToAllSockets('correct');
-		this.pointHandler(player);		
+		this.pointHandler(player);
 	}
 
 	pointHandler(player={}) {
