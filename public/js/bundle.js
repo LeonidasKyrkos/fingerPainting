@@ -3758,16 +3758,6 @@ var Footer = function (_Component) {
 						"the contact form"
 					),
 					"!"
-				),
-				_react2.default.createElement(
-					"div",
-					{ className: "footer__right" },
-					"Hosted by ",
-					_react2.default.createElement(
-						"a",
-						{ href: "http://redsnapper.net", className: "email-link" },
-						"Redsnapper Ltd."
-					)
 				)
 			);
 		}
