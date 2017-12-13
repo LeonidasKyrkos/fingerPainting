@@ -11,7 +11,7 @@ export default class AdminPanel extends Component {
 
 		this.state = Store.getState();
 		this.onChange = this.onChange.bind(this);
-		this.socket = io.connect('http://fingerpainting.io/admin');
+		this.socket = io.connect('/admin');
 		this.attachListeners();
 	}
 

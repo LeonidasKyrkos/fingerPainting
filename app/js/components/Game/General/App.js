@@ -8,7 +8,7 @@ import Footer from '../../Generic/Footer';
 export default class App extends Component {
 	constructor(props) {
 		super(props);
-		this.socket = io.connect('http://fingerpainting.io');
+		this.socket = io.connect('/');
 	}
 
 	componentDidMount() {

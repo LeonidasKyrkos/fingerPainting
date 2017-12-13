@@ -2,10 +2,12 @@
 var Firebase = require("firebase");
 
 var config = {
-	apiKey: "AIzaSyCtt1JaxaVKh5zzeMSLw4n53Iu2Fv20oXg",
-	authDomain: "pictionareo.firebaseapp.com",
-	databaseURL: "https://pictionareo.firebaseio.com",
-	storageBucket: "pictionareo.appspot.com",
+	apiKey: "AIzaSyBFbvtUleyrWLQMUX4oo9N_y77U7thU6no",
+    authDomain: "fingerpainting-a2590.firebaseapp.com",
+    databaseURL: "https://fingerpainting-a2590.firebaseio.com",
+    projectId: "fingerpainting-a2590",
+    storageBucket: "fingerpainting-a2590.appspot.com",
+    messagingSenderId: "266437389910"
 };
 
 Firebase.initializeApp(config);

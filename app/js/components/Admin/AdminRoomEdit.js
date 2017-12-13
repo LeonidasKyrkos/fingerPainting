@@ -9,7 +9,7 @@ export default class AdminRoomEdit extends Component {
 	}
 
 	renderRows() {
-		this.rooms = this.props.rooms;
+		this.rooms = this.props.rooms || {};
 		let roomsArr = Object.keys(this.rooms) || [];
 
 		return roomsArr.map((id,index)=>{
