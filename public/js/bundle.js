@@ -363,7 +363,7 @@ var AdminPanel = function (_Component) {
 
 		_this.state = _Store2.default.getState();
 		_this.onChange = _this.onChange.bind(_this);
-		_this.socket = io.connect('http://localhost:3000/admin');
+		_this.socket = io.connect('/admin');
 		_this.attachListeners();
 		return _this;
 	}
@@ -464,7 +464,7 @@ var AdminRoomEdit = function (_Component) {
 		value: function renderRows() {
 			var _this2 = this;
 
-			this.rooms = this.props.rooms;
+			this.rooms = this.props.rooms || {};
 			var roomsArr = Object.keys(this.rooms) || [];
 
 			return roomsArr.map(function (id, index) {
@@ -1059,7 +1059,7 @@ var CanvasClient = function (_Component) {
 
 exports.default = CanvasClient;
 
-},{"../../../stores/Store":40,"../../../utilities/canvasFunctions":41,"./WaitingMsgClient":11,"debounce":43,"react":"react"}],11:[function(require,module,exports){
+},{"../../../stores/Store":40,"../../../utilities/canvasFunctions":41,"./WaitingMsgClient":11,"debounce":44,"react":"react"}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1158,7 +1158,7 @@ var WaitingMsgClient = function (_Component) {
 
 exports.default = WaitingMsgClient;
 
-},{"../../../stores/Store":40,"../../../utilities/general":42,"lodash":161,"react":"react"}],12:[function(require,module,exports){
+},{"../../../stores/Store":40,"../../../utilities/general":42,"lodash":193,"react":"react"}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1201,7 +1201,7 @@ var App = function (_Component) {
 
 		var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
-		_this.socket = io.connect('http://localhost:3000');
+		_this.socket = io.connect('/');
 		return _this;
 	}
 
@@ -1405,7 +1405,7 @@ var Chat = function (_Component) {
 				_react2.default.createElement(
 					'button',
 					{ className: 'btn--submit flex-right' },
-					'»'
+					'\xBB'
 				)
 			);
 		}
@@ -1759,7 +1759,7 @@ var Home = function (_Component) {
 				_react2.default.createElement(
 					'a',
 					{ href: '/', className: 'header__home-link' },
-					'← Back to lobby'
+					'\u2190 Back to lobby'
 				),
 				this.renderItems()
 			);
@@ -2017,7 +2017,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -3498,7 +3498,7 @@ var CanvasPlayer = function (_Component) {
 
 exports.default = CanvasPlayer;
 
-},{"../../../stores/Store":40,"../../../utilities/canvasFunctions":41,"../../../utilities/general":42,"./CanvasSettings":30,"debounce":43,"react":"react"}],30:[function(require,module,exports){
+},{"../../../stores/Store":40,"../../../utilities/canvasFunctions":41,"../../../utilities/general":42,"./CanvasSettings":30,"debounce":44,"react":"react"}],30:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3683,7 +3683,7 @@ var CanvasSettings = function (_React$Component) {
 					_react2.default.createElement(
 						'span',
 						{ className: 'canvas__settings-label' },
-						'Colour picker ⇾'
+						'Colour picker \u21FE'
 					),
 					_react2.default.createElement(
 						'div',
@@ -3707,7 +3707,7 @@ CanvasSettings.propTypes = {
 	scope: _react.PropTypes.object.isRequired
 };
 
-},{"../../../stores/Store":40,"lodash":161,"react":"react","react-color":220}],31:[function(require,module,exports){
+},{"../../../stores/Store":40,"lodash":193,"react":"react","react-color":258}],31:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4102,7 +4102,7 @@ var Mailer = function (_Component) {
 				_react2.default.createElement(
 					'a',
 					{ href: '/', className: 'header__home-link' },
-					'← Back to lobby'
+					'\u2190 Back to lobby'
 				),
 				_react2.default.createElement(
 					'form',
@@ -4173,7 +4173,7 @@ var Success = function (_Component) {
 				_react2.default.createElement(
 					"a",
 					{ href: "/", className: "header__home-link" },
-					"← Back to lobby"
+					"\u2190 Back to lobby"
 				),
 				_react2.default.createElement(
 					"p",
@@ -4391,7 +4391,7 @@ exports.clearContext = clearContext;
 exports.setupCanvas = setupCanvas;
 exports.setCanvasWidth = setCanvasWidth;
 function redraw() {
-	var paths = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	var paths = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	var context = arguments[1];
 
 	var dots = [];
@@ -4548,7 +4548,14 @@ function hasClockUpdated(currentState, nextState) {
 	return nextState.store.clock !== currentState.store.clock;
 }
 
-},{"lodash":161}],43:[function(require,module,exports){
+},{"lodash":193}],43:[function(require,module,exports){
+module.exports = Date.now || now
+
+function now() {
+    return new Date().getTime()
+}
+
+},{}],44:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -4603,14 +4610,7 @@ module.exports = function debounce(func, wait, immediate){
   };
 };
 
-},{"date-now":44}],44:[function(require,module,exports){
-module.exports = Date.now || now
-
-function now() {
-    return new Date().getTime()
-}
-
-},{}],45:[function(require,module,exports){
+},{"date-now":43}],45:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -4638,7 +4638,8 @@ function is(x, y) {
   if (x === y) {
     // Steps 1-5, 7-10
     // Steps 6.b-6.e: +0 != -0
-    return x !== 0 || 1 / x === 1 / y;
+    // Added the nonzero y check to make Flow happy, but it is redundant
+    return x !== 0 || y !== 0 || 1 / x === 1 / y;
   } else {
     // Step 6.a: NaN == NaN
     return x !== x && y !== y;
@@ -4686,7 +4687,7 @@ var DataView = getNative(root, 'DataView');
 
 module.exports = DataView;
 
-},{"./_getNative":95,"./_root":128}],47:[function(require,module,exports){
+},{"./_getNative":120,"./_root":159}],47:[function(require,module,exports){
 var hashClear = require('./_hashClear'),
     hashDelete = require('./_hashDelete'),
     hashGet = require('./_hashGet'),
@@ -4702,7 +4703,7 @@ var hashClear = require('./_hashClear'),
  */
 function Hash(entries) {
   var index = -1,
-      length = entries ? entries.length : 0;
+      length = entries == null ? 0 : entries.length;
 
   this.clear();
   while (++index < length) {
@@ -4720,7 +4721,7 @@ Hash.prototype.set = hashSet;
 
 module.exports = Hash;
 
-},{"./_hashClear":100,"./_hashDelete":101,"./_hashGet":102,"./_hashHas":103,"./_hashSet":104}],48:[function(require,module,exports){
+},{"./_hashClear":127,"./_hashDelete":128,"./_hashGet":129,"./_hashHas":130,"./_hashSet":131}],48:[function(require,module,exports){
 var listCacheClear = require('./_listCacheClear'),
     listCacheDelete = require('./_listCacheDelete'),
     listCacheGet = require('./_listCacheGet'),
@@ -4736,7 +4737,7 @@ var listCacheClear = require('./_listCacheClear'),
  */
 function ListCache(entries) {
   var index = -1,
-      length = entries ? entries.length : 0;
+      length = entries == null ? 0 : entries.length;
 
   this.clear();
   while (++index < length) {
@@ -4754,7 +4755,7 @@ ListCache.prototype.set = listCacheSet;
 
 module.exports = ListCache;
 
-},{"./_listCacheClear":111,"./_listCacheDelete":112,"./_listCacheGet":113,"./_listCacheHas":114,"./_listCacheSet":115}],49:[function(require,module,exports){
+},{"./_listCacheClear":141,"./_listCacheDelete":142,"./_listCacheGet":143,"./_listCacheHas":144,"./_listCacheSet":145}],49:[function(require,module,exports){
 var getNative = require('./_getNative'),
     root = require('./_root');
 
@@ -4763,7 +4764,7 @@ var Map = getNative(root, 'Map');
 
 module.exports = Map;
 
-},{"./_getNative":95,"./_root":128}],50:[function(require,module,exports){
+},{"./_getNative":120,"./_root":159}],50:[function(require,module,exports){
 var mapCacheClear = require('./_mapCacheClear'),
     mapCacheDelete = require('./_mapCacheDelete'),
     mapCacheGet = require('./_mapCacheGet'),
@@ -4779,7 +4780,7 @@ var mapCacheClear = require('./_mapCacheClear'),
  */
 function MapCache(entries) {
   var index = -1,
-      length = entries ? entries.length : 0;
+      length = entries == null ? 0 : entries.length;
 
   this.clear();
   while (++index < length) {
@@ -4797,7 +4798,7 @@ MapCache.prototype.set = mapCacheSet;
 
 module.exports = MapCache;
 
-},{"./_mapCacheClear":116,"./_mapCacheDelete":117,"./_mapCacheGet":118,"./_mapCacheHas":119,"./_mapCacheSet":120}],51:[function(require,module,exports){
+},{"./_mapCacheClear":146,"./_mapCacheDelete":147,"./_mapCacheGet":148,"./_mapCacheHas":149,"./_mapCacheSet":150}],51:[function(require,module,exports){
 var getNative = require('./_getNative'),
     root = require('./_root');
 
@@ -4806,7 +4807,7 @@ var Promise = getNative(root, 'Promise');
 
 module.exports = Promise;
 
-},{"./_getNative":95,"./_root":128}],52:[function(require,module,exports){
+},{"./_getNative":120,"./_root":159}],52:[function(require,module,exports){
 var getNative = require('./_getNative'),
     root = require('./_root');
 
@@ -4815,7 +4816,7 @@ var Set = getNative(root, 'Set');
 
 module.exports = Set;
 
-},{"./_getNative":95,"./_root":128}],53:[function(require,module,exports){
+},{"./_getNative":120,"./_root":159}],53:[function(require,module,exports){
 var MapCache = require('./_MapCache'),
     setCacheAdd = require('./_setCacheAdd'),
     setCacheHas = require('./_setCacheHas');
@@ -4830,7 +4831,7 @@ var MapCache = require('./_MapCache'),
  */
 function SetCache(values) {
   var index = -1,
-      length = values ? values.length : 0;
+      length = values == null ? 0 : values.length;
 
   this.__data__ = new MapCache;
   while (++index < length) {
@@ -4844,7 +4845,7 @@ SetCache.prototype.has = setCacheHas;
 
 module.exports = SetCache;
 
-},{"./_MapCache":50,"./_setCacheAdd":129,"./_setCacheHas":130}],54:[function(require,module,exports){
+},{"./_MapCache":50,"./_setCacheAdd":160,"./_setCacheHas":161}],54:[function(require,module,exports){
 var ListCache = require('./_ListCache'),
     stackClear = require('./_stackClear'),
     stackDelete = require('./_stackDelete'),
@@ -4873,7 +4874,7 @@ Stack.prototype.set = stackSet;
 
 module.exports = Stack;
 
-},{"./_ListCache":48,"./_stackClear":132,"./_stackDelete":133,"./_stackGet":134,"./_stackHas":135,"./_stackSet":136}],55:[function(require,module,exports){
+},{"./_ListCache":48,"./_stackClear":163,"./_stackDelete":164,"./_stackGet":165,"./_stackHas":166,"./_stackSet":167}],55:[function(require,module,exports){
 var root = require('./_root');
 
 /** Built-in value references. */
@@ -4881,7 +4882,7 @@ var Symbol = root.Symbol;
 
 module.exports = Symbol;
 
-},{"./_root":128}],56:[function(require,module,exports){
+},{"./_root":159}],56:[function(require,module,exports){
 var root = require('./_root');
 
 /** Built-in value references. */
@@ -4889,7 +4890,7 @@ var Uint8Array = root.Uint8Array;
 
 module.exports = Uint8Array;
 
-},{"./_root":128}],57:[function(require,module,exports){
+},{"./_root":159}],57:[function(require,module,exports){
 var getNative = require('./_getNative'),
     root = require('./_root');
 
@@ -4898,7 +4899,41 @@ var WeakMap = getNative(root, 'WeakMap');
 
 module.exports = WeakMap;
 
-},{"./_getNative":95,"./_root":128}],58:[function(require,module,exports){
+},{"./_getNative":120,"./_root":159}],58:[function(require,module,exports){
+/**
+ * Adds the key-value `pair` to `map`.
+ *
+ * @private
+ * @param {Object} map The map to modify.
+ * @param {Array} pair The key-value pair to add.
+ * @returns {Object} Returns `map`.
+ */
+function addMapEntry(map, pair) {
+  // Don't return `map.set` because it's not chainable in IE 11.
+  map.set(pair[0], pair[1]);
+  return map;
+}
+
+module.exports = addMapEntry;
+
+},{}],59:[function(require,module,exports){
+/**
+ * Adds `value` to `set`.
+ *
+ * @private
+ * @param {Object} set The set to modify.
+ * @param {*} value The value to add.
+ * @returns {Object} Returns `set`.
+ */
+function addSetEntry(set, value) {
+  // Don't return `set.add` because it's not chainable in IE 11.
+  set.add(value);
+  return set;
+}
+
+module.exports = addSetEntry;
+
+},{}],60:[function(require,module,exports){
 /**
  * A specialized version of `_.forEach` for arrays without support for
  * iteratee shorthands.
@@ -4910,7 +4945,7 @@ module.exports = WeakMap;
  */
 function arrayEach(array, iteratee) {
   var index = -1,
-      length = array ? array.length : 0;
+      length = array == null ? 0 : array.length;
 
   while (++index < length) {
     if (iteratee(array[index], index, array) === false) {
@@ -4922,11 +4957,13 @@ function arrayEach(array, iteratee) {
 
 module.exports = arrayEach;
 
-},{}],59:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 var baseTimes = require('./_baseTimes'),
     isArguments = require('./isArguments'),
     isArray = require('./isArray'),
-    isIndex = require('./_isIndex');
+    isBuffer = require('./isBuffer'),
+    isIndex = require('./_isIndex'),
+    isTypedArray = require('./isTypedArray');
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
@@ -4943,18 +4980,26 @@ var hasOwnProperty = objectProto.hasOwnProperty;
  * @returns {Array} Returns the array of property names.
  */
 function arrayLikeKeys(value, inherited) {
-  // Safari 8.1 makes `arguments.callee` enumerable in strict mode.
-  // Safari 9 makes `arguments.length` enumerable in strict mode.
-  var result = (isArray(value) || isArguments(value))
-    ? baseTimes(value.length, String)
-    : [];
-
-  var length = result.length,
-      skipIndexes = !!length;
+  var isArr = isArray(value),
+      isArg = !isArr && isArguments(value),
+      isBuff = !isArr && !isArg && isBuffer(value),
+      isType = !isArr && !isArg && !isBuff && isTypedArray(value),
+      skipIndexes = isArr || isArg || isBuff || isType,
+      result = skipIndexes ? baseTimes(value.length, String) : [],
+      length = result.length;
 
   for (var key in value) {
     if ((inherited || hasOwnProperty.call(value, key)) &&
-        !(skipIndexes && (key == 'length' || isIndex(key, length)))) {
+        !(skipIndexes && (
+           // Safari 9 has enumerable `arguments.length` in strict mode.
+           key == 'length' ||
+           // Node.js 0.10 has enumerable non-index properties on buffers.
+           (isBuff && (key == 'offset' || key == 'parent')) ||
+           // PhantomJS 2 has enumerable non-index properties on typed arrays.
+           (isType && (key == 'buffer' || key == 'byteLength' || key == 'byteOffset')) ||
+           // Skip index properties.
+           isIndex(key, length)
+        ))) {
       result.push(key);
     }
   }
@@ -4963,7 +5008,7 @@ function arrayLikeKeys(value, inherited) {
 
 module.exports = arrayLikeKeys;
 
-},{"./_baseTimes":81,"./_isIndex":105,"./isArguments":148,"./isArray":149}],60:[function(require,module,exports){
+},{"./_baseTimes":92,"./_isIndex":135,"./isArguments":180,"./isArray":181,"./isBuffer":183,"./isTypedArray":191}],62:[function(require,module,exports){
 /**
  * A specialized version of `_.map` for arrays without support for iteratee
  * shorthands.
@@ -4975,7 +5020,7 @@ module.exports = arrayLikeKeys;
  */
 function arrayMap(array, iteratee) {
   var index = -1,
-      length = array ? array.length : 0,
+      length = array == null ? 0 : array.length,
       result = Array(length);
 
   while (++index < length) {
@@ -4986,7 +5031,57 @@ function arrayMap(array, iteratee) {
 
 module.exports = arrayMap;
 
-},{}],61:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
+/**
+ * Appends the elements of `values` to `array`.
+ *
+ * @private
+ * @param {Array} array The array to modify.
+ * @param {Array} values The values to append.
+ * @returns {Array} Returns `array`.
+ */
+function arrayPush(array, values) {
+  var index = -1,
+      length = values.length,
+      offset = array.length;
+
+  while (++index < length) {
+    array[offset + index] = values[index];
+  }
+  return array;
+}
+
+module.exports = arrayPush;
+
+},{}],64:[function(require,module,exports){
+/**
+ * A specialized version of `_.reduce` for arrays without support for
+ * iteratee shorthands.
+ *
+ * @private
+ * @param {Array} [array] The array to iterate over.
+ * @param {Function} iteratee The function invoked per iteration.
+ * @param {*} [accumulator] The initial value.
+ * @param {boolean} [initAccum] Specify using the first element of `array` as
+ *  the initial value.
+ * @returns {*} Returns the accumulated value.
+ */
+function arrayReduce(array, iteratee, accumulator, initAccum) {
+  var index = -1,
+      length = array == null ? 0 : array.length;
+
+  if (initAccum && length) {
+    accumulator = array[++index];
+  }
+  while (++index < length) {
+    accumulator = iteratee(accumulator, array[index], index, array);
+  }
+  return accumulator;
+}
+
+module.exports = arrayReduce;
+
+},{}],65:[function(require,module,exports){
 /**
  * A specialized version of `_.some` for arrays without support for iteratee
  * shorthands.
@@ -4999,7 +5094,7 @@ module.exports = arrayMap;
  */
 function arraySome(array, predicate) {
   var index = -1,
-      length = array ? array.length : 0;
+      length = array == null ? 0 : array.length;
 
   while (++index < length) {
     if (predicate(array[index], index, array)) {
@@ -5011,7 +5106,37 @@ function arraySome(array, predicate) {
 
 module.exports = arraySome;
 
-},{}],62:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
+var baseAssignValue = require('./_baseAssignValue'),
+    eq = require('./eq');
+
+/** Used for built-in method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/**
+ * Assigns `value` to `key` of `object` if the existing value is not equivalent
+ * using [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
+ * for equality comparisons.
+ *
+ * @private
+ * @param {Object} object The object to modify.
+ * @param {string} key The key of the property to assign.
+ * @param {*} value The value to assign.
+ */
+function assignValue(object, key, value) {
+  var objValue = object[key];
+  if (!(hasOwnProperty.call(object, key) && eq(objValue, value)) ||
+      (value === undefined && !(key in object))) {
+    baseAssignValue(object, key, value);
+  }
+}
+
+module.exports = assignValue;
+
+},{"./_baseAssignValue":69,"./eq":175}],67:[function(require,module,exports){
 var eq = require('./eq');
 
 /**
@@ -5034,7 +5159,220 @@ function assocIndexOf(array, key) {
 
 module.exports = assocIndexOf;
 
-},{"./eq":143}],63:[function(require,module,exports){
+},{"./eq":175}],68:[function(require,module,exports){
+var copyObject = require('./_copyObject'),
+    keys = require('./keys');
+
+/**
+ * The base implementation of `_.assign` without support for multiple sources
+ * or `customizer` functions.
+ *
+ * @private
+ * @param {Object} object The destination object.
+ * @param {Object} source The source object.
+ * @returns {Object} Returns `object`.
+ */
+function baseAssign(object, source) {
+  return object && copyObject(source, keys(source), object);
+}
+
+module.exports = baseAssign;
+
+},{"./_copyObject":107,"./keys":192}],69:[function(require,module,exports){
+var defineProperty = require('./_defineProperty');
+
+/**
+ * The base implementation of `assignValue` and `assignMergeValue` without
+ * value checks.
+ *
+ * @private
+ * @param {Object} object The object to modify.
+ * @param {string} key The key of the property to assign.
+ * @param {*} value The value to assign.
+ */
+function baseAssignValue(object, key, value) {
+  if (key == '__proto__' && defineProperty) {
+    defineProperty(object, key, {
+      'configurable': true,
+      'enumerable': true,
+      'value': value,
+      'writable': true
+    });
+  } else {
+    object[key] = value;
+  }
+}
+
+module.exports = baseAssignValue;
+
+},{"./_defineProperty":112}],70:[function(require,module,exports){
+var Stack = require('./_Stack'),
+    arrayEach = require('./_arrayEach'),
+    assignValue = require('./_assignValue'),
+    baseAssign = require('./_baseAssign'),
+    cloneBuffer = require('./_cloneBuffer'),
+    copyArray = require('./_copyArray'),
+    copySymbols = require('./_copySymbols'),
+    getAllKeys = require('./_getAllKeys'),
+    getTag = require('./_getTag'),
+    initCloneArray = require('./_initCloneArray'),
+    initCloneByTag = require('./_initCloneByTag'),
+    initCloneObject = require('./_initCloneObject'),
+    isArray = require('./isArray'),
+    isBuffer = require('./isBuffer'),
+    isObject = require('./isObject'),
+    keys = require('./keys');
+
+/** `Object#toString` result references. */
+var argsTag = '[object Arguments]',
+    arrayTag = '[object Array]',
+    boolTag = '[object Boolean]',
+    dateTag = '[object Date]',
+    errorTag = '[object Error]',
+    funcTag = '[object Function]',
+    genTag = '[object GeneratorFunction]',
+    mapTag = '[object Map]',
+    numberTag = '[object Number]',
+    objectTag = '[object Object]',
+    regexpTag = '[object RegExp]',
+    setTag = '[object Set]',
+    stringTag = '[object String]',
+    symbolTag = '[object Symbol]',
+    weakMapTag = '[object WeakMap]';
+
+var arrayBufferTag = '[object ArrayBuffer]',
+    dataViewTag = '[object DataView]',
+    float32Tag = '[object Float32Array]',
+    float64Tag = '[object Float64Array]',
+    int8Tag = '[object Int8Array]',
+    int16Tag = '[object Int16Array]',
+    int32Tag = '[object Int32Array]',
+    uint8Tag = '[object Uint8Array]',
+    uint8ClampedTag = '[object Uint8ClampedArray]',
+    uint16Tag = '[object Uint16Array]',
+    uint32Tag = '[object Uint32Array]';
+
+/** Used to identify `toStringTag` values supported by `_.clone`. */
+var cloneableTags = {};
+cloneableTags[argsTag] = cloneableTags[arrayTag] =
+cloneableTags[arrayBufferTag] = cloneableTags[dataViewTag] =
+cloneableTags[boolTag] = cloneableTags[dateTag] =
+cloneableTags[float32Tag] = cloneableTags[float64Tag] =
+cloneableTags[int8Tag] = cloneableTags[int16Tag] =
+cloneableTags[int32Tag] = cloneableTags[mapTag] =
+cloneableTags[numberTag] = cloneableTags[objectTag] =
+cloneableTags[regexpTag] = cloneableTags[setTag] =
+cloneableTags[stringTag] = cloneableTags[symbolTag] =
+cloneableTags[uint8Tag] = cloneableTags[uint8ClampedTag] =
+cloneableTags[uint16Tag] = cloneableTags[uint32Tag] = true;
+cloneableTags[errorTag] = cloneableTags[funcTag] =
+cloneableTags[weakMapTag] = false;
+
+/**
+ * The base implementation of `_.clone` and `_.cloneDeep` which tracks
+ * traversed objects.
+ *
+ * @private
+ * @param {*} value The value to clone.
+ * @param {boolean} [isDeep] Specify a deep clone.
+ * @param {boolean} [isFull] Specify a clone including symbols.
+ * @param {Function} [customizer] The function to customize cloning.
+ * @param {string} [key] The key of `value`.
+ * @param {Object} [object] The parent object of `value`.
+ * @param {Object} [stack] Tracks traversed objects and their clone counterparts.
+ * @returns {*} Returns the cloned value.
+ */
+function baseClone(value, isDeep, isFull, customizer, key, object, stack) {
+  var result;
+  if (customizer) {
+    result = object ? customizer(value, key, object, stack) : customizer(value);
+  }
+  if (result !== undefined) {
+    return result;
+  }
+  if (!isObject(value)) {
+    return value;
+  }
+  var isArr = isArray(value);
+  if (isArr) {
+    result = initCloneArray(value);
+    if (!isDeep) {
+      return copyArray(value, result);
+    }
+  } else {
+    var tag = getTag(value),
+        isFunc = tag == funcTag || tag == genTag;
+
+    if (isBuffer(value)) {
+      return cloneBuffer(value, isDeep);
+    }
+    if (tag == objectTag || tag == argsTag || (isFunc && !object)) {
+      result = initCloneObject(isFunc ? {} : value);
+      if (!isDeep) {
+        return copySymbols(value, baseAssign(result, value));
+      }
+    } else {
+      if (!cloneableTags[tag]) {
+        return object ? value : {};
+      }
+      result = initCloneByTag(value, tag, baseClone, isDeep);
+    }
+  }
+  // Check for circular references and return its corresponding clone.
+  stack || (stack = new Stack);
+  var stacked = stack.get(value);
+  if (stacked) {
+    return stacked;
+  }
+  stack.set(value, result);
+
+  var props = isArr ? undefined : (isFull ? getAllKeys : keys)(value);
+  arrayEach(props || value, function(subValue, key) {
+    if (props) {
+      key = subValue;
+      subValue = value[key];
+    }
+    // Recursively populate clone (susceptible to call stack limits).
+    assignValue(result, key, baseClone(subValue, isDeep, isFull, customizer, key, value, stack));
+  });
+  return result;
+}
+
+module.exports = baseClone;
+
+},{"./_Stack":54,"./_arrayEach":60,"./_assignValue":66,"./_baseAssign":68,"./_cloneBuffer":99,"./_copyArray":106,"./_copySymbols":108,"./_getAllKeys":117,"./_getTag":124,"./_initCloneArray":132,"./_initCloneByTag":133,"./_initCloneObject":134,"./isArray":181,"./isBuffer":183,"./isObject":186,"./keys":192}],71:[function(require,module,exports){
+var isObject = require('./isObject');
+
+/** Built-in value references. */
+var objectCreate = Object.create;
+
+/**
+ * The base implementation of `_.create` without support for assigning
+ * properties to the created object.
+ *
+ * @private
+ * @param {Object} proto The object to inherit from.
+ * @returns {Object} Returns the new object.
+ */
+var baseCreate = (function() {
+  function object() {}
+  return function(proto) {
+    if (!isObject(proto)) {
+      return {};
+    }
+    if (objectCreate) {
+      return objectCreate(proto);
+    }
+    object.prototype = proto;
+    var result = new object;
+    object.prototype = undefined;
+    return result;
+  };
+}());
+
+module.exports = baseCreate;
+
+},{"./isObject":186}],72:[function(require,module,exports){
 var baseForOwn = require('./_baseForOwn'),
     createBaseEach = require('./_createBaseEach');
 
@@ -5050,7 +5388,7 @@ var baseEach = createBaseEach(baseForOwn);
 
 module.exports = baseEach;
 
-},{"./_baseForOwn":65,"./_createBaseEach":87}],64:[function(require,module,exports){
+},{"./_baseForOwn":74,"./_createBaseEach":110}],73:[function(require,module,exports){
 var createBaseFor = require('./_createBaseFor');
 
 /**
@@ -5068,7 +5406,7 @@ var baseFor = createBaseFor();
 
 module.exports = baseFor;
 
-},{"./_createBaseFor":88}],65:[function(require,module,exports){
+},{"./_createBaseFor":111}],74:[function(require,module,exports){
 var baseFor = require('./_baseFor'),
     keys = require('./keys');
 
@@ -5086,7 +5424,7 @@ function baseForOwn(object, iteratee) {
 
 module.exports = baseForOwn;
 
-},{"./_baseFor":64,"./keys":160}],66:[function(require,module,exports){
+},{"./_baseFor":73,"./keys":192}],75:[function(require,module,exports){
 var castPath = require('./_castPath'),
     isKey = require('./_isKey'),
     toKey = require('./_toKey');
@@ -5113,31 +5451,60 @@ function baseGet(object, path) {
 
 module.exports = baseGet;
 
-},{"./_castPath":85,"./_isKey":106,"./_toKey":138}],67:[function(require,module,exports){
-/** Used for built-in method references. */
-var objectProto = Object.prototype;
+},{"./_castPath":97,"./_isKey":136,"./_toKey":169}],76:[function(require,module,exports){
+var arrayPush = require('./_arrayPush'),
+    isArray = require('./isArray');
 
 /**
- * Used to resolve the
- * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
- * of values.
+ * The base implementation of `getAllKeys` and `getAllKeysIn` which uses
+ * `keysFunc` and `symbolsFunc` to get the enumerable property names and
+ * symbols of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @param {Function} keysFunc The function to get the keys of `object`.
+ * @param {Function} symbolsFunc The function to get the symbols of `object`.
+ * @returns {Array} Returns the array of property names and symbols.
  */
-var objectToString = objectProto.toString;
+function baseGetAllKeys(object, keysFunc, symbolsFunc) {
+  var result = keysFunc(object);
+  return isArray(object) ? result : arrayPush(result, symbolsFunc(object));
+}
+
+module.exports = baseGetAllKeys;
+
+},{"./_arrayPush":63,"./isArray":181}],77:[function(require,module,exports){
+var Symbol = require('./_Symbol'),
+    getRawTag = require('./_getRawTag'),
+    objectToString = require('./_objectToString');
+
+/** `Object#toString` result references. */
+var nullTag = '[object Null]',
+    undefinedTag = '[object Undefined]';
+
+/** Built-in value references. */
+var symToStringTag = Symbol ? Symbol.toStringTag : undefined;
 
 /**
- * The base implementation of `getTag`.
+ * The base implementation of `getTag` without fallbacks for buggy environments.
  *
  * @private
  * @param {*} value The value to query.
  * @returns {string} Returns the `toStringTag`.
  */
 function baseGetTag(value) {
-  return objectToString.call(value);
+  if (value == null) {
+    return value === undefined ? undefinedTag : nullTag;
+  }
+  value = Object(value);
+  return (symToStringTag && symToStringTag in value)
+    ? getRawTag(value)
+    : objectToString(value);
 }
 
 module.exports = baseGetTag;
 
-},{}],68:[function(require,module,exports){
+},{"./_Symbol":55,"./_getRawTag":122,"./_objectToString":157}],78:[function(require,module,exports){
 /**
  * The base implementation of `_.hasIn` without support for deep paths.
  *
@@ -5152,7 +5519,27 @@ function baseHasIn(object, key) {
 
 module.exports = baseHasIn;
 
-},{}],69:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
+var baseGetTag = require('./_baseGetTag'),
+    isObjectLike = require('./isObjectLike');
+
+/** `Object#toString` result references. */
+var argsTag = '[object Arguments]';
+
+/**
+ * The base implementation of `_.isArguments`.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an `arguments` object,
+ */
+function baseIsArguments(value) {
+  return isObjectLike(value) && baseGetTag(value) == argsTag;
+}
+
+module.exports = baseIsArguments;
+
+},{"./_baseGetTag":77,"./isObjectLike":187}],80:[function(require,module,exports){
 var baseIsEqualDeep = require('./_baseIsEqualDeep'),
     isObject = require('./isObject'),
     isObjectLike = require('./isObjectLike');
@@ -5184,13 +5571,14 @@ function baseIsEqual(value, other, customizer, bitmask, stack) {
 
 module.exports = baseIsEqual;
 
-},{"./_baseIsEqualDeep":70,"./isObject":154,"./isObjectLike":155}],70:[function(require,module,exports){
+},{"./_baseIsEqualDeep":81,"./isObject":186,"./isObjectLike":187}],81:[function(require,module,exports){
 var Stack = require('./_Stack'),
     equalArrays = require('./_equalArrays'),
     equalByTag = require('./_equalByTag'),
     equalObjects = require('./_equalObjects'),
     getTag = require('./_getTag'),
     isArray = require('./isArray'),
+    isBuffer = require('./isBuffer'),
     isTypedArray = require('./isTypedArray');
 
 /** Used to compose bitmasks for comparison styles. */
@@ -5240,6 +5628,13 @@ function baseIsEqualDeep(object, other, equalFunc, customizer, bitmask, stack) {
       othIsObj = othTag == objectTag,
       isSameTag = objTag == othTag;
 
+  if (isSameTag && isBuffer(object)) {
+    if (!isBuffer(other)) {
+      return false;
+    }
+    objIsArr = true;
+    objIsObj = false;
+  }
   if (isSameTag && !objIsObj) {
     stack || (stack = new Stack);
     return (objIsArr || isTypedArray(object))
@@ -5267,7 +5662,7 @@ function baseIsEqualDeep(object, other, equalFunc, customizer, bitmask, stack) {
 
 module.exports = baseIsEqualDeep;
 
-},{"./_Stack":54,"./_equalArrays":89,"./_equalByTag":90,"./_equalObjects":91,"./_getTag":97,"./isArray":149,"./isTypedArray":159}],71:[function(require,module,exports){
+},{"./_Stack":54,"./_equalArrays":113,"./_equalByTag":114,"./_equalObjects":115,"./_getTag":124,"./isArray":181,"./isBuffer":183,"./isTypedArray":191}],82:[function(require,module,exports){
 var Stack = require('./_Stack'),
     baseIsEqual = require('./_baseIsEqual');
 
@@ -5331,7 +5726,7 @@ function baseIsMatch(object, source, matchData, customizer) {
 
 module.exports = baseIsMatch;
 
-},{"./_Stack":54,"./_baseIsEqual":69}],72:[function(require,module,exports){
+},{"./_Stack":54,"./_baseIsEqual":80}],83:[function(require,module,exports){
 var isFunction = require('./isFunction'),
     isMasked = require('./_isMasked'),
     isObject = require('./isObject'),
@@ -5380,8 +5775,9 @@ function baseIsNative(value) {
 
 module.exports = baseIsNative;
 
-},{"./_isMasked":108,"./_toSource":139,"./isFunction":152,"./isObject":154}],73:[function(require,module,exports){
-var isLength = require('./isLength'),
+},{"./_isMasked":138,"./_toSource":170,"./isFunction":184,"./isObject":186}],84:[function(require,module,exports){
+var baseGetTag = require('./_baseGetTag'),
+    isLength = require('./isLength'),
     isObjectLike = require('./isObjectLike');
 
 /** `Object#toString` result references. */
@@ -5427,16 +5823,6 @@ typedArrayTags[objectTag] = typedArrayTags[regexpTag] =
 typedArrayTags[setTag] = typedArrayTags[stringTag] =
 typedArrayTags[weakMapTag] = false;
 
-/** Used for built-in method references. */
-var objectProto = Object.prototype;
-
-/**
- * Used to resolve the
- * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objectToString = objectProto.toString;
-
 /**
  * The base implementation of `_.isTypedArray` without Node.js optimizations.
  *
@@ -5446,12 +5832,12 @@ var objectToString = objectProto.toString;
  */
 function baseIsTypedArray(value) {
   return isObjectLike(value) &&
-    isLength(value.length) && !!typedArrayTags[objectToString.call(value)];
+    isLength(value.length) && !!typedArrayTags[baseGetTag(value)];
 }
 
 module.exports = baseIsTypedArray;
 
-},{"./isLength":153,"./isObjectLike":155}],74:[function(require,module,exports){
+},{"./_baseGetTag":77,"./isLength":185,"./isObjectLike":187}],85:[function(require,module,exports){
 var baseMatches = require('./_baseMatches'),
     baseMatchesProperty = require('./_baseMatchesProperty'),
     identity = require('./identity'),
@@ -5484,7 +5870,7 @@ function baseIteratee(value) {
 
 module.exports = baseIteratee;
 
-},{"./_baseMatches":77,"./_baseMatchesProperty":78,"./identity":147,"./isArray":149,"./property":166}],75:[function(require,module,exports){
+},{"./_baseMatches":88,"./_baseMatchesProperty":89,"./identity":179,"./isArray":181,"./property":198}],86:[function(require,module,exports){
 var isPrototype = require('./_isPrototype'),
     nativeKeys = require('./_nativeKeys');
 
@@ -5516,7 +5902,7 @@ function baseKeys(object) {
 
 module.exports = baseKeys;
 
-},{"./_isPrototype":109,"./_nativeKeys":125}],76:[function(require,module,exports){
+},{"./_isPrototype":139,"./_nativeKeys":155}],87:[function(require,module,exports){
 var baseEach = require('./_baseEach'),
     isArrayLike = require('./isArrayLike');
 
@@ -5540,7 +5926,7 @@ function baseMap(collection, iteratee) {
 
 module.exports = baseMap;
 
-},{"./_baseEach":63,"./isArrayLike":150}],77:[function(require,module,exports){
+},{"./_baseEach":72,"./isArrayLike":182}],88:[function(require,module,exports){
 var baseIsMatch = require('./_baseIsMatch'),
     getMatchData = require('./_getMatchData'),
     matchesStrictComparable = require('./_matchesStrictComparable');
@@ -5564,7 +5950,7 @@ function baseMatches(source) {
 
 module.exports = baseMatches;
 
-},{"./_baseIsMatch":71,"./_getMatchData":94,"./_matchesStrictComparable":122}],78:[function(require,module,exports){
+},{"./_baseIsMatch":82,"./_getMatchData":119,"./_matchesStrictComparable":152}],89:[function(require,module,exports){
 var baseIsEqual = require('./_baseIsEqual'),
     get = require('./get'),
     hasIn = require('./hasIn'),
@@ -5599,7 +5985,7 @@ function baseMatchesProperty(path, srcValue) {
 
 module.exports = baseMatchesProperty;
 
-},{"./_baseIsEqual":69,"./_isKey":106,"./_isStrictComparable":110,"./_matchesStrictComparable":122,"./_toKey":138,"./get":145,"./hasIn":146}],79:[function(require,module,exports){
+},{"./_baseIsEqual":80,"./_isKey":136,"./_isStrictComparable":140,"./_matchesStrictComparable":152,"./_toKey":169,"./get":177,"./hasIn":178}],90:[function(require,module,exports){
 /**
  * The base implementation of `_.property` without support for deep paths.
  *
@@ -5615,7 +6001,7 @@ function baseProperty(key) {
 
 module.exports = baseProperty;
 
-},{}],80:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 var baseGet = require('./_baseGet');
 
 /**
@@ -5633,7 +6019,7 @@ function basePropertyDeep(path) {
 
 module.exports = basePropertyDeep;
 
-},{"./_baseGet":66}],81:[function(require,module,exports){
+},{"./_baseGet":75}],92:[function(require,module,exports){
 /**
  * The base implementation of `_.times` without support for iteratee shorthands
  * or max array length checks.
@@ -5655,8 +6041,10 @@ function baseTimes(n, iteratee) {
 
 module.exports = baseTimes;
 
-},{}],82:[function(require,module,exports){
+},{}],93:[function(require,module,exports){
 var Symbol = require('./_Symbol'),
+    arrayMap = require('./_arrayMap'),
+    isArray = require('./isArray'),
     isSymbol = require('./isSymbol');
 
 /** Used as references for various `Number` constants. */
@@ -5679,6 +6067,10 @@ function baseToString(value) {
   if (typeof value == 'string') {
     return value;
   }
+  if (isArray(value)) {
+    // Recursively convert values (susceptible to call stack limits).
+    return arrayMap(value, baseToString) + '';
+  }
   if (isSymbol(value)) {
     return symbolToString ? symbolToString.call(value) : '';
   }
@@ -5688,7 +6080,7 @@ function baseToString(value) {
 
 module.exports = baseToString;
 
-},{"./_Symbol":55,"./isSymbol":158}],83:[function(require,module,exports){
+},{"./_Symbol":55,"./_arrayMap":62,"./isArray":181,"./isSymbol":190}],94:[function(require,module,exports){
 /**
  * The base implementation of `_.unary` without support for storing metadata.
  *
@@ -5704,7 +6096,7 @@ function baseUnary(func) {
 
 module.exports = baseUnary;
 
-},{}],84:[function(require,module,exports){
+},{}],95:[function(require,module,exports){
 /**
  * Checks if a `cache` value for `key` exists.
  *
@@ -5719,7 +6111,23 @@ function cacheHas(cache, key) {
 
 module.exports = cacheHas;
 
-},{}],85:[function(require,module,exports){
+},{}],96:[function(require,module,exports){
+var identity = require('./identity');
+
+/**
+ * Casts `value` to `identity` if it's not a function.
+ *
+ * @private
+ * @param {*} value The value to inspect.
+ * @returns {Function} Returns cast function.
+ */
+function castFunction(value) {
+  return typeof value == 'function' ? value : identity;
+}
+
+module.exports = castFunction;
+
+},{"./identity":179}],97:[function(require,module,exports){
 var isArray = require('./isArray'),
     stringToPath = require('./_stringToPath');
 
@@ -5736,7 +6144,261 @@ function castPath(value) {
 
 module.exports = castPath;
 
-},{"./_stringToPath":137,"./isArray":149}],86:[function(require,module,exports){
+},{"./_stringToPath":168,"./isArray":181}],98:[function(require,module,exports){
+var Uint8Array = require('./_Uint8Array');
+
+/**
+ * Creates a clone of `arrayBuffer`.
+ *
+ * @private
+ * @param {ArrayBuffer} arrayBuffer The array buffer to clone.
+ * @returns {ArrayBuffer} Returns the cloned array buffer.
+ */
+function cloneArrayBuffer(arrayBuffer) {
+  var result = new arrayBuffer.constructor(arrayBuffer.byteLength);
+  new Uint8Array(result).set(new Uint8Array(arrayBuffer));
+  return result;
+}
+
+module.exports = cloneArrayBuffer;
+
+},{"./_Uint8Array":56}],99:[function(require,module,exports){
+var root = require('./_root');
+
+/** Detect free variable `exports`. */
+var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
+
+/** Detect free variable `module`. */
+var freeModule = freeExports && typeof module == 'object' && module && !module.nodeType && module;
+
+/** Detect the popular CommonJS extension `module.exports`. */
+var moduleExports = freeModule && freeModule.exports === freeExports;
+
+/** Built-in value references. */
+var Buffer = moduleExports ? root.Buffer : undefined,
+    allocUnsafe = Buffer ? Buffer.allocUnsafe : undefined;
+
+/**
+ * Creates a clone of  `buffer`.
+ *
+ * @private
+ * @param {Buffer} buffer The buffer to clone.
+ * @param {boolean} [isDeep] Specify a deep clone.
+ * @returns {Buffer} Returns the cloned buffer.
+ */
+function cloneBuffer(buffer, isDeep) {
+  if (isDeep) {
+    return buffer.slice();
+  }
+  var length = buffer.length,
+      result = allocUnsafe ? allocUnsafe(length) : new buffer.constructor(length);
+
+  buffer.copy(result);
+  return result;
+}
+
+module.exports = cloneBuffer;
+
+},{"./_root":159}],100:[function(require,module,exports){
+var cloneArrayBuffer = require('./_cloneArrayBuffer');
+
+/**
+ * Creates a clone of `dataView`.
+ *
+ * @private
+ * @param {Object} dataView The data view to clone.
+ * @param {boolean} [isDeep] Specify a deep clone.
+ * @returns {Object} Returns the cloned data view.
+ */
+function cloneDataView(dataView, isDeep) {
+  var buffer = isDeep ? cloneArrayBuffer(dataView.buffer) : dataView.buffer;
+  return new dataView.constructor(buffer, dataView.byteOffset, dataView.byteLength);
+}
+
+module.exports = cloneDataView;
+
+},{"./_cloneArrayBuffer":98}],101:[function(require,module,exports){
+var addMapEntry = require('./_addMapEntry'),
+    arrayReduce = require('./_arrayReduce'),
+    mapToArray = require('./_mapToArray');
+
+/**
+ * Creates a clone of `map`.
+ *
+ * @private
+ * @param {Object} map The map to clone.
+ * @param {Function} cloneFunc The function to clone values.
+ * @param {boolean} [isDeep] Specify a deep clone.
+ * @returns {Object} Returns the cloned map.
+ */
+function cloneMap(map, isDeep, cloneFunc) {
+  var array = isDeep ? cloneFunc(mapToArray(map), true) : mapToArray(map);
+  return arrayReduce(array, addMapEntry, new map.constructor);
+}
+
+module.exports = cloneMap;
+
+},{"./_addMapEntry":58,"./_arrayReduce":64,"./_mapToArray":151}],102:[function(require,module,exports){
+/** Used to match `RegExp` flags from their coerced string values. */
+var reFlags = /\w*$/;
+
+/**
+ * Creates a clone of `regexp`.
+ *
+ * @private
+ * @param {Object} regexp The regexp to clone.
+ * @returns {Object} Returns the cloned regexp.
+ */
+function cloneRegExp(regexp) {
+  var result = new regexp.constructor(regexp.source, reFlags.exec(regexp));
+  result.lastIndex = regexp.lastIndex;
+  return result;
+}
+
+module.exports = cloneRegExp;
+
+},{}],103:[function(require,module,exports){
+var addSetEntry = require('./_addSetEntry'),
+    arrayReduce = require('./_arrayReduce'),
+    setToArray = require('./_setToArray');
+
+/**
+ * Creates a clone of `set`.
+ *
+ * @private
+ * @param {Object} set The set to clone.
+ * @param {Function} cloneFunc The function to clone values.
+ * @param {boolean} [isDeep] Specify a deep clone.
+ * @returns {Object} Returns the cloned set.
+ */
+function cloneSet(set, isDeep, cloneFunc) {
+  var array = isDeep ? cloneFunc(setToArray(set), true) : setToArray(set);
+  return arrayReduce(array, addSetEntry, new set.constructor);
+}
+
+module.exports = cloneSet;
+
+},{"./_addSetEntry":59,"./_arrayReduce":64,"./_setToArray":162}],104:[function(require,module,exports){
+var Symbol = require('./_Symbol');
+
+/** Used to convert symbols to primitives and strings. */
+var symbolProto = Symbol ? Symbol.prototype : undefined,
+    symbolValueOf = symbolProto ? symbolProto.valueOf : undefined;
+
+/**
+ * Creates a clone of the `symbol` object.
+ *
+ * @private
+ * @param {Object} symbol The symbol object to clone.
+ * @returns {Object} Returns the cloned symbol object.
+ */
+function cloneSymbol(symbol) {
+  return symbolValueOf ? Object(symbolValueOf.call(symbol)) : {};
+}
+
+module.exports = cloneSymbol;
+
+},{"./_Symbol":55}],105:[function(require,module,exports){
+var cloneArrayBuffer = require('./_cloneArrayBuffer');
+
+/**
+ * Creates a clone of `typedArray`.
+ *
+ * @private
+ * @param {Object} typedArray The typed array to clone.
+ * @param {boolean} [isDeep] Specify a deep clone.
+ * @returns {Object} Returns the cloned typed array.
+ */
+function cloneTypedArray(typedArray, isDeep) {
+  var buffer = isDeep ? cloneArrayBuffer(typedArray.buffer) : typedArray.buffer;
+  return new typedArray.constructor(buffer, typedArray.byteOffset, typedArray.length);
+}
+
+module.exports = cloneTypedArray;
+
+},{"./_cloneArrayBuffer":98}],106:[function(require,module,exports){
+/**
+ * Copies the values of `source` to `array`.
+ *
+ * @private
+ * @param {Array} source The array to copy values from.
+ * @param {Array} [array=[]] The array to copy values to.
+ * @returns {Array} Returns `array`.
+ */
+function copyArray(source, array) {
+  var index = -1,
+      length = source.length;
+
+  array || (array = Array(length));
+  while (++index < length) {
+    array[index] = source[index];
+  }
+  return array;
+}
+
+module.exports = copyArray;
+
+},{}],107:[function(require,module,exports){
+var assignValue = require('./_assignValue'),
+    baseAssignValue = require('./_baseAssignValue');
+
+/**
+ * Copies properties of `source` to `object`.
+ *
+ * @private
+ * @param {Object} source The object to copy properties from.
+ * @param {Array} props The property identifiers to copy.
+ * @param {Object} [object={}] The object to copy properties to.
+ * @param {Function} [customizer] The function to customize copied values.
+ * @returns {Object} Returns `object`.
+ */
+function copyObject(source, props, object, customizer) {
+  var isNew = !object;
+  object || (object = {});
+
+  var index = -1,
+      length = props.length;
+
+  while (++index < length) {
+    var key = props[index];
+
+    var newValue = customizer
+      ? customizer(object[key], source[key], key, object, source)
+      : undefined;
+
+    if (newValue === undefined) {
+      newValue = source[key];
+    }
+    if (isNew) {
+      baseAssignValue(object, key, newValue);
+    } else {
+      assignValue(object, key, newValue);
+    }
+  }
+  return object;
+}
+
+module.exports = copyObject;
+
+},{"./_assignValue":66,"./_baseAssignValue":69}],108:[function(require,module,exports){
+var copyObject = require('./_copyObject'),
+    getSymbols = require('./_getSymbols');
+
+/**
+ * Copies own symbol properties of `source` to `object`.
+ *
+ * @private
+ * @param {Object} source The object to copy symbols from.
+ * @param {Object} [object={}] The object to copy symbols to.
+ * @returns {Object} Returns `object`.
+ */
+function copySymbols(source, object) {
+  return copyObject(source, getSymbols(source), object);
+}
+
+module.exports = copySymbols;
+
+},{"./_copyObject":107,"./_getSymbols":123}],109:[function(require,module,exports){
 var root = require('./_root');
 
 /** Used to detect overreaching core-js shims. */
@@ -5744,7 +6406,7 @@ var coreJsData = root['__core-js_shared__'];
 
 module.exports = coreJsData;
 
-},{"./_root":128}],87:[function(require,module,exports){
+},{"./_root":159}],110:[function(require,module,exports){
 var isArrayLike = require('./isArrayLike');
 
 /**
@@ -5778,7 +6440,7 @@ function createBaseEach(eachFunc, fromRight) {
 
 module.exports = createBaseEach;
 
-},{"./isArrayLike":150}],88:[function(require,module,exports){
+},{"./isArrayLike":182}],111:[function(require,module,exports){
 /**
  * Creates a base function for methods like `_.forIn` and `_.forOwn`.
  *
@@ -5805,7 +6467,20 @@ function createBaseFor(fromRight) {
 
 module.exports = createBaseFor;
 
-},{}],89:[function(require,module,exports){
+},{}],112:[function(require,module,exports){
+var getNative = require('./_getNative');
+
+var defineProperty = (function() {
+  try {
+    var func = getNative(Object, 'defineProperty');
+    func({}, '', {});
+    return func;
+  } catch (e) {}
+}());
+
+module.exports = defineProperty;
+
+},{"./_getNative":120}],113:[function(require,module,exports){
 var SetCache = require('./_SetCache'),
     arraySome = require('./_arraySome'),
     cacheHas = require('./_cacheHas');
@@ -5891,7 +6566,7 @@ function equalArrays(array, other, equalFunc, customizer, bitmask, stack) {
 
 module.exports = equalArrays;
 
-},{"./_SetCache":53,"./_arraySome":61,"./_cacheHas":84}],90:[function(require,module,exports){
+},{"./_SetCache":53,"./_arraySome":65,"./_cacheHas":95}],114:[function(require,module,exports){
 var Symbol = require('./_Symbol'),
     Uint8Array = require('./_Uint8Array'),
     eq = require('./eq'),
@@ -6006,7 +6681,7 @@ function equalByTag(object, other, tag, equalFunc, customizer, bitmask, stack) {
 
 module.exports = equalByTag;
 
-},{"./_Symbol":55,"./_Uint8Array":56,"./_equalArrays":89,"./_mapToArray":121,"./_setToArray":131,"./eq":143}],91:[function(require,module,exports){
+},{"./_Symbol":55,"./_Uint8Array":56,"./_equalArrays":113,"./_mapToArray":151,"./_setToArray":162,"./eq":175}],115:[function(require,module,exports){
 var keys = require('./keys');
 
 /** Used to compose bitmasks for comparison styles. */
@@ -6098,7 +6773,7 @@ function equalObjects(object, other, equalFunc, customizer, bitmask, stack) {
 
 module.exports = equalObjects;
 
-},{"./keys":160}],92:[function(require,module,exports){
+},{"./keys":192}],116:[function(require,module,exports){
 (function (global){
 /** Detect free variable `global` from Node.js. */
 var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
@@ -6107,7 +6782,25 @@ module.exports = freeGlobal;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{}],93:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
+var baseGetAllKeys = require('./_baseGetAllKeys'),
+    getSymbols = require('./_getSymbols'),
+    keys = require('./keys');
+
+/**
+ * Creates an array of own enumerable property names and symbols of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @returns {Array} Returns the array of property names and symbols.
+ */
+function getAllKeys(object) {
+  return baseGetAllKeys(object, keys, getSymbols);
+}
+
+module.exports = getAllKeys;
+
+},{"./_baseGetAllKeys":76,"./_getSymbols":123,"./keys":192}],118:[function(require,module,exports){
 var isKeyable = require('./_isKeyable');
 
 /**
@@ -6127,7 +6820,7 @@ function getMapData(map, key) {
 
 module.exports = getMapData;
 
-},{"./_isKeyable":107}],94:[function(require,module,exports){
+},{"./_isKeyable":137}],119:[function(require,module,exports){
 var isStrictComparable = require('./_isStrictComparable'),
     keys = require('./keys');
 
@@ -6153,7 +6846,7 @@ function getMatchData(object) {
 
 module.exports = getMatchData;
 
-},{"./_isStrictComparable":110,"./keys":160}],95:[function(require,module,exports){
+},{"./_isStrictComparable":140,"./keys":192}],120:[function(require,module,exports){
 var baseIsNative = require('./_baseIsNative'),
     getValue = require('./_getValue');
 
@@ -6172,7 +6865,7 @@ function getNative(object, key) {
 
 module.exports = getNative;
 
-},{"./_baseIsNative":72,"./_getValue":98}],96:[function(require,module,exports){
+},{"./_baseIsNative":83,"./_getValue":125}],121:[function(require,module,exports){
 var overArg = require('./_overArg');
 
 /** Built-in value references. */
@@ -6180,7 +6873,73 @@ var getPrototype = overArg(Object.getPrototypeOf, Object);
 
 module.exports = getPrototype;
 
-},{"./_overArg":127}],97:[function(require,module,exports){
+},{"./_overArg":158}],122:[function(require,module,exports){
+var Symbol = require('./_Symbol');
+
+/** Used for built-in method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/**
+ * Used to resolve the
+ * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var nativeObjectToString = objectProto.toString;
+
+/** Built-in value references. */
+var symToStringTag = Symbol ? Symbol.toStringTag : undefined;
+
+/**
+ * A specialized version of `baseGetTag` which ignores `Symbol.toStringTag` values.
+ *
+ * @private
+ * @param {*} value The value to query.
+ * @returns {string} Returns the raw `toStringTag`.
+ */
+function getRawTag(value) {
+  var isOwn = hasOwnProperty.call(value, symToStringTag),
+      tag = value[symToStringTag];
+
+  try {
+    value[symToStringTag] = undefined;
+    var unmasked = true;
+  } catch (e) {}
+
+  var result = nativeObjectToString.call(value);
+  if (unmasked) {
+    if (isOwn) {
+      value[symToStringTag] = tag;
+    } else {
+      delete value[symToStringTag];
+    }
+  }
+  return result;
+}
+
+module.exports = getRawTag;
+
+},{"./_Symbol":55}],123:[function(require,module,exports){
+var overArg = require('./_overArg'),
+    stubArray = require('./stubArray');
+
+/* Built-in method references for those with the same name as other `lodash` methods. */
+var nativeGetSymbols = Object.getOwnPropertySymbols;
+
+/**
+ * Creates an array of the own enumerable symbol properties of `object`.
+ *
+ * @private
+ * @param {Object} object The object to query.
+ * @returns {Array} Returns the array of symbols.
+ */
+var getSymbols = nativeGetSymbols ? overArg(nativeGetSymbols, Object) : stubArray;
+
+module.exports = getSymbols;
+
+},{"./_overArg":158,"./stubArray":199}],124:[function(require,module,exports){
 var DataView = require('./_DataView'),
     Map = require('./_Map'),
     Promise = require('./_Promise'),
@@ -6197,16 +6956,6 @@ var mapTag = '[object Map]',
     weakMapTag = '[object WeakMap]';
 
 var dataViewTag = '[object DataView]';
-
-/** Used for built-in method references. */
-var objectProto = Object.prototype;
-
-/**
- * Used to resolve the
- * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objectToString = objectProto.toString;
 
 /** Used to detect maps, sets, and weakmaps. */
 var dataViewCtorString = toSource(DataView),
@@ -6231,9 +6980,9 @@ if ((DataView && getTag(new DataView(new ArrayBuffer(1))) != dataViewTag) ||
     (Set && getTag(new Set) != setTag) ||
     (WeakMap && getTag(new WeakMap) != weakMapTag)) {
   getTag = function(value) {
-    var result = objectToString.call(value),
+    var result = baseGetTag(value),
         Ctor = result == objectTag ? value.constructor : undefined,
-        ctorString = Ctor ? toSource(Ctor) : undefined;
+        ctorString = Ctor ? toSource(Ctor) : '';
 
     if (ctorString) {
       switch (ctorString) {
@@ -6250,7 +6999,7 @@ if ((DataView && getTag(new DataView(new ArrayBuffer(1))) != dataViewTag) ||
 
 module.exports = getTag;
 
-},{"./_DataView":46,"./_Map":49,"./_Promise":51,"./_Set":52,"./_WeakMap":57,"./_baseGetTag":67,"./_toSource":139}],98:[function(require,module,exports){
+},{"./_DataView":46,"./_Map":49,"./_Promise":51,"./_Set":52,"./_WeakMap":57,"./_baseGetTag":77,"./_toSource":170}],125:[function(require,module,exports){
 /**
  * Gets the value at `key` of `object`.
  *
@@ -6265,7 +7014,7 @@ function getValue(object, key) {
 
 module.exports = getValue;
 
-},{}],99:[function(require,module,exports){
+},{}],126:[function(require,module,exports){
 var castPath = require('./_castPath'),
     isArguments = require('./isArguments'),
     isArray = require('./isArray'),
@@ -6300,14 +7049,14 @@ function hasPath(object, path, hasFunc) {
   if (result || ++index != length) {
     return result;
   }
-  length = object ? object.length : 0;
+  length = object == null ? 0 : object.length;
   return !!length && isLength(length) && isIndex(key, length) &&
     (isArray(object) || isArguments(object));
 }
 
 module.exports = hasPath;
 
-},{"./_castPath":85,"./_isIndex":105,"./_isKey":106,"./_toKey":138,"./isArguments":148,"./isArray":149,"./isLength":153}],100:[function(require,module,exports){
+},{"./_castPath":97,"./_isIndex":135,"./_isKey":136,"./_toKey":169,"./isArguments":180,"./isArray":181,"./isLength":185}],127:[function(require,module,exports){
 var nativeCreate = require('./_nativeCreate');
 
 /**
@@ -6324,7 +7073,7 @@ function hashClear() {
 
 module.exports = hashClear;
 
-},{"./_nativeCreate":124}],101:[function(require,module,exports){
+},{"./_nativeCreate":154}],128:[function(require,module,exports){
 /**
  * Removes `key` and its value from the hash.
  *
@@ -6343,7 +7092,7 @@ function hashDelete(key) {
 
 module.exports = hashDelete;
 
-},{}],102:[function(require,module,exports){
+},{}],129:[function(require,module,exports){
 var nativeCreate = require('./_nativeCreate');
 
 /** Used to stand-in for `undefined` hash values. */
@@ -6375,7 +7124,7 @@ function hashGet(key) {
 
 module.exports = hashGet;
 
-},{"./_nativeCreate":124}],103:[function(require,module,exports){
+},{"./_nativeCreate":154}],130:[function(require,module,exports){
 var nativeCreate = require('./_nativeCreate');
 
 /** Used for built-in method references. */
@@ -6400,7 +7149,7 @@ function hashHas(key) {
 
 module.exports = hashHas;
 
-},{"./_nativeCreate":124}],104:[function(require,module,exports){
+},{"./_nativeCreate":154}],131:[function(require,module,exports){
 var nativeCreate = require('./_nativeCreate');
 
 /** Used to stand-in for `undefined` hash values. */
@@ -6425,7 +7174,137 @@ function hashSet(key, value) {
 
 module.exports = hashSet;
 
-},{"./_nativeCreate":124}],105:[function(require,module,exports){
+},{"./_nativeCreate":154}],132:[function(require,module,exports){
+/** Used for built-in method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/**
+ * Initializes an array clone.
+ *
+ * @private
+ * @param {Array} array The array to clone.
+ * @returns {Array} Returns the initialized clone.
+ */
+function initCloneArray(array) {
+  var length = array.length,
+      result = array.constructor(length);
+
+  // Add properties assigned by `RegExp#exec`.
+  if (length && typeof array[0] == 'string' && hasOwnProperty.call(array, 'index')) {
+    result.index = array.index;
+    result.input = array.input;
+  }
+  return result;
+}
+
+module.exports = initCloneArray;
+
+},{}],133:[function(require,module,exports){
+var cloneArrayBuffer = require('./_cloneArrayBuffer'),
+    cloneDataView = require('./_cloneDataView'),
+    cloneMap = require('./_cloneMap'),
+    cloneRegExp = require('./_cloneRegExp'),
+    cloneSet = require('./_cloneSet'),
+    cloneSymbol = require('./_cloneSymbol'),
+    cloneTypedArray = require('./_cloneTypedArray');
+
+/** `Object#toString` result references. */
+var boolTag = '[object Boolean]',
+    dateTag = '[object Date]',
+    mapTag = '[object Map]',
+    numberTag = '[object Number]',
+    regexpTag = '[object RegExp]',
+    setTag = '[object Set]',
+    stringTag = '[object String]',
+    symbolTag = '[object Symbol]';
+
+var arrayBufferTag = '[object ArrayBuffer]',
+    dataViewTag = '[object DataView]',
+    float32Tag = '[object Float32Array]',
+    float64Tag = '[object Float64Array]',
+    int8Tag = '[object Int8Array]',
+    int16Tag = '[object Int16Array]',
+    int32Tag = '[object Int32Array]',
+    uint8Tag = '[object Uint8Array]',
+    uint8ClampedTag = '[object Uint8ClampedArray]',
+    uint16Tag = '[object Uint16Array]',
+    uint32Tag = '[object Uint32Array]';
+
+/**
+ * Initializes an object clone based on its `toStringTag`.
+ *
+ * **Note:** This function only supports cloning values with tags of
+ * `Boolean`, `Date`, `Error`, `Number`, `RegExp`, or `String`.
+ *
+ * @private
+ * @param {Object} object The object to clone.
+ * @param {string} tag The `toStringTag` of the object to clone.
+ * @param {Function} cloneFunc The function to clone values.
+ * @param {boolean} [isDeep] Specify a deep clone.
+ * @returns {Object} Returns the initialized clone.
+ */
+function initCloneByTag(object, tag, cloneFunc, isDeep) {
+  var Ctor = object.constructor;
+  switch (tag) {
+    case arrayBufferTag:
+      return cloneArrayBuffer(object);
+
+    case boolTag:
+    case dateTag:
+      return new Ctor(+object);
+
+    case dataViewTag:
+      return cloneDataView(object, isDeep);
+
+    case float32Tag: case float64Tag:
+    case int8Tag: case int16Tag: case int32Tag:
+    case uint8Tag: case uint8ClampedTag: case uint16Tag: case uint32Tag:
+      return cloneTypedArray(object, isDeep);
+
+    case mapTag:
+      return cloneMap(object, isDeep, cloneFunc);
+
+    case numberTag:
+    case stringTag:
+      return new Ctor(object);
+
+    case regexpTag:
+      return cloneRegExp(object);
+
+    case setTag:
+      return cloneSet(object, isDeep, cloneFunc);
+
+    case symbolTag:
+      return cloneSymbol(object);
+  }
+}
+
+module.exports = initCloneByTag;
+
+},{"./_cloneArrayBuffer":98,"./_cloneDataView":100,"./_cloneMap":101,"./_cloneRegExp":102,"./_cloneSet":103,"./_cloneSymbol":104,"./_cloneTypedArray":105}],134:[function(require,module,exports){
+var baseCreate = require('./_baseCreate'),
+    getPrototype = require('./_getPrototype'),
+    isPrototype = require('./_isPrototype');
+
+/**
+ * Initializes an object clone.
+ *
+ * @private
+ * @param {Object} object The object to clone.
+ * @returns {Object} Returns the initialized clone.
+ */
+function initCloneObject(object) {
+  return (typeof object.constructor == 'function' && !isPrototype(object))
+    ? baseCreate(getPrototype(object))
+    : {};
+}
+
+module.exports = initCloneObject;
+
+},{"./_baseCreate":71,"./_getPrototype":121,"./_isPrototype":139}],135:[function(require,module,exports){
 /** Used as references for various `Number` constants. */
 var MAX_SAFE_INTEGER = 9007199254740991;
 
@@ -6449,7 +7328,7 @@ function isIndex(value, length) {
 
 module.exports = isIndex;
 
-},{}],106:[function(require,module,exports){
+},{}],136:[function(require,module,exports){
 var isArray = require('./isArray'),
     isSymbol = require('./isSymbol');
 
@@ -6480,7 +7359,7 @@ function isKey(value, object) {
 
 module.exports = isKey;
 
-},{"./isArray":149,"./isSymbol":158}],107:[function(require,module,exports){
+},{"./isArray":181,"./isSymbol":190}],137:[function(require,module,exports){
 /**
  * Checks if `value` is suitable for use as unique object key.
  *
@@ -6497,7 +7376,7 @@ function isKeyable(value) {
 
 module.exports = isKeyable;
 
-},{}],108:[function(require,module,exports){
+},{}],138:[function(require,module,exports){
 var coreJsData = require('./_coreJsData');
 
 /** Used to detect methods masquerading as native. */
@@ -6519,7 +7398,7 @@ function isMasked(func) {
 
 module.exports = isMasked;
 
-},{"./_coreJsData":86}],109:[function(require,module,exports){
+},{"./_coreJsData":109}],139:[function(require,module,exports){
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
 
@@ -6539,7 +7418,7 @@ function isPrototype(value) {
 
 module.exports = isPrototype;
 
-},{}],110:[function(require,module,exports){
+},{}],140:[function(require,module,exports){
 var isObject = require('./isObject');
 
 /**
@@ -6556,7 +7435,7 @@ function isStrictComparable(value) {
 
 module.exports = isStrictComparable;
 
-},{"./isObject":154}],111:[function(require,module,exports){
+},{"./isObject":186}],141:[function(require,module,exports){
 /**
  * Removes all key-value entries from the list cache.
  *
@@ -6571,7 +7450,7 @@ function listCacheClear() {
 
 module.exports = listCacheClear;
 
-},{}],112:[function(require,module,exports){
+},{}],142:[function(require,module,exports){
 var assocIndexOf = require('./_assocIndexOf');
 
 /** Used for built-in method references. */
@@ -6608,7 +7487,7 @@ function listCacheDelete(key) {
 
 module.exports = listCacheDelete;
 
-},{"./_assocIndexOf":62}],113:[function(require,module,exports){
+},{"./_assocIndexOf":67}],143:[function(require,module,exports){
 var assocIndexOf = require('./_assocIndexOf');
 
 /**
@@ -6629,7 +7508,7 @@ function listCacheGet(key) {
 
 module.exports = listCacheGet;
 
-},{"./_assocIndexOf":62}],114:[function(require,module,exports){
+},{"./_assocIndexOf":67}],144:[function(require,module,exports){
 var assocIndexOf = require('./_assocIndexOf');
 
 /**
@@ -6647,7 +7526,7 @@ function listCacheHas(key) {
 
 module.exports = listCacheHas;
 
-},{"./_assocIndexOf":62}],115:[function(require,module,exports){
+},{"./_assocIndexOf":67}],145:[function(require,module,exports){
 var assocIndexOf = require('./_assocIndexOf');
 
 /**
@@ -6675,7 +7554,7 @@ function listCacheSet(key, value) {
 
 module.exports = listCacheSet;
 
-},{"./_assocIndexOf":62}],116:[function(require,module,exports){
+},{"./_assocIndexOf":67}],146:[function(require,module,exports){
 var Hash = require('./_Hash'),
     ListCache = require('./_ListCache'),
     Map = require('./_Map');
@@ -6698,7 +7577,7 @@ function mapCacheClear() {
 
 module.exports = mapCacheClear;
 
-},{"./_Hash":47,"./_ListCache":48,"./_Map":49}],117:[function(require,module,exports){
+},{"./_Hash":47,"./_ListCache":48,"./_Map":49}],147:[function(require,module,exports){
 var getMapData = require('./_getMapData');
 
 /**
@@ -6718,7 +7597,7 @@ function mapCacheDelete(key) {
 
 module.exports = mapCacheDelete;
 
-},{"./_getMapData":93}],118:[function(require,module,exports){
+},{"./_getMapData":118}],148:[function(require,module,exports){
 var getMapData = require('./_getMapData');
 
 /**
@@ -6736,7 +7615,7 @@ function mapCacheGet(key) {
 
 module.exports = mapCacheGet;
 
-},{"./_getMapData":93}],119:[function(require,module,exports){
+},{"./_getMapData":118}],149:[function(require,module,exports){
 var getMapData = require('./_getMapData');
 
 /**
@@ -6754,7 +7633,7 @@ function mapCacheHas(key) {
 
 module.exports = mapCacheHas;
 
-},{"./_getMapData":93}],120:[function(require,module,exports){
+},{"./_getMapData":118}],150:[function(require,module,exports){
 var getMapData = require('./_getMapData');
 
 /**
@@ -6778,7 +7657,7 @@ function mapCacheSet(key, value) {
 
 module.exports = mapCacheSet;
 
-},{"./_getMapData":93}],121:[function(require,module,exports){
+},{"./_getMapData":118}],151:[function(require,module,exports){
 /**
  * Converts `map` to its key-value pairs.
  *
@@ -6798,7 +7677,7 @@ function mapToArray(map) {
 
 module.exports = mapToArray;
 
-},{}],122:[function(require,module,exports){
+},{}],152:[function(require,module,exports){
 /**
  * A specialized version of `matchesProperty` for source values suitable
  * for strict equality comparisons, i.e. `===`.
@@ -6820,7 +7699,7 @@ function matchesStrictComparable(key, srcValue) {
 
 module.exports = matchesStrictComparable;
 
-},{}],123:[function(require,module,exports){
+},{}],153:[function(require,module,exports){
 var memoize = require('./memoize');
 
 /** Used as the maximum memoize cache size. */
@@ -6848,7 +7727,7 @@ function memoizeCapped(func) {
 
 module.exports = memoizeCapped;
 
-},{"./memoize":163}],124:[function(require,module,exports){
+},{"./memoize":195}],154:[function(require,module,exports){
 var getNative = require('./_getNative');
 
 /* Built-in method references that are verified to be native. */
@@ -6856,7 +7735,7 @@ var nativeCreate = getNative(Object, 'create');
 
 module.exports = nativeCreate;
 
-},{"./_getNative":95}],125:[function(require,module,exports){
+},{"./_getNative":120}],155:[function(require,module,exports){
 var overArg = require('./_overArg');
 
 /* Built-in method references for those with the same name as other `lodash` methods. */
@@ -6864,7 +7743,7 @@ var nativeKeys = overArg(Object.keys, Object);
 
 module.exports = nativeKeys;
 
-},{"./_overArg":127}],126:[function(require,module,exports){
+},{"./_overArg":158}],156:[function(require,module,exports){
 var freeGlobal = require('./_freeGlobal');
 
 /** Detect free variable `exports`. */
@@ -6888,7 +7767,31 @@ var nodeUtil = (function() {
 
 module.exports = nodeUtil;
 
-},{"./_freeGlobal":92}],127:[function(require,module,exports){
+},{"./_freeGlobal":116}],157:[function(require,module,exports){
+/** Used for built-in method references. */
+var objectProto = Object.prototype;
+
+/**
+ * Used to resolve the
+ * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var nativeObjectToString = objectProto.toString;
+
+/**
+ * Converts `value` to a string using `Object.prototype.toString`.
+ *
+ * @private
+ * @param {*} value The value to convert.
+ * @returns {string} Returns the converted string.
+ */
+function objectToString(value) {
+  return nativeObjectToString.call(value);
+}
+
+module.exports = objectToString;
+
+},{}],158:[function(require,module,exports){
 /**
  * Creates a unary function that invokes `func` with its argument transformed.
  *
@@ -6905,7 +7808,7 @@ function overArg(func, transform) {
 
 module.exports = overArg;
 
-},{}],128:[function(require,module,exports){
+},{}],159:[function(require,module,exports){
 var freeGlobal = require('./_freeGlobal');
 
 /** Detect free variable `self`. */
@@ -6916,7 +7819,7 @@ var root = freeGlobal || freeSelf || Function('return this')();
 
 module.exports = root;
 
-},{"./_freeGlobal":92}],129:[function(require,module,exports){
+},{"./_freeGlobal":116}],160:[function(require,module,exports){
 /** Used to stand-in for `undefined` hash values. */
 var HASH_UNDEFINED = '__lodash_hash_undefined__';
 
@@ -6937,7 +7840,7 @@ function setCacheAdd(value) {
 
 module.exports = setCacheAdd;
 
-},{}],130:[function(require,module,exports){
+},{}],161:[function(require,module,exports){
 /**
  * Checks if `value` is in the array cache.
  *
@@ -6953,7 +7856,7 @@ function setCacheHas(value) {
 
 module.exports = setCacheHas;
 
-},{}],131:[function(require,module,exports){
+},{}],162:[function(require,module,exports){
 /**
  * Converts `set` to an array of its values.
  *
@@ -6973,7 +7876,7 @@ function setToArray(set) {
 
 module.exports = setToArray;
 
-},{}],132:[function(require,module,exports){
+},{}],163:[function(require,module,exports){
 var ListCache = require('./_ListCache');
 
 /**
@@ -6990,7 +7893,7 @@ function stackClear() {
 
 module.exports = stackClear;
 
-},{"./_ListCache":48}],133:[function(require,module,exports){
+},{"./_ListCache":48}],164:[function(require,module,exports){
 /**
  * Removes `key` and its value from the stack.
  *
@@ -7010,7 +7913,7 @@ function stackDelete(key) {
 
 module.exports = stackDelete;
 
-},{}],134:[function(require,module,exports){
+},{}],165:[function(require,module,exports){
 /**
  * Gets the stack value for `key`.
  *
@@ -7026,7 +7929,7 @@ function stackGet(key) {
 
 module.exports = stackGet;
 
-},{}],135:[function(require,module,exports){
+},{}],166:[function(require,module,exports){
 /**
  * Checks if a stack value for `key` exists.
  *
@@ -7042,7 +7945,7 @@ function stackHas(key) {
 
 module.exports = stackHas;
 
-},{}],136:[function(require,module,exports){
+},{}],167:[function(require,module,exports){
 var ListCache = require('./_ListCache'),
     Map = require('./_Map'),
     MapCache = require('./_MapCache');
@@ -7078,7 +7981,7 @@ function stackSet(key, value) {
 
 module.exports = stackSet;
 
-},{"./_ListCache":48,"./_Map":49,"./_MapCache":50}],137:[function(require,module,exports){
+},{"./_ListCache":48,"./_Map":49,"./_MapCache":50}],168:[function(require,module,exports){
 var memoizeCapped = require('./_memoizeCapped'),
     toString = require('./toString');
 
@@ -7111,7 +8014,7 @@ var stringToPath = memoizeCapped(function(string) {
 
 module.exports = stringToPath;
 
-},{"./_memoizeCapped":123,"./toString":171}],138:[function(require,module,exports){
+},{"./_memoizeCapped":153,"./toString":205}],169:[function(require,module,exports){
 var isSymbol = require('./isSymbol');
 
 /** Used as references for various `Number` constants. */
@@ -7134,7 +8037,7 @@ function toKey(value) {
 
 module.exports = toKey;
 
-},{"./isSymbol":158}],139:[function(require,module,exports){
+},{"./isSymbol":190}],170:[function(require,module,exports){
 /** Used for built-in method references. */
 var funcProto = Function.prototype;
 
@@ -7145,7 +8048,7 @@ var funcToString = funcProto.toString;
  * Converts `func` to its source code.
  *
  * @private
- * @param {Function} func The function to process.
+ * @param {Function} func The function to convert.
  * @returns {string} Returns the source code.
  */
 function toSource(func) {
@@ -7162,10 +8065,10 @@ function toSource(func) {
 
 module.exports = toSource;
 
-},{}],140:[function(require,module,exports){
+},{}],171:[function(require,module,exports){
 var toInteger = require('./toInteger');
 
-/** Used as the `TypeError` message for "Functions" methods. */
+/** Error message constants. */
 var FUNC_ERROR_TEXT = 'Expected a function';
 
 /**
@@ -7204,12 +8107,39 @@ function before(n, func) {
 
 module.exports = before;
 
-},{"./toInteger":169}],141:[function(require,module,exports){
+},{"./toInteger":203}],172:[function(require,module,exports){
+var baseClone = require('./_baseClone');
+
+/**
+ * This method is like `_.clone` except that it recursively clones `value`.
+ *
+ * @static
+ * @memberOf _
+ * @since 1.0.0
+ * @category Lang
+ * @param {*} value The value to recursively clone.
+ * @returns {*} Returns the deep cloned value.
+ * @see _.clone
+ * @example
+ *
+ * var objects = [{ 'a': 1 }, { 'b': 2 }];
+ *
+ * var deep = _.cloneDeep(objects);
+ * console.log(deep[0] === objects[0]);
+ * // => false
+ */
+function cloneDeep(value) {
+  return baseClone(value, true, true);
+}
+
+module.exports = cloneDeep;
+
+},{"./_baseClone":70}],173:[function(require,module,exports){
 var isObject = require('./isObject'),
     now = require('./now'),
     toNumber = require('./toNumber');
 
-/** Used as the `TypeError` message for "Functions" methods. */
+/** Error message constants. */
 var FUNC_ERROR_TEXT = 'Expected a function';
 
 /* Built-in method references for those with the same name as other `lodash` methods. */
@@ -7394,10 +8324,10 @@ function debounce(func, wait, options) {
 
 module.exports = debounce;
 
-},{"./isObject":154,"./now":164,"./toNumber":170}],142:[function(require,module,exports){
+},{"./isObject":186,"./now":196,"./toNumber":204}],174:[function(require,module,exports){
 module.exports = require('./forEach');
 
-},{"./forEach":144}],143:[function(require,module,exports){
+},{"./forEach":176}],175:[function(require,module,exports){
 /**
  * Performs a
  * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
@@ -7436,10 +8366,10 @@ function eq(value, other) {
 
 module.exports = eq;
 
-},{}],144:[function(require,module,exports){
+},{}],176:[function(require,module,exports){
 var arrayEach = require('./_arrayEach'),
     baseEach = require('./_baseEach'),
-    baseIteratee = require('./_baseIteratee'),
+    castFunction = require('./_castFunction'),
     isArray = require('./isArray');
 
 /**
@@ -7474,12 +8404,12 @@ var arrayEach = require('./_arrayEach'),
  */
 function forEach(collection, iteratee) {
   var func = isArray(collection) ? arrayEach : baseEach;
-  return func(collection, baseIteratee(iteratee, 3));
+  return func(collection, castFunction(iteratee));
 }
 
 module.exports = forEach;
 
-},{"./_arrayEach":58,"./_baseEach":63,"./_baseIteratee":74,"./isArray":149}],145:[function(require,module,exports){
+},{"./_arrayEach":60,"./_baseEach":72,"./_castFunction":96,"./isArray":181}],177:[function(require,module,exports){
 var baseGet = require('./_baseGet');
 
 /**
@@ -7514,7 +8444,7 @@ function get(object, path, defaultValue) {
 
 module.exports = get;
 
-},{"./_baseGet":66}],146:[function(require,module,exports){
+},{"./_baseGet":75}],178:[function(require,module,exports){
 var baseHasIn = require('./_baseHasIn'),
     hasPath = require('./_hasPath');
 
@@ -7550,7 +8480,7 @@ function hasIn(object, path) {
 
 module.exports = hasIn;
 
-},{"./_baseHasIn":68,"./_hasPath":99}],147:[function(require,module,exports){
+},{"./_baseHasIn":78,"./_hasPath":126}],179:[function(require,module,exports){
 /**
  * This method returns the first argument it receives.
  *
@@ -7573,24 +8503,15 @@ function identity(value) {
 
 module.exports = identity;
 
-},{}],148:[function(require,module,exports){
-var isArrayLikeObject = require('./isArrayLikeObject');
-
-/** `Object#toString` result references. */
-var argsTag = '[object Arguments]';
+},{}],180:[function(require,module,exports){
+var baseIsArguments = require('./_baseIsArguments'),
+    isObjectLike = require('./isObjectLike');
 
 /** Used for built-in method references. */
 var objectProto = Object.prototype;
 
 /** Used to check objects for own properties. */
 var hasOwnProperty = objectProto.hasOwnProperty;
-
-/**
- * Used to resolve the
- * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objectToString = objectProto.toString;
 
 /** Built-in value references. */
 var propertyIsEnumerable = objectProto.propertyIsEnumerable;
@@ -7613,15 +8534,14 @@ var propertyIsEnumerable = objectProto.propertyIsEnumerable;
  * _.isArguments([1, 2, 3]);
  * // => false
  */
-function isArguments(value) {
-  // Safari 8.1 makes `arguments.callee` enumerable in strict mode.
-  return isArrayLikeObject(value) && hasOwnProperty.call(value, 'callee') &&
-    (!propertyIsEnumerable.call(value, 'callee') || objectToString.call(value) == argsTag);
-}
+var isArguments = baseIsArguments(function() { return arguments; }()) ? baseIsArguments : function(value) {
+  return isObjectLike(value) && hasOwnProperty.call(value, 'callee') &&
+    !propertyIsEnumerable.call(value, 'callee');
+};
 
 module.exports = isArguments;
 
-},{"./isArrayLikeObject":151}],149:[function(require,module,exports){
+},{"./_baseIsArguments":79,"./isObjectLike":187}],181:[function(require,module,exports){
 /**
  * Checks if `value` is classified as an `Array` object.
  *
@@ -7649,7 +8569,7 @@ var isArray = Array.isArray;
 
 module.exports = isArray;
 
-},{}],150:[function(require,module,exports){
+},{}],182:[function(require,module,exports){
 var isFunction = require('./isFunction'),
     isLength = require('./isLength');
 
@@ -7684,57 +8604,55 @@ function isArrayLike(value) {
 
 module.exports = isArrayLike;
 
-},{"./isFunction":152,"./isLength":153}],151:[function(require,module,exports){
-var isArrayLike = require('./isArrayLike'),
-    isObjectLike = require('./isObjectLike');
+},{"./isFunction":184,"./isLength":185}],183:[function(require,module,exports){
+var root = require('./_root'),
+    stubFalse = require('./stubFalse');
+
+/** Detect free variable `exports`. */
+var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
+
+/** Detect free variable `module`. */
+var freeModule = freeExports && typeof module == 'object' && module && !module.nodeType && module;
+
+/** Detect the popular CommonJS extension `module.exports`. */
+var moduleExports = freeModule && freeModule.exports === freeExports;
+
+/** Built-in value references. */
+var Buffer = moduleExports ? root.Buffer : undefined;
+
+/* Built-in method references for those with the same name as other `lodash` methods. */
+var nativeIsBuffer = Buffer ? Buffer.isBuffer : undefined;
 
 /**
- * This method is like `_.isArrayLike` except that it also checks if `value`
- * is an object.
+ * Checks if `value` is a buffer.
  *
  * @static
  * @memberOf _
- * @since 4.0.0
+ * @since 4.3.0
  * @category Lang
  * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is an array-like object,
- *  else `false`.
+ * @returns {boolean} Returns `true` if `value` is a buffer, else `false`.
  * @example
  *
- * _.isArrayLikeObject([1, 2, 3]);
+ * _.isBuffer(new Buffer(2));
  * // => true
  *
- * _.isArrayLikeObject(document.body.children);
- * // => true
- *
- * _.isArrayLikeObject('abc');
- * // => false
- *
- * _.isArrayLikeObject(_.noop);
+ * _.isBuffer(new Uint8Array(2));
  * // => false
  */
-function isArrayLikeObject(value) {
-  return isObjectLike(value) && isArrayLike(value);
-}
+var isBuffer = nativeIsBuffer || stubFalse;
 
-module.exports = isArrayLikeObject;
+module.exports = isBuffer;
 
-},{"./isArrayLike":150,"./isObjectLike":155}],152:[function(require,module,exports){
-var isObject = require('./isObject');
+},{"./_root":159,"./stubFalse":200}],184:[function(require,module,exports){
+var baseGetTag = require('./_baseGetTag'),
+    isObject = require('./isObject');
 
 /** `Object#toString` result references. */
-var funcTag = '[object Function]',
-    genTag = '[object GeneratorFunction]';
-
-/** Used for built-in method references. */
-var objectProto = Object.prototype;
-
-/**
- * Used to resolve the
- * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objectToString = objectProto.toString;
+var asyncTag = '[object AsyncFunction]',
+    funcTag = '[object Function]',
+    genTag = '[object GeneratorFunction]',
+    proxyTag = '[object Proxy]';
 
 /**
  * Checks if `value` is classified as a `Function` object.
@@ -7754,15 +8672,18 @@ var objectToString = objectProto.toString;
  * // => false
  */
 function isFunction(value) {
+  if (!isObject(value)) {
+    return false;
+  }
   // The use of `Object#toString` avoids issues with the `typeof` operator
-  // in Safari 8-9 which returns 'object' for typed array and other constructors.
-  var tag = isObject(value) ? objectToString.call(value) : '';
-  return tag == funcTag || tag == genTag;
+  // in Safari 9 which returns 'object' for typed arrays and other constructors.
+  var tag = baseGetTag(value);
+  return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
 }
 
 module.exports = isFunction;
 
-},{"./isObject":154}],153:[function(require,module,exports){
+},{"./_baseGetTag":77,"./isObject":186}],185:[function(require,module,exports){
 /** Used as references for various `Number` constants. */
 var MAX_SAFE_INTEGER = 9007199254740991;
 
@@ -7799,7 +8720,7 @@ function isLength(value) {
 
 module.exports = isLength;
 
-},{}],154:[function(require,module,exports){
+},{}],186:[function(require,module,exports){
 /**
  * Checks if `value` is the
  * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
@@ -7832,7 +8753,7 @@ function isObject(value) {
 
 module.exports = isObject;
 
-},{}],155:[function(require,module,exports){
+},{}],187:[function(require,module,exports){
 /**
  * Checks if `value` is object-like. A value is object-like if it's not `null`
  * and has a `typeof` result of "object".
@@ -7863,8 +8784,9 @@ function isObjectLike(value) {
 
 module.exports = isObjectLike;
 
-},{}],156:[function(require,module,exports){
-var getPrototype = require('./_getPrototype'),
+},{}],188:[function(require,module,exports){
+var baseGetTag = require('./_baseGetTag'),
+    getPrototype = require('./_getPrototype'),
     isObjectLike = require('./isObjectLike');
 
 /** `Object#toString` result references. */
@@ -7882,13 +8804,6 @@ var hasOwnProperty = objectProto.hasOwnProperty;
 
 /** Used to infer the `Object` constructor. */
 var objectCtorString = funcToString.call(Object);
-
-/**
- * Used to resolve the
- * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objectToString = objectProto.toString;
 
 /**
  * Checks if `value` is a plain object, that is, an object created by the
@@ -7919,7 +8834,7 @@ var objectToString = objectProto.toString;
  * // => true
  */
 function isPlainObject(value) {
-  if (!isObjectLike(value) || objectToString.call(value) != objectTag) {
+  if (!isObjectLike(value) || baseGetTag(value) != objectTag) {
     return false;
   }
   var proto = getPrototype(value);
@@ -7927,28 +8842,19 @@ function isPlainObject(value) {
     return true;
   }
   var Ctor = hasOwnProperty.call(proto, 'constructor') && proto.constructor;
-  return (typeof Ctor == 'function' &&
-    Ctor instanceof Ctor && funcToString.call(Ctor) == objectCtorString);
+  return typeof Ctor == 'function' && Ctor instanceof Ctor &&
+    funcToString.call(Ctor) == objectCtorString;
 }
 
 module.exports = isPlainObject;
 
-},{"./_getPrototype":96,"./isObjectLike":155}],157:[function(require,module,exports){
-var isArray = require('./isArray'),
+},{"./_baseGetTag":77,"./_getPrototype":121,"./isObjectLike":187}],189:[function(require,module,exports){
+var baseGetTag = require('./_baseGetTag'),
+    isArray = require('./isArray'),
     isObjectLike = require('./isObjectLike');
 
 /** `Object#toString` result references. */
 var stringTag = '[object String]';
-
-/** Used for built-in method references. */
-var objectProto = Object.prototype;
-
-/**
- * Used to resolve the
- * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objectToString = objectProto.toString;
 
 /**
  * Checks if `value` is classified as a `String` primitive or object.
@@ -7969,26 +8875,17 @@ var objectToString = objectProto.toString;
  */
 function isString(value) {
   return typeof value == 'string' ||
-    (!isArray(value) && isObjectLike(value) && objectToString.call(value) == stringTag);
+    (!isArray(value) && isObjectLike(value) && baseGetTag(value) == stringTag);
 }
 
 module.exports = isString;
 
-},{"./isArray":149,"./isObjectLike":155}],158:[function(require,module,exports){
-var isObjectLike = require('./isObjectLike');
+},{"./_baseGetTag":77,"./isArray":181,"./isObjectLike":187}],190:[function(require,module,exports){
+var baseGetTag = require('./_baseGetTag'),
+    isObjectLike = require('./isObjectLike');
 
 /** `Object#toString` result references. */
 var symbolTag = '[object Symbol]';
-
-/** Used for built-in method references. */
-var objectProto = Object.prototype;
-
-/**
- * Used to resolve the
- * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objectToString = objectProto.toString;
 
 /**
  * Checks if `value` is classified as a `Symbol` primitive or object.
@@ -8009,12 +8906,12 @@ var objectToString = objectProto.toString;
  */
 function isSymbol(value) {
   return typeof value == 'symbol' ||
-    (isObjectLike(value) && objectToString.call(value) == symbolTag);
+    (isObjectLike(value) && baseGetTag(value) == symbolTag);
 }
 
 module.exports = isSymbol;
 
-},{"./isObjectLike":155}],159:[function(require,module,exports){
+},{"./_baseGetTag":77,"./isObjectLike":187}],191:[function(require,module,exports){
 var baseIsTypedArray = require('./_baseIsTypedArray'),
     baseUnary = require('./_baseUnary'),
     nodeUtil = require('./_nodeUtil');
@@ -8043,7 +8940,7 @@ var isTypedArray = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedA
 
 module.exports = isTypedArray;
 
-},{"./_baseIsTypedArray":73,"./_baseUnary":83,"./_nodeUtil":126}],160:[function(require,module,exports){
+},{"./_baseIsTypedArray":84,"./_baseUnary":94,"./_nodeUtil":156}],192:[function(require,module,exports){
 var arrayLikeKeys = require('./_arrayLikeKeys'),
     baseKeys = require('./_baseKeys'),
     isArrayLike = require('./isArrayLike');
@@ -8082,12 +8979,12 @@ function keys(object) {
 
 module.exports = keys;
 
-},{"./_arrayLikeKeys":59,"./_baseKeys":75,"./isArrayLike":150}],161:[function(require,module,exports){
+},{"./_arrayLikeKeys":61,"./_baseKeys":86,"./isArrayLike":182}],193:[function(require,module,exports){
 (function (global){
 /**
  * @license
  * lodash <https://lodash.com/>
- * Copyright jQuery Foundation and other contributors <https://jquery.org/>
+ * Copyright JS Foundation and other contributors <https://js.foundation/>
  * Released under MIT license <https://lodash.com/license>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
  * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -8098,13 +8995,14 @@ module.exports = keys;
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '4.16.0';
+  var VERSION = '4.16.6';
 
   /** Used as the size to enable large array optimizations. */
   var LARGE_ARRAY_SIZE = 200;
 
-  /** Used as the `TypeError` message for "Functions" methods. */
-  var FUNC_ERROR_TEXT = 'Expected a function';
+  /** Error message constants. */
+  var CORE_ERROR_TEXT = 'Unsupported core-js use. Try https://github.com/es-shims.',
+      FUNC_ERROR_TEXT = 'Expected a function';
 
   /** Used to stand-in for `undefined` hash values. */
   var HASH_UNDEFINED = '__lodash_hash_undefined__';
@@ -8136,7 +9034,7 @@ module.exports = keys;
       DEFAULT_TRUNC_OMISSION = '...';
 
   /** Used to detect hot functions by number of calls within a span of milliseconds. */
-  var HOT_COUNT = 500,
+  var HOT_COUNT = 800,
       HOT_SPAN = 16;
 
   /** Used to indicate the type of lazy iteratees. */
@@ -8171,19 +9069,24 @@ module.exports = keys;
   /** `Object#toString` result references. */
   var argsTag = '[object Arguments]',
       arrayTag = '[object Array]',
+      asyncTag = '[object AsyncFunction]',
       boolTag = '[object Boolean]',
       dateTag = '[object Date]',
+      domExcTag = '[object DOMException]',
       errorTag = '[object Error]',
       funcTag = '[object Function]',
       genTag = '[object GeneratorFunction]',
       mapTag = '[object Map]',
       numberTag = '[object Number]',
+      nullTag = '[object Null]',
       objectTag = '[object Object]',
       promiseTag = '[object Promise]',
+      proxyTag = '[object Proxy]',
       regexpTag = '[object RegExp]',
       setTag = '[object Set]',
       stringTag = '[object String]',
       symbolTag = '[object Symbol]',
+      undefinedTag = '[object Undefined]',
       weakMapTag = '[object WeakMap]',
       weakSetTag = '[object WeakSet]';
 
@@ -8205,8 +9108,8 @@ module.exports = keys;
       reEmptyStringTrailing = /(__e\(.*?\)|\b__t\)) \+\n'';/g;
 
   /** Used to match HTML entities and HTML characters. */
-  var reEscapedHtml = /&(?:amp|lt|gt|quot|#39|#96);/g,
-      reUnescapedHtml = /[&<>"'`]/g,
+  var reEscapedHtml = /&(?:amp|lt|gt|quot|#39);/g,
+      reUnescapedHtml = /[&<>"']/g,
       reHasEscapedHtml = RegExp(reEscapedHtml.source),
       reHasUnescapedHtml = RegExp(reUnescapedHtml.source);
 
@@ -8309,13 +9212,15 @@ module.exports = keys;
       rsZWJ = '\\u200d';
 
   /** Used to compose unicode regexes. */
-  var rsLowerMisc = '(?:' + rsLower + '|' + rsMisc + ')',
-      rsUpperMisc = '(?:' + rsUpper + '|' + rsMisc + ')',
-      rsOptLowerContr = '(?:' + rsApos + '(?:d|ll|m|re|s|t|ve))?',
-      rsOptUpperContr = '(?:' + rsApos + '(?:D|LL|M|RE|S|T|VE))?',
+  var rsMiscLower = '(?:' + rsLower + '|' + rsMisc + ')',
+      rsMiscUpper = '(?:' + rsUpper + '|' + rsMisc + ')',
+      rsOptContrLower = '(?:' + rsApos + '(?:d|ll|m|re|s|t|ve))?',
+      rsOptContrUpper = '(?:' + rsApos + '(?:D|LL|M|RE|S|T|VE))?',
       reOptMod = rsModifier + '?',
       rsOptVar = '[' + rsVarRange + ']?',
       rsOptJoin = '(?:' + rsZWJ + '(?:' + [rsNonAstral, rsRegional, rsSurrPair].join('|') + ')' + rsOptVar + reOptMod + ')*',
+      rsOrdLower = '\\d*(?:(?:1st|2nd|3rd|(?![123])\\dth)\\b)',
+      rsOrdUpper = '\\d*(?:(?:1ST|2ND|3RD|(?![123])\\dTH)\\b)',
       rsSeq = rsOptVar + reOptMod + rsOptJoin,
       rsEmoji = '(?:' + [rsDingbat, rsRegional, rsSurrPair].join('|') + ')' + rsSeq,
       rsSymbol = '(?:' + [rsNonAstral + rsCombo + '?', rsCombo, rsRegional, rsSurrPair, rsAstral].join('|') + ')';
@@ -8334,10 +9239,12 @@ module.exports = keys;
 
   /** Used to match complex or compound words. */
   var reUnicodeWord = RegExp([
-    rsUpper + '?' + rsLower + '+' + rsOptLowerContr + '(?=' + [rsBreak, rsUpper, '$'].join('|') + ')',
-    rsUpperMisc + '+' + rsOptUpperContr + '(?=' + [rsBreak, rsUpper + rsLowerMisc, '$'].join('|') + ')',
-    rsUpper + '?' + rsLowerMisc + '+' + rsOptLowerContr,
-    rsUpper + '+' + rsOptUpperContr,
+    rsUpper + '?' + rsLower + '+' + rsOptContrLower + '(?=' + [rsBreak, rsUpper, '$'].join('|') + ')',
+    rsMiscUpper + '+' + rsOptContrUpper + '(?=' + [rsBreak, rsUpper + rsMiscLower, '$'].join('|') + ')',
+    rsUpper + '?' + rsMiscLower + '+' + rsOptContrLower,
+    rsUpper + '+' + rsOptContrUpper,
+    rsOrdUpper,
+    rsOrdLower,
     rsDigits,
     rsEmoji
   ].join('|'), 'g');
@@ -8580,7 +9487,7 @@ module.exports = keys;
    */
   function arrayAggregator(array, setter, iteratee, accumulator) {
     var index = -1,
-        length = array ? array.length : 0;
+        length = array == null ? 0 : array.length;
 
     while (++index < length) {
       var value = array[index];
@@ -8600,7 +9507,7 @@ module.exports = keys;
    */
   function arrayEach(array, iteratee) {
     var index = -1,
-        length = array ? array.length : 0;
+        length = array == null ? 0 : array.length;
 
     while (++index < length) {
       if (iteratee(array[index], index, array) === false) {
@@ -8620,7 +9527,7 @@ module.exports = keys;
    * @returns {Array} Returns `array`.
    */
   function arrayEachRight(array, iteratee) {
-    var length = array ? array.length : 0;
+    var length = array == null ? 0 : array.length;
 
     while (length--) {
       if (iteratee(array[length], length, array) === false) {
@@ -8642,7 +9549,7 @@ module.exports = keys;
    */
   function arrayEvery(array, predicate) {
     var index = -1,
-        length = array ? array.length : 0;
+        length = array == null ? 0 : array.length;
 
     while (++index < length) {
       if (!predicate(array[index], index, array)) {
@@ -8663,7 +9570,7 @@ module.exports = keys;
    */
   function arrayFilter(array, predicate) {
     var index = -1,
-        length = array ? array.length : 0,
+        length = array == null ? 0 : array.length,
         resIndex = 0,
         result = [];
 
@@ -8686,7 +9593,7 @@ module.exports = keys;
    * @returns {boolean} Returns `true` if `target` is found, else `false`.
    */
   function arrayIncludes(array, value) {
-    var length = array ? array.length : 0;
+    var length = array == null ? 0 : array.length;
     return !!length && baseIndexOf(array, value, 0) > -1;
   }
 
@@ -8701,7 +9608,7 @@ module.exports = keys;
    */
   function arrayIncludesWith(array, value, comparator) {
     var index = -1,
-        length = array ? array.length : 0;
+        length = array == null ? 0 : array.length;
 
     while (++index < length) {
       if (comparator(value, array[index])) {
@@ -8722,7 +9629,7 @@ module.exports = keys;
    */
   function arrayMap(array, iteratee) {
     var index = -1,
-        length = array ? array.length : 0,
+        length = array == null ? 0 : array.length,
         result = Array(length);
 
     while (++index < length) {
@@ -8764,7 +9671,7 @@ module.exports = keys;
    */
   function arrayReduce(array, iteratee, accumulator, initAccum) {
     var index = -1,
-        length = array ? array.length : 0;
+        length = array == null ? 0 : array.length;
 
     if (initAccum && length) {
       accumulator = array[++index];
@@ -8788,7 +9695,7 @@ module.exports = keys;
    * @returns {*} Returns the accumulated value.
    */
   function arrayReduceRight(array, iteratee, accumulator, initAccum) {
-    var length = array ? array.length : 0;
+    var length = array == null ? 0 : array.length;
     if (initAccum && length) {
       accumulator = array[--length];
     }
@@ -8810,7 +9717,7 @@ module.exports = keys;
    */
   function arraySome(array, predicate) {
     var index = -1,
-        length = array ? array.length : 0;
+        length = array == null ? 0 : array.length;
 
     while (++index < length) {
       if (predicate(array[index], index, array)) {
@@ -8954,7 +9861,7 @@ module.exports = keys;
    * @returns {number} Returns the mean.
    */
   function baseMean(array, iteratee) {
-    var length = array ? array.length : 0;
+    var length = array == null ? 0 : array.length;
     return length ? (baseSum(array, iteratee) / length) : NAN;
   }
 
@@ -9493,8 +10400,8 @@ module.exports = keys;
    * // Create a suped-up `defer` in Node.js.
    * var defer = _.runInContext({ 'setTimeout': setImmediate }).defer;
    */
-  function runInContext(context) {
-    context = context ? _.defaults(root.Object(), context, _.pick(root, contextProps)) : root;
+  var runInContext = (function runInContext(context) {
+    context = context == null ? root : _.defaults(root.Object(), context, _.pick(root, contextProps));
 
     /** Built-in constructor references. */
     var Array = context.Array,
@@ -9515,12 +10422,6 @@ module.exports = keys;
     /** Used to detect overreaching core-js shims. */
     var coreJsData = context['__core-js_shared__'];
 
-    /** Used to detect methods masquerading as native. */
-    var maskSrcKey = (function() {
-      var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || '');
-      return uid ? ('Symbol(src)_1.' + uid) : '';
-    }());
-
     /** Used to resolve the decompiled source of functions. */
     var funcToString = funcProto.toString;
 
@@ -9530,15 +10431,21 @@ module.exports = keys;
     /** Used to generate unique IDs. */
     var idCounter = 0;
 
-    /** Used to infer the `Object` constructor. */
-    var objectCtorString = funcToString.call(Object);
+    /** Used to detect methods masquerading as native. */
+    var maskSrcKey = (function() {
+      var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || '');
+      return uid ? ('Symbol(src)_1.' + uid) : '';
+    }());
 
     /**
      * Used to resolve the
      * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
      * of values.
      */
-    var objectToString = objectProto.toString;
+    var nativeObjectToString = objectProto.toString;
+
+    /** Used to infer the `Object` constructor. */
+    var objectCtorString = funcToString.call(Object);
 
     /** Used to restore the original `_` reference in `_.noConflict`. */
     var oldDash = root._;
@@ -9553,13 +10460,22 @@ module.exports = keys;
     var Buffer = moduleExports ? context.Buffer : undefined,
         Symbol = context.Symbol,
         Uint8Array = context.Uint8Array,
-        defineProperty = Object.defineProperty,
+        allocUnsafe = Buffer ? Buffer.allocUnsafe : undefined,
         getPrototype = overArg(Object.getPrototypeOf, Object),
-        iteratorSymbol = Symbol ? Symbol.iterator : undefined,
         objectCreate = Object.create,
         propertyIsEnumerable = objectProto.propertyIsEnumerable,
         splice = arrayProto.splice,
-        spreadableSymbol = Symbol ? Symbol.isConcatSpreadable : undefined;
+        spreadableSymbol = Symbol ? Symbol.isConcatSpreadable : undefined,
+        symIterator = Symbol ? Symbol.iterator : undefined,
+        symToStringTag = Symbol ? Symbol.toStringTag : undefined;
+
+    var defineProperty = (function() {
+      try {
+        var func = getNative(Object, 'defineProperty');
+        func({}, '', {});
+        return func;
+      } catch (e) {}
+    }());
 
     /** Mocked built-ins. */
     var ctxClearTimeout = context.clearTimeout !== root.clearTimeout && context.clearTimeout,
@@ -9587,8 +10503,7 @@ module.exports = keys;
         Promise = getNative(context, 'Promise'),
         Set = getNative(context, 'Set'),
         WeakMap = getNative(context, 'WeakMap'),
-        nativeCreate = getNative(Object, 'create'),
-        nativeDefineProperty = getNative(Object, 'defineProperty');
+        nativeCreate = getNative(Object, 'create');
 
     /** Used to store function metadata. */
     var metaMap = WeakMap && new WeakMap;
@@ -9738,6 +10653,30 @@ module.exports = keys;
       }
       return new LodashWrapper(value);
     }
+
+    /**
+     * The base implementation of `_.create` without support for assigning
+     * properties to the created object.
+     *
+     * @private
+     * @param {Object} proto The object to inherit from.
+     * @returns {Object} Returns the new object.
+     */
+    var baseCreate = (function() {
+      function object() {}
+      return function(proto) {
+        if (!isObject(proto)) {
+          return {};
+        }
+        if (objectCreate) {
+          return objectCreate(proto);
+        }
+        object.prototype = proto;
+        var result = new object;
+        object.prototype = undefined;
+        return result;
+      };
+    }());
 
     /**
      * The function whose prototype chain sequence wrappers inherit from.
@@ -9962,7 +10901,7 @@ module.exports = keys;
      */
     function Hash(entries) {
       var index = -1,
-          length = entries ? entries.length : 0;
+          length = entries == null ? 0 : entries.length;
 
       this.clear();
       while (++index < length) {
@@ -10066,7 +11005,7 @@ module.exports = keys;
      */
     function ListCache(entries) {
       var index = -1,
-          length = entries ? entries.length : 0;
+          length = entries == null ? 0 : entries.length;
 
       this.clear();
       while (++index < length) {
@@ -10183,7 +11122,7 @@ module.exports = keys;
      */
     function MapCache(entries) {
       var index = -1,
-          length = entries ? entries.length : 0;
+          length = entries == null ? 0 : entries.length;
 
       this.clear();
       while (++index < length) {
@@ -10287,7 +11226,7 @@ module.exports = keys;
      */
     function SetCache(values) {
       var index = -1,
-          length = values ? values.length : 0;
+          length = values == null ? 0 : values.length;
 
       this.__data__ = new MapCache;
       while (++index < length) {
@@ -10440,18 +11379,26 @@ module.exports = keys;
      * @returns {Array} Returns the array of property names.
      */
     function arrayLikeKeys(value, inherited) {
-      // Safari 8.1 makes `arguments.callee` enumerable in strict mode.
-      // Safari 9 makes `arguments.length` enumerable in strict mode.
-      var result = (isArray(value) || isArguments(value))
-        ? baseTimes(value.length, String)
-        : [];
-
-      var length = result.length,
-          skipIndexes = !!length;
+      var isArr = isArray(value),
+          isArg = !isArr && isArguments(value),
+          isBuff = !isArr && !isArg && isBuffer(value),
+          isType = !isArr && !isArg && !isBuff && isTypedArray(value),
+          skipIndexes = isArr || isArg || isBuff || isType,
+          result = skipIndexes ? baseTimes(value.length, String) : [],
+          length = result.length;
 
       for (var key in value) {
         if ((inherited || hasOwnProperty.call(value, key)) &&
-            !(skipIndexes && (key == 'length' || isIndex(key, length)))) {
+            !(skipIndexes && (
+               // Safari 9 has enumerable `arguments.length` in strict mode.
+               key == 'length' ||
+               // Node.js 0.10 has enumerable non-index properties on buffers.
+               (isBuff && (key == 'offset' || key == 'parent')) ||
+               // PhantomJS 2 has enumerable non-index properties on typed arrays.
+               (isType && (key == 'buffer' || key == 'byteLength' || key == 'byteOffset')) ||
+               // Skip index properties.
+               isIndex(key, length)
+            ))) {
           result.push(key);
         }
       }
@@ -10459,8 +11406,7 @@ module.exports = keys;
     }
 
     /**
-     * A specialized version of `_.sample` for arrays without support for iteratee
-     * shorthands.
+     * A specialized version of `_.sample` for arrays.
      *
      * @private
      * @param {Array} array The array to sample.
@@ -10480,9 +11426,7 @@ module.exports = keys;
      * @returns {Array} Returns the random elements.
      */
     function arraySampleSize(array, n) {
-      var result = arrayShuffle(array);
-      result.length = baseClamp(n, 0, result.length);
-      return result;
+      return shuffleSelf(copyArray(array), baseClamp(n, 0, array.length));
     }
 
     /**
@@ -10525,7 +11469,7 @@ module.exports = keys;
      */
     function assignMergeValue(object, key, value) {
       if ((value !== undefined && !eq(object[key], value)) ||
-          (typeof key == 'number' && value === undefined && !(key in object))) {
+          (value === undefined && !(key in object))) {
         baseAssignValue(object, key, value);
       }
     }
@@ -10629,12 +11573,12 @@ module.exports = keys;
      */
     function baseAt(object, paths) {
       var index = -1,
-          isNil = object == null,
           length = paths.length,
-          result = Array(length);
+          result = Array(length),
+          skip = object == null;
 
       while (++index < length) {
-        result[index] = isNil ? undefined : get(object, paths[index]);
+        result[index] = skip ? undefined : get(object, paths[index]);
       }
       return result;
     }
@@ -10718,9 +11662,7 @@ module.exports = keys;
       }
       stack.set(value, result);
 
-      if (!isArr) {
-        var props = isFull ? getAllKeys(value) : keys(value);
-      }
+      var props = isArr ? undefined : (isFull ? getAllKeys : keys)(value);
       arrayEach(props || value, function(subValue, key) {
         if (props) {
           key = subValue;
@@ -10770,18 +11712,6 @@ module.exports = keys;
         }
       }
       return true;
-    }
-
-    /**
-     * The base implementation of `_.create` without support for assigning
-     * properties to the created object.
-     *
-     * @private
-     * @param {Object} prototype The object to inherit from.
-     * @returns {Object} Returns the new object.
-     */
-    function baseCreate(proto) {
-      return isObject(proto) ? objectCreate(proto) : {};
     }
 
     /**
@@ -10838,7 +11768,7 @@ module.exports = keys;
       outer:
       while (++index < length) {
         var value = array[index],
-            computed = iteratee ? iteratee(value) : value;
+            computed = iteratee == null ? value : iteratee(value);
 
         value = (comparator || value !== 0) ? value : 0;
         if (isCommon && computed === computed) {
@@ -11105,14 +12035,20 @@ module.exports = keys;
     }
 
     /**
-     * The base implementation of `getTag`.
+     * The base implementation of `getTag` without fallbacks for buggy environments.
      *
      * @private
      * @param {*} value The value to query.
      * @returns {string} Returns the `toStringTag`.
      */
     function baseGetTag(value) {
-      return objectToString.call(value);
+      if (value == null) {
+        return value === undefined ? undefinedTag : nullTag;
+      }
+      value = Object(value);
+      return (symToStringTag && symToStringTag in value)
+        ? getRawTag(value)
+        : objectToString(value);
     }
 
     /**
@@ -11267,6 +12203,17 @@ module.exports = keys;
     }
 
     /**
+     * The base implementation of `_.isArguments`.
+     *
+     * @private
+     * @param {*} value The value to check.
+     * @returns {boolean} Returns `true` if `value` is an `arguments` object,
+     */
+    function baseIsArguments(value) {
+      return isObjectLike(value) && baseGetTag(value) == argsTag;
+    }
+
+    /**
      * The base implementation of `_.isArrayBuffer` without Node.js optimizations.
      *
      * @private
@@ -11274,7 +12221,7 @@ module.exports = keys;
      * @returns {boolean} Returns `true` if `value` is an array buffer, else `false`.
      */
     function baseIsArrayBuffer(value) {
-      return isObjectLike(value) && objectToString.call(value) == arrayBufferTag;
+      return isObjectLike(value) && baseGetTag(value) == arrayBufferTag;
     }
 
     /**
@@ -11285,7 +12232,7 @@ module.exports = keys;
      * @returns {boolean} Returns `true` if `value` is a date object, else `false`.
      */
     function baseIsDate(value) {
-      return isObjectLike(value) && objectToString.call(value) == dateTag;
+      return isObjectLike(value) && baseGetTag(value) == dateTag;
     }
 
     /**
@@ -11346,6 +12293,13 @@ module.exports = keys;
           othIsObj = othTag == objectTag,
           isSameTag = objTag == othTag;
 
+      if (isSameTag && isBuffer(object)) {
+        if (!isBuffer(other)) {
+          return false;
+        }
+        objIsArr = true;
+        objIsObj = false;
+      }
       if (isSameTag && !objIsObj) {
         stack || (stack = new Stack);
         return (objIsArr || isTypedArray(object))
@@ -11460,7 +12414,7 @@ module.exports = keys;
      * @returns {boolean} Returns `true` if `value` is a regexp, else `false`.
      */
     function baseIsRegExp(value) {
-      return isObject(value) && objectToString.call(value) == regexpTag;
+      return isObjectLike(value) && baseGetTag(value) == regexpTag;
     }
 
     /**
@@ -11483,7 +12437,7 @@ module.exports = keys;
      */
     function baseIsTypedArray(value) {
       return isObjectLike(value) &&
-        isLength(value.length) && !!typedArrayTags[objectToString.call(value)];
+        isLength(value.length) && !!typedArrayTags[baseGetTag(value)];
     }
 
     /**
@@ -11635,14 +12589,7 @@ module.exports = keys;
       if (object === source) {
         return;
       }
-      if (!(isArray(source) || isTypedArray(source))) {
-        var props = baseKeysIn(source);
-      }
-      arrayEach(props || source, function(srcValue, key) {
-        if (props) {
-          key = srcValue;
-          srcValue = source[key];
-        }
+      baseFor(source, function(srcValue, key) {
         if (isObject(srcValue)) {
           stack || (stack = new Stack);
           baseMergeDeep(object, source, key, srcIndex, baseMerge, customizer, stack);
@@ -11657,7 +12604,7 @@ module.exports = keys;
           }
           assignMergeValue(object, key, newValue);
         }
-      });
+      }, keysIn);
     }
 
     /**
@@ -11691,29 +12638,37 @@ module.exports = keys;
       var isCommon = newValue === undefined;
 
       if (isCommon) {
+        var isArr = isArray(srcValue),
+            isBuff = !isArr && isBuffer(srcValue),
+            isTyped = !isArr && !isBuff && isTypedArray(srcValue);
+
         newValue = srcValue;
-        if (isArray(srcValue) || isTypedArray(srcValue)) {
+        if (isArr || isBuff || isTyped) {
           if (isArray(objValue)) {
             newValue = objValue;
           }
           else if (isArrayLikeObject(objValue)) {
             newValue = copyArray(objValue);
           }
-          else {
+          else if (isBuff) {
             isCommon = false;
-            newValue = baseClone(srcValue, true);
+            newValue = cloneBuffer(srcValue, true);
+          }
+          else if (isTyped) {
+            isCommon = false;
+            newValue = cloneTypedArray(srcValue, true);
+          }
+          else {
+            newValue = [];
           }
         }
         else if (isPlainObject(srcValue) || isArguments(srcValue)) {
+          newValue = objValue;
           if (isArguments(objValue)) {
             newValue = toPlainObject(objValue);
           }
           else if (!isObject(objValue) || (srcIndex && isFunction(objValue))) {
-            isCommon = false;
-            newValue = baseClone(srcValue, true);
-          }
-          else {
-            newValue = objValue;
+            newValue = initCloneObject(srcValue);
           }
         }
         else {
@@ -11976,6 +12931,30 @@ module.exports = keys;
     }
 
     /**
+     * The base implementation of `_.sample`.
+     *
+     * @private
+     * @param {Array|Object} collection The collection to sample.
+     * @returns {*} Returns the random element.
+     */
+    function baseSample(collection) {
+      return arraySample(values(collection));
+    }
+
+    /**
+     * The base implementation of `_.sampleSize` without param guards.
+     *
+     * @private
+     * @param {Array|Object} collection The collection to sample.
+     * @param {number} n The number of elements to sample.
+     * @returns {Array} Returns the random elements.
+     */
+    function baseSampleSize(collection, n) {
+      var array = values(collection);
+      return shuffleSelf(array, baseClamp(n, 0, array.length));
+    }
+
+    /**
      * The base implementation of `_.set`.
      *
      * @private
@@ -12036,14 +13015,25 @@ module.exports = keys;
      * @param {Function} string The `toString` result.
      * @returns {Function} Returns `func`.
      */
-    var baseSetToString = !nativeDefineProperty ? identity : function(func, string) {
-      return nativeDefineProperty(func, 'toString', {
+    var baseSetToString = !defineProperty ? identity : function(func, string) {
+      return defineProperty(func, 'toString', {
         'configurable': true,
         'enumerable': false,
         'value': constant(string),
         'writable': true
       });
     };
+
+    /**
+     * The base implementation of `_.shuffle`.
+     *
+     * @private
+     * @param {Array|Object} collection The collection to shuffle.
+     * @returns {Array} Returns the new shuffled array.
+     */
+    function baseShuffle(collection) {
+      return shuffleSelf(values(collection));
+    }
 
     /**
      * The base implementation of `_.slice` without an iteratee call guard.
@@ -12108,7 +13098,7 @@ module.exports = keys;
      */
     function baseSortedIndex(array, value, retHighest) {
       var low = 0,
-          high = array ? array.length : low;
+          high = array == null ? low : array.length;
 
       if (typeof value == 'number' && value === value && high <= HALF_MAX_ARRAY_LENGTH) {
         while (low < high) {
@@ -12144,7 +13134,7 @@ module.exports = keys;
       value = iteratee(value);
 
       var low = 0,
-          high = array ? array.length : 0,
+          high = array == null ? 0 : array.length,
           valIsNaN = value !== value,
           valIsNull = value === null,
           valIsSymbol = isSymbol(value),
@@ -12237,6 +13227,10 @@ module.exports = keys;
       // Exit early for strings to avoid a performance hit in some environments.
       if (typeof value == 'string') {
         return value;
+      }
+      if (isArray(value)) {
+        // Recursively convert values (susceptible to call stack limits).
+        return arrayMap(value, baseToString) + '';
       }
       if (isSymbol(value)) {
         return symbolToString ? symbolToString.call(value) : '';
@@ -12390,18 +13384,24 @@ module.exports = keys;
      * @returns {Array} Returns the new array of values.
      */
     function baseXor(arrays, iteratee, comparator) {
+      var length = arrays.length;
+      if (length < 2) {
+        return length ? baseUniq(arrays[0]) : [];
+      }
       var index = -1,
-          length = arrays.length;
+          result = Array(length);
 
       while (++index < length) {
-        var result = result
-          ? arrayPush(
-              baseDifference(result, arrays[index], iteratee, comparator),
-              baseDifference(arrays[index], result, iteratee, comparator)
-            )
-          : arrays[index];
+        var array = arrays[index],
+            othIndex = -1;
+
+        while (++othIndex < length) {
+          if (othIndex != index) {
+            result[index] = baseDifference(result[index] || array, arrays[othIndex], iteratee, comparator);
+          }
+        }
       }
-      return (result && result.length) ? baseUniq(result, iteratee, comparator) : [];
+      return baseUniq(baseFlatten(result, 1), iteratee, comparator);
     }
 
     /**
@@ -12507,7 +13507,9 @@ module.exports = keys;
       if (isDeep) {
         return buffer.slice();
       }
-      var result = new buffer.constructor(buffer.length);
+      var length = buffer.length,
+          result = allocUnsafe ? allocUnsafe(length) : new buffer.constructor(length);
+
       buffer.copy(result);
       return result;
     }
@@ -13937,6 +14939,33 @@ module.exports = keys;
     }
 
     /**
+     * A specialized version of `baseGetTag` which ignores `Symbol.toStringTag` values.
+     *
+     * @private
+     * @param {*} value The value to query.
+     * @returns {string} Returns the raw `toStringTag`.
+     */
+    function getRawTag(value) {
+      var isOwn = hasOwnProperty.call(value, symToStringTag),
+          tag = value[symToStringTag];
+
+      try {
+        value[symToStringTag] = undefined;
+        var unmasked = true;
+      } catch (e) {}
+
+      var result = nativeObjectToString.call(value);
+      if (unmasked) {
+        if (isOwn) {
+          value[symToStringTag] = tag;
+        } else {
+          delete value[symToStringTag];
+        }
+      }
+      return result;
+    }
+
+    /**
      * Creates an array of the own enumerable symbol properties of `object`.
      *
      * @private
@@ -13978,9 +15007,9 @@ module.exports = keys;
         (Set && getTag(new Set) != setTag) ||
         (WeakMap && getTag(new WeakMap) != weakMapTag)) {
       getTag = function(value) {
-        var result = objectToString.call(value),
+        var result = baseGetTag(value),
             Ctor = result == objectTag ? value.constructor : undefined,
-            ctorString = Ctor ? toSource(Ctor) : undefined;
+            ctorString = Ctor ? toSource(Ctor) : '';
 
         if (ctorString) {
           switch (ctorString) {
@@ -14061,7 +15090,7 @@ module.exports = keys;
       if (result || ++index != length) {
         return result;
       }
-      length = object ? object.length : 0;
+      length = object == null ? 0 : object.length;
       return !!length && isLength(length) && isIndex(key, length) &&
         (isArray(object) || isArguments(object));
     }
@@ -14473,6 +15502,17 @@ module.exports = keys;
     }
 
     /**
+     * Converts `value` to a string using `Object.prototype.toString`.
+     *
+     * @private
+     * @param {*} value The value to convert.
+     * @returns {string} Returns the converted string.
+     */
+    function objectToString(value) {
+      return nativeObjectToString.call(value);
+    }
+
+    /**
      * A specialized version of `baseRest` which transforms the rest array.
      *
      * @private
@@ -14619,24 +15659,27 @@ module.exports = keys;
     }
 
     /**
-     * A specialized version of `arrayShuffle` which mutates `array`.
+     * A specialized version of `_.shuffle` which mutates and sets the size of `array`.
      *
      * @private
      * @param {Array} array The array to shuffle.
+     * @param {number} [size=array.length] The size of `array`.
      * @returns {Array} Returns `array`.
      */
-    function shuffleSelf(array) {
+    function shuffleSelf(array, size) {
       var index = -1,
           length = array.length,
           lastIndex = length - 1;
 
-      while (++index < length) {
+      size = size === undefined ? length : size;
+      while (++index < size) {
         var rand = baseRandom(index, lastIndex),
             value = array[rand];
 
         array[rand] = array[index];
         array[index] = value;
       }
+      array.length = size;
       return array;
     }
 
@@ -14679,7 +15722,7 @@ module.exports = keys;
      * Converts `func` to its source code.
      *
      * @private
-     * @param {Function} func The function to process.
+     * @param {Function} func The function to convert.
      * @returns {string} Returns the source code.
      */
     function toSource(func) {
@@ -14759,7 +15802,7 @@ module.exports = keys;
       } else {
         size = nativeMax(toInteger(size), 0);
       }
-      var length = array ? array.length : 0;
+      var length = array == null ? 0 : array.length;
       if (!length || size < 1) {
         return [];
       }
@@ -14790,7 +15833,7 @@ module.exports = keys;
      */
     function compact(array) {
       var index = -1,
-          length = array ? array.length : 0,
+          length = array == null ? 0 : array.length,
           resIndex = 0,
           result = [];
 
@@ -14962,7 +16005,7 @@ module.exports = keys;
      * // => [1, 2, 3]
      */
     function drop(array, n, guard) {
-      var length = array ? array.length : 0;
+      var length = array == null ? 0 : array.length;
       if (!length) {
         return [];
       }
@@ -14996,7 +16039,7 @@ module.exports = keys;
      * // => [1, 2, 3]
      */
     function dropRight(array, n, guard) {
-      var length = array ? array.length : 0;
+      var length = array == null ? 0 : array.length;
       if (!length) {
         return [];
       }
@@ -15056,8 +16099,7 @@ module.exports = keys;
      * @since 3.0.0
      * @category Array
      * @param {Array} array The array to query.
-     * @param {Function} [predicate=_.identity]
-     *  The function invoked per iteration.
+     * @param {Function} [predicate=_.identity] The function invoked per iteration.
      * @returns {Array} Returns the slice of `array`.
      * @example
      *
@@ -15118,7 +16160,7 @@ module.exports = keys;
      * // => [4, '*', '*', 10]
      */
     function fill(array, value, start, end) {
-      var length = array ? array.length : 0;
+      var length = array == null ? 0 : array.length;
       if (!length) {
         return [];
       }
@@ -15138,8 +16180,7 @@ module.exports = keys;
      * @since 1.1.0
      * @category Array
      * @param {Array} array The array to inspect.
-     * @param {Function} [predicate=_.identity]
-     *  The function invoked per iteration.
+     * @param {Function} [predicate=_.identity] The function invoked per iteration.
      * @param {number} [fromIndex=0] The index to search from.
      * @returns {number} Returns the index of the found element, else `-1`.
      * @example
@@ -15166,7 +16207,7 @@ module.exports = keys;
      * // => 2
      */
     function findIndex(array, predicate, fromIndex) {
-      var length = array ? array.length : 0;
+      var length = array == null ? 0 : array.length;
       if (!length) {
         return -1;
       }
@@ -15186,8 +16227,7 @@ module.exports = keys;
      * @since 2.0.0
      * @category Array
      * @param {Array} array The array to inspect.
-     * @param {Function} [predicate=_.identity]
-     *  The function invoked per iteration.
+     * @param {Function} [predicate=_.identity] The function invoked per iteration.
      * @param {number} [fromIndex=array.length-1] The index to search from.
      * @returns {number} Returns the index of the found element, else `-1`.
      * @example
@@ -15214,7 +16254,7 @@ module.exports = keys;
      * // => 0
      */
     function findLastIndex(array, predicate, fromIndex) {
-      var length = array ? array.length : 0;
+      var length = array == null ? 0 : array.length;
       if (!length) {
         return -1;
       }
@@ -15243,7 +16283,7 @@ module.exports = keys;
      * // => [1, 2, [3, [4]], 5]
      */
     function flatten(array) {
-      var length = array ? array.length : 0;
+      var length = array == null ? 0 : array.length;
       return length ? baseFlatten(array, 1) : [];
     }
 
@@ -15262,7 +16302,7 @@ module.exports = keys;
      * // => [1, 2, 3, 4, 5]
      */
     function flattenDeep(array) {
-      var length = array ? array.length : 0;
+      var length = array == null ? 0 : array.length;
       return length ? baseFlatten(array, INFINITY) : [];
     }
 
@@ -15287,7 +16327,7 @@ module.exports = keys;
      * // => [1, 2, 3, [4], 5]
      */
     function flattenDepth(array, depth) {
-      var length = array ? array.length : 0;
+      var length = array == null ? 0 : array.length;
       if (!length) {
         return [];
       }
@@ -15312,7 +16352,7 @@ module.exports = keys;
      */
     function fromPairs(pairs) {
       var index = -1,
-          length = pairs ? pairs.length : 0,
+          length = pairs == null ? 0 : pairs.length,
           result = {};
 
       while (++index < length) {
@@ -15368,7 +16408,7 @@ module.exports = keys;
      * // => 3
      */
     function indexOf(array, value, fromIndex) {
-      var length = array ? array.length : 0;
+      var length = array == null ? 0 : array.length;
       if (!length) {
         return -1;
       }
@@ -15394,7 +16434,7 @@ module.exports = keys;
      * // => [1, 2]
      */
     function initial(array) {
-      var length = array ? array.length : 0;
+      var length = array == null ? 0 : array.length;
       return length ? baseSlice(array, 0, -1) : [];
     }
 
@@ -15484,9 +16524,8 @@ module.exports = keys;
       var comparator = last(arrays),
           mapped = arrayMap(arrays, castArrayLikeObject);
 
-      if (comparator === last(mapped)) {
-        comparator = undefined;
-      } else {
+      comparator = typeof comparator == 'function' ? comparator : undefined;
+      if (comparator) {
         mapped.pop();
       }
       return (mapped.length && mapped[0] === arrays[0])
@@ -15510,7 +16549,7 @@ module.exports = keys;
      * // => 'a~b~c'
      */
     function join(array, separator) {
-      return array ? nativeJoin.call(array, separator) : '';
+      return array == null ? '' : nativeJoin.call(array, separator);
     }
 
     /**
@@ -15528,7 +16567,7 @@ module.exports = keys;
      * // => 3
      */
     function last(array) {
-      var length = array ? array.length : 0;
+      var length = array == null ? 0 : array.length;
       return length ? array[length - 1] : undefined;
     }
 
@@ -15554,7 +16593,7 @@ module.exports = keys;
      * // => 1
      */
     function lastIndexOf(array, value, fromIndex) {
-      var length = array ? array.length : 0;
+      var length = array == null ? 0 : array.length;
       if (!length) {
         return -1;
       }
@@ -15657,8 +16696,7 @@ module.exports = keys;
      * @category Array
      * @param {Array} array The array to modify.
      * @param {Array} values The values to remove.
-     * @param {Function} [iteratee=_.identity]
-     *  The iteratee invoked per element.
+     * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
      * @returns {Array} Returns `array`.
      * @example
      *
@@ -15728,7 +16766,7 @@ module.exports = keys;
      * // => ['b', 'd']
      */
     var pullAt = flatRest(function(array, indexes) {
-      var length = array ? array.length : 0,
+      var length = array == null ? 0 : array.length,
           result = baseAt(array, indexes);
 
       basePullAt(array, arrayMap(indexes, function(index) {
@@ -15751,8 +16789,7 @@ module.exports = keys;
      * @since 2.0.0
      * @category Array
      * @param {Array} array The array to modify.
-     * @param {Function} [predicate=_.identity]
-     *  The function invoked per iteration.
+     * @param {Function} [predicate=_.identity] The function invoked per iteration.
      * @returns {Array} Returns the new array of removed elements.
      * @example
      *
@@ -15812,7 +16849,7 @@ module.exports = keys;
      * // => [3, 2, 1]
      */
     function reverse(array) {
-      return array ? nativeReverse.call(array) : array;
+      return array == null ? array : nativeReverse.call(array);
     }
 
     /**
@@ -15832,7 +16869,7 @@ module.exports = keys;
      * @returns {Array} Returns the slice of `array`.
      */
     function slice(array, start, end) {
-      var length = array ? array.length : 0;
+      var length = array == null ? 0 : array.length;
       if (!length) {
         return [];
       }
@@ -15879,8 +16916,7 @@ module.exports = keys;
      * @category Array
      * @param {Array} array The sorted array to inspect.
      * @param {*} value The value to evaluate.
-     * @param {Function} [iteratee=_.identity]
-     *  The iteratee invoked per element.
+     * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
      * @returns {number} Returns the index at which `value` should be inserted
      *  into `array`.
      * @example
@@ -15915,7 +16951,7 @@ module.exports = keys;
      * // => 1
      */
     function sortedIndexOf(array, value) {
-      var length = array ? array.length : 0;
+      var length = array == null ? 0 : array.length;
       if (length) {
         var index = baseSortedIndex(array, value);
         if (index < length && eq(array[index], value)) {
@@ -15958,8 +16994,7 @@ module.exports = keys;
      * @category Array
      * @param {Array} array The sorted array to inspect.
      * @param {*} value The value to evaluate.
-     * @param {Function} [iteratee=_.identity]
-     *  The iteratee invoked per element.
+     * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
      * @returns {number} Returns the index at which `value` should be inserted
      *  into `array`.
      * @example
@@ -15994,7 +17029,7 @@ module.exports = keys;
      * // => 3
      */
     function sortedLastIndexOf(array, value) {
-      var length = array ? array.length : 0;
+      var length = array == null ? 0 : array.length;
       if (length) {
         var index = baseSortedIndex(array, value, true) - 1;
         if (eq(array[index], value)) {
@@ -16062,7 +17097,7 @@ module.exports = keys;
      * // => [2, 3]
      */
     function tail(array) {
-      var length = array ? array.length : 0;
+      var length = array == null ? 0 : array.length;
       return length ? baseSlice(array, 1, length) : [];
     }
 
@@ -16125,7 +17160,7 @@ module.exports = keys;
      * // => []
      */
     function takeRight(array, n, guard) {
-      var length = array ? array.length : 0;
+      var length = array == null ? 0 : array.length;
       if (!length) {
         return [];
       }
@@ -16144,8 +17179,7 @@ module.exports = keys;
      * @since 3.0.0
      * @category Array
      * @param {Array} array The array to query.
-     * @param {Function} [predicate=_.identity]
-     *  The function invoked per iteration.
+     * @param {Function} [predicate=_.identity] The function invoked per iteration.
      * @returns {Array} Returns the slice of `array`.
      * @example
      *
@@ -16186,8 +17220,7 @@ module.exports = keys;
      * @since 3.0.0
      * @category Array
      * @param {Array} array The array to query.
-     * @param {Function} [predicate=_.identity]
-     *  The function invoked per iteration.
+     * @param {Function} [predicate=_.identity] The function invoked per iteration.
      * @returns {Array} Returns the slice of `array`.
      * @example
      *
@@ -16250,8 +17283,7 @@ module.exports = keys;
      * @since 4.0.0
      * @category Array
      * @param {...Array} [arrays] The arrays to inspect.
-     * @param {Function} [iteratee=_.identity]
-     *  The iteratee invoked per element.
+     * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
      * @returns {Array} Returns the new array of combined values.
      * @example
      *
@@ -16293,9 +17325,7 @@ module.exports = keys;
      */
     var unionWith = baseRest(function(arrays) {
       var comparator = last(arrays);
-      if (isArrayLikeObject(comparator)) {
-        comparator = undefined;
-      }
+      comparator = typeof comparator == 'function' ? comparator : undefined;
       return baseUniq(baseFlatten(arrays, 1, isArrayLikeObject, true), undefined, comparator);
     });
 
@@ -16318,9 +17348,7 @@ module.exports = keys;
      * // => [2, 1]
      */
     function uniq(array) {
-      return (array && array.length)
-        ? baseUniq(array)
-        : [];
+      return (array && array.length) ? baseUniq(array) : [];
     }
 
     /**
@@ -16335,8 +17363,7 @@ module.exports = keys;
      * @since 4.0.0
      * @category Array
      * @param {Array} array The array to inspect.
-     * @param {Function} [iteratee=_.identity]
-     *  The iteratee invoked per element.
+     * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
      * @returns {Array} Returns the new duplicate free array.
      * @example
      *
@@ -16348,9 +17375,7 @@ module.exports = keys;
      * // => [{ 'x': 1 }, { 'x': 2 }]
      */
     function uniqBy(array, iteratee) {
-      return (array && array.length)
-        ? baseUniq(array, getIteratee(iteratee, 2))
-        : [];
+      return (array && array.length) ? baseUniq(array, getIteratee(iteratee, 2)) : [];
     }
 
     /**
@@ -16374,9 +17399,8 @@ module.exports = keys;
      * // => [{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 }]
      */
     function uniqWith(array, comparator) {
-      return (array && array.length)
-        ? baseUniq(array, undefined, comparator)
-        : [];
+      comparator = typeof comparator == 'function' ? comparator : undefined;
+      return (array && array.length) ? baseUniq(array, undefined, comparator) : [];
     }
 
     /**
@@ -16508,8 +17532,7 @@ module.exports = keys;
      * @since 4.0.0
      * @category Array
      * @param {...Array} [arrays] The arrays to inspect.
-     * @param {Function} [iteratee=_.identity]
-     *  The iteratee invoked per element.
+     * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
      * @returns {Array} Returns the new array of filtered values.
      * @example
      *
@@ -16551,9 +17574,7 @@ module.exports = keys;
      */
     var xorWith = baseRest(function(arrays) {
       var comparator = last(arrays);
-      if (isArrayLikeObject(comparator)) {
-        comparator = undefined;
-      }
+      comparator = typeof comparator == 'function' ? comparator : undefined;
       return baseXor(arrayFilter(arrays, isArrayLikeObject), undefined, comparator);
     });
 
@@ -16624,7 +17645,8 @@ module.exports = keys;
      * @since 3.8.0
      * @category Array
      * @param {...Array} [arrays] The arrays to process.
-     * @param {Function} [iteratee=_.identity] The function to combine grouped values.
+     * @param {Function} [iteratee=_.identity] The function to combine
+     *  grouped values.
      * @returns {Array} Returns the new array of grouped elements.
      * @example
      *
@@ -17001,8 +18023,7 @@ module.exports = keys;
      * @since 0.5.0
      * @category Collection
      * @param {Array|Object} collection The collection to iterate over.
-     * @param {Function} [iteratee=_.identity]
-     *  The iteratee to transform keys.
+     * @param {Function} [iteratee=_.identity] The iteratee to transform keys.
      * @returns {Object} Returns the composed aggregate object.
      * @example
      *
@@ -17036,8 +18057,7 @@ module.exports = keys;
      * @since 0.1.0
      * @category Collection
      * @param {Array|Object} collection The collection to iterate over.
-     * @param {Function} [predicate=_.identity]
-     *  The function invoked per iteration.
+     * @param {Function} [predicate=_.identity] The function invoked per iteration.
      * @param- {Object} [guard] Enables use as an iteratee for methods like `_.map`.
      * @returns {boolean} Returns `true` if all elements pass the predicate check,
      *  else `false`.
@@ -17083,8 +18103,7 @@ module.exports = keys;
      * @since 0.1.0
      * @category Collection
      * @param {Array|Object} collection The collection to iterate over.
-     * @param {Function} [predicate=_.identity]
-     *  The function invoked per iteration.
+     * @param {Function} [predicate=_.identity] The function invoked per iteration.
      * @returns {Array} Returns the new filtered array.
      * @see _.reject
      * @example
@@ -17124,8 +18143,7 @@ module.exports = keys;
      * @since 0.1.0
      * @category Collection
      * @param {Array|Object} collection The collection to inspect.
-     * @param {Function} [predicate=_.identity]
-     *  The function invoked per iteration.
+     * @param {Function} [predicate=_.identity] The function invoked per iteration.
      * @param {number} [fromIndex=0] The index to search from.
      * @returns {*} Returns the matched element, else `undefined`.
      * @example
@@ -17162,8 +18180,7 @@ module.exports = keys;
      * @since 2.0.0
      * @category Collection
      * @param {Array|Object} collection The collection to inspect.
-     * @param {Function} [predicate=_.identity]
-     *  The function invoked per iteration.
+     * @param {Function} [predicate=_.identity] The function invoked per iteration.
      * @param {number} [fromIndex=collection.length-1] The index to search from.
      * @returns {*} Returns the matched element, else `undefined`.
      * @example
@@ -17185,8 +18202,7 @@ module.exports = keys;
      * @since 4.0.0
      * @category Collection
      * @param {Array|Object} collection The collection to iterate over.
-     * @param {Function} [iteratee=_.identity]
-     *  The function invoked per iteration.
+     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
      * @returns {Array} Returns the new flattened array.
      * @example
      *
@@ -17210,8 +18226,7 @@ module.exports = keys;
      * @since 4.7.0
      * @category Collection
      * @param {Array|Object} collection The collection to iterate over.
-     * @param {Function} [iteratee=_.identity]
-     *  The function invoked per iteration.
+     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
      * @returns {Array} Returns the new flattened array.
      * @example
      *
@@ -17235,8 +18250,7 @@ module.exports = keys;
      * @since 4.7.0
      * @category Collection
      * @param {Array|Object} collection The collection to iterate over.
-     * @param {Function} [iteratee=_.identity]
-     *  The function invoked per iteration.
+     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
      * @param {number} [depth=1] The maximum recursion depth.
      * @returns {Array} Returns the new flattened array.
      * @example
@@ -17325,8 +18339,7 @@ module.exports = keys;
      * @since 0.1.0
      * @category Collection
      * @param {Array|Object} collection The collection to iterate over.
-     * @param {Function} [iteratee=_.identity]
-     *  The iteratee to transform keys.
+     * @param {Function} [iteratee=_.identity] The iteratee to transform keys.
      * @returns {Object} Returns the composed aggregate object.
      * @example
      *
@@ -17435,8 +18448,7 @@ module.exports = keys;
      * @since 4.0.0
      * @category Collection
      * @param {Array|Object} collection The collection to iterate over.
-     * @param {Function} [iteratee=_.identity]
-     *  The iteratee to transform keys.
+     * @param {Function} [iteratee=_.identity] The iteratee to transform keys.
      * @returns {Object} Returns the composed aggregate object.
      * @example
      *
@@ -17714,7 +18726,8 @@ module.exports = keys;
      * // => 2
      */
     function sample(collection) {
-      return arraySample(isArrayLike(collection) ? collection : values(collection));
+      var func = isArray(collection) ? arraySample : baseSample;
+      return func(collection);
     }
 
     /**
@@ -17743,7 +18756,8 @@ module.exports = keys;
       } else {
         n = toInteger(n);
       }
-      return arraySampleSize(isArrayLike(collection) ? collection : values(collection), n);
+      var func = isArray(collection) ? arraySampleSize : baseSampleSize;
+      return func(collection, n);
     }
 
     /**
@@ -17762,10 +18776,8 @@ module.exports = keys;
      * // => [4, 1, 3, 2]
      */
     function shuffle(collection) {
-      return shuffleSelf(isArrayLike(collection)
-        ? copyArray(collection)
-        : values(collection)
-      );
+      var func = isArray(collection) ? arrayShuffle : baseShuffle;
+      return func(collection);
     }
 
     /**
@@ -18451,7 +19463,7 @@ module.exports = keys;
      * function. Its creation may be customized by replacing the `_.memoize.Cache`
      * constructor with one whose instances implement the
      * [`Map`](http://ecma-international.org/ecma-262/7.0/#sec-properties-of-the-map-prototype-object)
-     * method interface of `delete`, `get`, `has`, and `set`.
+     * method interface of `clear`, `delete`, `get`, `has`, and `set`.
      *
      * @static
      * @memberOf _
@@ -18485,7 +19497,7 @@ module.exports = keys;
      * _.memoize.Cache = WeakMap;
      */
     function memoize(func, resolver) {
-      if (typeof func != 'function' || (resolver && typeof resolver != 'function')) {
+      if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
         throw new TypeError(FUNC_ERROR_TEXT);
       }
       var memoized = function() {
@@ -18901,8 +19913,7 @@ module.exports = keys;
      * // => '<p>fred, barney, &amp; pebbles</p>'
      */
     function wrap(value, wrapper) {
-      wrapper = wrapper == null ? identity : wrapper;
-      return partial(wrapper, value);
+      return partial(castFunction(wrapper), value);
     }
 
     /*------------------------------------------------------------------------*/
@@ -19010,6 +20021,7 @@ module.exports = keys;
      * // => 0
      */
     function cloneWith(value, customizer) {
+      customizer = typeof customizer == 'function' ? customizer : undefined;
       return baseClone(value, false, true, customizer);
     }
 
@@ -19064,6 +20076,7 @@ module.exports = keys;
      * // => 20
      */
     function cloneDeepWith(value, customizer) {
+      customizer = typeof customizer == 'function' ? customizer : undefined;
       return baseClone(value, true, true, customizer);
     }
 
@@ -19201,11 +20214,10 @@ module.exports = keys;
      * _.isArguments([1, 2, 3]);
      * // => false
      */
-    function isArguments(value) {
-      // Safari 8.1 makes `arguments.callee` enumerable in strict mode.
-      return isArrayLikeObject(value) && hasOwnProperty.call(value, 'callee') &&
-        (!propertyIsEnumerable.call(value, 'callee') || objectToString.call(value) == argsTag);
-    }
+    var isArguments = baseIsArguments(function() { return arguments; }()) ? baseIsArguments : function(value) {
+      return isObjectLike(value) && hasOwnProperty.call(value, 'callee') &&
+        !propertyIsEnumerable.call(value, 'callee');
+    };
 
     /**
      * Checks if `value` is classified as an `Array` object.
@@ -19328,7 +20340,7 @@ module.exports = keys;
      */
     function isBoolean(value) {
       return value === true || value === false ||
-        (isObjectLike(value) && objectToString.call(value) == boolTag);
+        (isObjectLike(value) && baseGetTag(value) == boolTag);
     }
 
     /**
@@ -19387,7 +20399,7 @@ module.exports = keys;
      * // => false
      */
     function isElement(value) {
-      return value != null && value.nodeType === 1 && isObjectLike(value) && !isPlainObject(value);
+      return isObjectLike(value) && value.nodeType === 1 && !isPlainObject(value);
     }
 
     /**
@@ -19424,9 +20436,12 @@ module.exports = keys;
      * // => false
      */
     function isEmpty(value) {
+      if (value == null) {
+        return true;
+      }
       if (isArrayLike(value) &&
-          (isArray(value) || typeof value == 'string' ||
-            typeof value.splice == 'function' || isBuffer(value) || isArguments(value))) {
+          (isArray(value) || typeof value == 'string' || typeof value.splice == 'function' ||
+            isBuffer(value) || isTypedArray(value) || isArguments(value))) {
         return !value.length;
       }
       var tag = getTag(value);
@@ -19434,7 +20449,7 @@ module.exports = keys;
         return !value.size;
       }
       if (isPrototype(value)) {
-        return !nativeKeys(value).length;
+        return !baseKeys(value).length;
       }
       for (var key in value) {
         if (hasOwnProperty.call(value, key)) {
@@ -19536,8 +20551,9 @@ module.exports = keys;
       if (!isObjectLike(value)) {
         return false;
       }
-      return (objectToString.call(value) == errorTag) ||
-        (typeof value.message == 'string' && typeof value.name == 'string');
+      var tag = baseGetTag(value);
+      return tag == errorTag || tag == domExcTag ||
+        (typeof value.message == 'string' && typeof value.name == 'string' && !isPlainObject(value));
     }
 
     /**
@@ -19588,10 +20604,13 @@ module.exports = keys;
      * // => false
      */
     function isFunction(value) {
+      if (!isObject(value)) {
+        return false;
+      }
       // The use of `Object#toString` avoids issues with the `typeof` operator
-      // in Safari 8-9 which returns 'object' for typed array and other constructors.
-      var tag = isObject(value) ? objectToString.call(value) : '';
-      return tag == funcTag || tag == genTag;
+      // in Safari 9 which returns 'object' for typed arrays and other constructors.
+      var tag = baseGetTag(value);
+      return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
     }
 
     /**
@@ -19864,7 +20883,7 @@ module.exports = keys;
      */
     function isNative(value) {
       if (isMaskable(value)) {
-        throw new Error('This method is not supported with core-js. Try https://github.com/es-shims.');
+        throw new Error(CORE_ERROR_TEXT);
       }
       return baseIsNative(value);
     }
@@ -19942,7 +20961,7 @@ module.exports = keys;
      */
     function isNumber(value) {
       return typeof value == 'number' ||
-        (isObjectLike(value) && objectToString.call(value) == numberTag);
+        (isObjectLike(value) && baseGetTag(value) == numberTag);
     }
 
     /**
@@ -19974,7 +20993,7 @@ module.exports = keys;
      * // => true
      */
     function isPlainObject(value) {
-      if (!isObjectLike(value) || objectToString.call(value) != objectTag) {
+      if (!isObjectLike(value) || baseGetTag(value) != objectTag) {
         return false;
       }
       var proto = getPrototype(value);
@@ -19982,8 +21001,8 @@ module.exports = keys;
         return true;
       }
       var Ctor = hasOwnProperty.call(proto, 'constructor') && proto.constructor;
-      return (typeof Ctor == 'function' &&
-        Ctor instanceof Ctor && funcToString.call(Ctor) == objectCtorString);
+      return typeof Ctor == 'function' && Ctor instanceof Ctor &&
+        funcToString.call(Ctor) == objectCtorString;
     }
 
     /**
@@ -20074,7 +21093,7 @@ module.exports = keys;
      */
     function isString(value) {
       return typeof value == 'string' ||
-        (!isArray(value) && isObjectLike(value) && objectToString.call(value) == stringTag);
+        (!isArray(value) && isObjectLike(value) && baseGetTag(value) == stringTag);
     }
 
     /**
@@ -20096,7 +21115,7 @@ module.exports = keys;
      */
     function isSymbol(value) {
       return typeof value == 'symbol' ||
-        (isObjectLike(value) && objectToString.call(value) == symbolTag);
+        (isObjectLike(value) && baseGetTag(value) == symbolTag);
     }
 
     /**
@@ -20178,7 +21197,7 @@ module.exports = keys;
      * // => false
      */
     function isWeakSet(value) {
-      return isObjectLike(value) && objectToString.call(value) == weakSetTag;
+      return isObjectLike(value) && baseGetTag(value) == weakSetTag;
     }
 
     /**
@@ -20263,8 +21282,8 @@ module.exports = keys;
       if (isArrayLike(value)) {
         return isString(value) ? stringToArray(value) : copyArray(value);
       }
-      if (iteratorSymbol && value[iteratorSymbol]) {
-        return iteratorToArray(value[iteratorSymbol]());
+      if (symIterator && value[symIterator]) {
+        return iteratorToArray(value[symIterator]());
       }
       var tag = getTag(value),
           func = tag == mapTag ? mapToArray : (tag == setTag ? setToArray : values);
@@ -20479,8 +21498,8 @@ module.exports = keys;
      * @memberOf _
      * @since 4.0.0
      * @category Lang
-     * @param {*} value The value to process.
-     * @returns {string} Returns the string.
+     * @param {*} value The value to convert.
+     * @returns {string} Returns the converted string.
      * @example
      *
      * _.toString(null);
@@ -20697,7 +21716,7 @@ module.exports = keys;
      */
     function create(prototype, properties) {
       var result = baseCreate(prototype);
-      return properties ? baseAssign(result, properties) : result;
+      return properties == null ? result : baseAssign(result, properties);
     }
 
     /**
@@ -21664,22 +22683,23 @@ module.exports = keys;
      * // => { '1': ['a', 'c'], '2': ['b'] }
      */
     function transform(object, iteratee, accumulator) {
-      var isArr = isArray(object) || isTypedArray(object);
-      iteratee = getIteratee(iteratee, 4);
+      var isArr = isArray(object),
+          isArrLike = isArr || isBuffer(object) || isTypedArray(object);
 
+      iteratee = getIteratee(iteratee, 4);
       if (accumulator == null) {
-        if (isArr || isObject(object)) {
-          var Ctor = object.constructor;
-          if (isArr) {
-            accumulator = isArray(object) ? new Ctor : [];
-          } else {
-            accumulator = isFunction(Ctor) ? baseCreate(getPrototype(object)) : {};
-          }
-        } else {
+        var Ctor = object && object.constructor;
+        if (isArrLike) {
+          accumulator = isArr ? new Ctor : [];
+        }
+        else if (isObject(object)) {
+          accumulator = isFunction(Ctor) ? baseCreate(getPrototype(object)) : {};
+        }
+        else {
           accumulator = {};
         }
       }
-      (isArr ? arrayEach : baseForOwn)(object, function(value, index, object) {
+      (isArrLike ? arrayEach : baseForOwn)(object, function(value, index, object) {
         return iteratee(accumulator, value, index, object);
       });
       return accumulator;
@@ -21803,7 +22823,7 @@ module.exports = keys;
      * // => ['h', 'i']
      */
     function values(object) {
-      return object ? baseValues(object, keys(object)) : [];
+      return object == null ? [] : baseValues(object, keys(object));
     }
 
     /**
@@ -22357,7 +23377,7 @@ module.exports = keys;
       } else if (radix) {
         radix = +radix;
       }
-      return nativeParseInt(toString(string), radix || 0);
+      return nativeParseInt(toString(string).replace(reTrimStart, ''), radix || 0);
     }
 
     /**
@@ -23190,7 +24210,7 @@ module.exports = keys;
      * // => 'no match'
      */
     function cond(pairs) {
-      var length = pairs ? pairs.length : 0,
+      var length = pairs == null ? 0 : pairs.length,
           toIteratee = getIteratee();
 
       pairs = !length ? [] : arrayMap(pairs, function(pair) {
@@ -24942,11 +25962,11 @@ module.exports = keys;
     // Add lazy aliases.
     lodash.prototype.first = lodash.prototype.head;
 
-    if (iteratorSymbol) {
-      lodash.prototype[iteratorSymbol] = wrapperToIterator;
+    if (symIterator) {
+      lodash.prototype[symIterator] = wrapperToIterator;
     }
     return lodash;
-  }
+  });
 
   /*--------------------------------------------------------------------------*/
 
@@ -24982,7 +26002,7 @@ module.exports = keys;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{}],162:[function(require,module,exports){
+},{}],194:[function(require,module,exports){
 var arrayMap = require('./_arrayMap'),
     baseIteratee = require('./_baseIteratee'),
     baseMap = require('./_baseMap'),
@@ -25037,10 +26057,10 @@ function map(collection, iteratee) {
 
 module.exports = map;
 
-},{"./_arrayMap":60,"./_baseIteratee":74,"./_baseMap":76,"./isArray":149}],163:[function(require,module,exports){
+},{"./_arrayMap":62,"./_baseIteratee":85,"./_baseMap":87,"./isArray":181}],195:[function(require,module,exports){
 var MapCache = require('./_MapCache');
 
-/** Used as the `TypeError` message for "Functions" methods. */
+/** Error message constants. */
 var FUNC_ERROR_TEXT = 'Expected a function';
 
 /**
@@ -25054,7 +26074,7 @@ var FUNC_ERROR_TEXT = 'Expected a function';
  * function. Its creation may be customized by replacing the `_.memoize.Cache`
  * constructor with one whose instances implement the
  * [`Map`](http://ecma-international.org/ecma-262/7.0/#sec-properties-of-the-map-prototype-object)
- * method interface of `delete`, `get`, `has`, and `set`.
+ * method interface of `clear`, `delete`, `get`, `has`, and `set`.
  *
  * @static
  * @memberOf _
@@ -25088,7 +26108,7 @@ var FUNC_ERROR_TEXT = 'Expected a function';
  * _.memoize.Cache = WeakMap;
  */
 function memoize(func, resolver) {
-  if (typeof func != 'function' || (resolver && typeof resolver != 'function')) {
+  if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
     throw new TypeError(FUNC_ERROR_TEXT);
   }
   var memoized = function() {
@@ -25112,7 +26132,7 @@ memoize.Cache = MapCache;
 
 module.exports = memoize;
 
-},{"./_MapCache":50}],164:[function(require,module,exports){
+},{"./_MapCache":50}],196:[function(require,module,exports){
 var root = require('./_root');
 
 /**
@@ -25137,7 +26157,7 @@ var now = function() {
 
 module.exports = now;
 
-},{"./_root":128}],165:[function(require,module,exports){
+},{"./_root":159}],197:[function(require,module,exports){
 var before = require('./before');
 
 /**
@@ -25164,7 +26184,7 @@ function once(func) {
 
 module.exports = once;
 
-},{"./before":140}],166:[function(require,module,exports){
+},{"./before":171}],198:[function(require,module,exports){
 var baseProperty = require('./_baseProperty'),
     basePropertyDeep = require('./_basePropertyDeep'),
     isKey = require('./_isKey'),
@@ -25198,11 +26218,56 @@ function property(path) {
 
 module.exports = property;
 
-},{"./_baseProperty":79,"./_basePropertyDeep":80,"./_isKey":106,"./_toKey":138}],167:[function(require,module,exports){
+},{"./_baseProperty":90,"./_basePropertyDeep":91,"./_isKey":136,"./_toKey":169}],199:[function(require,module,exports){
+/**
+ * This method returns a new empty array.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.13.0
+ * @category Util
+ * @returns {Array} Returns the new empty array.
+ * @example
+ *
+ * var arrays = _.times(2, _.stubArray);
+ *
+ * console.log(arrays);
+ * // => [[], []]
+ *
+ * console.log(arrays[0] === arrays[1]);
+ * // => false
+ */
+function stubArray() {
+  return [];
+}
+
+module.exports = stubArray;
+
+},{}],200:[function(require,module,exports){
+/**
+ * This method returns `false`.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.13.0
+ * @category Util
+ * @returns {boolean} Returns `false`.
+ * @example
+ *
+ * _.times(2, _.stubFalse);
+ * // => [false, false]
+ */
+function stubFalse() {
+  return false;
+}
+
+module.exports = stubFalse;
+
+},{}],201:[function(require,module,exports){
 var debounce = require('./debounce'),
     isObject = require('./isObject');
 
-/** Used as the `TypeError` message for "Functions" methods. */
+/** Error message constants. */
 var FUNC_ERROR_TEXT = 'Expected a function';
 
 /**
@@ -25269,7 +26334,7 @@ function throttle(func, wait, options) {
 
 module.exports = throttle;
 
-},{"./debounce":141,"./isObject":154}],168:[function(require,module,exports){
+},{"./debounce":173,"./isObject":186}],202:[function(require,module,exports){
 var toNumber = require('./toNumber');
 
 /** Used as references for various `Number` constants. */
@@ -25313,7 +26378,7 @@ function toFinite(value) {
 
 module.exports = toFinite;
 
-},{"./toNumber":170}],169:[function(require,module,exports){
+},{"./toNumber":204}],203:[function(require,module,exports){
 var toFinite = require('./toFinite');
 
 /**
@@ -25351,7 +26416,7 @@ function toInteger(value) {
 
 module.exports = toInteger;
 
-},{"./toFinite":168}],170:[function(require,module,exports){
+},{"./toFinite":202}],204:[function(require,module,exports){
 var isObject = require('./isObject'),
     isSymbol = require('./isSymbol');
 
@@ -25419,7 +26484,7 @@ function toNumber(value) {
 
 module.exports = toNumber;
 
-},{"./isObject":154,"./isSymbol":158}],171:[function(require,module,exports){
+},{"./isObject":186,"./isSymbol":190}],205:[function(require,module,exports){
 var baseToString = require('./_baseToString');
 
 /**
@@ -25430,8 +26495,8 @@ var baseToString = require('./_baseToString');
  * @memberOf _
  * @since 4.0.0
  * @category Lang
- * @param {*} value The value to process.
- * @returns {string} Returns the string.
+ * @param {*} value The value to convert.
+ * @returns {string} Returns the converted string.
  * @example
  *
  * _.toString(null);
@@ -25449,7 +26514,7 @@ function toString(value) {
 
 module.exports = toString;
 
-},{"./_baseToString":82}],172:[function(require,module,exports){
+},{"./_baseToString":93}],206:[function(require,module,exports){
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
     define([], factory);
@@ -25462,7 +26527,7 @@ module.exports = toString;
   return {"red":{"50":"#ffebee","100":"#ffcdd2","200":"#ef9a9a","300":"#e57373","400":"#ef5350","500":"#f44336","600":"#e53935","700":"#d32f2f","800":"#c62828","900":"#b71c1c","a100":"#ff8a80","a200":"#ff5252","a400":"#ff1744","a700":"#d50000"},"pink":{"50":"#fce4ec","100":"#f8bbd0","200":"#f48fb1","300":"#f06292","400":"#ec407a","500":"#e91e63","600":"#d81b60","700":"#c2185b","800":"#ad1457","900":"#880e4f","a100":"#ff80ab","a200":"#ff4081","a400":"#f50057","a700":"#c51162"},"purple":{"50":"#f3e5f5","100":"#e1bee7","200":"#ce93d8","300":"#ba68c8","400":"#ab47bc","500":"#9c27b0","600":"#8e24aa","700":"#7b1fa2","800":"#6a1b9a","900":"#4a148c","a100":"#ea80fc","a200":"#e040fb","a400":"#d500f9","a700":"#aa00ff"},"deepPurple":{"50":"#ede7f6","100":"#d1c4e9","200":"#b39ddb","300":"#9575cd","400":"#7e57c2","500":"#673ab7","600":"#5e35b1","700":"#512da8","800":"#4527a0","900":"#311b92","a100":"#b388ff","a200":"#7c4dff","a400":"#651fff","a700":"#6200ea"},"indigo":{"50":"#e8eaf6","100":"#c5cae9","200":"#9fa8da","300":"#7986cb","400":"#5c6bc0","500":"#3f51b5","600":"#3949ab","700":"#303f9f","800":"#283593","900":"#1a237e","a100":"#8c9eff","a200":"#536dfe","a400":"#3d5afe","a700":"#304ffe"},"blue":{"50":"#e3f2fd","100":"#bbdefb","200":"#90caf9","300":"#64b5f6","400":"#42a5f5","500":"#2196f3","600":"#1e88e5","700":"#1976d2","800":"#1565c0","900":"#0d47a1","a100":"#82b1ff","a200":"#448aff","a400":"#2979ff","a700":"#2962ff"},"lightBlue":{"50":"#e1f5fe","100":"#b3e5fc","200":"#81d4fa","300":"#4fc3f7","400":"#29b6f6","500":"#03a9f4","600":"#039be5","700":"#0288d1","800":"#0277bd","900":"#01579b","a100":"#80d8ff","a200":"#40c4ff","a400":"#00b0ff","a700":"#0091ea"},"cyan":{"50":"#e0f7fa","100":"#b2ebf2","200":"#80deea","300":"#4dd0e1","400":"#26c6da","500":"#00bcd4","600":"#00acc1","700":"#0097a7","800":"#00838f","900":"#006064","a100":"#84ffff","a200":"#18ffff","a400":"#00e5ff","a700":"#00b8d4"},"teal":{"50":"#e0f2f1","100":"#b2dfdb","200":"#80cbc4","300":"#4db6ac","400":"#26a69a","500":"#009688","600":"#00897b","700":"#00796b","800":"#00695c","900":"#004d40","a100":"#a7ffeb","a200":"#64ffda","a400":"#1de9b6","a700":"#00bfa5"},"green":{"50":"#e8f5e9","100":"#c8e6c9","200":"#a5d6a7","300":"#81c784","400":"#66bb6a","500":"#4caf50","600":"#43a047","700":"#388e3c","800":"#2e7d32","900":"#1b5e20","a100":"#b9f6ca","a200":"#69f0ae","a400":"#00e676","a700":"#00c853"},"lightGreen":{"50":"#f1f8e9","100":"#dcedc8","200":"#c5e1a5","300":"#aed581","400":"#9ccc65","500":"#8bc34a","600":"#7cb342","700":"#689f38","800":"#558b2f","900":"#33691e","a100":"#ccff90","a200":"#b2ff59","a400":"#76ff03","a700":"#64dd17"},"lime":{"50":"#f9fbe7","100":"#f0f4c3","200":"#e6ee9c","300":"#dce775","400":"#d4e157","500":"#cddc39","600":"#c0ca33","700":"#afb42b","800":"#9e9d24","900":"#827717","a100":"#f4ff81","a200":"#eeff41","a400":"#c6ff00","a700":"#aeea00"},"yellow":{"50":"#fffde7","100":"#fff9c4","200":"#fff59d","300":"#fff176","400":"#ffee58","500":"#ffeb3b","600":"#fdd835","700":"#fbc02d","800":"#f9a825","900":"#f57f17","a100":"#ffff8d","a200":"#ffff00","a400":"#ffea00","a700":"#ffd600"},"amber":{"50":"#fff8e1","100":"#ffecb3","200":"#ffe082","300":"#ffd54f","400":"#ffca28","500":"#ffc107","600":"#ffb300","700":"#ffa000","800":"#ff8f00","900":"#ff6f00","a100":"#ffe57f","a200":"#ffd740","a400":"#ffc400","a700":"#ffab00"},"orange":{"50":"#fff3e0","100":"#ffe0b2","200":"#ffcc80","300":"#ffb74d","400":"#ffa726","500":"#ff9800","600":"#fb8c00","700":"#f57c00","800":"#ef6c00","900":"#e65100","a100":"#ffd180","a200":"#ffab40","a400":"#ff9100","a700":"#ff6d00"},"deepOrange":{"50":"#fbe9e7","100":"#ffccbc","200":"#ffab91","300":"#ff8a65","400":"#ff7043","500":"#ff5722","600":"#f4511e","700":"#e64a19","800":"#d84315","900":"#bf360c","a100":"#ff9e80","a200":"#ff6e40","a400":"#ff3d00","a700":"#dd2c00"},"brown":{"50":"#efebe9","100":"#d7ccc8","200":"#bcaaa4","300":"#a1887f","400":"#8d6e63","500":"#795548","600":"#6d4c41","700":"#5d4037","800":"#4e342e","900":"#3e2723"},"grey":{"50":"#fafafa","100":"#f5f5f5","200":"#eeeeee","300":"#e0e0e0","400":"#bdbdbd","500":"#9e9e9e","600":"#757575","700":"#616161","800":"#424242","900":"#212121"},"blueGrey":{"50":"#eceff1","100":"#cfd8dc","200":"#b0bec5","300":"#90a4ae","400":"#78909c","500":"#607d8b","600":"#546e7a","700":"#455a64","800":"#37474f","900":"#263238"},"darkText":{"primary":"rgba(0, 0, 0, 0.87)","secondary":"rgba(0, 0, 0, 0.54)","disabled":"rgba(0, 0, 0, 0.38)","dividers":"rgba(0, 0, 0, 0.12)"},"lightText":{"primary":"rgba(255, 255, 255, 1)","secondary":"rgba(255, 255, 255, 0.7)","disabled":"rgba(255, 255, 255, 0.5)","dividers":"rgba(255, 255, 255, 0.12)"},"darkIcons":{"active":"rgba(0, 0, 0, 0.54)","inactive":"rgba(0, 0, 0, 0.38)"},"lightIcons":{"active":"rgba(255, 255, 255, 1)","inactive":"rgba(255, 255, 255, 0.5)"},"white":"#ffffff","black":"#000000"};
 });
 
-},{}],173:[function(require,module,exports){
+},{}],207:[function(require,module,exports){
 /*!
  * @name JavaScript/NodeJS Merge v1.2.0
  * @author yeikos
@@ -25638,7 +26703,7 @@ module.exports = toString;
 	}
 
 })(typeof module === 'object' && module && typeof module.exports === 'object' && module.exports);
-},{}],174:[function(require,module,exports){
+},{}],208:[function(require,module,exports){
 'use strict';
 /* eslint-disable no-unused-vars */
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -25723,9 +26788,9 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],175:[function(require,module,exports){
+},{}],209:[function(require,module,exports){
 module.exports = require('react/lib/shallowCompare');
-},{"react/lib/shallowCompare":228}],176:[function(require,module,exports){
+},{"react/lib/shallowCompare":266}],210:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25751,30 +26816,36 @@ var _AlphaPointer2 = _interopRequireDefault(_AlphaPointer);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var AlphaPicker = exports.AlphaPicker = function AlphaPicker(props) {
+var AlphaPicker = exports.AlphaPicker = function AlphaPicker(_ref) {
+  var rgb = _ref.rgb;
+  var hsl = _ref.hsl;
+  var width = _ref.width;
+  var height = _ref.height;
+  var onChange = _ref.onChange;
+  var style = _ref.style;
+
   var styles = (0, _reactcss2.default)({
     'default': {
-      hue: {
+      picker: {
         position: 'relative',
-        width: props.width,
-        height: props.height
+        width: width,
+        height: height
       },
-      Hue: {
-        radius: '2px'
+      alpha: {
+        radius: '2px',
+        style: style
       }
     }
   });
 
-  var handleChange = function handleChange(data, e) {
-    props.onChange && props.onChange(data, e);
-  };
-
   return _react2.default.createElement(
     'div',
-    { style: styles.hue },
-    _react2.default.createElement(_common.Alpha, _extends({}, styles.Hue, props, {
+    { style: styles.picker, className: 'alpha-picker' },
+    _react2.default.createElement(_common.Alpha, _extends({}, styles.alpha, {
+      rgb: rgb,
+      hsl: hsl,
       pointer: _AlphaPointer2.default,
-      onChange: handleChange
+      onChange: onChange
     }))
   );
 };
@@ -25785,15 +26856,13 @@ AlphaPicker.defaultProps = {
 };
 
 exports.default = (0, _common.ColorWrap)(AlphaPicker);
-},{"../common":193,"./AlphaPointer":177,"react":"react","reactcss":240}],177:[function(require,module,exports){
+},{"../common":227,"./AlphaPointer":211,"react":"react","reactcss":278}],211:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.AlphaPointer = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -25803,68 +26872,32 @@ var _reactcss = require('reactcss');
 
 var _reactcss2 = _interopRequireDefault(_reactcss);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var AlphaPointer = exports.AlphaPointer = function (_React$Component) {
-  _inherits(AlphaPointer, _React$Component);
-
-  function AlphaPointer() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+var AlphaPointer = exports.AlphaPointer = function AlphaPointer() {
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      picker: {
+        width: '18px',
+        height: '18px',
+        borderRadius: '50%',
+        transform: 'translate(-9px, -1px)',
+        backgroundColor: 'rgb(248, 248, 248)',
+        boxShadow: '0 1px 4px 0 rgba(0, 0, 0, 0.37)'
+      }
     }
-
-    _classCallCheck(this, AlphaPointer);
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(AlphaPointer)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(AlphaPointer, [{
-    key: 'render',
-    value: function render() {
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          picker: {
-            width: '18px',
-            height: '18px',
-            borderRadius: '50%',
-            transform: 'translate(-9px, -1px)',
-            backgroundColor: 'rgb(248, 248, 248)',
-            boxShadow: '0 1px 4px 0 rgba(0, 0, 0, 0.37)'
-          }
-        }
-      });
-
-      return _react2.default.createElement('div', { style: styles.picker });
-    }
-  }]);
-
-  return AlphaPointer;
-}(_react2.default.Component);
+  });
+  return _react2.default.createElement('div', { style: styles.picker });
+};
 
 exports.default = AlphaPointer;
-},{"react":"react","react-addons-shallow-compare":175,"reactcss":240}],178:[function(require,module,exports){
+},{"react":"react","reactcss":278}],212:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.Block = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -25878,10 +26911,6 @@ var _color = require('../../helpers/color');
 
 var _color2 = _interopRequireDefault(_color);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 var _common = require('../common');
 
 var _BlockSwatches = require('./BlockSwatches');
@@ -25890,125 +26919,110 @@ var _BlockSwatches2 = _interopRequireDefault(_BlockSwatches);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var Block = exports.Block = function Block(_ref) {
+  var onChange = _ref.onChange;
+  var hex = _ref.hex;
+  var colors = _ref.colors;
+  var width = _ref.width;
+  var triangle = _ref.triangle;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+  var handleChange = function handleChange(hexCode) {
+    _color2.default.isValidHex(hexCode) && onChange({
+      hex: hexCode,
+      source: 'hex'
+    });
+  };
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Block = exports.Block = function (_React$Component) {
-  _inherits(Block, _React$Component);
-
-  function Block() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      card: {
+        width: width,
+        background: '#fff',
+        boxShadow: '0 1px rgba(0,0,0,.1)',
+        borderRadius: '6px',
+        position: 'relative'
+      },
+      head: {
+        height: '110px',
+        background: hex,
+        borderRadius: '6px 6px 0 0',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      },
+      body: {
+        padding: '10px'
+      },
+      label: {
+        fontSize: '18px',
+        color: '#fff'
+      },
+      triangle: {
+        width: '0px',
+        height: '0px',
+        borderStyle: 'solid',
+        borderWidth: '0 10px 10px 10px',
+        borderColor: 'transparent transparent ' + hex + ' transparent',
+        position: 'absolute',
+        top: '-10px',
+        left: '50%',
+        marginLeft: '-10px'
+      },
+      input: {
+        width: '100%',
+        fontSize: '12px',
+        color: '#666',
+        border: '0px',
+        outline: 'none',
+        height: '22px',
+        boxShadow: 'inset 0 0 0 1px #ddd',
+        borderRadius: '4px',
+        padding: '0 7px',
+        boxSizing: 'border-box'
+      }
+    },
+    'hide-triangle': {
+      triangle: {
+        display: 'none'
+      }
     }
+  }, { 'hide-triangle': triangle === 'hide' });
 
-    _classCallCheck(this, Block);
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Block)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleChange = function (hex) {
-      _color2.default.isValidHex(hex) && _this.props.onChange({
-        hex: hex,
-        source: 'hex'
-      });
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(Block, [{
-    key: 'render',
-    value: function render() {
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          card: {
-            width: this.props.width,
-            background: '#fff',
-            boxShadow: '0 1px rgba(0,0,0,.1)',
-            borderRadius: '6px',
-            position: 'relative'
-          },
-          head: {
-            height: '110px',
-            background: this.props.hex,
-            borderRadius: '6px 6px 0 0',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          },
-          body: {
-            padding: '10px'
-          },
-          label: {
-            fontSize: '18px',
-            color: '#fff'
-          },
-          triangle: {
-            width: '0px',
-            height: '0px',
-            borderStyle: 'solid',
-            borderWidth: '0 10px 10px 10px',
-            borderColor: 'transparent transparent ' + this.props.hex + ' transparent',
-            position: 'absolute',
-            top: '-10px',
-            left: '50%',
-            marginLeft: '-10px'
-          },
-          input: {
-            width: '100%',
-            fontSize: '12px',
-            color: '#666',
-            border: '0px',
-            outline: 'none',
-            height: '22px',
-            boxShadow: 'inset 0 0 0 1px #ddd',
-            borderRadius: '4px',
-            padding: '0 7px',
-            boxSizing: 'border-box'
-          }
-        }
-      });
-
-      return _react2.default.createElement(
+  return _react2.default.createElement(
+    'div',
+    { style: styles.card, className: 'block-picker' },
+    _react2.default.createElement('div', { style: styles.triangle }),
+    _react2.default.createElement(
+      'div',
+      { style: styles.head },
+      _react2.default.createElement(
         'div',
-        { style: styles.card },
-        _react2.default.createElement('div', { style: styles.triangle }),
-        _react2.default.createElement(
-          'div',
-          { style: styles.head },
-          _react2.default.createElement(
-            'div',
-            { style: styles.label },
-            this.props.hex
-          )
-        ),
-        _react2.default.createElement(
-          'div',
-          { style: styles.body },
-          _react2.default.createElement(_BlockSwatches2.default, { colors: this.props.colors, onClick: this.handleChange }),
-          _react2.default.createElement(_common.EditableInput, {
-            placeholder: 'Hex Code',
-            style: { input: styles.input },
-            value: '',
-            onChange: this.handleChange
-          })
-        )
-      );
-    }
-  }]);
-
-  return Block;
-}(_react2.default.Component);
+        { style: styles.label },
+        hex
+      )
+    ),
+    _react2.default.createElement(
+      'div',
+      { style: styles.body },
+      _react2.default.createElement(_BlockSwatches2.default, { colors: colors, onClick: handleChange }),
+      _react2.default.createElement(_common.EditableInput, {
+        placeholder: 'Hex Code',
+        style: { input: styles.input },
+        value: '',
+        onChange: handleChange
+      })
+    )
+  );
+};
 
 Block.defaultProps = {
   width: '170px',
-  colors: ['#D9E3F0', '#F47373', '#697689', '#37D67A', '#2CCCE4', '#555555', '#dce775', '#ff8a65', '#ba68c8']
+  colors: ['#D9E3F0', '#F47373', '#697689', '#37D67A', '#2CCCE4', '#555555', '#dce775', '#ff8a65', '#ba68c8'],
+  triangle: 'top'
 };
 
 exports.default = (0, _common.ColorWrap)(Block);
-},{"../../helpers/color":219,"../common":193,"./BlockSwatches":179,"react":"react","react-addons-shallow-compare":175,"reactcss":240}],179:[function(require,module,exports){
+},{"../../helpers/color":255,"../common":227,"./BlockSwatches":213,"react":"react","reactcss":278}],213:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26032,7 +27046,10 @@ var _common = require('../common');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var BlockSwatches = exports.BlockSwatches = function BlockSwatches(props) {
+var BlockSwatches = exports.BlockSwatches = function BlockSwatches(_ref) {
+  var colors = _ref.colors;
+  var onClick = _ref.onClick;
+
   var styles = (0, _reactcss2.default)({
     'default': {
       swatches: {
@@ -26052,32 +27069,29 @@ var BlockSwatches = exports.BlockSwatches = function BlockSwatches(props) {
     }
   });
 
-  var handleClick = function handleClick(color, e) {
-    props.onClick && props.onClick(color, e);
-  };
-
   return _react2.default.createElement(
     'div',
     { style: styles.swatches },
-    (0, _map2.default)(props.colors, function (c) {
-      return _react2.default.createElement(_common.Swatch, { color: c, key: c, style: styles.swatch, onClick: handleClick });
+    (0, _map2.default)(colors, function (c) {
+      return _react2.default.createElement(_common.Swatch, {
+        key: c,
+        color: c,
+        style: styles.swatch,
+        onClick: onClick
+      });
     }),
     _react2.default.createElement('div', { style: styles.clear })
   );
 };
 
 exports.default = BlockSwatches;
-},{"../common":193,"lodash/map":162,"react":"react","reactcss":240}],180:[function(require,module,exports){
+},{"../common":227,"lodash/map":194,"react":"react","reactcss":278}],214:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.Chrome = undefined;
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -26101,192 +27115,167 @@ var _ChromePointerCircle = require('./ChromePointerCircle');
 
 var _ChromePointerCircle2 = _interopRequireDefault(_ChromePointerCircle);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var Chrome = exports.Chrome = function Chrome(_ref) {
+  var onChange = _ref.onChange;
+  var disableAlpha = _ref.disableAlpha;
+  var rgb = _ref.rgb;
+  var hsl = _ref.hsl;
+  var hsv = _ref.hsv;
+  var hex = _ref.hex;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Chrome = exports.Chrome = function (_React$Component) {
-  _inherits(Chrome, _React$Component);
-
-  function Chrome() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      picker: {
+        background: '#fff',
+        borderRadius: '2px',
+        boxShadow: '0 0 2px rgba(0,0,0,.3), 0 4px 8px rgba(0,0,0,.3)',
+        boxSizing: 'initial',
+        width: '225px',
+        fontFamily: 'Menlo'
+      },
+      saturation: {
+        width: '100%',
+        paddingBottom: '55%',
+        position: 'relative',
+        borderRadius: '2px 2px 0 0',
+        overflow: 'hidden'
+      },
+      Saturation: {
+        radius: '2px 2px 0 0'
+      },
+      body: {
+        padding: '16px 16px 12px'
+      },
+      controls: {
+        display: 'flex'
+      },
+      color: {
+        width: '32px'
+      },
+      swatch: {
+        marginTop: '6px',
+        width: '16px',
+        height: '16px',
+        borderRadius: '8px',
+        position: 'relative',
+        overflow: 'hidden'
+      },
+      active: {
+        absolute: '0px 0px 0px 0px',
+        borderRadius: '8px',
+        boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.1)',
+        background: 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + rgb.a + ')',
+        zIndex: '2'
+      },
+      toggles: {
+        flex: '1'
+      },
+      hue: {
+        height: '10px',
+        position: 'relative',
+        marginBottom: '8px'
+      },
+      Hue: {
+        radius: '2px'
+      },
+      alpha: {
+        height: '10px',
+        position: 'relative'
+      },
+      Alpha: {
+        radius: '2px'
+      }
+    },
+    'disableAlpha': {
+      color: {
+        width: '22px'
+      },
+      alpha: {
+        display: 'none'
+      },
+      hue: {
+        marginBottom: '0px'
+      },
+      swatch: {
+        width: '10px',
+        height: '10px',
+        marginTop: '0px'
+      }
     }
+  }, { disableAlpha: disableAlpha });
 
-    _classCallCheck(this, Chrome);
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Chrome)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleChange = function (data) {
-      _this.props.onChange(data);
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(Chrome, [{
-    key: 'render',
-    value: function render() {
-      var rgb = this.props.rgb;
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          picker: {
-            background: '#fff',
-            borderRadius: '2px',
-            boxShadow: '0 0 2px rgba(0,0,0,.3), 0 4px 8px rgba(0,0,0,.3)',
-            boxSizing: 'initial',
-            width: '225px',
-            fontFamily: 'Menlo'
-          },
-          saturation: {
-            width: '100%',
-            paddingBottom: '55%',
-            position: 'relative',
-            borderRadius: '2px 2px 0 0',
-            overflow: 'hidden'
-          },
-          Saturation: {
-            radius: '2px 2px 0 0'
-          },
-          body: {
-            padding: '16px 16px 12px'
-          },
-          controls: {
-            display: 'flex'
-          },
-          color: {
-            width: '32px'
-          },
-          swatch: {
-            marginTop: '6px',
-            width: '16px',
-            height: '16px',
-            borderRadius: '8px',
-            position: 'relative',
-            overflow: 'hidden'
-          },
-          active: {
-            absolute: '0px 0px 0px 0px',
-            borderRadius: '8px',
-            boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.1)',
-            background: 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + rgb.a + ')',
-            zIndex: '2'
-          },
-          toggles: {
-            flex: '1'
-          },
-          hue: {
-            height: '10px',
-            position: 'relative',
-            marginBottom: '8px'
-          },
-          Hue: {
-            radius: '2px'
-          },
-          alpha: {
-            height: '10px',
-            position: 'relative'
-          },
-          Alpha: {
-            radius: '2px'
-          }
-        },
-        'disableAlpha': {
-          color: {
-            width: '22px'
-          },
-          alpha: {
-            display: 'none'
-          },
-          hue: {
-            marginBottom: '0px'
-          },
-          swatch: {
-            width: '10px',
-            height: '10px',
-            marginTop: '0px'
-          }
-        }
-      }, this.props);
-
-      return _react2.default.createElement(
+  return _react2.default.createElement(
+    'div',
+    { style: styles.picker, className: 'chrome-picker' },
+    _react2.default.createElement(
+      'div',
+      { style: styles.saturation },
+      _react2.default.createElement(_common.Saturation, {
+        style: styles.Saturation,
+        hsl: hsl,
+        hsv: hsv,
+        pointer: _ChromePointerCircle2.default,
+        onChange: onChange
+      })
+    ),
+    _react2.default.createElement(
+      'div',
+      { style: styles.body },
+      _react2.default.createElement(
         'div',
-        { style: styles.picker },
+        { style: styles.controls, className: 'flexbox-fix' },
         _react2.default.createElement(
           'div',
-          { style: styles.saturation },
-          _react2.default.createElement(_common.Saturation, _extends({
-            style: styles.Saturation
-          }, this.props, {
-            pointer: _ChromePointerCircle2.default,
-            onChange: this.handleChange
-          }))
+          { style: styles.color },
+          _react2.default.createElement(
+            'div',
+            { style: styles.swatch },
+            _react2.default.createElement('div', { style: styles.active }),
+            _react2.default.createElement(_common.Checkboard, null)
+          )
         ),
         _react2.default.createElement(
           'div',
-          { style: styles.body },
+          { style: styles.toggles },
           _react2.default.createElement(
             'div',
-            { style: styles.controls, className: 'flexbox-fix' },
-            _react2.default.createElement(
-              'div',
-              { style: styles.color },
-              _react2.default.createElement(
-                'div',
-                { style: styles.swatch },
-                _react2.default.createElement('div', { style: styles.active }),
-                _react2.default.createElement(_common.Checkboard, null)
-              )
-            ),
-            _react2.default.createElement(
-              'div',
-              { style: styles.toggles },
-              _react2.default.createElement(
-                'div',
-                { style: styles.hue },
-                _react2.default.createElement(_common.Hue, _extends({
-                  style: styles.Hue
-                }, this.props, {
-                  pointer: _ChromePointer2.default,
-                  onChange: this.handleChange
-                }))
-              ),
-              _react2.default.createElement(
-                'div',
-                { style: styles.alpha },
-                _react2.default.createElement(_common.Alpha, _extends({
-                  style: styles.Alpha
-                }, this.props, {
-                  pointer: _ChromePointer2.default,
-                  onChange: this.handleChange
-                }))
-              )
-            )
+            { style: styles.hue },
+            _react2.default.createElement(_common.Hue, {
+              style: styles.Hue,
+              hsl: hsl,
+              pointer: _ChromePointer2.default,
+              onChange: onChange
+            })
           ),
-          _react2.default.createElement(_ChromeFields2.default, _extends({}, this.props, {
-            onChange: this.handleChange,
-            disableAlpha: this.props.disableAlpha
-          }))
+          _react2.default.createElement(
+            'div',
+            { style: styles.alpha },
+            _react2.default.createElement(_common.Alpha, {
+              style: styles.Alpha,
+              rgb: rgb,
+              hsl: hsl,
+              pointer: _ChromePointer2.default,
+              onChange: onChange
+            })
+          )
         )
-      );
-    }
-  }]);
-
-  return Chrome;
-}(_react2.default.Component);
+      ),
+      _react2.default.createElement(_ChromeFields2.default, {
+        rgb: rgb,
+        hsl: hsl,
+        hex: hex,
+        onChange: onChange,
+        disableAlpha: disableAlpha
+      })
+    )
+  );
+};
 
 exports.default = (0, _common.ColorWrap)(Chrome);
-},{"../common":193,"./ChromeFields":181,"./ChromePointer":182,"./ChromePointerCircle":183,"react":"react","react-addons-shallow-compare":175,"reactcss":240}],181:[function(require,module,exports){
+},{"../common":227,"./ChromeFields":215,"./ChromePointer":216,"./ChromePointerCircle":217,"react":"react","reactcss":278}],215:[function(require,module,exports){
 'use strict';
-/* eslint react/no-did-mount-set-state: 0 */
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -26307,10 +27296,6 @@ var _color = require('../../helpers/color');
 
 var _color2 = _interopRequireDefault(_color);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 var _common = require('../common');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -26319,7 +27304,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* eslint-disable react/no-did-mount-set-state, no-param-reassign */
 
 var ChromeFields = exports.ChromeFields = function (_React$Component) {
   _inherits(ChromeFields, _React$Component);
@@ -26329,16 +27314,14 @@ var ChromeFields = exports.ChromeFields = function (_React$Component) {
 
     var _temp, _this, _ret;
 
+    _classCallCheck(this, ChromeFields);
+
     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    _classCallCheck(this, ChromeFields);
-
     return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(ChromeFields)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
       view: ''
-    }, _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleChange = function (data) {
-      _this.props.onChange(data);
     }, _this.toggleViews = function () {
       if (_this.state.view === 'hex') {
         _this.setState({ view: 'rgb' });
@@ -26634,7 +27617,7 @@ var ChromeFields = exports.ChromeFields = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = ChromeFields;
-},{"../../helpers/color":219,"../common":193,"react":"react","react-addons-shallow-compare":175,"reactcss":240}],182:[function(require,module,exports){
+},{"../../helpers/color":255,"../common":227,"react":"react","reactcss":278}],216:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26642,8 +27625,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ChromePointer = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -26652,60 +27633,27 @@ var _reactcss = require('reactcss');
 
 var _reactcss2 = _interopRequireDefault(_reactcss);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var ChromePointer = exports.ChromePointer = function (_React$Component) {
-  _inherits(ChromePointer, _React$Component);
-
-  function ChromePointer() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+var ChromePointer = exports.ChromePointer = function ChromePointer() {
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      picker: {
+        width: '12px',
+        height: '12px',
+        borderRadius: '6px',
+        transform: 'translate(-6px, -1px)',
+        backgroundColor: 'rgb(248, 248, 248)',
+        boxShadow: '0 1px 4px 0 rgba(0, 0, 0, 0.37)'
+      }
     }
+  });
 
-    _classCallCheck(this, ChromePointer);
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(ChromePointer)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(ChromePointer, [{
-    key: 'render',
-    value: function render() {
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          picker: {
-            width: '12px',
-            height: '12px',
-            borderRadius: '6px',
-            transform: 'translate(-6px, -1px)',
-            backgroundColor: 'rgb(248, 248, 248)',
-            boxShadow: '0 1px 4px 0 rgba(0, 0, 0, 0.37)'
-          }
-        }
-      });
-
-      return _react2.default.createElement('div', { style: styles.picker });
-    }
-  }]);
-
-  return ChromePointer;
-}(_react2.default.Component);
+  return _react2.default.createElement('div', { style: styles.picker });
+};
 
 exports.default = ChromePointer;
-},{"react":"react","react-addons-shallow-compare":175,"reactcss":240}],183:[function(require,module,exports){
+},{"react":"react","reactcss":278}],217:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26713,8 +27661,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ChromePointerCircle = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -26723,67 +27669,32 @@ var _reactcss = require('reactcss');
 
 var _reactcss2 = _interopRequireDefault(_reactcss);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var ChromePointerCircle = exports.ChromePointerCircle = function (_React$Component) {
-  _inherits(ChromePointerCircle, _React$Component);
-
-  function ChromePointerCircle() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+var ChromePointerCircle = exports.ChromePointerCircle = function ChromePointerCircle() {
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      picker: {
+        width: '12px',
+        height: '12px',
+        borderRadius: '6px',
+        boxShadow: 'inset 0 0 0 1px #fff',
+        transform: 'translate(-6px, -6px)'
+      }
     }
+  });
 
-    _classCallCheck(this, ChromePointerCircle);
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(ChromePointerCircle)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(ChromePointerCircle, [{
-    key: 'render',
-    value: function render() {
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          picker: {
-            width: '12px',
-            height: '12px',
-            borderRadius: '6px',
-            boxShadow: 'inset 0 0 0 1px #fff',
-            transform: 'translate(-6px, -6px)'
-          }
-        }
-      });
-
-      return _react2.default.createElement('div', { style: styles.picker });
-    }
-  }]);
-
-  return ChromePointerCircle;
-}(_react2.default.Component);
+  return _react2.default.createElement('div', { style: styles.picker });
+};
 
 exports.default = ChromePointerCircle;
-},{"react":"react","react-addons-shallow-compare":175,"reactcss":240}],184:[function(require,module,exports){
+},{"react":"react","reactcss":278}],218:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.Circle = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -26801,10 +27712,6 @@ var _materialColors = require('material-colors');
 
 var _materialColors2 = _interopRequireDefault(_materialColors);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 var _common = require('../common');
 
 var _CircleSwatch = require('./CircleSwatch');
@@ -26813,64 +27720,40 @@ var _CircleSwatch2 = _interopRequireDefault(_CircleSwatch);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var Circle = exports.Circle = function Circle(_ref) {
+  var width = _ref.width;
+  var onChange = _ref.onChange;
+  var colors = _ref.colors;
+  var hex = _ref.hex;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Circle = exports.Circle = function (_React$Component) {
-  _inherits(Circle, _React$Component);
-
-  function Circle() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      card: {
+        width: width,
+        display: 'flex',
+        flexWrap: 'wrap',
+        margin: '0 -14px -14px 0'
+      }
     }
+  });
 
-    _classCallCheck(this, Circle);
+  var handleChange = function handleChange(hexCode) {
+    onChange({ hex: hexCode, source: 'hex' });
+  };
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Circle)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleChange = function (hex) {
-      _this.props.onChange({ hex: hex, source: 'hex' });
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(Circle, [{
-    key: 'render',
-    value: function render() {
-      var _this2 = this;
-
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          card: {
-            width: this.props.width,
-            display: 'flex',
-            flexWrap: 'wrap',
-            margin: '0 -14px -14px 0'
-          }
-        }
+  return _react2.default.createElement(
+    'div',
+    { style: styles.card, className: 'circle-picker' },
+    (0, _map2.default)(colors, function (c) {
+      return _react2.default.createElement(_CircleSwatch2.default, {
+        key: c,
+        color: c,
+        onClick: handleChange,
+        active: hex === c.toLowerCase()
       });
-
-      return _react2.default.createElement(
-        'div',
-        { style: styles.card },
-        (0, _map2.default)(this.props.colors, function (c) {
-          return _react2.default.createElement(_CircleSwatch2.default, {
-            color: c,
-            key: c,
-            onClick: _this2.handleChange,
-            active: _this2.props.hex === c.toLowerCase()
-          });
-        })
-      );
-    }
-  }]);
-
-  return Circle;
-}(_react2.default.Component);
+    })
+  );
+};
 
 Circle.defaultProps = {
   width: '252px',
@@ -26878,7 +27761,7 @@ Circle.defaultProps = {
 };
 
 exports.default = (0, _common.ColorWrap)(Circle);
-},{"../common":193,"./CircleSwatch":185,"lodash/map":162,"material-colors":172,"react":"react","react-addons-shallow-compare":175,"reactcss":240}],185:[function(require,module,exports){
+},{"../common":227,"./CircleSwatch":219,"lodash/map":194,"material-colors":206,"react":"react","reactcss":278}],219:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26898,7 +27781,12 @@ var _common = require('../common');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var CircleSwatch = exports.CircleSwatch = function CircleSwatch(props) {
+var CircleSwatch = exports.CircleSwatch = function CircleSwatch(_ref) {
+  var color = _ref.color;
+  var onClick = _ref.onClick;
+  var hover = _ref.hover;
+  var active = _ref.active;
+
   var styles = (0, _reactcss2.default)({
     'default': {
       swatch: {
@@ -26911,7 +27799,7 @@ var CircleSwatch = exports.CircleSwatch = function CircleSwatch(props) {
       Swatch: {
         borderRadius: '50%',
         background: 'transparent',
-        boxShadow: 'inset 0 0 0 14px ' + props.color,
+        boxShadow: 'inset 0 0 0 14px ' + color,
         transition: '100ms box-shadow ease'
       }
     },
@@ -26922,30 +27810,28 @@ var CircleSwatch = exports.CircleSwatch = function CircleSwatch(props) {
     },
     'active': {
       Swatch: {
-        boxShadow: 'inset 0 0 0 3px ' + props.color
+        boxShadow: 'inset 0 0 0 3px ' + color
       }
     }
-  }, props);
-
-  var handleClick = function handleClick(color, e) {
-    props.onClick && props.onClick(color, e);
-  };
+  }, { hover: hover, active: active });
 
   return _react2.default.createElement(
     'div',
     { style: styles.swatch },
-    _react2.default.createElement(_common.Swatch, { style: styles.Swatch, color: props.color, onClick: handleClick })
+    _react2.default.createElement(_common.Swatch, { style: styles.Swatch, color: color, onClick: onClick })
   );
 };
 
 exports.default = (0, _reactcss.hover)(CircleSwatch);
-},{"../common":193,"react":"react","reactcss":240}],186:[function(require,module,exports){
+},{"../common":227,"react":"react","reactcss":278}],220:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.Alpha = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -26961,9 +27847,15 @@ var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
 
 var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
 
+var _alpha = require('../../helpers/alpha');
+
+var alpha = _interopRequireWildcard(_alpha);
+
 var _Checkboard = require('./Checkboard');
 
 var _Checkboard2 = _interopRequireDefault(_Checkboard);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -26988,31 +27880,8 @@ var Alpha = exports.Alpha = function (_React$Component) {
     _classCallCheck(this, Alpha);
 
     return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Alpha)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleChange = function (e, skip) {
-      !skip && e.preventDefault();
-      var container = _this.refs.container;
-      var containerWidth = container.clientWidth;
-      var x = typeof e.pageX === 'number' ? e.pageX : e.touches[0].pageX;
-      var inIFrame = window.self !== window.top || window.document !== container.ownerDocument;
-      var left = x - (container.getBoundingClientRect().left + (inIFrame ? 0 : window.pageXOffset));
-
-      var a = void 0;
-      if (left < 0) {
-        a = 0;
-      } else if (left > containerWidth) {
-        a = 1;
-      } else {
-        a = Math.round(left * 100 / containerWidth) / 100;
-      }
-
-      if (_this.props.a !== a) {
-        _this.props.onChange({
-          h: _this.props.hsl.h,
-          s: _this.props.hsl.s,
-          l: _this.props.hsl.l,
-          a: a,
-          source: 'rgb'
-        });
-      }
+      var change = alpha.calculateChange(e, skip, _this.props, _this.refs.container);
+      change && _this.props.onChange(change);
     }, _this.handleMouseDown = function (e) {
       _this.handleChange(e, true);
       window.addEventListener('mousemove', _this.handleChange);
@@ -27068,10 +27937,9 @@ var Alpha = exports.Alpha = function (_React$Component) {
             marginTop: '1px',
             transform: 'translateX(-2px)'
           }
-        }
-      });
-
-      var pointer = this.props.pointer ? _react2.default.createElement(this.props.pointer, this.props) : _react2.default.createElement('div', { style: styles.slider });
+        },
+        'overwrite': _extends({}, this.props.style)
+      }, 'overwrite');
 
       return _react2.default.createElement(
         'div',
@@ -27093,8 +27961,8 @@ var Alpha = exports.Alpha = function (_React$Component) {
           },
           _react2.default.createElement(
             'div',
-            { style: styles.pointer, ref: 'pointer' },
-            pointer
+            { style: styles.pointer },
+            this.props.pointer ? _react2.default.createElement(this.props.pointer, this.props) : _react2.default.createElement('div', { style: styles.slider })
           )
         )
       );
@@ -27105,15 +27973,13 @@ var Alpha = exports.Alpha = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = Alpha;
-},{"./Checkboard":187,"react":"react","react-addons-shallow-compare":175,"reactcss":240}],187:[function(require,module,exports){
+},{"../../helpers/alpha":253,"./Checkboard":221,"react":"react","react-addons-shallow-compare":209,"reactcss":278}],221:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.Checkboard = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -27123,81 +27989,30 @@ var _reactcss = require('reactcss');
 
 var _reactcss2 = _interopRequireDefault(_reactcss);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
+var _checkboard = require('../../helpers/checkboard');
 
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
+var checkboard = _interopRequireWildcard(_checkboard);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var Checkboard = exports.Checkboard = function Checkboard(_ref) {
+  var white = _ref.white;
+  var grey = _ref.grey;
+  var size = _ref.size;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var checkboardCache = {};
-
-function renderCheckboard(c1, c2, size) {
-  if (typeof document === 'undefined') return null; // Dont Render On Server
-  var canvas = document.createElement('canvas');
-  canvas.width = canvas.height = size * 2;
-  var ctx = canvas.getContext('2d');
-  if (!ctx) return null; // If no context can be found, return early.
-  ctx.fillStyle = c1;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = c2;
-  ctx.fillRect(0, 0, size, size);
-  ctx.translate(size, size);
-  ctx.fillRect(0, 0, size, size);
-  return canvas.toDataURL();
-}
-
-function getCheckboard(c1, c2, size) {
-  var key = c1 + ',' + c2 + ', ' + size;
-  var checkboard = renderCheckboard(c1, c2, size);
-
-  if (checkboardCache[key]) {
-    return checkboardCache[key];
-  }
-  checkboardCache[key] = checkboard;
-  return checkboard;
-}
-
-var Checkboard = exports.Checkboard = function (_React$Component) {
-  _inherits(Checkboard, _React$Component);
-
-  function Checkboard() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      grid: {
+        absolute: '0px 0px 0px 0px',
+        background: 'url(' + checkboard.get(white, grey, size) + ') center left'
+      }
     }
+  });
 
-    _classCallCheck(this, Checkboard);
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Checkboard)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(Checkboard, [{
-    key: 'render',
-    value: function render() {
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          grid: {
-            absolute: '0px 0px 0px 0px',
-            background: 'url(' + getCheckboard(this.props.white, this.props.grey, this.props.size) + ') center left'
-          }
-        }
-      });
-
-      return _react2.default.createElement('div', { style: styles.grid, ref: 'grid' });
-    }
-  }]);
-
-  return Checkboard;
-}(_react2.default.Component);
+  return _react2.default.createElement('div', { style: styles.grid });
+};
 
 Checkboard.defaultProps = {
   size: 8,
@@ -27206,7 +28021,7 @@ Checkboard.defaultProps = {
 };
 
 exports.default = Checkboard;
-},{"react":"react","react-addons-shallow-compare":175,"reactcss":240}],188:[function(require,module,exports){
+},{"../../helpers/checkboard":254,"react":"react","reactcss":278}],222:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27307,7 +28122,7 @@ var ColorWrap = exports.ColorWrap = function ColorWrap(Picker) {
 };
 
 exports.default = ColorWrap;
-},{"../../helpers/color":219,"lodash/debounce":141,"merge":173,"react":"react","react-addons-shallow-compare":175}],189:[function(require,module,exports){
+},{"../../helpers/color":255,"lodash/debounce":173,"merge":207,"react":"react","react-addons-shallow-compare":209}],223:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27417,7 +28232,7 @@ var EditableInput = exports.EditableInput = function (_React$Component) {
     };
 
     _this.unbindEventListeners = function () {
-      window.removeEventListener('mousemove', _this.handleChange);
+      window.removeEventListener('mousemove', _this.handleDrag);
       window.removeEventListener('mouseup', _this.handleMouseUp);
     };
 
@@ -27449,6 +28264,11 @@ var EditableInput = exports.EditableInput = function (_React$Component) {
     key: 'render',
     value: function render() {
       var styles = (0, _reactcss2.default)({
+        'default': {
+          wrap: {
+            position: 'relative'
+          }
+        },
         'user-override': {
           wrap: this.props.style && this.props.style.wrap ? this.props.style.wrap : {},
           input: this.props.style && this.props.style.input ? this.props.style.input : {},
@@ -27465,7 +28285,7 @@ var EditableInput = exports.EditableInput = function (_React$Component) {
 
       return _react2.default.createElement(
         'div',
-        { style: styles.wrap, ref: 'container' },
+        { style: styles.wrap },
         _react2.default.createElement('input', {
           style: styles.input,
           ref: 'input',
@@ -27477,7 +28297,7 @@ var EditableInput = exports.EditableInput = function (_React$Component) {
         }),
         this.props.label ? _react2.default.createElement(
           'span',
-          { style: styles.label, ref: 'label', onMouseDown: this.handleMouseDown },
+          { style: styles.label, onMouseDown: this.handleMouseDown },
           this.props.label
         ) : null
       );
@@ -27488,7 +28308,7 @@ var EditableInput = exports.EditableInput = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = EditableInput;
-},{"react":"react","react-addons-shallow-compare":175,"reactcss":240}],190:[function(require,module,exports){
+},{"react":"react","react-addons-shallow-compare":209,"reactcss":278}],224:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27509,6 +28329,12 @@ var _reactcss2 = _interopRequireDefault(_reactcss);
 var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
 
 var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
+
+var _hue = require('../../helpers/hue');
+
+var hue = _interopRequireWildcard(_hue);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27533,57 +28359,8 @@ var Hue = exports.Hue = function (_React$Component) {
     _classCallCheck(this, Hue);
 
     return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Hue)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleChange = function (e, skip) {
-      !skip && e.preventDefault();
-      var container = _this.refs.container;
-      var containerWidth = container.clientWidth;
-      var containerHeight = container.clientHeight;
-      var x = typeof e.pageX === 'number' ? e.pageX : e.touches[0].pageX;
-      var y = typeof e.pageY === 'number' ? e.pageY : e.touches[0].pageY;
-      var inIFrame = window.self !== window.top || window.document !== container.ownerDocument;
-      var left = x - (container.getBoundingClientRect().left + (inIFrame ? 0 : window.pageXOffset));
-      var top = y - (container.getBoundingClientRect().top + (inIFrame ? 0 : window.pageYOffset));
-
-      if (_this.props.direction === 'vertical') {
-        var h = void 0;
-        if (top < 0) {
-          h = 359;
-        } else if (top > containerHeight) {
-          h = 0;
-        } else {
-          var percent = -(top * 100 / containerHeight) + 100;
-          h = 360 * percent / 100;
-        }
-
-        if (_this.props.hsl.h !== h) {
-          _this.props.onChange({
-            h: h,
-            s: _this.props.hsl.s,
-            l: _this.props.hsl.l,
-            a: _this.props.hsl.a,
-            source: 'rgb'
-          });
-        }
-      } else {
-        var _h = void 0;
-        if (left < 0) {
-          _h = 0;
-        } else if (left > containerWidth) {
-          _h = 359;
-        } else {
-          var _percent = left * 100 / containerWidth;
-          _h = 360 * _percent / 100;
-        }
-
-        if (_this.props.hsl.h !== _h) {
-          _this.props.onChange({
-            h: _h,
-            s: _this.props.hsl.s,
-            l: _this.props.hsl.l,
-            a: _this.props.hsl.a,
-            source: 'rgb'
-          });
-        }
-      }
+      var change = hue.calculateChange(e, skip, _this.props, _this.refs.container);
+      change && _this.props.onChange(change);
     }, _this.handleMouseDown = function (e) {
       _this.handleChange(e, true);
       window.addEventListener('mousemove', _this.handleChange);
@@ -27659,7 +28436,7 @@ var Hue = exports.Hue = function (_React$Component) {
           },
           _react2.default.createElement(
             'div',
-            { style: styles.pointer, ref: 'pointer' },
+            { style: styles.pointer },
             this.props.pointer ? _react2.default.createElement(this.props.pointer, this.props) : _react2.default.createElement('div', { style: styles.slider })
           )
         )
@@ -27671,7 +28448,7 @@ var Hue = exports.Hue = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = Hue;
-},{"react":"react","react-addons-shallow-compare":175,"reactcss":240}],191:[function(require,module,exports){
+},{"../../helpers/hue":256,"react":"react","react-addons-shallow-compare":209,"reactcss":278}],225:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27697,6 +28474,12 @@ var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
 
 var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
 
+var _saturation = require('../../helpers/saturation');
+
+var saturation = _interopRequireWildcard(_saturation);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -27716,36 +28499,7 @@ var Saturation = exports.Saturation = function (_React$Component) {
     _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]);
 
     _this.handleChange = function (e, skip) {
-      !skip && e.preventDefault();
-      var container = _this.refs.container;
-      var containerWidth = container.clientWidth;
-      var containerHeight = container.clientHeight;
-      var x = typeof e.pageX === 'number' ? e.pageX : e.touches[0].pageX;
-      var y = typeof e.pageY === 'number' ? e.pageY : e.touches[0].pageY;
-      var inIFrame = window.self !== window.top || window.document !== container.ownerDocument;
-      var left = x - (container.getBoundingClientRect().left + (inIFrame ? 0 : window.pageXOffset));
-      var top = y - (container.getBoundingClientRect().top + (inIFrame ? 0 : window.pageYOffset));
-
-      if (left < 0) {
-        left = 0;
-      } else if (left > containerWidth) {
-        left = containerWidth;
-      } else if (top < 0) {
-        top = 0;
-      } else if (top > containerHeight) {
-        top = containerHeight;
-      }
-
-      var saturation = left * 100 / containerWidth;
-      var bright = -(top * 100 / containerHeight) + 100;
-
-      _this.throttle(_this.props.onChange, {
-        h: _this.props.hsl.h,
-        s: saturation,
-        v: bright,
-        a: _this.props.hsl.a,
-        source: 'rgb'
-      });
+      _this.throttle(_this.props.onChange, saturation.calculateChange(e, skip, _this.props, _this.refs.container));
     };
 
     _this.handleMouseDown = function (e) {
@@ -27826,7 +28580,7 @@ var Saturation = exports.Saturation = function (_React$Component) {
           _react2.default.createElement('div', { style: styles.black }),
           _react2.default.createElement(
             'div',
-            { style: styles.pointer, ref: 'pointer' },
+            { style: styles.pointer },
             this.props.pointer ? _react2.default.createElement(this.props.pointer, this.props) : _react2.default.createElement('div', { style: styles.circle })
           )
         )
@@ -27838,7 +28592,7 @@ var Saturation = exports.Saturation = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = Saturation;
-},{"lodash/throttle":167,"react":"react","react-addons-shallow-compare":175,"reactcss":240}],192:[function(require,module,exports){
+},{"../../helpers/saturation":257,"lodash/throttle":201,"react":"react","react-addons-shallow-compare":209,"reactcss":278}],226:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27856,30 +28610,34 @@ var _reactcss2 = _interopRequireDefault(_reactcss);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Swatch = exports.Swatch = function Swatch(props) {
+var Swatch = exports.Swatch = function Swatch(_ref) {
+  var color = _ref.color;
+  var style = _ref.style;
+  var onClick = _ref.onClick;
+
   var styles = (0, _reactcss2.default)({
     'default': {
       swatch: {
-        background: props.color,
+        background: color,
         height: '100%',
         width: '100%',
         cursor: 'pointer'
       }
     },
     'custom': {
-      swatch: props.style
+      swatch: style
     }
   }, 'custom');
 
   var handleClick = function handleClick(e) {
-    props.onClick && props.onClick(props.color, e);
+    return onClick(color, e);
   };
 
   return _react2.default.createElement('div', { style: styles.swatch, onClick: handleClick });
 };
 
 exports.default = Swatch;
-},{"react":"react","reactcss":240}],193:[function(require,module,exports){
+},{"react":"react","reactcss":278}],227:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27950,17 +28708,13 @@ Object.defineProperty(exports, 'Swatch', {
 });
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./Alpha":186,"./Checkboard":187,"./ColorWrap":188,"./EditableInput":189,"./Hue":190,"./Saturation":191,"./Swatch":192}],194:[function(require,module,exports){
+},{"./Alpha":220,"./Checkboard":221,"./ColorWrap":222,"./EditableInput":223,"./Hue":224,"./Saturation":225,"./Swatch":226}],228:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.Compact = undefined;
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -27978,10 +28732,6 @@ var _color = require('../../helpers/color');
 
 var _color2 = _interopRequireDefault(_color);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 var _reactMaterialDesign = require('../../../modules/react-material-design');
 
 var _common = require('../common');
@@ -27996,106 +28746,77 @@ var _CompactFields2 = _interopRequireDefault(_CompactFields);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var Compact = exports.Compact = function Compact(_ref) {
+  var onChange = _ref.onChange;
+  var colors = _ref.colors;
+  var hex = _ref.hex;
+  var rgb = _ref.rgb;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Compact = exports.Compact = function (_React$Component) {
-  _inherits(Compact, _React$Component);
-
-  function Compact() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    _classCallCheck(this, Compact);
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Compact)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleChange = function (data) {
-      if (data.hex) {
-        _color2.default.isValidHex(data.hex) && _this.props.onChange({
-          hex: data.hex,
-          source: 'hex'
-        });
-      } else {
-        _this.props.onChange(data);
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      Compact: {
+        background: '#f6f6f6',
+        radius: '4px'
+      },
+      compact: {
+        paddingTop: '5px',
+        paddingLeft: '5px',
+        boxSizing: 'initial',
+        width: '240px'
+      },
+      clear: {
+        clear: 'both'
       }
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(Compact, [{
-    key: 'render',
-    value: function render() {
-      var _this2 = this;
-
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          Compact: {
-            background: '#f6f6f6',
-            radius: '4px'
-          },
-          compact: {
-            paddingTop: '5px',
-            paddingLeft: '5px',
-            boxSizing: 'initial',
-            width: '240px'
-          },
-
-          clear: {
-            clear: 'both'
-          }
-        }
-      });
-
-      var colors = (0, _map2.default)(this.props.colors, function (c) {
-        return _react2.default.createElement(_CompactColor2.default, {
-          key: c,
-          color: c,
-          active: c.toLowerCase() === _this2.props.hex,
-          onClick: _this2.handleChange
-        });
-      });
-
-      return _react2.default.createElement(
-        _reactMaterialDesign.Raised,
-        { style: styles.Compact },
-        _react2.default.createElement(
-          'div',
-          { style: styles.compact },
-          _react2.default.createElement(
-            'div',
-            { ref: 'colors' },
-            colors,
-            _react2.default.createElement('div', { style: styles.clear })
-          ),
-          _react2.default.createElement(_CompactFields2.default, _extends({}, this.props, { onChange: this.handleChange }))
-        )
-      );
     }
-  }]);
+  });
 
-  return Compact;
-}(_react2.default.Component);
+  var handleChange = function handleChange(data) {
+    if (data.hex) {
+      _color2.default.isValidHex(data.hex) && onChange({
+        hex: data.hex,
+        source: 'hex'
+      });
+    } else {
+      onChange(data);
+    }
+  };
+
+  return _react2.default.createElement(
+    _reactMaterialDesign.Raised,
+    { style: styles.Compact },
+    _react2.default.createElement(
+      'div',
+      { style: styles.compact, className: 'compact-picker' },
+      _react2.default.createElement(
+        'div',
+        null,
+        (0, _map2.default)(colors, function (c) {
+          return _react2.default.createElement(_CompactColor2.default, {
+            key: c,
+            color: c,
+            active: c.toLowerCase() === hex,
+            onClick: handleChange
+          });
+        }),
+        _react2.default.createElement('div', { style: styles.clear })
+      ),
+      _react2.default.createElement(_CompactFields2.default, { hex: hex, rgb: rgb, onChange: handleChange })
+    )
+  );
+};
 
 Compact.defaultProps = {
   colors: ['#4D4D4D', '#999999', '#FFFFFF', '#F44E3B', '#FE9200', '#FCDC00', '#DBDF00', '#A4DD00', '#68CCCA', '#73D8FF', '#AEA1FF', '#FDA1FF', '#333333', '#808080', '#cccccc', '#D33115', '#E27300', '#FCC400', '#B0BC00', '#68BC00', '#16A5A5', '#009CE0', '#7B64FF', '#FA28FF', '#000000', '#666666', '#B3B3B3', '#9F0500', '#C45100', '#FB9E00', '#808900', '#194D33', '#0C797D', '#0062B1', '#653294', '#AB149E']
 };
 
 exports.default = (0, _common.ColorWrap)(Compact);
-},{"../../../modules/react-material-design":221,"../../helpers/color":219,"../common":193,"./CompactColor":195,"./CompactFields":196,"lodash/map":162,"react":"react","react-addons-shallow-compare":175,"reactcss":240}],195:[function(require,module,exports){
+},{"../../../modules/react-material-design":259,"../../helpers/color":255,"../common":227,"./CompactColor":229,"./CompactFields":230,"lodash/map":194,"react":"react","reactcss":278}],229:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.CompactColor = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -28104,96 +28825,67 @@ var _react2 = _interopRequireDefault(_react);
 var _reactcss = require('reactcss');
 
 var _reactcss2 = _interopRequireDefault(_reactcss);
-
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var CompactColor = exports.CompactColor = function CompactColor(_ref) {
+  var color = _ref.color;
+  var onClick = _ref.onClick;
+  var active = _ref.active;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var CompactColor = exports.CompactColor = function (_React$Component) {
-  _inherits(CompactColor, _React$Component);
-
-  function CompactColor() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      color: {
+        background: color,
+        width: '15px',
+        height: '15px',
+        float: 'left',
+        marginRight: '5px',
+        marginBottom: '5px',
+        position: 'relative',
+        cursor: 'pointer'
+      },
+      dot: {
+        absolute: '5px 5px 5px 5px',
+        background: '#fff',
+        borderRadius: '50%',
+        opacity: '0'
+      }
+    },
+    'active': {
+      dot: {
+        opacity: '1'
+      }
+    },
+    'color-#FFFFFF': {
+      color: {
+        boxShadow: 'inset 0 0 0 1px #ddd'
+      },
+      dot: {
+        background: '#000'
+      }
     }
+  }, { active: active, 'color-#FFFFFF': color === '#FFFFFF' });
 
-    _classCallCheck(this, CompactColor);
+  var handleClick = function handleClick() {
+    onClick({ hex: color });
+  };
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(CompactColor)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleClick = function () {
-      _this.props.onClick({ hex: _this.props.color });
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(CompactColor, [{
-    key: 'render',
-    value: function render() {
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          color: {
-            background: this.props.color,
-            width: '15px',
-            height: '15px',
-            float: 'left',
-            marginRight: '5px',
-            marginBottom: '5px',
-            position: 'relative',
-            cursor: 'pointer'
-          },
-          dot: {
-            absolute: '5px 5px 5px 5px',
-            background: '#fff',
-            borderRadius: '50%',
-            opacity: '0'
-          }
-        },
-        'active': {
-          dot: {
-            opacity: '1'
-          }
-        },
-        'color-#FFFFFF': {
-          color: {
-            boxShadow: 'inset 0 0 0 1px #ddd'
-          },
-          dot: {
-            background: '#000'
-          }
-        }
-      }, this.props);
-
-      return _react2.default.createElement(
-        'div',
-        { style: styles.color, ref: 'color', onClick: this.handleClick },
-        _react2.default.createElement('div', { style: styles.dot })
-      );
-    }
-  }]);
-
-  return CompactColor;
-}(_react2.default.Component);
+  return _react2.default.createElement(
+    'div',
+    { style: styles.color, onClick: handleClick },
+    _react2.default.createElement('div', { style: styles.dot })
+  );
+};
 
 exports.default = CompactColor;
-},{"react":"react","react-addons-shallow-compare":175,"reactcss":240}],196:[function(require,module,exports){
+},{"react":"react","reactcss":278}],230:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.CompactColor = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+exports.CompactFields = undefined;
 
 var _react = require('react');
 
@@ -28202,161 +28894,132 @@ var _react2 = _interopRequireDefault(_react);
 var _reactcss = require('reactcss');
 
 var _reactcss2 = _interopRequireDefault(_reactcss);
-
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
 
 var _common = require('../common');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var CompactFields = exports.CompactFields = function CompactFields(_ref) {
+  var hex = _ref.hex;
+  var rgb = _ref.rgb;
+  var onChange = _ref.onChange;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var CompactColor = exports.CompactColor = function (_React$Component) {
-  _inherits(CompactColor, _React$Component);
-
-  function CompactColor() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    _classCallCheck(this, CompactColor);
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(CompactColor)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleChange = function (data) {
-      if (data.r || data.g || data.b) {
-        _this.props.onChange({
-          r: data.r || _this.props.rgb.r,
-          g: data.g || _this.props.rgb.g,
-          b: data.b || _this.props.rgb.b,
-          source: 'rgb'
-        });
-      } else {
-        _this.props.onChange({
-          hex: data,
-          source: 'hex'
-        });
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      fields: {
+        display: 'flex',
+        paddingBottom: '6px',
+        paddingRight: '5px',
+        position: 'relative'
+      },
+      active: {
+        position: 'absolute',
+        top: '6px',
+        left: '5px',
+        height: '9px',
+        width: '9px',
+        background: hex
+      },
+      HEXwrap: {
+        flex: '6',
+        position: 'relative'
+      },
+      HEXinput: {
+        width: '80%',
+        padding: '0px',
+        paddingLeft: '20%',
+        border: 'none',
+        outline: 'none',
+        background: 'none',
+        fontSize: '12px',
+        color: '#333',
+        height: '16px'
+      },
+      HEXlabel: {
+        display: 'none'
+      },
+      RGBwrap: {
+        flex: '3',
+        position: 'relative'
+      },
+      RGBinput: {
+        width: '70%',
+        padding: '0px',
+        paddingLeft: '30%',
+        border: 'none',
+        outline: 'none',
+        background: 'none',
+        fontSize: '12px',
+        color: '#333',
+        height: '16px'
+      },
+      RGBlabel: {
+        position: 'absolute',
+        top: '3px',
+        left: '0px',
+        lineHeight: '16px',
+        textTransform: 'uppercase',
+        fontSize: '12px',
+        color: '#999'
       }
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(CompactColor, [{
-    key: 'render',
-    value: function render() {
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          fields: {
-            display: 'flex',
-            paddingBottom: '6px',
-            paddingRight: '5px',
-            position: 'relative'
-          },
-          active: {
-            position: 'absolute',
-            top: '6px',
-            left: '5px',
-            height: '9px',
-            width: '9px',
-            background: this.props.hex
-          },
-          HEXwrap: {
-            flex: '6',
-            position: 'relative'
-          },
-          HEXinput: {
-            width: '80%',
-            padding: '0px',
-            paddingLeft: '20%',
-            border: 'none',
-            outline: 'none',
-            background: 'none',
-            fontSize: '12px',
-            color: '#333',
-            height: '16px'
-          },
-          HEXlabel: {
-            display: 'none'
-          },
-          RGBwrap: {
-            flex: '3',
-            position: 'relative'
-          },
-          RGBinput: {
-            width: '70%',
-            padding: '0px',
-            paddingLeft: '30%',
-            border: 'none',
-            outline: 'none',
-            background: 'none',
-            fontSize: '12px',
-            color: '#333',
-            height: '16px'
-          },
-          RGBlabel: {
-            position: 'absolute',
-            top: '3px',
-            left: '0px',
-            lineHeight: '16px',
-            textTransform: 'uppercase',
-            fontSize: '12px',
-            color: '#999'
-          }
-        }
-      });
-
-      return _react2.default.createElement(
-        'div',
-        { style: styles.fields, className: 'flexbox-fix' },
-        _react2.default.createElement('div', { style: styles.active }),
-        _react2.default.createElement(_common.EditableInput, {
-          style: { wrap: styles.HEXwrap, input: styles.HEXinput, label: styles.HEXlabel },
-          label: 'hex',
-          value: this.props.hex,
-          onChange: this.handleChange
-        }),
-        _react2.default.createElement(_common.EditableInput, {
-          style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
-          label: 'r',
-          value: this.props.rgb.r,
-          onChange: this.handleChange
-        }),
-        _react2.default.createElement(_common.EditableInput, {
-          style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
-          label: 'g',
-          value: this.props.rgb.g,
-          onChange: this.handleChange
-        }),
-        _react2.default.createElement(_common.EditableInput, {
-          style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
-          label: 'b',
-          value: this.props.rgb.b,
-          onChange: this.handleChange
-        })
-      );
     }
-  }]);
+  });
 
-  return CompactColor;
-}(_react2.default.Component);
+  var handleChange = function handleChange(data) {
+    if (data.r || data.g || data.b) {
+      onChange({
+        r: data.r || rgb.r,
+        g: data.g || rgb.g,
+        b: data.b || rgb.b,
+        source: 'rgb'
+      });
+    } else {
+      onChange({
+        hex: data.hex,
+        source: 'hex'
+      });
+    }
+  };
 
-exports.default = CompactColor;
-},{"../common":193,"react":"react","react-addons-shallow-compare":175,"reactcss":240}],197:[function(require,module,exports){
+  return _react2.default.createElement(
+    'div',
+    { style: styles.fields, className: 'flexbox-fix' },
+    _react2.default.createElement('div', { style: styles.active }),
+    _react2.default.createElement(_common.EditableInput, {
+      style: { wrap: styles.HEXwrap, input: styles.HEXinput, label: styles.HEXlabel },
+      label: 'hex',
+      value: hex,
+      onChange: handleChange
+    }),
+    _react2.default.createElement(_common.EditableInput, {
+      style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
+      label: 'r',
+      value: rgb.r,
+      onChange: handleChange
+    }),
+    _react2.default.createElement(_common.EditableInput, {
+      style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
+      label: 'g',
+      value: rgb.g,
+      onChange: handleChange
+    }),
+    _react2.default.createElement(_common.EditableInput, {
+      style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
+      label: 'b',
+      value: rgb.b,
+      onChange: handleChange
+    })
+  );
+};
+
+exports.default = CompactFields;
+},{"../common":227,"react":"react","reactcss":278}],231:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.Github = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -28370,10 +29033,6 @@ var _map = require('lodash/map');
 
 var _map2 = _interopRequireDefault(_map);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 var _common = require('../common');
 
 var _GithubSwatch = require('./GithubSwatch');
@@ -28382,88 +29041,93 @@ var _GithubSwatch2 = _interopRequireDefault(_GithubSwatch);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var Github = exports.Github = function Github(_ref) {
+  var width = _ref.width;
+  var colors = _ref.colors;
+  var onChange = _ref.onChange;
+  var triangle = _ref.triangle;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Github = exports.Github = function (_React$Component) {
-  _inherits(Github, _React$Component);
-
-  function Github() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      card: {
+        width: width,
+        background: '#fff',
+        border: '1px solid rgba(0,0,0,0.2)',
+        boxShadow: '0 3px 12px rgba(0,0,0,0.15)',
+        borderRadius: '4px',
+        position: 'relative',
+        padding: '5px',
+        display: 'flex',
+        flexWrap: 'wrap'
+      },
+      triangle: {
+        position: 'absolute',
+        border: '7px solid transparent',
+        borderBottomColor: '#fff'
+      },
+      triangleShadow: {
+        position: 'absolute',
+        border: '8px solid transparent',
+        borderBottomColor: 'rgba(0,0,0,0.15)'
+      }
+    },
+    'hide-triangle': {
+      triangle: {
+        display: 'none'
+      },
+      triangleShadow: {
+        display: 'none'
+      }
+    },
+    'top-left-triangle': {
+      triangle: {
+        top: '-14px',
+        left: '10px'
+      },
+      triangleShadow: {
+        top: '-16px',
+        left: '9px'
+      }
+    },
+    'top-right-triangle': {
+      triangle: {
+        top: '-14px',
+        right: '10px'
+      },
+      triangleShadow: {
+        top: '-16px',
+        right: '9px'
+      }
     }
+  }, {
+    'hide-triangle': triangle === 'hide',
+    'top-left-triangle': triangle === 'top-left',
+    'top-right-triangle': triangle === 'top-right'
+  });
 
-    _classCallCheck(this, Github);
+  var handleChange = function handleChange(hex) {
+    onChange({ hex: hex, source: 'hex' });
+  };
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Github)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleChange = function (hex) {
-      _this.props.onChange({ hex: hex, source: 'hex' });
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(Github, [{
-    key: 'render',
-    value: function render() {
-      var _this2 = this;
-
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          card: {
-            width: this.props.width,
-            background: '#fff',
-            border: '1px solid rgba(0,0,0,0.2)',
-            boxShadow: '0 3px 12px rgba(0,0,0,0.15)',
-            borderRadius: '4px',
-            position: 'relative',
-            padding: '5px',
-            display: 'flex',
-            flexWrap: 'wrap'
-          },
-          triangle: {
-            position: 'absolute',
-            border: '7px solid transparent',
-            borderBottomColor: '#fff',
-            top: '-14px',
-            left: '10px'
-          },
-          triangleShadow: {
-            position: 'absolute',
-            border: '8px solid transparent',
-            borderBottomColor: 'rgba(0,0,0,0.15)',
-            top: '-16px',
-            left: '9px'
-          }
-        }
-      });
-
-      return _react2.default.createElement(
-        'div',
-        { style: styles.card },
-        _react2.default.createElement('div', { style: styles.triangleShadow }),
-        _react2.default.createElement('div', { style: styles.triangle }),
-        (0, _map2.default)(this.props.colors, function (c) {
-          return _react2.default.createElement(_GithubSwatch2.default, { color: c, key: c, onClick: _this2.handleChange });
-        })
-      );
-    }
-  }]);
-
-  return Github;
-}(_react2.default.Component);
+  return _react2.default.createElement(
+    'div',
+    { style: styles.card, className: 'github-picker' },
+    _react2.default.createElement('div', { style: styles.triangleShadow }),
+    _react2.default.createElement('div', { style: styles.triangle }),
+    (0, _map2.default)(colors, function (c) {
+      return _react2.default.createElement(_GithubSwatch2.default, { color: c, key: c, onClick: handleChange });
+    })
+  );
+};
 
 Github.defaultProps = {
   width: '200px',
-  colors: ['#B80000', '#DB3E00', '#FCCB00', '#008B02', '#006B76', '#1273DE', '#004DCF', '#5300EB', '#EB9694', '#FAD0C3', '#FEF3BD', '#C1E1C5', '#BEDADC', '#C4DEF6', '#BED3F3', '#D4C4FB']
+  colors: ['#B80000', '#DB3E00', '#FCCB00', '#008B02', '#006B76', '#1273DE', '#004DCF', '#5300EB', '#EB9694', '#FAD0C3', '#FEF3BD', '#C1E1C5', '#BEDADC', '#C4DEF6', '#BED3F3', '#D4C4FB'],
+  triangle: 'top-left'
 };
 
 exports.default = (0, _common.ColorWrap)(Github);
-},{"../common":193,"./GithubSwatch":198,"lodash/map":162,"react":"react","react-addons-shallow-compare":175,"reactcss":240}],198:[function(require,module,exports){
+},{"../common":227,"./GithubSwatch":232,"lodash/map":194,"react":"react","reactcss":278}],232:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28483,7 +29147,11 @@ var _common = require('../common');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var GithubSwatch = exports.GithubSwatch = function GithubSwatch(props) {
+var GithubSwatch = exports.GithubSwatch = function GithubSwatch(_ref) {
+  var hover = _ref.hover;
+  var color = _ref.color;
+  var onClick = _ref.onClick;
+
   var styles = (0, _reactcss2.default)({
     'default': {
       swatch: {
@@ -28499,21 +29167,17 @@ var GithubSwatch = exports.GithubSwatch = function GithubSwatch(props) {
         boxShadow: '0 0 5px 2px rgba(0,0,0,0.25)'
       }
     }
-  }, props);
-
-  var handleClick = function handleClick(color, e) {
-    props.onClick && props.onClick(color, e);
-  };
+  }, { hover: hover });
 
   return _react2.default.createElement(
     'div',
     { style: styles.swatch },
-    _react2.default.createElement(_common.Swatch, { color: props.color, onClick: handleClick })
+    _react2.default.createElement(_common.Swatch, { color: color, onClick: onClick })
   );
 };
 
 exports.default = (0, _reactcss.hover)(GithubSwatch);
-},{"../common":193,"react":"react","reactcss":240}],199:[function(require,module,exports){
+},{"../common":227,"react":"react","reactcss":278}],233:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28539,30 +29203,32 @@ var _HuePointer2 = _interopRequireDefault(_HuePointer);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var HuePicker = exports.HuePicker = function HuePicker(props) {
+var HuePicker = exports.HuePicker = function HuePicker(_ref) {
+  var width = _ref.width;
+  var height = _ref.height;
+  var onChange = _ref.onChange;
+  var hsl = _ref.hsl;
+
   var styles = (0, _reactcss2.default)({
     'default': {
-      hue: {
+      picker: {
         position: 'relative',
-        width: props.width,
-        height: props.height
+        width: width,
+        height: height
       },
-      Hue: {
+      hue: {
         radius: '2px'
       }
     }
   });
 
-  var handleChange = function handleChange(data, e) {
-    props.onChange && props.onChange(data, e);
-  };
-
   return _react2.default.createElement(
     'div',
-    { style: styles.hue },
-    _react2.default.createElement(_common.Hue, _extends({}, styles.Hue, props, {
+    { style: styles.picker, className: 'hue-picker' },
+    _react2.default.createElement(_common.Hue, _extends({}, styles.hue, {
+      hsl: hsl,
       pointer: _HuePointer2.default,
-      onChange: handleChange
+      onChange: onChange
     }))
   );
 };
@@ -28573,15 +29239,13 @@ HuePicker.defaultProps = {
 };
 
 exports.default = (0, _common.ColorWrap)(HuePicker);
-},{"../common":193,"./HuePointer":200,"react":"react","reactcss":240}],200:[function(require,module,exports){
+},{"../common":227,"./HuePointer":234,"react":"react","reactcss":278}],234:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.SliderPointer = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -28591,68 +29255,33 @@ var _reactcss = require('reactcss');
 
 var _reactcss2 = _interopRequireDefault(_reactcss);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var SliderPointer = exports.SliderPointer = function (_React$Component) {
-  _inherits(SliderPointer, _React$Component);
-
-  function SliderPointer() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+var SliderPointer = exports.SliderPointer = function SliderPointer() {
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      picker: {
+        width: '18px',
+        height: '18px',
+        borderRadius: '50%',
+        transform: 'translate(-9px, -1px)',
+        backgroundColor: 'rgb(248, 248, 248)',
+        boxShadow: '0 1px 4px 0 rgba(0, 0, 0, 0.37)'
+      }
     }
+  });
 
-    _classCallCheck(this, SliderPointer);
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(SliderPointer)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(SliderPointer, [{
-    key: 'render',
-    value: function render() {
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          picker: {
-            width: '18px',
-            height: '18px',
-            borderRadius: '50%',
-            transform: 'translate(-9px, -1px)',
-            backgroundColor: 'rgb(248, 248, 248)',
-            boxShadow: '0 1px 4px 0 rgba(0, 0, 0, 0.37)'
-          }
-        }
-      });
-
-      return _react2.default.createElement('div', { style: styles.picker });
-    }
-  }]);
-
-  return SliderPointer;
-}(_react2.default.Component);
+  return _react2.default.createElement('div', { style: styles.picker });
+};
 
 exports.default = SliderPointer;
-},{"react":"react","react-addons-shallow-compare":175,"reactcss":240}],201:[function(require,module,exports){
+},{"react":"react","reactcss":278}],235:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.Material = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -28666,186 +29295,157 @@ var _color = require('../../helpers/color');
 
 var _color2 = _interopRequireDefault(_color);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 var _reactMaterialDesign = require('../../../modules/react-material-design');
 
 var _common = require('../common');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var Material = exports.Material = function Material(_ref) {
+  var onChange = _ref.onChange;
+  var hex = _ref.hex;
+  var rgb = _ref.rgb;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Material = exports.Material = function (_React$Component) {
-  _inherits(Material, _React$Component);
-
-  function Material() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    _classCallCheck(this, Material);
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Material)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleChange = function (data) {
-      if (data.hex) {
-        _color2.default.isValidHex(data.hex) && _this.props.onChange({
-          hex: data.hex,
-          source: 'hex'
-        });
-      } else if (data.r || data.g || data.b) {
-        _this.props.onChange({
-          r: data.r || _this.props.rgb.r,
-          g: data.g || _this.props.rgb.g,
-          b: data.b || _this.props.rgb.b,
-          source: 'rgb'
-        });
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      material: {
+        width: '98px',
+        height: '98px',
+        padding: '16px',
+        fontFamily: 'Roboto'
+      },
+      HEXwrap: {
+        position: 'relative'
+      },
+      HEXinput: {
+        width: '100%',
+        marginTop: '12px',
+        fontSize: '15px',
+        color: '#333',
+        padding: '0px',
+        border: '0px',
+        borderBottom: '2px solid ' + hex,
+        outline: 'none',
+        height: '30px'
+      },
+      HEXlabel: {
+        position: 'absolute',
+        top: '0px',
+        left: '0px',
+        fontSize: '11px',
+        color: '#999999',
+        textTransform: 'capitalize'
+      },
+      Hex: {
+        style: {}
+      },
+      RGBwrap: {
+        position: 'relative'
+      },
+      RGBinput: {
+        width: '100%',
+        marginTop: '12px',
+        fontSize: '15px',
+        color: '#333',
+        padding: '0px',
+        border: '0px',
+        borderBottom: '1px solid #eee',
+        outline: 'none',
+        height: '30px'
+      },
+      RGBlabel: {
+        position: 'absolute',
+        top: '0px',
+        left: '0px',
+        fontSize: '11px',
+        color: '#999999',
+        textTransform: 'capitalize'
+      },
+      split: {
+        display: 'flex',
+        marginRight: '-10px',
+        paddingTop: '11px'
+      },
+      third: {
+        flex: '1',
+        paddingRight: '10px'
       }
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
+    }
+  });
 
-  _createClass(Material, [{
-    key: 'render',
-    value: function render() {
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          material: {
-            width: '98px',
-            height: '98px',
-            padding: '16px',
-            fontFamily: 'Roboto'
-          },
-          HEXwrap: {
-            position: 'relative'
-          },
-          HEXinput: {
-            width: '100%',
-            marginTop: '12px',
-            fontSize: '15px',
-            color: '#333',
-            padding: '0px',
-            border: '0px',
-            borderBottom: '2px solid ' + this.props.hex,
-            outline: 'none',
-            height: '30px'
-          },
-          HEXlabel: {
-            position: 'absolute',
-            top: '0px',
-            left: '0px',
-            fontSize: '11px',
-            color: '#999999',
-            textTransform: 'capitalize'
-          },
-          Hex: {
-            style: {}
-          },
-          RGBwrap: {
-            position: 'relative'
-          },
-          RGBinput: {
-            width: '100%',
-            marginTop: '12px',
-            fontSize: '15px',
-            color: '#333',
-            padding: '0px',
-            border: '0px',
-            borderBottom: '1px solid #eee',
-            outline: 'none',
-            height: '30px'
-          },
-          RGBlabel: {
-            position: 'absolute',
-            top: '0px',
-            left: '0px',
-            fontSize: '11px',
-            color: '#999999',
-            textTransform: 'capitalize'
-          },
-          split: {
-            display: 'flex',
-            marginRight: '-10px',
-            paddingTop: '11px'
-          },
-          third: {
-            flex: '1',
-            paddingRight: '10px'
-          }
-        }
+  var handleChange = function handleChange(data) {
+    if (data.hex) {
+      _color2.default.isValidHex(data.hex) && onChange({
+        hex: data.hex,
+        source: 'hex'
       });
+    } else if (data.r || data.g || data.b) {
+      onChange({
+        r: data.r || rgb.r,
+        g: data.g || rgb.g,
+        b: data.b || rgb.b,
+        source: 'rgb'
+      });
+    }
+  };
 
-      return _react2.default.createElement(
-        _reactMaterialDesign.Raised,
-        null,
+  return _react2.default.createElement(
+    _reactMaterialDesign.Raised,
+    null,
+    _react2.default.createElement(
+      'div',
+      { style: styles.material, className: 'material-picker' },
+      _react2.default.createElement(_common.EditableInput, {
+        style: { wrap: styles.HEXwrap, input: styles.HEXinput, label: styles.HEXlabel },
+        label: 'hex',
+        value: hex,
+        onChange: handleChange
+      }),
+      _react2.default.createElement(
+        'div',
+        { style: styles.split, className: 'flexbox-fix' },
         _react2.default.createElement(
           'div',
-          { style: styles.material },
+          { style: styles.third },
           _react2.default.createElement(_common.EditableInput, {
-            style: { wrap: styles.HEXwrap, input: styles.HEXinput, label: styles.HEXlabel },
-            label: 'hex',
-            value: this.props.hex,
-            onChange: this.handleChange
-          }),
-          _react2.default.createElement(
-            'div',
-            { style: styles.split, className: 'flexbox-fix' },
-            _react2.default.createElement(
-              'div',
-              { style: styles.third },
-              _react2.default.createElement(_common.EditableInput, {
-                style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
-                label: 'r', value: this.props.rgb.r,
-                onChange: this.handleChange
-              })
-            ),
-            _react2.default.createElement(
-              'div',
-              { style: styles.third },
-              _react2.default.createElement(_common.EditableInput, {
-                style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
-                label: 'g',
-                value: this.props.rgb.g,
-                onChange: this.handleChange
-              })
-            ),
-            _react2.default.createElement(
-              'div',
-              { style: styles.third },
-              _react2.default.createElement(_common.EditableInput, {
-                style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
-                label: 'b',
-                value: this.props.rgb.b,
-                onChange: this.handleChange
-              })
-            )
-          )
+            style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
+            label: 'r', value: rgb.r,
+            onChange: handleChange
+          })
+        ),
+        _react2.default.createElement(
+          'div',
+          { style: styles.third },
+          _react2.default.createElement(_common.EditableInput, {
+            style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
+            label: 'g',
+            value: rgb.g,
+            onChange: handleChange
+          })
+        ),
+        _react2.default.createElement(
+          'div',
+          { style: styles.third },
+          _react2.default.createElement(_common.EditableInput, {
+            style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
+            label: 'b',
+            value: rgb.b,
+            onChange: handleChange
+          })
         )
-      );
-    }
-  }]);
-
-  return Material;
-}(_react2.default.Component);
+      )
+    )
+  );
+};
 
 exports.default = (0, _common.ColorWrap)(Material);
-},{"../../../modules/react-material-design":221,"../../helpers/color":219,"../common":193,"react":"react","react-addons-shallow-compare":175,"reactcss":240}],202:[function(require,module,exports){
+},{"../../../modules/react-material-design":259,"../../helpers/color":255,"../common":227,"react":"react","reactcss":278}],236:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.Photoshop = undefined;
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -28856,10 +29456,6 @@ var _react2 = _interopRequireDefault(_react);
 var _reactcss = require('reactcss');
 
 var _reactcss2 = _interopRequireDefault(_reactcss);
-
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
 
 var _common = require('../common');
 
@@ -28898,20 +29494,6 @@ var Photoshop = exports.Photoshop = function (_React$Component) {
     _classCallCheck(this, Photoshop);
 
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Photoshop).call(this));
-
-    _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]);
-
-    _this.handleChange = function (data) {
-      _this.props.onChange(data);
-    };
-
-    _this.handleAccept = function () {
-      _this.props.onAccept && _this.props.onAccept();
-    };
-
-    _this.handleCancel = function () {
-      _this.props.onCancel && _this.props.onCancel();
-    };
 
     _this.state = {
       currentColor: props.hex
@@ -28981,7 +29563,7 @@ var Photoshop = exports.Photoshop = function (_React$Component) {
 
       return _react2.default.createElement(
         'div',
-        { style: styles.picker },
+        { style: styles.picker, className: 'photoshop-picker' },
         _react2.default.createElement(
           'div',
           { style: styles.head },
@@ -28993,20 +29575,22 @@ var Photoshop = exports.Photoshop = function (_React$Component) {
           _react2.default.createElement(
             'div',
             { style: styles.saturation },
-            _react2.default.createElement(_common.Saturation, _extends({}, this.props, {
+            _react2.default.createElement(_common.Saturation, {
+              hsl: this.props.hsl,
+              hsv: this.props.hsv,
               pointer: _PhotoshopPointerCircle2.default,
-              onChange: this.handleChange
-            }))
+              onChange: this.props.onChange
+            })
           ),
           _react2.default.createElement(
             'div',
             { style: styles.hue },
-            _react2.default.createElement(_common.Hue, _extends({
-              direction: 'vertical'
-            }, this.props, {
+            _react2.default.createElement(_common.Hue, {
+              direction: 'vertical',
+              hsl: this.props.hsl,
               pointer: _PhotoshopPointer2.default,
-              onChange: this.handleChange
-            }))
+              onChange: this.props.onChange
+            })
           ),
           _react2.default.createElement(
             'div',
@@ -29025,9 +29609,13 @@ var Photoshop = exports.Photoshop = function (_React$Component) {
               _react2.default.createElement(
                 'div',
                 { style: styles.actions },
-                _react2.default.createElement(_PhotoshopButton2.default, { label: 'OK', onClick: this.handleAccept, active: true }),
-                _react2.default.createElement(_PhotoshopButton2.default, { label: 'Cancel', onClick: this.handleCancel }),
-                _react2.default.createElement(_PhotoshopFields2.default, this.props)
+                _react2.default.createElement(_PhotoshopButton2.default, { label: 'OK', onClick: this.props.onAccept, active: true }),
+                _react2.default.createElement(_PhotoshopButton2.default, { label: 'Cancel', onClick: this.props.onCancel }),
+                _react2.default.createElement(_PhotoshopFields2.default, {
+                  rgb: this.props.rgb,
+                  hsv: this.props.hsv,
+                  hex: this.props.hex
+                })
               )
             )
           )
@@ -29044,7 +29632,7 @@ Photoshop.defaultProps = {
 };
 
 exports.default = (0, _common.ColorWrap)(Photoshop);
-},{"../common":193,"./PhotoshopButton":203,"./PhotoshopFields":204,"./PhotoshopPointer":205,"./PhotoshopPointerCircle":206,"./PhotoshopPreviews":207,"react":"react","react-addons-shallow-compare":175,"reactcss":240}],203:[function(require,module,exports){
+},{"../common":227,"./PhotoshopButton":237,"./PhotoshopFields":238,"./PhotoshopPointer":239,"./PhotoshopPointerCircle":240,"./PhotoshopPreviews":241,"react":"react","reactcss":278}],237:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29062,7 +29650,12 @@ var _reactcss2 = _interopRequireDefault(_reactcss);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var PhotoshopBotton = exports.PhotoshopBotton = function PhotoshopBotton(props) {
+var PhotoshopBotton = exports.PhotoshopBotton = function PhotoshopBotton(_ref) {
+  var onClick = _ref.onClick;
+  var label = _ref.label;
+  var children = _ref.children;
+  var active = _ref.active;
+
   var styles = (0, _reactcss2.default)({
     'default': {
       button: {
@@ -29075,7 +29668,8 @@ var PhotoshopBotton = exports.PhotoshopBotton = function PhotoshopBotton(props) 
         color: '#000',
         lineHeight: '20px',
         textAlign: 'center',
-        marginBottom: '10px'
+        marginBottom: '10px',
+        cursor: 'pointer'
       }
     },
     'active': {
@@ -29083,29 +29677,23 @@ var PhotoshopBotton = exports.PhotoshopBotton = function PhotoshopBotton(props) 
         boxShadow: '0 0 0 1px #878787'
       }
     }
-  }, props);
-
-  var handleClick = function handleClick(e) {
-    props.onClick && props.onClick(e);
-  };
+  }, { active: active });
 
   return _react2.default.createElement(
     'div',
-    { style: styles.button, onClick: handleClick },
-    props.label || props.children
+    { style: styles.button, onClick: onClick },
+    label || children
   );
 };
 
 exports.default = PhotoshopBotton;
-},{"react":"react","reactcss":240}],204:[function(require,module,exports){
+},{"react":"react","reactcss":278}],238:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.PhotoshopPicker = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -29119,215 +29707,187 @@ var _color = require('../../helpers/color');
 
 var _color2 = _interopRequireDefault(_color);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 var _common = require('../common');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var PhotoshopPicker = exports.PhotoshopPicker = function PhotoshopPicker(_ref) {
+  var onChange = _ref.onChange;
+  var rgb = _ref.rgb;
+  var hsv = _ref.hsv;
+  var hex = _ref.hex;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var PhotoshopPicker = exports.PhotoshopPicker = function (_React$Component) {
-  _inherits(PhotoshopPicker, _React$Component);
-
-  function PhotoshopPicker() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    _classCallCheck(this, PhotoshopPicker);
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(PhotoshopPicker)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleChange = function (data) {
-      if (data['#']) {
-        _color2.default.isValidHex(data['#']) && _this.props.onChange({
-          hex: data['#'],
-          source: 'hex'
-        });
-      } else if (data.r || data.g || data.b) {
-        _this.props.onChange({
-          r: data.r || _this.props.rgb.r,
-          g: data.g || _this.props.rgb.g,
-          b: data.b || _this.props.rgb.b,
-          source: 'rgb'
-        });
-      } else if (data.h || data.s || data.v) {
-        _this.props.onChange({
-          h: data.h || _this.props.hsv.h,
-          s: data.s || _this.props.hsv.s,
-          v: data.v || _this.props.hsv.v,
-          source: 'hsv'
-        });
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      fields: {
+        paddingTop: '5px',
+        paddingBottom: '9px',
+        width: '80px',
+        position: 'relative'
+      },
+      divider: {
+        height: '5px'
+      },
+      RGBwrap: {
+        position: 'relative'
+      },
+      RGBinput: {
+        marginLeft: '40%',
+        width: '40%',
+        height: '18px',
+        border: '1px solid #888888',
+        boxShadow: 'inset 0 1px 1px rgba(0,0,0,.1), 0 1px 0 0 #ECECEC',
+        marginBottom: '5px',
+        fontSize: '13px',
+        paddingLeft: '3px',
+        marginRight: '10px'
+      },
+      RGBlabel: {
+        left: '0px',
+        width: '34px',
+        textTransform: 'uppercase',
+        fontSize: '13px',
+        height: '18px',
+        lineHeight: '22px',
+        position: 'absolute'
+      },
+      HEXwrap: {
+        position: 'relative'
+      },
+      HEXinput: {
+        marginLeft: '20%',
+        width: '80%',
+        height: '18px',
+        border: '1px solid #888888',
+        boxShadow: 'inset 0 1px 1px rgba(0,0,0,.1), 0 1px 0 0 #ECECEC',
+        marginBottom: '6px',
+        fontSize: '13px',
+        paddingLeft: '3px'
+      },
+      HEXlabel: {
+        position: 'absolute',
+        top: '0px',
+        left: '0px',
+        width: '14px',
+        textTransform: 'uppercase',
+        fontSize: '13px',
+        height: '18px',
+        lineHeight: '22px'
+      },
+      fieldSymbols: {
+        position: 'absolute',
+        top: '5px',
+        right: '-7px',
+        fontSize: '13px'
+      },
+      symbol: {
+        height: '20px',
+        lineHeight: '22px',
+        paddingBottom: '7px'
       }
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(PhotoshopPicker, [{
-    key: 'render',
-    value: function render() {
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          fields: {
-            paddingTop: '5px',
-            paddingBottom: '9px',
-            width: '80px',
-            position: 'relative'
-          },
-          divider: {
-            height: '5px'
-          },
-          RGBwrap: {
-            position: 'relative'
-          },
-          RGBinput: {
-            marginLeft: '40%',
-            width: '40%',
-            height: '18px',
-            border: '1px solid #888888',
-            boxShadow: 'inset 0 1px 1px rgba(0,0,0,.1), 0 1px 0 0 #ECECEC',
-            marginBottom: '5px',
-            fontSize: '13px',
-            paddingLeft: '3px',
-            marginRight: '10px'
-          },
-          RGBlabel: {
-            left: '0px',
-            width: '34px',
-            textTransform: 'uppercase',
-            fontSize: '13px',
-            height: '18px',
-            lineHeight: '22px',
-            position: 'absolute'
-          },
-          HEXwrap: {
-            position: 'relative'
-          },
-          HEXinput: {
-            marginLeft: '20%',
-            width: '80%',
-            height: '18px',
-            border: '1px solid #888888',
-            boxShadow: 'inset 0 1px 1px rgba(0,0,0,.1), 0 1px 0 0 #ECECEC',
-            marginBottom: '6px',
-            fontSize: '13px',
-            paddingLeft: '3px'
-          },
-          HEXlabel: {
-            position: 'absolute',
-            top: '0px',
-            left: '0px',
-            width: '14px',
-            textTransform: 'uppercase',
-            fontSize: '13px',
-            height: '18px',
-            lineHeight: '22px'
-          },
-          fieldSymbols: {
-            position: 'absolute',
-            top: '5px',
-            right: '-7px',
-            fontSize: '13px'
-          },
-          symbol: {
-            height: '20px',
-            lineHeight: '22px',
-            paddingBottom: '7px'
-          }
-        }
-      });
-
-      return _react2.default.createElement(
-        'div',
-        { style: styles.fields },
-        _react2.default.createElement(_common.EditableInput, {
-          style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
-          label: 'h',
-          value: Math.round(this.props.hsv.h),
-          onChange: this.handleChange
-        }),
-        _react2.default.createElement(_common.EditableInput, {
-          style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
-          label: 's',
-          value: Math.round(this.props.hsv.s * 100),
-          onChange: this.handleChange
-        }),
-        _react2.default.createElement(_common.EditableInput, {
-          style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
-          label: 'v',
-          value: Math.round(this.props.hsv.v * 100),
-          onChange: this.handleChange
-        }),
-        _react2.default.createElement('div', { style: styles.divider }),
-        _react2.default.createElement(_common.EditableInput, {
-          style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
-          label: 'r',
-          value: this.props.rgb.r,
-          onChange: this.handleChange
-        }),
-        _react2.default.createElement(_common.EditableInput, {
-          style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
-          label: 'g',
-          value: this.props.rgb.g,
-          onChange: this.handleChange
-        }),
-        _react2.default.createElement(_common.EditableInput, {
-          style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
-          label: 'b',
-          value: this.props.rgb.b,
-          onChange: this.handleChange
-        }),
-        _react2.default.createElement('div', { style: styles.divider }),
-        _react2.default.createElement(_common.EditableInput, {
-          style: { wrap: styles.HEXwrap, input: styles.HEXinput, label: styles.HEXlabel },
-          label: '#',
-          value: this.props.hex.replace('#', ''),
-          onChange: this.handleChange
-        }),
-        _react2.default.createElement(
-          'div',
-          { style: styles.fieldSymbols },
-          _react2.default.createElement(
-            'div',
-            { style: styles.symbol },
-            '°'
-          ),
-          _react2.default.createElement(
-            'div',
-            { style: styles.symbol },
-            '%'
-          ),
-          _react2.default.createElement(
-            'div',
-            { style: styles.symbol },
-            '%'
-          )
-        )
-      );
     }
-  }]);
+  });
 
-  return PhotoshopPicker;
-}(_react2.default.Component);
+  var handleChange = function handleChange(data) {
+    if (data['#']) {
+      _color2.default.isValidHex(data['#']) && onChange({
+        hex: data['#'],
+        source: 'hex'
+      });
+    } else if (data.r || data.g || data.b) {
+      onChange({
+        r: data.r || rgb.r,
+        g: data.g || rgb.g,
+        b: data.b || rgb.b,
+        source: 'rgb'
+      });
+    } else if (data.h || data.s || data.v) {
+      onChange({
+        h: data.h || hsv.h,
+        s: data.s || hsv.s,
+        v: data.v || hsv.v,
+        source: 'hsv'
+      });
+    }
+  };
+
+  return _react2.default.createElement(
+    'div',
+    { style: styles.fields },
+    _react2.default.createElement(_common.EditableInput, {
+      style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
+      label: 'h',
+      value: Math.round(hsv.h),
+      onChange: handleChange
+    }),
+    _react2.default.createElement(_common.EditableInput, {
+      style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
+      label: 's',
+      value: Math.round(hsv.s * 100),
+      onChange: handleChange
+    }),
+    _react2.default.createElement(_common.EditableInput, {
+      style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
+      label: 'v',
+      value: Math.round(hsv.v * 100),
+      onChange: handleChange
+    }),
+    _react2.default.createElement('div', { style: styles.divider }),
+    _react2.default.createElement(_common.EditableInput, {
+      style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
+      label: 'r',
+      value: rgb.r,
+      onChange: handleChange
+    }),
+    _react2.default.createElement(_common.EditableInput, {
+      style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
+      label: 'g',
+      value: rgb.g,
+      onChange: handleChange
+    }),
+    _react2.default.createElement(_common.EditableInput, {
+      style: { wrap: styles.RGBwrap, input: styles.RGBinput, label: styles.RGBlabel },
+      label: 'b',
+      value: rgb.b,
+      onChange: handleChange
+    }),
+    _react2.default.createElement('div', { style: styles.divider }),
+    _react2.default.createElement(_common.EditableInput, {
+      style: { wrap: styles.HEXwrap, input: styles.HEXinput, label: styles.HEXlabel },
+      label: '#',
+      value: hex.replace('#', ''),
+      onChange: handleChange
+    }),
+    _react2.default.createElement(
+      'div',
+      { style: styles.fieldSymbols },
+      _react2.default.createElement(
+        'div',
+        { style: styles.symbol },
+        '°'
+      ),
+      _react2.default.createElement(
+        'div',
+        { style: styles.symbol },
+        '%'
+      ),
+      _react2.default.createElement(
+        'div',
+        { style: styles.symbol },
+        '%'
+      )
+    )
+  );
+};
 
 exports.default = PhotoshopPicker;
-},{"../../helpers/color":219,"../common":193,"react":"react","react-addons-shallow-compare":175,"reactcss":240}],205:[function(require,module,exports){
+},{"../../helpers/color":255,"../common":227,"react":"react","reactcss":278}],239:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.PhotoshopPointerCircle = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -29337,108 +29897,73 @@ var _reactcss = require('reactcss');
 
 var _reactcss2 = _interopRequireDefault(_reactcss);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var PhotoshopPointerCircle = exports.PhotoshopPointerCircle = function PhotoshopPointerCircle() {
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      triangle: {
+        width: 0,
+        height: 0,
+        borderStyle: 'solid',
+        borderWidth: '4px 0 4px 6px',
+        borderColor: 'transparent transparent transparent #fff',
+        position: 'absolute',
+        top: '1px',
+        left: '1px'
+      },
+      triangleBorder: {
+        width: 0,
+        height: 0,
+        borderStyle: 'solid',
+        borderWidth: '5px 0 5px 8px',
+        borderColor: 'transparent transparent transparent #555'
+      },
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+      left: {
+        Extend: 'triangleBorder',
+        transform: 'translate(-13px, -4px)'
+      },
+      leftInside: {
+        Extend: 'triangle',
+        transform: 'translate(-8px, -5px)'
+      },
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var PhotoshopPointerCircle = exports.PhotoshopPointerCircle = function (_React$Component) {
-  _inherits(PhotoshopPointerCircle, _React$Component);
-
-  function PhotoshopPointerCircle() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+      right: {
+        Extend: 'triangleBorder',
+        transform: 'translate(20px, -14px) rotate(180deg)'
+      },
+      rightInside: {
+        Extend: 'triangle',
+        transform: 'translate(-8px, -5px)'
+      }
     }
+  });
 
-    _classCallCheck(this, PhotoshopPointerCircle);
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(PhotoshopPointerCircle)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(PhotoshopPointerCircle, [{
-    key: 'render',
-    value: function render() {
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          triangle: {
-            width: 0,
-            height: 0,
-            borderStyle: 'solid',
-            borderWidth: '4px 0 4px 6px',
-            borderColor: 'transparent transparent transparent #fff',
-            position: 'absolute',
-            top: '1px',
-            left: '1px'
-          },
-          triangleBorder: {
-            width: 0,
-            height: 0,
-            borderStyle: 'solid',
-            borderWidth: '5px 0 5px 8px',
-            borderColor: 'transparent transparent transparent #555'
-          },
-
-          left: {
-            Extend: 'triangleBorder',
-            transform: 'translate(-13px, -4px)'
-          },
-          leftInside: {
-            Extend: 'triangle',
-            transform: 'translate(-8px, -5px)'
-          },
-
-          right: {
-            Extend: 'triangleBorder',
-            transform: 'translate(20px, -14px) rotate(180deg)'
-          },
-          rightInside: {
-            Extend: 'triangle',
-            transform: 'translate(-8px, -5px)'
-          }
-        }
-      });
-
-      return _react2.default.createElement(
-        'div',
-        { style: styles.pointer },
-        _react2.default.createElement(
-          'div',
-          { style: styles.left },
-          _react2.default.createElement('div', { style: styles.leftInside })
-        ),
-        _react2.default.createElement(
-          'div',
-          { style: styles.right },
-          _react2.default.createElement('div', { style: styles.rightInside })
-        )
-      );
-    }
-  }]);
-
-  return PhotoshopPointerCircle;
-}(_react2.default.Component);
+  return _react2.default.createElement(
+    'div',
+    { style: styles.pointer },
+    _react2.default.createElement(
+      'div',
+      { style: styles.left },
+      _react2.default.createElement('div', { style: styles.leftInside })
+    ),
+    _react2.default.createElement(
+      'div',
+      { style: styles.right },
+      _react2.default.createElement('div', { style: styles.rightInside })
+    )
+  );
+};
 
 exports.default = PhotoshopPointerCircle;
-},{"react":"react","react-addons-shallow-compare":175,"reactcss":240}],206:[function(require,module,exports){
+},{"react":"react","reactcss":278}],240:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.PhotoshopPointerCircle = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -29448,66 +29973,33 @@ var _reactcss = require('reactcss');
 
 var _reactcss2 = _interopRequireDefault(_reactcss);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var PhotoshopPointerCircle = exports.PhotoshopPointerCircle = function PhotoshopPointerCircle(_ref) {
+  var hsl = _ref.hsl;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var PhotoshopPointerCircle = exports.PhotoshopPointerCircle = function (_React$Component) {
-  _inherits(PhotoshopPointerCircle, _React$Component);
-
-  function PhotoshopPointerCircle() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      picker: {
+        width: '12px',
+        height: '12px',
+        borderRadius: '6px',
+        boxShadow: 'inset 0 0 0 1px #fff',
+        transform: 'translate(-6px, -6px)'
+      }
+    },
+    'black-outline': {
+      picker: {
+        boxShadow: 'inset 0 0 0 1px #000'
+      }
     }
+  }, { 'black-outline': hsl.l > 0.5 });
 
-    _classCallCheck(this, PhotoshopPointerCircle);
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(PhotoshopPointerCircle)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(PhotoshopPointerCircle, [{
-    key: 'render',
-    value: function render() {
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          picker: {
-            width: '12px',
-            height: '12px',
-            borderRadius: '6px',
-            boxShadow: 'inset 0 0 0 1px #fff',
-            transform: 'translate(-6px, -6px)'
-          }
-        },
-        'black-outline': {
-          picker: {
-            boxShadow: 'inset 0 0 0 1px #000'
-          }
-        }
-      }, {
-        'black-outline': this.props.hsl.l > 0.5
-      });
-
-      return _react2.default.createElement('div', { style: styles.picker });
-    }
-  }]);
-
-  return PhotoshopPointerCircle;
-}(_react2.default.Component);
+  return _react2.default.createElement('div', { style: styles.picker });
+};
 
 exports.default = PhotoshopPointerCircle;
-},{"react":"react","react-addons-shallow-compare":175,"reactcss":240}],207:[function(require,module,exports){
+},{"react":"react","reactcss":278}],241:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29525,7 +30017,10 @@ var _reactcss2 = _interopRequireDefault(_reactcss);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var PhotoshopPreviews = exports.PhotoshopPreviews = function PhotoshopPreviews(props) {
+var PhotoshopPreviews = exports.PhotoshopPreviews = function PhotoshopPreviews(_ref) {
+  var rgb = _ref.rgb;
+  var currentColor = _ref.currentColor;
+
   var styles = (0, _reactcss2.default)({
     'default': {
       swatches: {
@@ -29536,12 +30031,12 @@ var PhotoshopPreviews = exports.PhotoshopPreviews = function PhotoshopPreviews(p
       },
       new: {
         height: '34px',
-        background: 'rgb(' + props.rgb.r + ',' + props.rgb.g + ', ' + props.rgb.b + ')',
+        background: 'rgb(' + rgb.r + ',' + rgb.g + ', ' + rgb.b + ')',
         boxShadow: 'inset 1px 0 0 #000, inset -1px 0 0 #000, inset 0 1px 0 #000'
       },
       current: {
         height: '34px',
-        background: props.currentColor,
+        background: currentColor,
         boxShadow: 'inset 1px 0 0 #000, inset -1px 0 0 #000, inset 0 -1px 0 #000'
       },
       label: {
@@ -29575,17 +30070,13 @@ var PhotoshopPreviews = exports.PhotoshopPreviews = function PhotoshopPreviews(p
 };
 
 exports.default = PhotoshopPreviews;
-},{"react":"react","reactcss":240}],208:[function(require,module,exports){
+},{"react":"react","reactcss":278}],242:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.Sketch = undefined;
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -29594,10 +30085,6 @@ var _react2 = _interopRequireDefault(_react);
 var _reactcss = require('reactcss');
 
 var _reactcss2 = _interopRequireDefault(_reactcss);
-
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
 
 var _common = require('../common');
 
@@ -29611,157 +30098,151 @@ var _SketchPresetColors2 = _interopRequireDefault(_SketchPresetColors);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var Sketch = exports.Sketch = function Sketch(_ref) {
+  var width = _ref.width;
+  var rgb = _ref.rgb;
+  var hex = _ref.hex;
+  var hsv = _ref.hsv;
+  var hsl = _ref.hsl;
+  var onChange = _ref.onChange;
+  var disableAlpha = _ref.disableAlpha;
+  var presetColors = _ref.presetColors;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      picker: {
+        width: width,
+        padding: '10px 10px 0',
+        boxSizing: 'initial',
+        background: '#fff',
+        borderRadius: '4px',
+        boxShadow: '0 0 0 1px rgba(0,0,0,.15), 0 8px 16px rgba(0,0,0,.15)'
+      },
+      saturation: {
+        width: '100%',
+        paddingBottom: '75%',
+        position: 'relative',
+        overflow: 'hidden'
+      },
+      Saturation: {
+        radius: '3px',
+        shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
+      },
+      controls: {
+        display: 'flex'
+      },
+      sliders: {
+        padding: '4px 0',
+        flex: '1'
+      },
+      color: {
+        width: '24px',
+        height: '24px',
+        position: 'relative',
+        marginTop: '4px',
+        marginLeft: '4px',
+        borderRadius: '3px'
+      },
+      activeColor: {
+        absolute: '0px 0px 0px 0px',
+        borderRadius: '2px',
+        background: 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',' + rgb.a + ')',
+        boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
+      },
+      hue: {
+        position: 'relative',
+        height: '10px',
+        overflow: 'hidden'
+      },
+      Hue: {
+        radius: '2px',
+        shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
+      },
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Sketch = exports.Sketch = function (_React$Component) {
-  _inherits(Sketch, _React$Component);
-
-  function Sketch() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+      alpha: {
+        position: 'relative',
+        height: '10px',
+        marginTop: '4px',
+        overflow: 'hidden'
+      },
+      Alpha: {
+        radius: '2px',
+        shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
+      }
+    },
+    'disableAlpha': {
+      color: {
+        height: '10px'
+      },
+      hue: {
+        height: '10px'
+      },
+      alpha: {
+        display: 'none'
+      }
     }
+  }, { disableAlpha: disableAlpha });
 
-    _classCallCheck(this, Sketch);
+  var handleChange = function handleChange(data) {
+    onChange(data);
+  };
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Sketch)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleChange = function (data) {
-      _this.props.onChange(data);
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(Sketch, [{
-    key: 'render',
-    value: function render() {
-      var rgb = this.props.rgb;
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          picker: {
-            width: this.props.width,
-            padding: '10px 10px 0',
-            boxSizing: 'initial',
-            background: '#fff',
-            borderRadius: '4px',
-            boxShadow: '0 0 0 1px rgba(0,0,0,.15), 0 8px 16px rgba(0,0,0,.15)'
-          },
-          saturation: {
-            width: '100%',
-            paddingBottom: '75%',
-            position: 'relative',
-            overflow: 'hidden'
-          },
-          Saturation: {
-            radius: '3px',
-            shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
-          },
-          controls: {
-            display: 'flex'
-          },
-          sliders: {
-            padding: '4px 0',
-            flex: '1'
-          },
-          color: {
-            width: '24px',
-            height: '24px',
-            position: 'relative',
-            marginTop: '4px',
-            marginLeft: '4px',
-            borderRadius: '3px'
-          },
-          activeColor: {
-            absolute: '0px 0px 0px 0px',
-            borderRadius: '2px',
-            background: 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',' + rgb.a + ')',
-            boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
-          },
-          hue: {
-            position: 'relative',
-            height: '10px',
-            overflow: 'hidden'
-          },
-          Hue: {
-            radius: '2px',
-            shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
-          },
-
-          alpha: {
-            position: 'relative',
-            height: '10px',
-            marginTop: '4px',
-            overflow: 'hidden'
-          },
-          Alpha: {
-            radius: '2px',
-            shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
-          }
-        },
-        'disableAlpha': {
-          color: {
-            height: '10px'
-          },
-          hue: {
-            height: '10px'
-          },
-          alpha: {
-            display: 'none'
-          }
-        }
-      }, this.props);
-
-      return _react2.default.createElement(
+  return _react2.default.createElement(
+    'div',
+    { style: styles.picker, className: 'sketch-picker' },
+    _react2.default.createElement(
+      'div',
+      { style: styles.saturation },
+      _react2.default.createElement(_common.Saturation, {
+        style: styles.Saturation,
+        hsl: hsl,
+        hsv: hsv,
+        onChange: handleChange
+      })
+    ),
+    _react2.default.createElement(
+      'div',
+      { style: styles.controls, className: 'flexbox-fix' },
+      _react2.default.createElement(
         'div',
-        { style: styles.picker },
+        { style: styles.sliders },
         _react2.default.createElement(
           'div',
-          { style: styles.saturation },
-          _react2.default.createElement(_common.Saturation, _extends({
-            style: styles.Saturation
-          }, this.props, {
-            onChange: this.handleChange
-          }))
+          { style: styles.hue },
+          _react2.default.createElement(_common.Hue, {
+            style: styles.Hue,
+            hsl: hsl,
+            onChange: handleChange
+          })
         ),
         _react2.default.createElement(
           'div',
-          { style: styles.controls, className: 'flexbox-fix' },
-          _react2.default.createElement(
-            'div',
-            { style: styles.sliders },
-            _react2.default.createElement(
-              'div',
-              { style: styles.hue },
-              _react2.default.createElement(_common.Hue, _extends({ style: styles.Hue }, this.props, { onChange: this.handleChange }))
-            ),
-            _react2.default.createElement(
-              'div',
-              { style: styles.alpha },
-              _react2.default.createElement(_common.Alpha, _extends({ style: styles.Alpha }, this.props, { onChange: this.handleChange }))
-            )
-          ),
-          _react2.default.createElement(
-            'div',
-            { style: styles.color },
-            _react2.default.createElement(_common.Checkboard, null),
-            _react2.default.createElement('div', { style: styles.activeColor })
-          )
-        ),
-        _react2.default.createElement(_SketchFields2.default, _extends({}, this.props, {
-          onChange: this.handleChange,
-          disableAlpha: this.props.disableAlpha
-        })),
-        _react2.default.createElement(_SketchPresetColors2.default, { colors: this.props.presetColors, onClick: this.handleChange })
-      );
-    }
-  }]);
-
-  return Sketch;
-}(_react2.default.Component);
+          { style: styles.alpha },
+          _react2.default.createElement(_common.Alpha, {
+            style: styles.Alpha,
+            rgb: rgb,
+            hsl: hsl,
+            onChange: handleChange
+          })
+        )
+      ),
+      _react2.default.createElement(
+        'div',
+        { style: styles.color },
+        _react2.default.createElement(_common.Checkboard, null),
+        _react2.default.createElement('div', { style: styles.activeColor })
+      )
+    ),
+    _react2.default.createElement(_SketchFields2.default, {
+      rgb: rgb,
+      hsl: hsl,
+      hex: hex,
+      onChange: handleChange,
+      disableAlpha: disableAlpha
+    }),
+    _react2.default.createElement(_SketchPresetColors2.default, { colors: presetColors, onClick: handleChange })
+  );
+};
 
 Sketch.defaultProps = {
   presetColors: ['#D0021B', '#F5A623', '#F8E71C', '#8B572A', '#7ED321', '#417505', '#BD10E0', '#9013FE', '#4A90E2', '#50E3C2', '#B8E986', '#000000', '#4A4A4A', '#9B9B9B', '#FFFFFF'],
@@ -29769,15 +30250,13 @@ Sketch.defaultProps = {
 };
 
 exports.default = (0, _common.ColorWrap)(Sketch);
-},{"../common":193,"./SketchFields":209,"./SketchPresetColors":210,"react":"react","react-addons-shallow-compare":175,"reactcss":240}],209:[function(require,module,exports){
+},{"../common":227,"./SketchFields":243,"./SketchPresetColors":244,"react":"react","reactcss":278}],243:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.ShetchFields = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -29791,189 +30270,164 @@ var _color = require('../../helpers/color');
 
 var _color2 = _interopRequireDefault(_color);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 var _common = require('../common');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+/* eslint-disable no-param-reassign */
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+var ShetchFields = exports.ShetchFields = function ShetchFields(_ref) {
+  var onChange = _ref.onChange;
+  var rgb = _ref.rgb;
+  var hsl = _ref.hsl;
+  var hex = _ref.hex;
+  var disableAlpha = _ref.disableAlpha;
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var ShetchFields = exports.ShetchFields = function (_React$Component) {
-  _inherits(ShetchFields, _React$Component);
-
-  function ShetchFields() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    _classCallCheck(this, ShetchFields);
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(ShetchFields)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleChange = function (data) {
-      if (data.hex) {
-        _color2.default.isValidHex(data.hex) && _this.props.onChange({
-          hex: data.hex,
-          source: 'hex'
-        });
-      } else if (data.r || data.g || data.b) {
-        _this.props.onChange({
-          r: data.r || _this.props.rgb.r,
-          g: data.g || _this.props.rgb.g,
-          b: data.b || _this.props.rgb.b,
-          a: _this.props.rgb.a,
-          source: 'rgb'
-        });
-      } else if (data.a) {
-        if (data.a < 0) {
-          data.a = 0;
-        } else if (data.a > 100) {
-          data.a = 100;
-        }
-
-        data.a = data.a / 100;
-        _this.props.onChange({
-          h: _this.props.hsl.h,
-          s: _this.props.hsl.s,
-          l: _this.props.hsl.l,
-          a: data.a,
-          source: 'rgb'
-        });
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      fields: {
+        display: 'flex',
+        paddingTop: '4px'
+      },
+      single: {
+        flex: '1',
+        paddingLeft: '6px'
+      },
+      alpha: {
+        flex: '1',
+        paddingLeft: '6px'
+      },
+      double: {
+        flex: '2'
+      },
+      input: {
+        width: '80%',
+        padding: '4px 10% 3px',
+        border: 'none',
+        boxShadow: 'inset 0 0 0 1px #ccc',
+        fontSize: '11px'
+      },
+      label: {
+        display: 'block',
+        textAlign: 'center',
+        fontSize: '11px',
+        color: '#222',
+        paddingTop: '3px',
+        paddingBottom: '4px',
+        textTransform: 'capitalize'
       }
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(ShetchFields, [{
-    key: 'render',
-    value: function render() {
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          fields: {
-            display: 'flex',
-            paddingTop: '4px'
-          },
-          single: {
-            flex: '1',
-            paddingLeft: '6px'
-          },
-          alpha: {
-            flex: '1',
-            paddingLeft: '6px'
-          },
-          double: {
-            flex: '2'
-          },
-          input: {
-            width: '80%',
-            padding: '4px 10% 3px',
-            border: 'none',
-            boxShadow: 'inset 0 0 0 1px #ccc',
-            fontSize: '11px'
-          },
-          label: {
-            display: 'block',
-            textAlign: 'center',
-            fontSize: '11px',
-            color: '#222',
-            paddingTop: '3px',
-            paddingBottom: '4px',
-            textTransform: 'capitalize'
-          }
-        },
-        'disableAlpha': {
-          alpha: {
-            display: 'none'
-          }
-        }
-      }, this.props);
-
-      return _react2.default.createElement(
-        'div',
-        { style: styles.fields, className: 'flexbox-fix' },
-        _react2.default.createElement(
-          'div',
-          { style: styles.double },
-          _react2.default.createElement(_common.EditableInput, {
-            style: { input: styles.input, label: styles.label },
-            label: 'hex',
-            value: this.props.hex.replace('#', ''),
-            onChange: this.handleChange
-          })
-        ),
-        _react2.default.createElement(
-          'div',
-          { style: styles.single },
-          _react2.default.createElement(_common.EditableInput, {
-            style: { input: styles.input, label: styles.label },
-            label: 'r',
-            value: this.props.rgb.r,
-            onChange: this.handleChange,
-            dragLabel: 'true',
-            dragMax: '255'
-          })
-        ),
-        _react2.default.createElement(
-          'div',
-          { style: styles.single },
-          _react2.default.createElement(_common.EditableInput, {
-            style: { input: styles.input, label: styles.label },
-            label: 'g',
-            value: this.props.rgb.g,
-            onChange: this.handleChange,
-            dragLabel: 'true',
-            dragMax: '255'
-          })
-        ),
-        _react2.default.createElement(
-          'div',
-          { style: styles.single },
-          _react2.default.createElement(_common.EditableInput, {
-            style: { input: styles.input, label: styles.label },
-            label: 'b',
-            value: this.props.rgb.b,
-            onChange: this.handleChange,
-            dragLabel: 'true',
-            dragMax: '255'
-          })
-        ),
-        _react2.default.createElement(
-          'div',
-          { style: styles.alpha },
-          _react2.default.createElement(_common.EditableInput, {
-            style: { input: styles.input, label: styles.label },
-            label: 'a',
-            value: Math.round(this.props.rgb.a * 100),
-            onChange: this.handleChange,
-            dragLabel: 'true',
-            dragMax: '100'
-          })
-        )
-      );
+    },
+    'disableAlpha': {
+      alpha: {
+        display: 'none'
+      }
     }
-  }]);
+  }, { disableAlpha: disableAlpha });
 
-  return ShetchFields;
-}(_react2.default.Component);
+  var handleChange = function handleChange(data) {
+    if (data.hex) {
+      _color2.default.isValidHex(data.hex) && onChange({
+        hex: data.hex,
+        source: 'hex'
+      });
+    } else if (data.r || data.g || data.b) {
+      onChange({
+        r: data.r || rgb.r,
+        g: data.g || rgb.g,
+        b: data.b || rgb.b,
+        a: rgb.a,
+        source: 'rgb'
+      });
+    } else if (data.a) {
+      if (data.a < 0) {
+        data.a = 0;
+      } else if (data.a > 100) {
+        data.a = 100;
+      }
+
+      data.a = data.a / 100;
+      onChange({
+        h: hsl.h,
+        s: hsl.s,
+        l: hsl.l,
+        a: data.a,
+        source: 'rgb'
+      });
+    }
+  };
+
+  return _react2.default.createElement(
+    'div',
+    { style: styles.fields, className: 'flexbox-fix' },
+    _react2.default.createElement(
+      'div',
+      { style: styles.double },
+      _react2.default.createElement(_common.EditableInput, {
+        style: { input: styles.input, label: styles.label },
+        label: 'hex',
+        value: hex.replace('#', ''),
+        onChange: handleChange
+      })
+    ),
+    _react2.default.createElement(
+      'div',
+      { style: styles.single },
+      _react2.default.createElement(_common.EditableInput, {
+        style: { input: styles.input, label: styles.label },
+        label: 'r',
+        value: rgb.r,
+        onChange: handleChange,
+        dragLabel: 'true',
+        dragMax: '255'
+      })
+    ),
+    _react2.default.createElement(
+      'div',
+      { style: styles.single },
+      _react2.default.createElement(_common.EditableInput, {
+        style: { input: styles.input, label: styles.label },
+        label: 'g',
+        value: rgb.g,
+        onChange: handleChange,
+        dragLabel: 'true',
+        dragMax: '255'
+      })
+    ),
+    _react2.default.createElement(
+      'div',
+      { style: styles.single },
+      _react2.default.createElement(_common.EditableInput, {
+        style: { input: styles.input, label: styles.label },
+        label: 'b',
+        value: rgb.b,
+        onChange: handleChange,
+        dragLabel: 'true',
+        dragMax: '255'
+      })
+    ),
+    _react2.default.createElement(
+      'div',
+      { style: styles.alpha },
+      _react2.default.createElement(_common.EditableInput, {
+        style: { input: styles.input, label: styles.label },
+        label: 'a',
+        value: Math.round(rgb.a * 100),
+        onChange: handleChange,
+        dragLabel: 'true',
+        dragMax: '100'
+      })
+    )
+  );
+};
 
 exports.default = ShetchFields;
-},{"../../helpers/color":219,"../common":193,"react":"react","react-addons-shallow-compare":175,"reactcss":240}],210:[function(require,module,exports){
+},{"../../helpers/color":255,"../common":227,"react":"react","reactcss":278}],244:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.SketchPresetColors = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -29987,108 +30441,74 @@ var _map = require('lodash/map');
 
 var _map2 = _interopRequireDefault(_map);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 var _common = require('../common');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var SketchPresetColors = exports.SketchPresetColors = function SketchPresetColors(_ref) {
+  var colors = _ref.colors;
+  var onClick = _ref.onClick;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var SketchPresetColors = exports.SketchPresetColors = function (_React$Component) {
-  _inherits(SketchPresetColors, _React$Component);
-
-  function SketchPresetColors() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      colors: {
+        margin: '0 -10px',
+        padding: '10px 0 0 10px',
+        borderTop: '1px solid #eee',
+        display: 'flex',
+        flexWrap: 'wrap'
+      },
+      swatchWrap: {
+        width: '16px',
+        height: '16px',
+        margin: '0 10px 10px 0'
+      },
+      swatch: {
+        borderRadius: '3px',
+        boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.15)'
+      }
+    },
+    'no-presets': {
+      colors: {
+        display: 'none'
+      }
     }
+  }, {
+    'no-presets': !colors || !colors.length
+  });
 
-    _classCallCheck(this, SketchPresetColors);
+  var handleClick = function handleClick(hex) {
+    onClick({
+      hex: hex,
+      source: 'hex'
+    });
+  };
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(SketchPresetColors)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleClick = function (hex) {
-      _this.props.onClick({
-        hex: hex,
-        source: 'hex'
-      });
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(SketchPresetColors, [{
-    key: 'render',
-    value: function render() {
-      var _this2 = this;
-
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          colors: {
-            margin: '0 -10px',
-            padding: '10px 0 0 10px',
-            borderTop: '1px solid #eee',
-            display: 'flex',
-            flexWrap: 'wrap'
-          },
-          swatchWrap: {
-            width: '16px',
-            height: '16px',
-            margin: '0 10px 10px 0'
-          },
-          swatch: {
-            borderRadius: '3px',
-            boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.15)'
-          }
-        },
-        'no-presets': {
-          colors: {
-            display: 'none'
-          }
-        }
-      }, {
-        'no-presets': !this.props.colors || !this.props.colors.length
-      });
-
+  return _react2.default.createElement(
+    'div',
+    { style: styles.colors, className: 'flexbox-fix' },
+    (0, _map2.default)(colors, function (c) {
       return _react2.default.createElement(
         'div',
-        { style: styles.colors, className: 'flexbox-fix' },
-        (0, _map2.default)(this.props.colors, function (c) {
-          return _react2.default.createElement(
-            'div',
-            { style: styles.swatchWrap, key: c },
-            _react2.default.createElement(_common.Swatch, {
-              color: c,
-              style: styles.swatch,
-              onClick: _this2.handleClick
-            })
-          );
+        { key: c, style: styles.swatchWrap },
+        _react2.default.createElement(_common.Swatch, {
+          color: c,
+          style: styles.swatch,
+          onClick: handleClick
         })
       );
-    }
-  }]);
-
-  return SketchPresetColors;
-}(_react2.default.Component);
+    })
+  );
+};
 
 exports.default = SketchPresetColors;
-},{"../common":193,"lodash/map":162,"react":"react","react-addons-shallow-compare":175,"reactcss":240}],211:[function(require,module,exports){
+},{"../common":227,"lodash/map":194,"react":"react","reactcss":278}],245:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.Slider = undefined;
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -30097,10 +30517,6 @@ var _react2 = _interopRequireDefault(_react);
 var _reactcss = require('reactcss');
 
 var _reactcss2 = _interopRequireDefault(_reactcss);
-
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
 
 var _common = require('../common');
 
@@ -30114,74 +30530,45 @@ var _SliderPointer2 = _interopRequireDefault(_SliderPointer);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var Slider = exports.Slider = function Slider(_ref) {
+  var hsl = _ref.hsl;
+  var onChange = _ref.onChange;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Slider = exports.Slider = function (_React$Component) {
-  _inherits(Slider, _React$Component);
-
-  function Slider() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      hue: {
+        height: '12px',
+        position: 'relative'
+      },
+      Hue: {
+        radius: '2px'
+      }
     }
+  });
 
-    _classCallCheck(this, Slider);
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Slider)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleChange = function (data) {
-      _this.props.onChange(data);
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(Slider, [{
-    key: 'render',
-    value: function render() {
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          slider: {},
-          hue: {
-            height: '12px',
-            position: 'relative'
-          },
-          Hue: {
-            radius: '2px'
-          }
-        }
-      });
-
-      return _react2.default.createElement(
-        'div',
-        { style: styles.slider },
-        _react2.default.createElement(
-          'div',
-          { style: styles.hue },
-          _react2.default.createElement(_common.Hue, _extends({
-            style: styles.Hue
-          }, this.props, {
-            pointer: _SliderPointer2.default,
-            onChange: this.handleChange
-          }))
-        ),
-        _react2.default.createElement(
-          'div',
-          { style: styles.swatches },
-          _react2.default.createElement(_SliderSwatches2.default, _extends({}, this.props, { onClick: this.handleChange }))
-        )
-      );
-    }
-  }]);
-
-  return Slider;
-}(_react2.default.Component);
+  return _react2.default.createElement(
+    'div',
+    { className: 'slider-picker' },
+    _react2.default.createElement(
+      'div',
+      { style: styles.hue },
+      _react2.default.createElement(_common.Hue, {
+        style: styles.Hue,
+        hsl: hsl,
+        pointer: _SliderPointer2.default,
+        onChange: onChange
+      })
+    ),
+    _react2.default.createElement(
+      'div',
+      { style: styles.swatches },
+      _react2.default.createElement(_SliderSwatches2.default, { hsl: hsl, onClick: onChange })
+    )
+  );
+};
 
 exports.default = (0, _common.ColorWrap)(Slider);
-},{"../common":193,"./SliderPointer":212,"./SliderSwatches":214,"react":"react","react-addons-shallow-compare":175,"reactcss":240}],212:[function(require,module,exports){
+},{"../common":227,"./SliderPointer":246,"./SliderSwatches":248,"react":"react","reactcss":278}],246:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30189,8 +30576,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.SliderPointer = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -30199,60 +30584,27 @@ var _reactcss = require('reactcss');
 
 var _reactcss2 = _interopRequireDefault(_reactcss);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var SliderPointer = exports.SliderPointer = function (_React$Component) {
-  _inherits(SliderPointer, _React$Component);
-
-  function SliderPointer() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+var SliderPointer = exports.SliderPointer = function SliderPointer() {
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      picker: {
+        width: '14px',
+        height: '14px',
+        borderRadius: '6px',
+        transform: 'translate(-7px, -1px)',
+        backgroundColor: 'rgb(248, 248, 248)',
+        boxShadow: '0 1px 4px 0 rgba(0, 0, 0, 0.37)'
+      }
     }
+  });
 
-    _classCallCheck(this, SliderPointer);
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(SliderPointer)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(SliderPointer, [{
-    key: 'render',
-    value: function render() {
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          picker: {
-            width: '14px',
-            height: '14px',
-            borderRadius: '6px',
-            transform: 'translate(-7px, -1px)',
-            backgroundColor: 'rgb(248, 248, 248)',
-            boxShadow: '0 1px 4px 0 rgba(0, 0, 0, 0.37)'
-          }
-        }
-      });
-
-      return _react2.default.createElement('div', { style: styles.picker });
-    }
-  }]);
-
-  return SliderPointer;
-}(_react2.default.Component);
+  return _react2.default.createElement('div', { style: styles.picker });
+};
 
 exports.default = SliderPointer;
-},{"react":"react","react-addons-shallow-compare":175,"reactcss":240}],213:[function(require,module,exports){
+},{"react":"react","reactcss":278}],247:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30260,8 +30612,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.SliderSwatch = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -30270,80 +30620,56 @@ var _reactcss = require('reactcss');
 
 var _reactcss2 = _interopRequireDefault(_reactcss);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var SliderSwatch = exports.SliderSwatch = function SliderSwatch(_ref) {
+  var hsl = _ref.hsl;
+  var offset = _ref.offset;
+  var onClick = _ref.onClick;
+  var active = _ref.active;
+  var first = _ref.first;
+  var last = _ref.last;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var SliderSwatch = exports.SliderSwatch = function (_React$Component) {
-  _inherits(SliderSwatch, _React$Component);
-
-  function SliderSwatch() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      swatch: {
+        height: '12px',
+        background: 'hsl(' + hsl.h + ', 50%, ' + offset * 100 + '%)',
+        cursor: 'pointer'
+      }
+    },
+    'first': {
+      swatch: {
+        borderRadius: '2px 0 0 2px'
+      }
+    },
+    'last': {
+      swatch: {
+        borderRadius: '0 2px 2px 0'
+      }
+    },
+    'active': {
+      swatch: {
+        transform: 'scaleY(1.8)',
+        borderRadius: '3.6px/2px'
+      }
     }
+  }, { active: active, first: first, last: last });
 
-    _classCallCheck(this, SliderSwatch);
+  var handleClick = function handleClick() {
+    onClick({
+      h: hsl.h,
+      s: 0.5,
+      l: offset,
+      source: 'hsl'
+    });
+  };
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(SliderSwatch)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleClick = function () {
-      _this.props.onClick({
-        h: _this.props.hsl.h,
-        s: 0.5,
-        l: _this.props.offset,
-        source: 'hsl'
-      });
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(SliderSwatch, [{
-    key: 'render',
-    value: function render() {
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          swatch: {
-            height: '12px',
-            background: 'hsl(' + this.props.hsl.h + ', 50%, ' + this.props.offset * 100 + '%)',
-            cursor: 'pointer'
-          }
-        },
-        'first': {
-          swatch: {
-            borderRadius: '2px 0 0 2px'
-          }
-        },
-        'last': {
-          swatch: {
-            borderRadius: '0 2px 2px 0'
-          }
-        },
-        'active': {
-          swatch: {
-            transform: 'scaleY(1.8)',
-            borderRadius: '3.6px/2px'
-          }
-        }
-      }, this.props);
-
-      return _react2.default.createElement('div', { style: styles.swatch, ref: 'swatch', onClick: this.handleClick });
-    }
-  }]);
-
-  return SliderSwatch;
-}(_react2.default.Component);
+  return _react2.default.createElement('div', { style: styles.swatch, onClick: handleClick });
+};
 
 exports.default = SliderSwatch;
-},{"react":"react","react-addons-shallow-compare":175,"reactcss":240}],214:[function(require,module,exports){
+},{"react":"react","reactcss":278}],248:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30351,10 +30677,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.SliderSwatches = undefined;
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -30363,129 +30685,100 @@ var _reactcss = require('reactcss');
 
 var _reactcss2 = _interopRequireDefault(_reactcss);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 var _SliderSwatch = require('./SliderSwatch');
 
 var _SliderSwatch2 = _interopRequireDefault(_SliderSwatch);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var SliderSwatches = exports.SliderSwatches = function SliderSwatches(_ref) {
+  var onClick = _ref.onClick;
+  var hsl = _ref.hsl;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var SliderSwatches = exports.SliderSwatches = function (_React$Component) {
-  _inherits(SliderSwatches, _React$Component);
-
-  function SliderSwatches() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      swatches: {
+        marginTop: '20px'
+      },
+      swatch: {
+        boxSizing: 'border-box',
+        width: '20%',
+        paddingRight: '1px',
+        float: 'left'
+      },
+      clear: {
+        clear: 'both'
+      }
     }
+  });
 
-    _classCallCheck(this, SliderSwatches);
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(SliderSwatches)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleClick = function (data) {
-      _this.props.onClick(data);
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(SliderSwatches, [{
-    key: 'render',
-    value: function render() {
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          swatches: {
-            marginTop: '20px'
-          },
-          swatch: {
-            boxSizing: 'border-box',
-            width: '20%',
-            paddingRight: '1px',
-            float: 'left'
-          },
-          clear: {
-            clear: 'both'
-          }
-        }
-      });
-
-      return _react2.default.createElement(
-        'div',
-        { style: styles.swatches },
-        _react2.default.createElement(
-          'div',
-          { style: styles.swatch },
-          _react2.default.createElement(_SliderSwatch2.default, _extends({}, this.props, {
-            offset: '.80',
-            active: Math.round(this.props.hsl.l * 100) / 100 === 0.80 && Math.round(this.props.hsl.s * 100) / 100 === 0.50,
-            onClick: this.handleClick,
-            first: true
-          }))
-        ),
-        _react2.default.createElement(
-          'div',
-          { style: styles.swatch },
-          _react2.default.createElement(_SliderSwatch2.default, _extends({}, this.props, {
-            offset: '.65',
-            active: Math.round(this.props.hsl.l * 100) / 100 === 0.65 && Math.round(this.props.hsl.s * 100) / 100 === 0.50,
-            onClick: this.handleClick
-          }))
-        ),
-        _react2.default.createElement(
-          'div',
-          { style: styles.swatch },
-          _react2.default.createElement(_SliderSwatch2.default, _extends({}, this.props, {
-            offset: '.50',
-            active: Math.round(this.props.hsl.l * 100) / 100 === 0.50 && Math.round(this.props.hsl.s * 100) / 100 === 0.50,
-            onClick: this.handleClick
-          }))
-        ),
-        _react2.default.createElement(
-          'div',
-          { style: styles.swatch },
-          _react2.default.createElement(_SliderSwatch2.default, _extends({}, this.props, {
-            offset: '.35',
-            active: Math.round(this.props.hsl.l * 100) / 100 === 0.35 && Math.round(this.props.hsl.s * 100) / 100 === 0.50,
-            onClick: this.handleClick
-          }))
-        ),
-        _react2.default.createElement(
-          'div',
-          { style: styles.swatch },
-          _react2.default.createElement(_SliderSwatch2.default, _extends({}, this.props, {
-            offset: '.20',
-            active: Math.round(this.props.hsl.l * 100) / 100 === 0.20 && Math.round(this.props.hsl.s * 100) / 100 === 0.50,
-            onClick: this.handleClick,
-            last: true
-          }))
-        ),
-        _react2.default.createElement('div', { style: styles.clear })
-      );
-    }
-  }]);
-
-  return SliderSwatches;
-}(_react2.default.Component);
+  return _react2.default.createElement(
+    'div',
+    { style: styles.swatches },
+    _react2.default.createElement(
+      'div',
+      { style: styles.swatch },
+      _react2.default.createElement(_SliderSwatch2.default, {
+        hsl: hsl,
+        offset: '.80',
+        active: Math.round(hsl.l * 100) / 100 === 0.80 && Math.round(hsl.s * 100) / 100 === 0.50,
+        onClick: onClick,
+        first: true
+      })
+    ),
+    _react2.default.createElement(
+      'div',
+      { style: styles.swatch },
+      _react2.default.createElement(_SliderSwatch2.default, {
+        hsl: hsl,
+        offset: '.65',
+        active: Math.round(hsl.l * 100) / 100 === 0.65 && Math.round(hsl.s * 100) / 100 === 0.50,
+        onClick: onClick
+      })
+    ),
+    _react2.default.createElement(
+      'div',
+      { style: styles.swatch },
+      _react2.default.createElement(_SliderSwatch2.default, {
+        hsl: hsl,
+        offset: '.50',
+        active: Math.round(hsl.l * 100) / 100 === 0.50 && Math.round(hsl.s * 100) / 100 === 0.50,
+        onClick: onClick
+      })
+    ),
+    _react2.default.createElement(
+      'div',
+      { style: styles.swatch },
+      _react2.default.createElement(_SliderSwatch2.default, {
+        hsl: hsl,
+        offset: '.35',
+        active: Math.round(hsl.l * 100) / 100 === 0.35 && Math.round(hsl.s * 100) / 100 === 0.50,
+        onClick: onClick
+      })
+    ),
+    _react2.default.createElement(
+      'div',
+      { style: styles.swatch },
+      _react2.default.createElement(_SliderSwatch2.default, {
+        hsl: hsl,
+        offset: '.20',
+        active: Math.round(hsl.l * 100) / 100 === 0.20 && Math.round(hsl.s * 100) / 100 === 0.50,
+        onClick: onClick,
+        last: true
+      })
+    ),
+    _react2.default.createElement('div', { style: styles.clear })
+  );
+};
 
 exports.default = SliderSwatches;
-},{"./SliderSwatch":213,"react":"react","react-addons-shallow-compare":175,"reactcss":240}],215:[function(require,module,exports){
+},{"./SliderSwatch":247,"react":"react","reactcss":278}],249:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.Swatches = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -30507,10 +30800,6 @@ var _materialColors = require('material-colors');
 
 var _materialColors2 = _interopRequireDefault(_materialColors);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 var _common = require('../common');
 
 var _reactMaterialDesign = require('../../../modules/react-material-design');
@@ -30521,93 +30810,67 @@ var _SwatchesGroup2 = _interopRequireDefault(_SwatchesGroup);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var Swatches = exports.Swatches = function Swatches(_ref) {
+  var width = _ref.width;
+  var height = _ref.height;
+  var onChange = _ref.onChange;
+  var colors = _ref.colors;
+  var hex = _ref.hex;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Swatches = exports.Swatches = function (_React$Component) {
-  _inherits(Swatches, _React$Component);
-
-  function Swatches() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      picker: {
+        width: width,
+        height: height
+      },
+      overflow: {
+        height: height,
+        overflowY: 'scroll'
+      },
+      body: {
+        padding: '16px 0 6px 16px'
+      },
+      clear: {
+        clear: 'both'
+      }
     }
+  });
 
-    _classCallCheck(this, Swatches);
+  var handleChange = function handleChange(data) {
+    _color2.default.isValidHex(data) && onChange({
+      hex: data,
+      source: 'hex'
+    });
+  };
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Swatches)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleChange = function (data) {
-      _color2.default.isValidHex(data) && _this.props.onChange({
-        hex: data,
-        source: 'hex'
-      });
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(Swatches, [{
-    key: 'render',
-    value: function render() {
-      var _this2 = this;
-
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          picker: {
-            width: this.props.width,
-            height: this.props.height
-          },
-          overflow: {
-            height: this.props.height,
-            overflowY: 'scroll'
-          },
-          body: {
-            padding: '16px 0 6px 16px'
-          },
-
-          clear: {
-            clear: 'both'
-          }
-        }
-      });
-
-      return _react2.default.createElement(
+  return _react2.default.createElement(
+    'div',
+    { style: styles.picker, className: 'swatches-picker' },
+    _react2.default.createElement(
+      _reactMaterialDesign.Raised,
+      null,
+      _react2.default.createElement(
         'div',
-        { style: styles.picker },
+        { style: styles.overflow },
         _react2.default.createElement(
-          _reactMaterialDesign.Raised,
-          null,
-          _react2.default.createElement(
-            'div',
-            { style: styles.overflow },
-            _react2.default.createElement(
-              'div',
-              { style: styles.body, ref: 'body' },
-              (0, _map2.default)(this.props.colors, function (group) {
-                return _react2.default.createElement(_SwatchesGroup2.default, {
-                  key: group.toString(),
-                  group: group,
-                  active: _this2.props.hex,
-                  onClick: _this2.handleChange
-                });
-              }),
-              _react2.default.createElement('div', { style: styles.clear })
-            )
-          )
+          'div',
+          { style: styles.body },
+          (0, _map2.default)(colors, function (group) {
+            return _react2.default.createElement(_SwatchesGroup2.default, {
+              key: group.toString(),
+              group: group,
+              active: hex,
+              onClick: handleChange
+            });
+          }),
+          _react2.default.createElement('div', { style: styles.clear })
         )
-      );
-    }
-  }]);
+      )
+    )
+  );
+};
 
-  return Swatches;
-}(_react2.default.Component);
-
-/* eslint max-len: 0*/
-
-
+/* eslint-disable max-len */
 Swatches.defaultProps = {
   width: 320,
   height: 240,
@@ -30615,15 +30878,13 @@ Swatches.defaultProps = {
 };
 
 exports.default = (0, _common.ColorWrap)(Swatches);
-},{"../../../modules/react-material-design":221,"../../helpers/color":219,"../common":193,"./SwatchesGroup":217,"lodash/map":162,"material-colors":172,"react":"react","react-addons-shallow-compare":175,"reactcss":240}],216:[function(require,module,exports){
+},{"../../../modules/react-material-design":259,"../../helpers/color":255,"../common":227,"./SwatchesGroup":251,"lodash/map":194,"material-colors":206,"react":"react","reactcss":278}],250:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.SwatchesColor = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -30633,111 +30894,84 @@ var _reactcss = require('reactcss');
 
 var _reactcss2 = _interopRequireDefault(_reactcss);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var SwatchesColor = exports.SwatchesColor = function SwatchesColor(_ref) {
+  var color = _ref.color;
+  var onClick = _ref.onClick;
+  var first = _ref.first;
+  var last = _ref.last;
+  var active = _ref.active;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var SwatchesColor = exports.SwatchesColor = function (_React$Component) {
-  _inherits(SwatchesColor, _React$Component);
-
-  function SwatchesColor() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      color: {
+        width: '40px',
+        height: '24px',
+        cursor: 'pointer',
+        background: color,
+        marginBottom: '1px'
+      },
+      check: {
+        fill: '#fff',
+        marginLeft: '8px',
+        display: 'none'
+      }
+    },
+    'first': {
+      color: {
+        overflow: 'hidden',
+        borderRadius: '2px 2px 0 0'
+      }
+    },
+    'last': {
+      color: {
+        overflow: 'hidden',
+        borderRadius: '0 0 2px 2px'
+      }
+    },
+    'active': {
+      check: {
+        display: 'block'
+      }
+    },
+    'color-#FFFFFF': {
+      color: {
+        boxShadow: 'inset 0 0 0 1px #eee'
+      },
+      check: {
+        fill: '#333'
+      }
     }
+  }, { first: first, last: last, active: active, 'color=#FFFFFF': color === '#FFFFFF' });
 
-    _classCallCheck(this, SwatchesColor);
+  var handleClick = function handleClick() {
+    return onClick(color);
+  };
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(SwatchesColor)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleClick = function () {
-      _this.props.onClick(_this.props.color);
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(SwatchesColor, [{
-    key: 'render',
-    value: function render() {
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          color: {
-            width: '40px',
-            height: '24px',
-            cursor: 'pointer',
-            background: this.props.color,
-            marginBottom: '1px'
-          },
-          check: {
-            fill: '#fff',
-            marginLeft: '8px',
-            display: 'none'
-          }
-        },
-        'first': {
-          color: {
-            overflow: 'hidden',
-            borderRadius: '2px 2px 0 0'
-          }
-        },
-        'last': {
-          color: {
-            overflow: 'hidden',
-            borderRadius: '0 0 2px 2px'
-          }
-        },
-        'active': {
-          check: {
-            display: 'block'
-          }
-        },
-        'color-#FFFFFF': {
-          color: {
-            boxShadow: 'inset 0 0 0 1px #eee'
-          },
-          check: {
-            fill: '#333'
-          }
-        }
-      }, this.props);
-
-      return _react2.default.createElement(
-        'div',
-        { style: styles.color, ref: 'color', onClick: this.handleClick },
-        _react2.default.createElement(
-          'div',
-          { style: styles.check },
-          _react2.default.createElement(
-            'svg',
-            { style: { width: '24px', height: '24px' }, viewBox: '0 0 24 24' },
-            _react2.default.createElement('path', { d: 'M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z' })
-          )
-        )
-      );
-    }
-  }]);
-
-  return SwatchesColor;
-}(_react2.default.Component);
+  return _react2.default.createElement(
+    'div',
+    { style: styles.color, onClick: handleClick },
+    _react2.default.createElement(
+      'div',
+      { style: styles.check },
+      _react2.default.createElement(
+        'svg',
+        { style: { width: '24px', height: '24px' }, viewBox: '0 0 24 24' },
+        _react2.default.createElement('path', { d: 'M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z' })
+      )
+    )
+  );
+};
 
 exports.default = SwatchesColor;
-},{"react":"react","react-addons-shallow-compare":175,"reactcss":240}],217:[function(require,module,exports){
+},{"react":"react","reactcss":278}],251:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.SwatchesGroup = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -30751,87 +30985,52 @@ var _map = require('lodash/map');
 
 var _map2 = _interopRequireDefault(_map);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 var _SwatchesColor = require('./SwatchesColor');
 
 var _SwatchesColor2 = _interopRequireDefault(_SwatchesColor);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var SwatchesGroup = exports.SwatchesGroup = function SwatchesGroup(_ref) {
+  var onClick = _ref.onClick;
+  var group = _ref.group;
+  var active = _ref.active;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var SwatchesGroup = exports.SwatchesGroup = function (_React$Component) {
-  _inherits(SwatchesGroup, _React$Component);
-
-  function SwatchesGroup() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      group: {
+        paddingBottom: '10px',
+        width: '40px',
+        float: 'left',
+        marginRight: '10px'
+      }
     }
+  });
 
-    _classCallCheck(this, SwatchesGroup);
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(SwatchesGroup)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleClick = function (data) {
-      _this.props.onClick(data);
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(SwatchesGroup, [{
-    key: 'render',
-    value: function render() {
-      var _this2 = this;
-
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          group: {
-            paddingBottom: '10px',
-            width: '40px',
-            float: 'left',
-            marginRight: '10px'
-          }
-        }
+  return _react2.default.createElement(
+    'div',
+    { style: styles.group },
+    (0, _map2.default)(group, function (color, i) {
+      return _react2.default.createElement(_SwatchesColor2.default, {
+        key: color,
+        color: color,
+        active: color.toLowerCase() === active,
+        first: i === 0,
+        last: i === group.length - 1,
+        onClick: onClick
       });
-
-      return _react2.default.createElement(
-        'div',
-        { style: styles.group, ref: 'group' },
-        (0, _map2.default)(this.props.group, function (color, i) {
-          return _react2.default.createElement(_SwatchesColor2.default, {
-            key: color,
-            color: color,
-            active: color.toLowerCase() === _this2.props.active,
-            first: i === 0,
-            last: i === _this2.props.group.length - 1,
-            onClick: _this2.handleClick
-          });
-        })
-      );
-    }
-  }]);
-
-  return SwatchesGroup;
-}(_react2.default.Component);
+    })
+  );
+};
 
 exports.default = SwatchesGroup;
-},{"./SwatchesColor":216,"lodash/map":162,"react":"react","react-addons-shallow-compare":175,"reactcss":240}],218:[function(require,module,exports){
+},{"./SwatchesColor":250,"lodash/map":194,"react":"react","reactcss":278}],252:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.Twitter = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -30849,163 +31048,240 @@ var _color = require('../../helpers/color');
 
 var _color2 = _interopRequireDefault(_color);
 
-var _reactAddonsShallowCompare = require('react-addons-shallow-compare');
-
-var _reactAddonsShallowCompare2 = _interopRequireDefault(_reactAddonsShallowCompare);
-
 var _common = require('../common');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var Twitter = exports.Twitter = function Twitter(_ref) {
+  var onChange = _ref.onChange;
+  var colors = _ref.colors;
+  var width = _ref.width;
+  var triangle = _ref.triangle;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Twitter = exports.Twitter = function (_React$Component) {
-  _inherits(Twitter, _React$Component);
-
-  function Twitter() {
-    var _Object$getPrototypeO;
-
-    var _temp, _this, _ret;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+  var styles = (0, _reactcss2.default)({
+    'default': {
+      card: {
+        width: width,
+        background: '#fff',
+        border: '0 solid rgba(0,0,0,0.25)',
+        boxShadow: '0 1px 4px rgba(0,0,0,0.25)',
+        borderRadius: '4px',
+        position: 'relative'
+      },
+      body: {
+        padding: '15px 9px 9px 15px'
+      },
+      label: {
+        fontSize: '18px',
+        color: '#fff'
+      },
+      triangle: {
+        width: '0px',
+        height: '0px',
+        borderStyle: 'solid',
+        borderWidth: '0 9px 10px 9px',
+        borderColor: 'transparent transparent #fff transparent',
+        position: 'absolute'
+      },
+      triangleShadow: {
+        width: '0px',
+        height: '0px',
+        borderStyle: 'solid',
+        borderWidth: '0 9px 10px 9px',
+        borderColor: 'transparent transparent rgba(0,0,0,.1) transparent',
+        position: 'absolute'
+      },
+      hash: {
+        background: '#F0F0F0',
+        height: '30px',
+        width: '30px',
+        borderRadius: '4px 0 0 4px',
+        float: 'left',
+        color: '#98A1A4',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      },
+      input: {
+        width: '100px',
+        fontSize: '14px',
+        color: '#666',
+        border: '0px',
+        outline: 'none',
+        height: '28px',
+        boxShadow: 'inset 0 0 0 1px #F0F0F0',
+        borderRadius: '0 4px 4px 0',
+        float: 'left',
+        paddingLeft: '8px'
+      },
+      swatch: {
+        width: '30px',
+        height: '30px',
+        float: 'left',
+        borderRadius: '4px',
+        margin: '0 6px 6px 0'
+      },
+      clear: {
+        clear: 'both'
+      }
+    },
+    'hide-triangle': {
+      triangle: {
+        display: 'none'
+      },
+      triangleShadow: {
+        display: 'none'
+      }
+    },
+    'top-left-triangle': {
+      triangle: {
+        top: '-10px',
+        left: '12px'
+      },
+      triangleShadow: {
+        top: '-11px',
+        left: '12px'
+      }
+    },
+    'top-right-triangle': {
+      triangle: {
+        top: '-10px',
+        right: '12px'
+      },
+      triangleShadow: {
+        top: '-11px',
+        right: '12px'
+      }
     }
+  }, {
+    'hide-triangle': triangle === 'hide',
+    'top-left-triangle': triangle === 'top-left',
+    'top-right-triangle': triangle === 'top-right'
+  });
 
-    _classCallCheck(this, Twitter);
+  var handleChange = function handleChange(hex) {
+    _color2.default.isValidHex(hex) && onChange({
+      hex: hex,
+      source: 'hex'
+    });
+  };
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Twitter)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.shouldComponentUpdate = _reactAddonsShallowCompare2.default.bind(_this, _this, arguments[0], arguments[1]), _this.handleChange = function (hex) {
-      _color2.default.isValidHex(hex) && _this.props.onChange({
-        hex: hex,
-        source: 'hex'
-      });
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  _createClass(Twitter, [{
-    key: 'render',
-    value: function render() {
-      var _this2 = this;
-
-      var styles = (0, _reactcss2.default)({
-        'default': {
-          card: {
-            width: this.props.width,
-            background: '#fff',
-            border: '0 solid rgba(0,0,0,0.25)',
-            boxShadow: '0 1px 4px rgba(0,0,0,0.25)',
-            borderRadius: '4px',
-            position: 'relative'
-          },
-          body: {
-            padding: '15px 9px 9px 15px'
-          },
-          label: {
-            fontSize: '18px',
-            color: '#fff'
-          },
-          triangle: {
-            width: '0px',
-            height: '0px',
-            borderStyle: 'solid',
-            borderWidth: '0 9px 10px 9px',
-            borderColor: 'transparent transparent #fff transparent',
-            position: 'absolute',
-            top: '-10px',
-            left: '12px'
-          },
-          triangleShadow: {
-            width: '0px',
-            height: '0px',
-            borderStyle: 'solid',
-            borderWidth: '0 9px 10px 9px',
-            borderColor: 'transparent transparent rgba(0,0,0,.1) transparent',
-            position: 'absolute',
-            top: '-11px',
-            left: '12px'
-          },
-          hash: {
-            background: '#F0F0F0',
-            height: '30px',
-            width: '30px',
-            borderRadius: '4px 0 0 4px',
-            float: 'left',
-            color: '#98A1A4',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          },
-          input: {
-            width: '100px',
-            fontSize: '14px',
-            color: '#666',
-            border: '0px',
-            outline: 'none',
-            height: '28px',
-            boxShadow: 'inset 0 0 0 1px #F0F0F0',
-            borderRadius: '0 4px 4px 0',
-            float: 'left',
-            paddingLeft: '8px'
-          },
-          swatch: {
-            width: '30px',
-            height: '30px',
-            float: 'left',
-            borderRadius: '4px',
-            margin: '0 6px 6px 0'
-          },
-          clear: {
-            clear: 'both'
-          }
-        }
-      });
-
-      return _react2.default.createElement(
+  return _react2.default.createElement(
+    'div',
+    { style: styles.card, className: 'twitter-picker' },
+    _react2.default.createElement('div', { style: styles.triangleShadow }),
+    _react2.default.createElement('div', { style: styles.triangle }),
+    _react2.default.createElement(
+      'div',
+      { style: styles.body },
+      (0, _map2.default)(colors, function (c, i) {
+        return _react2.default.createElement(_common.Swatch, {
+          key: i,
+          color: c,
+          hex: c,
+          style: styles.swatch,
+          onClick: handleChange
+        });
+      }),
+      _react2.default.createElement(
         'div',
-        { style: styles.card },
-        _react2.default.createElement('div', { style: styles.triangleShadow }),
-        _react2.default.createElement('div', { style: styles.triangle }),
-        _react2.default.createElement(
-          'div',
-          { style: styles.body },
-          (0, _map2.default)(this.props.colors, function (c) {
-            return _react2.default.createElement(_common.Swatch, { color: c, hex: c, style: styles.swatch, onClick: _this2.handleChange });
-          }),
-          _react2.default.createElement(
-            'div',
-            { style: styles.hash },
-            '#'
-          ),
-          _react2.default.createElement(_common.EditableInput, {
-            placeholder: 'ff691f',
-            style: { input: styles.input },
-            value: '',
-            onChange: this.handleChange
-          }),
-          _react2.default.createElement('div', { style: styles.clear })
-        )
-      );
-    }
-  }]);
-
-  return Twitter;
-}(_react2.default.Component);
+        { style: styles.hash },
+        '#'
+      ),
+      _react2.default.createElement(_common.EditableInput, {
+        placeholder: 'ff691f',
+        style: { input: styles.input },
+        value: '',
+        onChange: handleChange
+      }),
+      _react2.default.createElement('div', { style: styles.clear })
+    )
+  );
+};
 
 Twitter.defaultProps = {
   width: '276px',
-  colors: ['#FF6900', '#FCB900', '#7BDCB5', '#00D084', '#8ED1FC', '#0693E3', '#ABB8C3', '#EB144C', '#F78DA7', '#9900EF']
+  colors: ['#FF6900', '#FCB900', '#7BDCB5', '#00D084', '#8ED1FC', '#0693E3', '#ABB8C3', '#EB144C', '#F78DA7', '#9900EF'],
+  triangle: 'top-left'
 };
 
 exports.default = (0, _common.ColorWrap)(Twitter);
-},{"../../helpers/color":219,"../common":193,"lodash/map":162,"react":"react","react-addons-shallow-compare":175,"reactcss":240}],219:[function(require,module,exports){
+},{"../../helpers/color":255,"../common":227,"lodash/map":194,"react":"react","reactcss":278}],253:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.calculateChange = calculateChange;
+function calculateChange(e, skip, props, container) {
+  !skip && e.preventDefault();
+  var containerWidth = container.clientWidth;
+  var x = typeof e.pageX === 'number' ? e.pageX : e.touches[0].pageX;
+  var inIFrame = window.self !== window.top || window.document !== container.ownerDocument;
+  var left = x - (container.getBoundingClientRect().left + (inIFrame ? 0 : window.pageXOffset));
+
+  var a = void 0;
+  if (left < 0) {
+    a = 0;
+  } else if (left > containerWidth) {
+    a = 1;
+  } else {
+    a = Math.round(left * 100 / containerWidth) / 100;
+  }
+
+  if (props.a !== a) {
+    return {
+      h: props.hsl.h,
+      s: props.hsl.s,
+      l: props.hsl.l,
+      a: a,
+      source: 'rgb'
+    };
+  }
+  return null;
+}
+},{}],254:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.render = render;
+exports.get = get;
+var checkboardCache = {};
+
+function render(c1, c2, size) {
+  if (typeof document === 'undefined') return null; // Dont Render On Server
+  var canvas = document.createElement('canvas');
+  canvas.width = canvas.height = size * 2;
+  var ctx = canvas.getContext('2d');
+  if (!ctx) return null; // If no context can be found, return early.
+  ctx.fillStyle = c1;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = c2;
+  ctx.fillRect(0, 0, size, size);
+  ctx.translate(size, size);
+  ctx.fillRect(0, 0, size, size);
+  return canvas.toDataURL();
+}
+
+function get(c1, c2, size) {
+  var key = c1 + ',' + c2 + ', ' + size;
+  var checkboard = render(c1, c2, size);
+
+  if (checkboardCache[key]) {
+    return checkboardCache[key];
+  }
+  checkboardCache[key] = checkboard;
+  return checkboard;
+}
+},{}],255:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.red = undefined;
 
 var _each = require('lodash/each');
 
@@ -31054,7 +31330,111 @@ exports.default = {
     return (0, _tinycolor2.default)(hex).isValid();
   }
 };
-},{"../../modules/tinycolor2":227,"lodash/each":142}],220:[function(require,module,exports){
+var red = exports.red = {
+  hsl: { a: 1, h: 0, l: 0.5, s: 1 },
+  hex: '#ff0000',
+  rgb: { r: 255, g: 0, b: 0, a: 1 },
+  hsv: { h: 0, s: 1, v: 1, a: 1 }
+};
+},{"../../modules/tinycolor2":265,"lodash/each":174}],256:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.calculateChange = calculateChange;
+function calculateChange(e, skip, props, container) {
+  !skip && e.preventDefault();
+  var containerWidth = container.clientWidth;
+  var containerHeight = container.clientHeight;
+  var x = typeof e.pageX === 'number' ? e.pageX : e.touches[0].pageX;
+  var y = typeof e.pageY === 'number' ? e.pageY : e.touches[0].pageY;
+  var inIFrame = window.self !== window.top || window.document !== container.ownerDocument;
+  var left = x - (container.getBoundingClientRect().left + (inIFrame ? 0 : window.pageXOffset));
+  var top = y - (container.getBoundingClientRect().top + (inIFrame ? 0 : window.pageYOffset));
+
+  if (props.direction === 'vertical') {
+    var h = void 0;
+    if (top < 0) {
+      h = 359;
+    } else if (top > containerHeight) {
+      h = 0;
+    } else {
+      var percent = -(top * 100 / containerHeight) + 100;
+      h = 360 * percent / 100;
+    }
+
+    if (props.hsl.h !== h) {
+      return {
+        h: h,
+        s: props.hsl.s,
+        l: props.hsl.l,
+        a: props.hsl.a,
+        source: 'rgb'
+      };
+    }
+  } else {
+    var _h = void 0;
+    if (left < 0) {
+      _h = 0;
+    } else if (left > containerWidth) {
+      _h = 359;
+    } else {
+      var _percent = left * 100 / containerWidth;
+      _h = 360 * _percent / 100;
+    }
+
+    if (props.hsl.h !== _h) {
+      return {
+        h: _h,
+        s: props.hsl.s,
+        l: props.hsl.l,
+        a: props.hsl.a,
+        source: 'rgb'
+      };
+    }
+  }
+  return null;
+}
+},{}],257:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.calculateChange = calculateChange;
+function calculateChange(e, skip, props, container) {
+  !skip && e.preventDefault();
+  var containerWidth = container.clientWidth;
+  var containerHeight = container.clientHeight;
+  var x = typeof e.pageX === 'number' ? e.pageX : e.touches[0].pageX;
+  var y = typeof e.pageY === 'number' ? e.pageY : e.touches[0].pageY;
+  var inIFrame = window.self !== window.top || window.document !== container.ownerDocument;
+  var left = x - (container.getBoundingClientRect().left + (inIFrame ? 0 : window.pageXOffset));
+  var top = y - (container.getBoundingClientRect().top + (inIFrame ? 0 : window.pageYOffset));
+
+  if (left < 0) {
+    left = 0;
+  } else if (left > containerWidth) {
+    left = containerWidth;
+  } else if (top < 0) {
+    top = 0;
+  } else if (top > containerHeight) {
+    top = containerHeight;
+  }
+
+  var saturation = left * 100 / containerWidth;
+  var bright = -(top * 100 / containerHeight) + 100;
+
+  return {
+    h: props.hsl.h,
+    s: saturation,
+    v: bright,
+    a: props.hsl.a,
+    source: 'rgb'
+  };
+}
+},{}],258:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31193,7 +31573,7 @@ var _Chrome2 = _interopRequireDefault(_Chrome);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _Chrome2.default;
-},{"./components/alpha/Alpha":176,"./components/block/Block":178,"./components/chrome/Chrome":180,"./components/circle/Circle":184,"./components/common/ColorWrap":188,"./components/compact/Compact":194,"./components/github/Github":197,"./components/hue/Hue":199,"./components/material/Material":201,"./components/photoshop/Photoshop":202,"./components/sketch/Sketch":208,"./components/slider/Slider":211,"./components/swatches/Swatches":215,"./components/twitter/Twitter":218}],221:[function(require,module,exports){
+},{"./components/alpha/Alpha":210,"./components/block/Block":212,"./components/chrome/Chrome":214,"./components/circle/Circle":218,"./components/common/ColorWrap":222,"./components/compact/Compact":228,"./components/github/Github":231,"./components/hue/Hue":233,"./components/material/Material":235,"./components/photoshop/Photoshop":236,"./components/sketch/Sketch":242,"./components/slider/Slider":245,"./components/swatches/Swatches":249,"./components/twitter/Twitter":252}],259:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -31218,7 +31598,7 @@ exports.Raised = _libComponentsRaised2['default'];
 exports.Tile = _libComponentsTile2['default'];
 exports.Tabs = _libComponentsTabs2['default'];
 
-},{"./lib/components/Raised":223,"./lib/components/Tabs":225,"./lib/components/Tile":226}],222:[function(require,module,exports){
+},{"./lib/components/Raised":261,"./lib/components/Tabs":263,"./lib/components/Tile":264}],260:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31299,7 +31679,7 @@ Link.defaultProps = {
 };
 
 exports.default = Link;
-},{"lodash/isString":157,"react":"react"}],223:[function(require,module,exports){
+},{"lodash/isString":189,"react":"react"}],261:[function(require,module,exports){
 /* jshint node: true, esnext: true */
 "use strict";
 
@@ -31425,7 +31805,7 @@ Raised.defaultProps = {
 };
 
 exports.default = Raised;
-},{"react":"react","reactcss":240}],224:[function(require,module,exports){
+},{"react":"react","reactcss":278}],262:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31520,7 +31900,7 @@ Tab.defaultProps = {
 };
 
 exports.default = Tab;
-},{"react":"react","reactcss":240}],225:[function(require,module,exports){
+},{"react":"react","reactcss":278}],263:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31783,7 +32163,7 @@ Tabs.defaultProps = {
 };
 
 exports.default = Tabs;
-},{"./Link":222,"./Tab":224,"lodash/isString":157,"react":"react","reactcss":240}],226:[function(require,module,exports){
+},{"./Link":260,"./Tab":262,"lodash/isString":189,"react":"react","reactcss":278}],264:[function(require,module,exports){
 /* jshint node: true, esnext: true */
 "use strict";
 
@@ -31911,7 +32291,7 @@ var Tile = function (_React$Component) {
 ;
 
 exports.default = Tile;
-},{"react":"react","reactcss":240}],227:[function(require,module,exports){
+},{"react":"react","reactcss":278}],265:[function(require,module,exports){
 // jscs: disable
 
 // TinyColor v1.1.2
@@ -33079,7 +33459,7 @@ else {
 
 })();
 
-},{}],228:[function(require,module,exports){
+},{}],266:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -33105,31 +33485,31 @@ function shallowCompare(instance, nextProps, nextState) {
 }
 
 module.exports = shallowCompare;
-},{"fbjs/lib/shallowEqual":45}],229:[function(require,module,exports){
+},{"fbjs/lib/shallowEqual":45}],267:[function(require,module,exports){
 "use strict";function _interopRequireDefault(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(exports,"__esModule",{value:!0}),exports.autoprefix=void 0;var _map=require("lodash/map"),_map2=_interopRequireDefault(_map),_objectAssign=require("object-assign"),_objectAssign2=_interopRequireDefault(_objectAssign),transforms={borderRadius:function(e){return{msBorderRadius:e,MozBorderRadius:e,OBorderRadius:e,WebkitBorderRadius:e,borderRadius:e}},boxShadow:function(e){return{msBoxShadow:e,MozBoxShadow:e,OBoxShadow:e,WebkitBoxShadow:e,boxShadow:e}},userSelect:function(e){return{WebkitTouchCallout:e,KhtmlUserSelect:e,MozUserSelect:e,msUserSelect:e,WebkitUserSelect:e,userSelect:e}},flex:function(e){return{WebkitBoxFlex:e,MozBoxFlex:e,WebkitFlex:e,msFlex:e,flex:e}},flexBasis:function(e){return{WebkitFlexBasis:e,flexBasis:e}},justifyContent:function(e){return{WebkitJustifyContent:e,justifyContent:e}},transition:function(e){return{msTransition:e,MozTransition:e,OTransition:e,WebkitTransition:e,transition:e}},transform:function(e){return{msTransform:e,MozTransform:e,OTransform:e,WebkitTransform:e,transform:e}},absolute:function(e){var t=e&&e.split(" ");return{position:"absolute",top:t&&t[0],right:t&&t[1],bottom:t&&t[2],left:t&&t[3]}},extend:function(e,t){var r=t[e];return r?r:{extend:e}}},autoprefix=exports.autoprefix=function(e){var t={};return(0,_map2["default"])(e,function(e,r){var o={};(0,_map2["default"])(e,function(e,t){var r=transforms[t];r?(0,_objectAssign2["default"])(o,r(e)):o[t]=e}),t[r]=o}),t};exports["default"]=autoprefix;
-},{"lodash/map":162,"object-assign":174}],230:[function(require,module,exports){
+},{"lodash/map":194,"object-assign":208}],268:[function(require,module,exports){
 "use strict";function _interopRequireDefault(e){return e&&e.__esModule?e:{"default":e}}function _classCallCheck(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function _possibleConstructorReturn(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function _inherits(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}Object.defineProperty(exports,"__esModule",{value:!0}),exports.hover=void 0;var _extends=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var r=arguments[t];for(var n in r)Object.prototype.hasOwnProperty.call(r,n)&&(e[n]=r[n])}return e},_createClass=function(){function e(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,r,n){return r&&e(t.prototype,r),n&&e(t,n),t}}(),_react=require("react"),_react2=_interopRequireDefault(_react),hover=exports.hover=function(e){return function(t){function r(){_classCallCheck(this,r);var e=_possibleConstructorReturn(this,Object.getPrototypeOf(r).call(this));return e.handleMouseOver=function(){e.setState({hover:!0})},e.handleMouseOut=function(){e.setState({hover:!1})},e.state={hover:!1},e}return _inherits(r,t),_createClass(r,[{key:"render",value:function(){return _react2["default"].createElement("div",{onMouseOver:this.handleMouseOver,onMouseOut:this.handleMouseOut},_react2["default"].createElement(e,_extends({},this.props,this.state)))}}]),r}(_react2["default"].Component)};exports["default"]=hover;
-},{"react":"react"}],231:[function(require,module,exports){
+},{"react":"react"}],269:[function(require,module,exports){
 "use strict";function _interopRequireDefault(e){return e&&e.__esModule?e:{"default":e}}function _classCallCheck(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function _possibleConstructorReturn(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function _inherits(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}Object.defineProperty(exports,"__esModule",{value:!0}),exports.ReactCSSComponent=void 0;var _createClass=function(){function e(e,t){for(var n=0;n<t.length;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(t,n,r){return n&&e(t.prototype,n),r&&e(t,r),t}}(),_react=require("react"),_react2=_interopRequireDefault(_react),_inline=require("./inline"),_inline2=_interopRequireDefault(_inline),_once=require("lodash/once"),_once2=_interopRequireDefault(_once),warning=(0,_once2["default"])(function(){return console.warn("Extending ReactCSS.Component\n  is deprecated in ReactCSS 1.0.0")}),ReactCSSComponent=exports.ReactCSSComponent=function(e){function t(){return _classCallCheck(this,t),_possibleConstructorReturn(this,Object.getPrototypeOf(t).apply(this,arguments))}return _inherits(t,e),_createClass(t,[{key:"css",value:function(e){return warning(),_inline2["default"].call(this,e)}},{key:"styles",value:function(){return this.css()}}]),t}(_react2["default"].Component);ReactCSSComponent.contextTypes={mixins:_react2["default"].PropTypes.object},exports["default"]=ReactCSSComponent;
-},{"./inline":234,"lodash/once":165,"react":"react"}],232:[function(require,module,exports){
+},{"./inline":272,"lodash/once":197,"react":"react"}],270:[function(require,module,exports){
 "use strict";function _interopRequireDefault(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(exports,"__esModule",{value:!0}),exports.checkClassStructure=void 0;var _map=require("lodash/map"),_map2=_interopRequireDefault(_map),_isObject=require("lodash/isObject"),_isObject2=_interopRequireDefault(_isObject),checkClassStructure=exports.checkClassStructure=function(e){(0,_map2["default"])(e,function(t,s){e.hasOwnProperty(s)&&((0,_isObject2["default"])(t)?(0,_map2["default"])(t,function(e,u){t.hasOwnProperty(u)&&((0,_isObject2["default"])(e)||console.warn("Make sure the value of the element `"+s+"`\n                is an object of css. You passed it `"+t+"`"))}):console.warn("Make sure the value of `"+s+"` is an object of\n          html elements. You passed it `"+t+"`"))})};exports["default"]=checkClassStructure;
-},{"lodash/isObject":154,"lodash/map":162}],233:[function(require,module,exports){
+},{"lodash/isObject":186,"lodash/map":194}],271:[function(require,module,exports){
 "use strict";function _interopRequireDefault(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(exports,"__esModule",{value:!0}),exports.combine=void 0;var _merge=require("./merge"),_merge2=_interopRequireDefault(_merge),_transformMixins=require("./transform-mixins"),_transformMixins2=_interopRequireDefault(_transformMixins),combine=exports.combine=function(e,r){var i=(0,_merge2["default"])(e);return(0,_transformMixins2["default"])(i,r)};exports["default"]=combine;
-},{"./merge":235,"./transform-mixins":236}],234:[function(require,module,exports){
+},{"./merge":273,"./transform-mixins":274}],272:[function(require,module,exports){
 "use strict";function _interopRequireDefault(e){return e&&e.__esModule?e:{"default":e}}var _isObject=require("lodash/isObject"),_isObject2=_interopRequireDefault(_isObject),_checkClassStructure=require("./check-class-structure"),_checkClassStructure2=_interopRequireDefault(_checkClassStructure),_combine=require("./combine"),_combine2=_interopRequireDefault(_combine);module.exports=function(e){var s=this,t=[];if(!this.classes)throw console.warn("Define this.classes on `"+this.constructor.name+"`");(0,_checkClassStructure2["default"])(this.classes());var r=function(e,r){s.classes()[e]?t.push(s.classes()[e]):e&&r&&r.warn===!0&&console.warn("The `"+e+"` css class does not exist on `"+s.constructor.name+"`")};r("default");for(var i in this.props){var c=this.props[i];(0,_isObject2["default"])(c)||(c===!0?(r(i),r(i+"-true")):r(c?i+"-"+c:i+"-false"))}if(this.props&&this.props.activeBounds)for(var o=0;o<this.props.activeBounds.length;o++){var n=this.props.activeBounds[o];r(n)}for(var a in e){var u=e[a];u===!0&&r(a,{warn:!0})}var l={};return this.context&&this.context.mixins&&(l=this.context.mixins),(0,_combine2["default"])(t,l)};
-},{"./check-class-structure":232,"./combine":233,"lodash/isObject":154}],235:[function(require,module,exports){
+},{"./check-class-structure":270,"./combine":271,"lodash/isObject":186}],273:[function(require,module,exports){
 "use strict";function _interopRequireDefault(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(exports,"__esModule",{value:!0});var _merge=require("merge"),_merge2=_interopRequireDefault(_merge),_isObject=require("lodash/isObject"),_isObject2=_interopRequireDefault(_isObject),merge=function(e){return(0,_isObject2["default"])(e)&&!Array.isArray(e)?e:1===e.length?e[0]:_merge2["default"].recursive.apply(void 0,e)};exports["default"]=merge;
-},{"lodash/isObject":154,"merge":173}],236:[function(require,module,exports){
-"use strict";function _interopRequireDefault(e){return e&&e.__esModule?e:{"default":e}}var _isObject=require("lodash/isObject"),_isObject2=_interopRequireDefault(_isObject),_merge=require("merge"),_merge2=_interopRequireDefault(_merge),localProps={borderRadius:function(e){if(null!==e)return{msBorderRadius:e,MozBorderRadius:e,OBorderRadius:e,WebkitBorderRadius:e,borderRadius:e}},boxShadow:function(e){if(null!==e)return{msBoxShadow:e,MozBoxShadow:e,OBoxShadow:e,WebkitBoxShadow:e,boxShadow:e}},userSelect:function(e){if(null!==e)return{WebkitTouchCallout:e,KhtmlUserSelect:e,MozUserSelect:e,msUserSelect:e,WebkitUserSelect:e,userSelect:e}},flex:function(e){if(null!==e)return{WebkitBoxFlex:e,MozBoxFlex:e,WebkitFlex:e,msFlex:e,flex:e}},flexBasis:function(e){if(null!==e)return{WebkitFlexBasis:e,flexBasis:e}},justifyContent:function(e){if(null!==e)return{WebkitJustifyContent:e,justifyContent:e}},transition:function(e){if(null!==e)return{msTransition:e,MozTransition:e,OTransition:e,WebkitTransition:e,transition:e}},transform:function(e){if(null!==e)return{msTransform:e,MozTransform:e,OTransform:e,WebkitTransform:e,transform:e}},Absolute:function(e){if(null!==e){var r=e.split(" ");return{position:"absolute",top:r[0],right:r[1],bottom:r[2],left:r[3]}}},Extend:function(e,r){var t=r[e];if(t)return t}},transform=function e(r,t,n){var i=(0,_merge2["default"])(t,localProps),o={};for(var u in r){var s=r[u];if((0,_isObject2["default"])(s)&&!Array.isArray(s))o[u]=e(s,t,r);else if(i[u]){var l=i[u](s,n);for(var a in l){var f=l[a];o[a]=f}}else o[u]=s}return o};module.exports=function(e,r,t){return transform(e,r,t)};
-},{"lodash/isObject":154,"merge":173}],237:[function(require,module,exports){
+},{"lodash/isObject":186,"merge":207}],274:[function(require,module,exports){
+"use strict";function _interopRequireDefault(e){return e&&e.__esModule?e:{"default":e}}var _isObject=require("lodash/isObject"),_isObject2=_interopRequireDefault(_isObject),_merge=require("merge"),_merge2=_interopRequireDefault(_merge),localProps={borderRadius:function(e){return null!==e?{msBorderRadius:e,MozBorderRadius:e,OBorderRadius:e,WebkitBorderRadius:e,borderRadius:e}:void 0},boxShadow:function(e){return null!==e?{msBoxShadow:e,MozBoxShadow:e,OBoxShadow:e,WebkitBoxShadow:e,boxShadow:e}:void 0},userSelect:function(e){return null!==e?{WebkitTouchCallout:e,KhtmlUserSelect:e,MozUserSelect:e,msUserSelect:e,WebkitUserSelect:e,userSelect:e}:void 0},flex:function(e){return null!==e?{WebkitBoxFlex:e,MozBoxFlex:e,WebkitFlex:e,msFlex:e,flex:e}:void 0},flexBasis:function(e){return null!==e?{WebkitFlexBasis:e,flexBasis:e}:void 0},justifyContent:function(e){return null!==e?{WebkitJustifyContent:e,justifyContent:e}:void 0},transition:function(e){return null!==e?{msTransition:e,MozTransition:e,OTransition:e,WebkitTransition:e,transition:e}:void 0},transform:function(e){return null!==e?{msTransform:e,MozTransform:e,OTransform:e,WebkitTransform:e,transform:e}:void 0},Absolute:function(e){if(null!==e){var r=e.split(" ");return{position:"absolute",top:r[0],right:r[1],bottom:r[2],left:r[3]}}},Extend:function(e,r){var t=r[e];return t?t:void 0}},transform=function e(r,t,o){var n=(0,_merge2["default"])(t,localProps),i={};for(var u in r){var s=r[u];if((0,_isObject2["default"])(s)&&!Array.isArray(s))i[u]=e(s,t,r);else if(n[u]){var l=n[u](s,o);for(var a in l){var f=l[a];i[a]=f}}else i[u]=s}return i};module.exports=function(e,r,t){return transform(e,r,t)};
+},{"lodash/isObject":186,"merge":207}],275:[function(require,module,exports){
 "use strict";function _interopRequireDefault(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(exports,"__esModule",{value:!0}),exports.flattenNames=void 0;var _map=require("lodash/map"),_map2=_interopRequireDefault(_map),_isPlainObject=require("lodash/isPlainObject"),_isPlainObject2=_interopRequireDefault(_isPlainObject),_isString=require("lodash/isString"),_isString2=_interopRequireDefault(_isString),flattenNames=exports.flattenNames=function e(t){var i=[];return t.map(function(t){return Array.isArray(t)&&e(t).map(function(e){return i.push(e)}),(0,_isPlainObject2["default"])(t)&&(0,_map2["default"])(t,function(e,t){e===!0&&i.push(t),i.push(t+"-"+e)}),(0,_isString2["default"])(t)&&i.push(t),t}),i};exports["default"]=flattenNames;
-},{"lodash/isPlainObject":156,"lodash/isString":157,"lodash/map":162}],238:[function(require,module,exports){
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var loopable=function(e,t){var l={},o=function(e){var t=arguments.length<=1||void 0===arguments[1]||arguments[1];l[e]=t};return 0===e&&o("first-child"),e===t-1&&o("last-child"),(0===e||e%2===0)&&o("even"),1===Math.abs(e%2)&&o("odd"),o("nth-child",e),l};exports["default"]=loopable;
-},{}],239:[function(require,module,exports){
-"use strict";function _interopRequireDefault(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(exports,"__esModule",{value:!0}),exports.mergeClasses=void 0;var _map=require("lodash/map"),_map2=_interopRequireDefault(_map),_objectAssign=require("object-assign"),_objectAssign2=_interopRequireDefault(_objectAssign),mergeClasses=exports.mergeClasses=function(e){var t=arguments.length<=1||void 0===arguments[1]?[]:arguments[1],s=e["default"]&&(0,_objectAssign2["default"])({},e["default"])||{};return t.map(function(t){var r=e[t];return r&&(0,_map2["default"])(r,function(e,t){s[t]||(s[t]={}),(0,_objectAssign2["default"])(s[t],r[t])}),t}),s};exports["default"]=mergeClasses;
-},{"lodash/map":162,"object-assign":174}],240:[function(require,module,exports){
-"use strict";function _interopRequireDefault(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(exports,"__esModule",{value:!0}),exports.ReactCSS=exports.loop=exports.hover=exports.Component=void 0;var _objectAssign=require("object-assign"),_objectAssign2=_interopRequireDefault(_objectAssign),_flattenNames=require("./flattenNames"),_flattenNames2=_interopRequireDefault(_flattenNames),_mergeClasses=require("./mergeClasses"),_mergeClasses2=_interopRequireDefault(_mergeClasses),_autoprefix=require("./autoprefix"),_autoprefix2=_interopRequireDefault(_autoprefix),_Component2=require("./deprecated/Component"),_Component3=_interopRequireDefault(_Component2),_hover2=require("./components/hover"),_hover3=_interopRequireDefault(_hover2),_loop2=require("./loop"),_loop3=_interopRequireDefault(_loop2);exports.Component=_Component3["default"],exports.hover=_hover3["default"],exports.loop=_loop3["default"];var ReactCSS=exports.ReactCSS=function(e){for(var t=arguments.length,o=Array(t>1?t-1:0),r=1;r<t;r++)o[r-1]=arguments[r];var a=(0,_flattenNames2["default"])(o),s=(0,_mergeClasses2["default"])(e,a);return(0,_autoprefix2["default"])(s)};ReactCSS.m=_objectAssign2["default"],exports["default"]=ReactCSS;
-},{"./autoprefix":229,"./components/hover":230,"./deprecated/Component":231,"./flattenNames":237,"./loop":238,"./mergeClasses":239,"object-assign":174}]},{},[38])
+},{"lodash/isPlainObject":188,"lodash/isString":189,"lodash/map":194}],276:[function(require,module,exports){
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var loopable=function(e,t){var l={},o=function(e){var t=arguments.length<=1||void 0===arguments[1]?!0:arguments[1];l[e]=t};return 0===e&&o("first-child"),e===t-1&&o("last-child"),(0===e||e%2===0)&&o("even"),1===Math.abs(e%2)&&o("odd"),o("nth-child",e),l};exports["default"]=loopable;
+},{}],277:[function(require,module,exports){
+"use strict";function _interopRequireDefault(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(exports,"__esModule",{value:!0}),exports.mergeClasses=void 0;var _map=require("lodash/map"),_map2=_interopRequireDefault(_map),_cloneDeep=require("lodash/cloneDeep"),_cloneDeep2=_interopRequireDefault(_cloneDeep),_objectAssign=require("object-assign"),_objectAssign2=_interopRequireDefault(_objectAssign),mergeClasses=exports.mergeClasses=function(e){var t=arguments.length<=1||void 0===arguments[1]?[]:arguments[1],r=e["default"]&&(0,_cloneDeep2["default"])(e["default"])||{};return t.map(function(t){var s=e[t];return s&&(0,_map2["default"])(s,function(e,t){r[t]||(r[t]={}),(0,_objectAssign2["default"])(r[t],s[t])}),t}),r};exports["default"]=mergeClasses;
+},{"lodash/cloneDeep":172,"lodash/map":194,"object-assign":208}],278:[function(require,module,exports){
+"use strict";function _interopRequireDefault(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(exports,"__esModule",{value:!0}),exports.ReactCSS=exports.loop=exports.hover=exports.Component=void 0;var _objectAssign=require("object-assign"),_objectAssign2=_interopRequireDefault(_objectAssign),_flattenNames=require("./flattenNames"),_flattenNames2=_interopRequireDefault(_flattenNames),_mergeClasses=require("./mergeClasses"),_mergeClasses2=_interopRequireDefault(_mergeClasses),_autoprefix=require("./autoprefix"),_autoprefix2=_interopRequireDefault(_autoprefix),_Component2=require("./deprecated/Component"),_Component3=_interopRequireDefault(_Component2),_hover2=require("./components/hover"),_hover3=_interopRequireDefault(_hover2),_loop2=require("./loop"),_loop3=_interopRequireDefault(_loop2);exports.Component=_Component3["default"],exports.hover=_hover3["default"],exports.loop=_loop3["default"];var ReactCSS=exports.ReactCSS=function(e){for(var t=arguments.length,o=Array(t>1?t-1:0),r=1;t>r;r++)o[r-1]=arguments[r];var a=(0,_flattenNames2["default"])(o),s=(0,_mergeClasses2["default"])(e,a);return(0,_autoprefix2["default"])(s)};ReactCSS.m=_objectAssign2["default"],exports["default"]=ReactCSS;
+},{"./autoprefix":267,"./components/hover":268,"./deprecated/Component":269,"./flattenNames":275,"./loop":276,"./mergeClasses":277,"object-assign":208}]},{},[38])
 
 
 //# sourceMappingURL=bundle.js.map
