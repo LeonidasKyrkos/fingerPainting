@@ -36,7 +36,7 @@ const gameDefaults = {
 class Game {
 	constructor(id){
 		this.id = id;
-		this.game = Object.assign({},gameDefaults);
+		this.game = Object.assign({}, gameDefaults);
 		this.events = new Eev();
 		this.data = new DataConnection(this);
 		this.setGetters = new SetGetters(this);

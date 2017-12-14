@@ -6,3 +6,4 @@ npm-debug.log
 backups/
 typings/
 *.vscode
+.env

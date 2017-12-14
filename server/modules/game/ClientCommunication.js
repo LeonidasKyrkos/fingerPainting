@@ -14,14 +14,16 @@ class ClientCommunication {
 	}
 
 	// Emit information to all players that are currently in an 'incorrect' state
-	emitToStupidPlayers(type,emission) {
-		for(let player in this.App.game.store.players) {
-			let playerObj = this.App.game.store.players[player];
+	emitToStupidPlayers(type, emission) {
+		const players = this.App.game.store.players;
 
-			if(playerObj.status !== 'painter' && !playerObj.correct) {
-				this.sockets[player].emit(type,emission);
+		Object.keys(players).forEach(playerName => {
+			const player = players[playerName];
+
+			if(player.status !== 'painter' && !player.correct) {
+				this.App.game.sockets[playerName].emit(type, emission);
 			}
-		}
+		});
 	}
 
 	emitToAllSockets(type,emission) {

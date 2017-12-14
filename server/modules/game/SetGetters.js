@@ -48,9 +48,9 @@ class SetGetters {
 	setPuzzle(puzzle) {
 		let data = this.getPuzzleAndClueArrays(puzzle);
 
-		this.setGameProperty('puzzle',puzzle);
-		this.setGameProperty('puzzleArray',data.puzzleArray);
-		this.setGameProperty('clue',data.clueArray)
+		this.setGameProperty('puzzle', puzzle);
+		this.setGameProperty('puzzleArray', data.puzzleArray);
+		this.setGameProperty('clue', data.clueArray)
 	}
 
 	// Add player to the garbage queue to be cleared by the interval
@@ -61,13 +61,14 @@ class SetGetters {
 	// Get puzzle DUHHHHHHHHHHHHHHHH
 	getPuzzle() {
 		if(!this.App.game.dictionary.length) {
-			this.setGameProperty('dictionary',this.App.game.dictionaryBackup.slice(0));
+			this.setGameProperty('dictionary', this.App.game.dictionaryBackup.slice(0));
 		}
 
 		let max = this.App.game.dictionary.length - 1;
 		let random = Math.floor(Math.random() * (max-1)) + 1;
 		let puzzle = this.App.game.dictionary[random];
-		this.App.game.dictionary.splice(random,1);
+
+		this.App.game.dictionary.splice(random, 1);
 
 		return puzzle;
 	}
@@ -78,6 +79,8 @@ class SetGetters {
 		let random2 = Math.floor((Math.random() * this.App.game.puzzleArray[random].length));
 
 		this.App.game.clue[random][random2] = this.App.game.puzzleArray[random][random2];
+
+		return this.App.game.clue;
 	}
 
 	// Create and return arrays of puzzle and clue

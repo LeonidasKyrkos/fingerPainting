@@ -11,7 +11,7 @@ class Fingerpainting {
 
 	newRound() {
 		// Increment the round count
-		this.App.setGetters.setGameProperty('roundCount',this.App.game.roundCount++);
+		this.App.setGetters.setGameProperty('roundCount', this.App.game.roundCount++);
 		this.resetGame();
 		this.findNewPainter();
 		this.startRound();
@@ -24,9 +24,9 @@ class Fingerpainting {
 		// if there are players and a dictionary, start the round.
 		if(playersLength && this.App.game.dictionary.length) {
 			this.App.setGetters.setPuzzle(this.App.setGetters.getPuzzle());
-			this.App.clientComms.emitToPainter('puzzle',this.App.game.puzzleArray);
-			this.App.clientComms.emitToGuessers('puzzle',this.App.game.clue);
-			this.App.setGetters.setGameStoreProperty('status','playing');
+			this.App.clientComms.emitToPainter('puzzle', this.App.game.puzzleArray);
+			this.App.clientComms.emitToGuessers('puzzle', this.App.game.clue);
+			this.App.setGetters.setGameStoreProperty('status', 'playing');
 			this.startInterval();			
 		}
 	}
@@ -69,8 +69,8 @@ class Fingerpainting {
 
 	correctAnswer(playerId) {
 		let player = this.App.game.store.players[playerId];
-		this.App.data.updatePlayer(playerId,{correct: true});
-		this.App.clientComms.emitToSocket(this.App.game.sockets[playerId],'puzzle',this.App.game.puzzleArray);
+		this.App.data.updatePlayer(playerId, {correct: true});
+		this.App.clientComms.emitToSocket(this.App.game.sockets[playerId],'puzzle', this.App.game.puzzleArray);
 		this.App.clientComms.emitToAllSockets('correct');
 		this.pointHandler(player);
 	}
@@ -79,14 +79,14 @@ class Fingerpainting {
 		this.App.playerHandler.rewardPlayer(player);
 
 		// make array of players that are correct
-		let correctPlayers = _.filter(this.App.game.store.players,(player)=>{
+		let correctPlayers = _.filter(this.App.game.store.players, player => {
 			return player.correct;
 		});
 
 		// if this is the first correct answer then reward the painter based on
 		// the remaining time equal to that of the guesser
 		if(correctPlayers.length === 1) {			
-			let artist = _.find(this.App.game.store.players,{status: 'painter'});
+			let artist = _.find(this.App.game.store.players, { status: 'painter' });
 			this.App.playerHandler.rewardPlayer(artist);
 		}
 
@@ -111,18 +111,18 @@ class Fingerpainting {
 
 	clueHandler() {
 		// Current game time
-		let time = this.App.game.timer;
+		const time = this.timer;
 
 		// Timestamps based on length of game
-		let firstClueTime = Math.floor(this.App.game.settings.gameLength * 0.666);
-		let secondClueTime = Math.floor(this.App.game.settings.gameLength * 0.333);
-		let finalClueTime = Math.floor(this.App.game.settings.gameLength * 0.15);
+		const firstClueTime = Math.floor(this.App.game.settings.gameLength * 0.666);
+		const secondClueTime = Math.floor(this.App.game.settings.gameLength * 0.333);
+		const finalClueTime = Math.floor(this.App.game.settings.gameLength * 0.15);
 
 		// If the current time = any of our clue timestamps then emit a clue to the remaining guessers
 		if(time === firstClueTime || time === secondClueTime || time === finalClueTime) {
 			let clue = this.App.setGetters.getClue();
 
-			this.App.clientComms.emitToStupidPlayers('puzzle',clue);
+			this.App.clientComms.emitToStupidPlayers('puzzle', clue);
 		}
 	}
 
