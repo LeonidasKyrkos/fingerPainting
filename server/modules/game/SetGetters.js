@@ -17,23 +17,23 @@ class SetGetters {
 		this.App.events.emit('store_updated');
 	}
 
-	setGameStoreProperty(property='',state) {
-		this.App.data.setChild(property,state);
+	setGameStoreProperty(property='', state) {
+		this.App.data.setChild(property, state);
 	}
 
-	setGameProperty(property='',state) {
-		this.App.game[property] = state;
+	setGameProperty(property='', value) {
+		this.App.game[property] = value;
 	}
 
 	// set a property on an individual player
-	setPlayerProperty(player,property,value) {
+	setPlayerProperty(player, property, value) {
 		let data = {};
 		data[property] = value;
 		this.App.data.updatePlayer(player.id,data)
 	}
 
 	// Set a property for all currently active players
-	setPlayersProperty(property,value) {
+	setPlayersProperty(property, value) {
 		let players = this.App.game.store.players || {};
 
 		let data = {};
@@ -90,14 +90,17 @@ class SetGetters {
 		let clueArray = [];
 
 		// loop through the words and create arrays for them inside of puzzleArray and cluearray
-		words.forEach((word,index)=>{
+		words.forEach((word, index) => {
 			puzzleArray[index] = puzzleArray[index] || [];
 			clueArray[index] = clueArray[index] || [];
 
-			for(let i = 0; i < word.length; i++) {
-				puzzleArray[index].push(word.charAt(i));
-				clueArray[index].push('_');
-			}
+			// puzzleArray = 'puzzle' = [p, u, z, z, l, e]
+			puzzleArray[index] = word.split('');
+
+			// clueArray = [p, u, z, z, l, e] = [_, _, _, _, _, _]
+			clueArray[index] = puzzleArray[index].map(letter => {
+				return '_';
+			});
 		});
 
 		return { puzzleArray: puzzleArray, clueArray: clueArray };
@@ -122,7 +125,7 @@ class SetGetters {
 	getRemainingPlayers() {
 		let players = this.App.game.store.players;
 
-		return _.filter(players,(player)=>{ return player.turns < this.App.game.settings.rounds });
+		return _.filter(players, player => player.turns < this.App.game.settings.rounds);
 	}
 
 	getIntRemainingGuessers() {
@@ -133,11 +136,9 @@ class SetGetters {
 	}
 
 	getBoolRemainingTurns() {
-		let players = _.filter(this.App.game.store.players, (player)=>{
-			return player.turns < this.App.game.settings.roundCount;
-		});
+		let players = _.filter(this.App.game.store.players, player => player.turns < this.App.game.settings.rounds);
 
-		return players.length > 1 ? true : false;
+		return players.length > 1;
 	}
 }
 

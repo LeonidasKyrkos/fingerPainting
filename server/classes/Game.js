@@ -17,13 +17,12 @@ const Tests = require('../modules/game/Tests'); // Got something to test? use th
 // settings
 const gameDefaults = {
 	store: {
-		status: 'pending'
+		status: 'pending',
 	},
 	sockets: {},
 	inactivePlayers: {},
 	garbageQueue: [],
 	settings: {
-		roundCount: 1,
 		gameLength: 90,
 		rounds: 3,
 		minimumPlayers: 3, // testing value. 3 on live
@@ -53,7 +52,7 @@ class Game {
 	initEventHandlers() {
 		// When the store has updated we'll do the same for the players. We'll also update their player objects.
 		this.events.on('store_updated',()=>{
-			this.clientComms.emitToAllSockets('store update',this.game.store);
+			this.clientComms.emitToAllSockets('store update', this.game.store);
 			this.clientComms.updateClientPlayerObject();
 		});
 
