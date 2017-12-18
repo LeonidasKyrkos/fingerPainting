@@ -8,9 +8,9 @@
 	},
 	"main": "server.js",
 	"scripts": {
-		"dev": "NODE_ENV=development node server.js",
+		"dev": "NODE_ENV=development node server.js & gulp",
 		"start": "gulp",
-			"build": "gulp build"
+		"build": "gulp build"
 	},
 	"babel": {
 		"presets": ["es2015", "react"]

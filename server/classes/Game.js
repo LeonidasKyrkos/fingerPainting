@@ -60,13 +60,13 @@ class Game {
 		// passed data = { socket: socket, msg: player }
 		this.events.on('new_player',(data)=>{
 			this.data.addPlayer(this.id,data.msg);
-			this.clientComms.emitToSocket(data.socket,'join room','/rooms/' + this.id);
-			this.clientComms.emitToSocket(data.socket,'player',data.msg);
+			this.clientComms.emitToSocket(data.socket, 'join room', '/rooms/' + this.id);
+			this.clientComms.emitToSocket(data.socket, 'player', data.msg);
 		});
 
 		// When the painter sends a path update, send it through to all the other players
 		this.events.on('path_update',(paths)=>{
-			this.clientComms.emitToGuessers('path update',paths);
+			this.clientComms.emitToAllGuessers('path update', paths);
 		});
 
 		// Start round

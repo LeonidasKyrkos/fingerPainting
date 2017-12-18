@@ -42,11 +42,31 @@ class ClientCommunication {
 		}
 	}
 
-	emitToGuessers(type,emission) {
-		for(let player in this.App.game.store.players) {
+	/**
+	 * Emit state to all players who are still guessing (excludes people who have guessed correctly)
+	 * @param {String} type
+	 * @param {} payload
+	 */
+	emitToGuessers(type, emission) {
+		for (let player in this.App.game.store.players) {
 			let playerObj = this.App.game.store.players[player];
 
 			if(playerObj.status !== 'painter' && !playerObj.correct) {
+				this.App.game.sockets[player].emit(type,emission);
+			}
+		}
+	}
+
+	/**
+	 * Emit state to all players who are not the painter
+	 * @param {String} type
+	 * @param {} payload
+	 */
+	emitToAllGuessers(type, emission) {
+		for (let player in this.App.game.store.players) {
+			let playerObj = this.App.game.store.players[player];
+
+			if(playerObj.status !== 'painter') {
 				this.App.game.sockets[player].emit(type,emission);
 			}
 		}
