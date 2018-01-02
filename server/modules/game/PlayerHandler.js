@@ -19,7 +19,7 @@ class PlayerHandler {
 			player.status = 'painter';
 		}
 
-		this.App.events.emit('new_player',{socket: socket, msg: player});
+		this.App.events.emit('new_player',{ socket: socket, msg: player });
 		this.playerEventHandlers(socket, player);
 	}
 
