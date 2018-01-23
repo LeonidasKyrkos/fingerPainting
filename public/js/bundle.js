@@ -2300,7 +2300,7 @@ var Puzzle = function (_Component) {
 exports.default = Puzzle;
 
 },{"../../../stores/Store":40,"../../../utilities/general":42,"react":"react"}],22:[function(require,module,exports){
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -2308,15 +2308,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require('react');
+var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Store = require('../../../stores/Store');
+var _Store = require("../../../stores/Store");
 
 var _Store2 = _interopRequireDefault(_Store);
 
-var _ErrorMessage = require('./ErrorMessage');
+var _ErrorMessage = require("./ErrorMessage");
 
 var _ErrorMessage2 = _interopRequireDefault(_ErrorMessage);
 
@@ -2342,27 +2342,27 @@ var RoomJoin = function (_Component) {
 	}
 
 	_createClass(RoomJoin, [{
-		key: 'componentDidMount',
+		key: "componentDidMount",
 		value: function componentDidMount() {
 			_Store2.default.listen(this.onChange);
 		}
 	}, {
-		key: 'componentDidUpdate',
+		key: "componentDidUpdate",
 		value: function componentDidUpdate() {
 			this.refs.name.focus();
 		}
 	}, {
-		key: 'componentWillUnmount',
+		key: "componentWillUnmount",
 		value: function componentWillUnmount() {
 			_Store2.default.unlisten(this.onChange);
 		}
 	}, {
-		key: 'onChange',
+		key: "onChange",
 		value: function onChange(state) {
 			this.setState(state);
 		}
 	}, {
-		key: 'authenticate',
+		key: "authenticate",
 		value: function authenticate(e) {
 			e.preventDefault();
 
@@ -2373,7 +2373,7 @@ var RoomJoin = function (_Component) {
 			if (form.el.querySelector('[data-js="room.password"]')) {
 				form.password = form.el.querySelector('[data-js="room.password"]').value;
 			} else {
-				form.password = '';
+				form.password = "";
 			}
 
 			form.name = form.el.querySelector('[data-js="room.name"]').value;
@@ -2381,105 +2381,137 @@ var RoomJoin = function (_Component) {
 			this.requestJoin(form.name, form.id, form.password);
 		}
 	}, {
-		key: 'requestJoin',
+		key: "requestJoin",
 		value: function requestJoin(name, id, password) {
-			this.state.socket.emit('join request', { name: name, id: id, password: password });
+			this.state.socket.emit("join request", {
+				name: name,
+				id: id,
+				password: password
+			});
 		}
 	}, {
-		key: 'renderPasswordField',
+		key: "renderPasswordField",
 		value: function renderPasswordField() {
 			if (this.props.password) {
 				return _react2.default.createElement(
-					'li',
+					"li",
 					null,
 					_react2.default.createElement(
-						'label',
-						{ className: 'form__control' },
+						"label",
+						{ className: "form__control" },
 						_react2.default.createElement(
-							'span',
-							{ className: 'form__label' },
-							'Password'
+							"span",
+							{ className: "form__label" },
+							"Password"
 						),
 						_react2.default.createElement(
-							'span',
-							{ className: 'form__input-wrap' },
-							_react2.default.createElement('input', { 'data-js': 'room.password', type: 'password', className: 'form__input' })
+							"span",
+							{ className: "form__input-wrap" },
+							_react2.default.createElement("input", {
+								"data-js": "room.password",
+								type: "password",
+								className: "form__input"
+							})
 						)
 					)
 				);
 			}
 		}
 	}, {
-		key: 'changeHandler',
+		key: "changeHandler",
 		value: function changeHandler(e) {
 			// having this avoids react errors. Maybe delete it some time and work out why they occur as you're probably doing something wrong.
 		}
 	}, {
-		key: 'handleKeyUp',
+		key: "handleKeyUp",
 		value: function handleKeyUp(e) {
 			if (e.keyCode === 27) {
 				this.closeForm();
 			}
 		}
 	}, {
-		key: 'closeForm',
+		key: "closeForm",
 		value: function closeForm(e) {
-			document.querySelector('[data-js="form-popup"]').className = 'hide';
+			document.querySelector('[data-js="form-popup"]').className = "hide";
 		}
 	}, {
-		key: 'render',
+		key: "render",
 		value: function render() {
-			var id = this.props.id || '';
+			var id = this.props.id || "";
 			var room = this.state.rooms ? this.state.rooms[id] || {} : {};
 
 			return _react2.default.createElement(
-				'form',
-				{ onKeyDown: this.handleKeyUp.bind(this), 'data-js': 'room.join', className: 'form--popup', onSubmit: this.authenticate.bind(this) },
+				"form",
+				{
+					onKeyDown: this.handleKeyUp.bind(this),
+					"data-js": "room.join",
+					className: "form--popup",
+					onSubmit: this.authenticate.bind(this)
+				},
 				_react2.default.createElement(
-					'span',
-					{ className: 'form__close', onClick: this.closeForm.bind(this) },
-					'x'
+					"span",
+					{
+						className: "form__close",
+						onClick: this.closeForm.bind(this)
+					},
+					"x"
 				),
 				_react2.default.createElement(
-					'h3',
-					{ className: 'gamma' },
+					"h3",
+					{ className: "gamma" },
 					room.title
 				),
 				_react2.default.createElement(_ErrorMessage2.default, { socket: this.state.socket }),
 				_react2.default.createElement(
-					'ul',
+					"ul",
 					null,
 					_react2.default.createElement(
-						'li',
+						"li",
 						null,
 						_react2.default.createElement(
-							'label',
-							{ className: 'form__control' },
+							"label",
+							{ className: "form__control" },
 							_react2.default.createElement(
-								'span',
-								{ className: 'form__label' },
-								'Name:'
+								"span",
+								{ className: "form__label" },
+								"Name:"
 							),
 							_react2.default.createElement(
-								'span',
-								{ className: 'form__input-wrap' },
-								_react2.default.createElement('input', { ref: 'name', maxLength: '10', required: true, 'data-js': 'room.name', autoComplete: 'off', type: 'text', className: 'form__input' })
+								"span",
+								{ className: "form__input-wrap" },
+								_react2.default.createElement("input", {
+									ref: "name",
+									maxLength: "10",
+									required: true,
+									"data-js": "room.name",
+									autoComplete: "off",
+									type: "text",
+									className: "form__input"
+								})
 							)
 						)
 					),
 					_react2.default.createElement(
-						'li',
-						{ className: 'hide' },
-						_react2.default.createElement('input', { required: true, 'data-js': 'room.id', autoComplete: 'off', type: 'text', className: 'form__input', value: id, onChange: this.changeHandler.bind(this) })
+						"li",
+						{ className: "hide" },
+						_react2.default.createElement("input", {
+							required: true,
+							"data-js": "room.id",
+							autoComplete: "off",
+							type: "text",
+							className: "form__input",
+							value: id,
+							onChange: this.changeHandler.bind(this)
+						})
 					),
 					this.renderPasswordField(),
 					_react2.default.createElement(
-						'li',
-						{ className: 'align-right' },
+						"li",
+						{ className: "align-right" },
 						_react2.default.createElement(
-							'button',
-							{ className: 'btn--primary' },
-							'Submit'
+							"button",
+							{ className: "btn--primary" },
+							"Submit"
 						)
 					)
 				)

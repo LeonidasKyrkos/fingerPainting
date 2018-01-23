@@ -33,10 +33,10 @@ class AdminPanel {
 
 		socket.on('new word',(data)=>{
 			let dictionary = Object.keys(data)[0];
-			let word = Object.keys(data[dictionary])[0];
+			let word = Object.keys(data[dictionary])[0].trim().toLowerCase();
 
-			if(Object.keys(this.dictionarys[dictionary]).indexOf(word) === -1) {
-				this.data.addWord(dictionary,word);
+			if(!Object.keys(this.dictionarys[dictionary]).includes(word)) {
+				this.data.addWord(dictionary, word);
 				socket.emit('success message',"'" + word + "'" + ' added to dictionary');
 			} else {
 				socket.emit('error message','Sorry - that word already exists in this dictionary');
